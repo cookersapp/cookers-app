@@ -26,7 +26,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     }
   })
   .state('sidemenu.product', {
-    url: "/product/:id?from",
+    url: "/product/:barcode?from",
     views: {
       'menuContent': {
         templateUrl: "templates/product.html",

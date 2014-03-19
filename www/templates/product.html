@@ -1,5 +1,16 @@
 <ion-view title="Product" left-buttons="leftButtons">
     <ion-content class="has-header">
-        <h2>Product {{product.id}}</h2>
+        <div ng-if="!product.name">
+            Recherche du produit {{product.barcode}} ...
+        </div>
+        <div ng-if="product.name">
+            <div class="list card">
+                <div class="item item-avatar">
+                    <img ng-src="img/product/160x160/{{product.image}}">
+                    <h2>{{product.name}}</h2>
+                    <p>Marque: {{product.brand}}</p>
+                </div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>

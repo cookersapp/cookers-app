@@ -112,7 +112,7 @@ angular.module('ionicApp.controllers', [])
     cordova.plugins.barcodeScanner.scan(
       function (result) {
         if(!result.cancelled){
-          $state.go('sidemenu.product', {id: result.text, from: from});
+          $state.go('sidemenu.product', {barcode: result.text, from: from});
         }
       }, 
       function (error) {
@@ -128,13 +128,17 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ProductCtrl', function($scope, $stateParams){
-  var id = $stateParams.id;
+.controller('ProductCtrl', function($scope, $stateParams, ProductService){
+  var barcode = $stateParams.barcode;
   var from = $stateParams.from;
 
   $scope.product = {
-    id: id
+    barcode: barcode
   };
+  
+  ProductService.get(barcode).then(function(product){
+    $scope.product = product;
+  });
 })
 
 
