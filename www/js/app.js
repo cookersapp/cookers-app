@@ -1,84 +1,92 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/sidemenu/home');
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
-
-  // setup an abstract state for the tabs directive
-  .state('tab', {
-    url: "/tab",
+  .state('tutorial', {
+    url: '/tutorial',
+    templateUrl: 'templates/tutorial.html',
+    controller: 'TutorialCtrl'
+  })
+  .state('sidemenu', {
+    url: "/sidemenu",
     abstract: true,
-    templateUrl: "templates/tabs.html"
+    templateUrl: "templates/side-menu.html",
+    controller: 'SideMenuCtrl'
   })
-
-  // the pet tab has its own child nav-view and history
-  .state('tab.pet-index', {
-    url: '/pets',
+  .state('sidemenu.home', {
+    url: "/home",
     views: {
-      'pets-tab': {
-        templateUrl: 'templates/pet-index.html',
-        controller: 'PetIndexCtrl'
+      'menuContent': {
+        templateUrl: "templates/home.html",
+        controller: 'HomeCtrl'
       }
     }
   })
-
-  .state('tab.pet-detail', {
-    url: '/pet/:petId',
+  .state('sidemenu.product', {
+    url: "/product/:id?from",
     views: {
-      'pets-tab': {
-        templateUrl: 'templates/pet-detail.html',
-        controller: 'PetDetailCtrl'
+      'menuContent': {
+        templateUrl: "templates/product.html",
+        controller: 'ProductCtrl'
       }
     }
   })
-
-  .state('tab.adopt', {
-    url: '/adopt',
+  .state('sidemenu.ingredient', {
+    url: "/ingredient/:id?from",
     views: {
-      'adopt-tab': {
-        templateUrl: 'templates/adopt.html'
+      'menuContent': {
+        templateUrl: "templates/ingredient.html",
+        controller: 'IngredientCtrl'
       }
     }
   })
-
-  .state('tab.about', {
-    url: '/about',
+  .state('sidemenu.recipe', {
+    url: "/recipe/:id?from",
     views: {
-      'about-tab': {
-        templateUrl: 'templates/about.html',
-        controller: function($scope){
-          $scope.scan = function(){
-            cordova.plugins.barcodeScanner.scan(
-              function (result) {
-                alert("We got a barcode\n" +
-                      "Result: " + result.text + "\n" +
-                      "Format: " + result.format + "\n" +
-                      "Cancelled: " + result.cancelled);
-              }, 
-              function (error) {
-                alert("Scanning failed: " + error);
-              }
-            );
-          };
-        }
+      'menuContent': {
+        templateUrl: "templates/recipe.html",
+        controller: 'RecipeCtrl'
+      }
+    }
+  })
+  .state('sidemenu.feedback', {
+    url: "/feedback",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/feedback.html",
+        controller: 'FeedbackCtrl'
+      }
+    }
+  })
+  .state('sidemenu.faq', {
+    url: "/faq",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/faq.html",
+        controller: 'FaqCtrl'
+      }
+    }
+  })
+  .state('sidemenu.informations', {
+    url: "/informations",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/informations.html",
+        controller: 'InformationsCtrl'
+      }
+    }
+  })
+  .state('sidemenu.device', {
+    url: "/device",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/device.html",
+        controller: 'DeviceCtrl'
       }
     }
   });
-
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/pets');
-
 });
 

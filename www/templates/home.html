@@ -1,0 +1,49 @@
+<ion-view title="Accueil" left-buttons="leftButtons">
+    <ion-content class="has-header has-footer">
+        <div class="list card">
+            <div class="item">
+                <h2>Scannez ces produits !</h2>
+                <p>Et obtenez des recettes originales :</p>
+            </div>
+            <div class="item item-image">
+                <div>
+                    <img src="img/brand/coca-cola.png" style="width: 160px; vertical-align: top;" />
+                    <img src="img/brand/danone.png"    style="width: 160px;" /><br/>
+                    <img src="img/brand/kelloggs.png"  style="width: 160px;" />
+                    <img src="img/brand/panzani.png"   style="width: 160px;" />
+                </div>
+            </div>
+        </div>
+
+        <div class="list" ng-if="recipeHistory.length > 0">
+            <div class="item item-divider">
+                Dernières recettes achetées
+            </div>
+            <a ng-repeat="entry in recipeHistory"
+               class="item item-thumbnail-left"
+               href="#/recipe/{{entry.recipe.id}}"
+               type="item-link">
+                <img ng-src="img/recipe/{{entry.recipe.thumbnail}}">
+                <!-- <img ng-src="img/placeholder80x80.gif"> -->
+                <h2>{{entry.recipe.name}}</h2>
+                <p>{{entry.recipe.category}} - {{entry.recipe.difficulty}} - {{entry.recipe.budget}}</p>
+            </a>
+        </div>
+    </ion-content>
+
+    <!-- Footer -->
+    <div class="tabs tabs-icon-left">
+        <a class="tab-item" ui-sref="sidemenu.shoppinglist.cart">
+            <i class="icon ion-clipboard"></i>
+            COURSES
+        </a>
+        <a class="tab-item" ng-click="makeScan()">
+            <i class="icon ion-pinpoint"></i>
+            SCAN
+        </a>
+        <a class="tab-item">
+            <i class="icon ion-android-stopwatch"></i>
+            CUISINE
+        </a>
+    </div>
+</ion-view>
