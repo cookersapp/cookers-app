@@ -1,0 +1,8 @@
+*.keystore
+*.sw*
+platforms/^.*
+
+.cordova
+bower_components
+platforms
+plugins
