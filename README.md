@@ -1,6 +1,8 @@
-ionic-angular-cordova-seed
-==========================
+# Retail-scan app
 
-The perfect starting point for an Ionic project.
+Create your shopping list easily with recipe recommandations
 
-- [Ionic Tutorials](http://ionicframework.com/tutorials/)
+# Technicals
+
+- add [barcode plugin](https://github.com/wildabeast/BarcodeScanner) : ```cordova plugin add https://github.com/wildabeast/BarcodeScanner.git``` ([explanation](http://stackoverflow.com/questions/20548106/how-to-install-barcodescanner-plugin-on-cordova-phonegap-eclipse-for-android-a))
+
