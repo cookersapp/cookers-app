@@ -83,6 +83,15 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
       }
     }
   })
+  .state('sidemenu.shoppinglist.recipes', {
+    url: "/recipes",
+    views: {
+      'recipes-tab': {
+        templateUrl: "templates/shoppinglist/recipes.html",
+        controller: 'ShoppinglistRecipesCtrl'
+      }
+    }
+  })
   .state('sidemenu.feedback', {
     url: "/feedback",
     views: {

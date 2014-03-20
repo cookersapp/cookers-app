@@ -145,7 +145,7 @@ angular.module('ionicApp.services', [])
     var currentCart = $localStorage.currentCart;
     var service = {
         getCurrentCart: function(){return currentCart;},
-        getCurrentCartItem: function(ingredient){getItem(currentCart, ingredient);},
+        getCurrentCartItem: function(ingredient){return getItem(currentCart, ingredient);},
         addToCurrentCart: function(ingredient){addItem(currentCart, ingredient);}
     };
 
@@ -192,7 +192,6 @@ angular.module('ionicApp.services', [])
         };
     }
     function createCategory(categoryIngredient){
-        console.log('createCategory', categoryIngredient);
         return {
             id: categoryIngredient.id,
             name: categoryIngredient.name,

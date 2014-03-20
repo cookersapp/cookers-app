@@ -11,4 +11,9 @@ var cordova = {
             }
         }
     }
-}
+};
+
+// override ionic functions !!!
+ionic.Platform.exitApp = function(){
+    location.reload();
+};

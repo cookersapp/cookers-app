@@ -170,10 +170,12 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCtrl', function($scope, ShoppinglistService){
+.controller('ShoppinglistCtrl', function($scope, $ionicModal, ShoppinglistService){
+  $scope.rightButtons = [];
   $scope.current = {
     cart: ShoppinglistService.getCurrentCart()
   };
+
 
   $scope.cartItemClick = function(item){
     // TODO
@@ -181,19 +183,57 @@ angular.module('ionicApp.controllers', [])
   };
 
   $scope.isInCart = function(ingredient){
-    var cart = $scope.current.cart;
-    if(cart && cart.categories){
-      for(var i in cart.categories){
-        var category = cart.categories[i];
-        for(var j in category.items){
-          if(category.items[j].ingredient.id === ingredient.id){
-            return true;
-          }
-        }
+    return ShoppinglistService.getCurrentCartItem(ingredient)!== undefined;
+  };
+
+  $scope.rightButtons = [
+    {
+      type: 'button-icon button-clear ion-compose',
+      tap: function(e) {
+        $scope.cartModal.open();
+      }
+    },
+    {
+      type: 'button-icon button-clear ion-shuffle',
+      tap: function(e) {
+        $scope.changeCart();
       }
     }
-    return false;
+  ];
+
+  $scope.changeCart = function(){
+    console.log('TODO : changeCart');
   };
+
+  // edit cart modal
+  $scope.cartModal = {};
+  $ionicModal.fromTemplateUrl('templates/shoppinglist/edit-cart.modal.html', function(modal) {
+    $scope.cartModal.modal = modal;
+  }, {
+    scope: $scope,
+    animation: 'slide-in-up'
+  });
+  $scope.cartModal.open = function(){
+    $scope.cartModal.title = "Informations liste";
+    $scope.cartModal.cartData = {
+      name: $scope.current.cart.name
+    };
+    $scope.cartModal.modal.show();
+  };
+  $scope.cartModal.close = function(){
+    $scope.cartModal.modal.hide();
+  };
+  $scope.cartModal.deleteCart = function(){
+    // TODO delete cart !!!
+  };
+  $scope.cartModal.save = function(){
+    $scope.current.cart.name = $scope.cartModal.cart.name;
+    $scope.cartModal.modal.hide();
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.cartModal.modal.remove();
+  });
 })
 
 
@@ -221,11 +261,17 @@ angular.module('ionicApp.controllers', [])
       var cartItem = ShoppinglistService.getCurrentCartItem(ingredient);
       if(cartItem){
         console.log('TODO: show cart item details !');
+        $scope.cartItemClick(cartItem);
       } else {
         ShoppinglistService.addToCurrentCart(ingredient);
       }
     }
   };
+})
+
+
+.controller('ShoppinglistRecipesCtrl', function($scope){
+
 })
 
 
