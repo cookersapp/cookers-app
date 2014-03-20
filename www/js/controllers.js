@@ -227,7 +227,7 @@ angular.module('ionicApp.controllers', [])
     // TODO delete cart !!!
   };
   $scope.cartModal.save = function(){
-    $scope.current.cart.name = $scope.cartModal.cart.name;
+    $scope.current.cart.name = $scope.cartModal.cartData.name;
     $scope.cartModal.modal.hide();
   };
 
