@@ -34,6 +34,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
       }
     }
   })
+  // sidemenu.product.details
   .state('sidemenu.ingredient', {
     url: "/ingredient/:id?from",
     views: {
@@ -52,6 +53,8 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
       }
     }
   })
+  // sidemenu.recipe.cook
+  // sidemenu.meal
   .state('sidemenu.feedback', {
     url: "/feedback",
     views: {

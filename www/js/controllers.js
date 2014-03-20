@@ -128,16 +128,20 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ProductCtrl', function($scope, $stateParams, ProductService){
+.controller('ProductCtrl', function($scope, $stateParams, ProductService, RecipeService){
   var barcode = $stateParams.barcode;
   var from = $stateParams.from;
 
   $scope.product = {
     barcode: barcode
   };
-  
+  $scope.linkedRecipes = [];
+
   ProductService.get(barcode).then(function(product){
     $scope.product = product;
+    RecipeService.getAll(product.linkedRecipes).then(function(recipes){
+      $scope.linkedRecipes = recipes;
+    });
   });
 })
 
@@ -152,13 +156,17 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope, $stateParams){
+.controller('RecipeCtrl', function($scope, $stateParams, RecipeService){
   var id = $stateParams.id;
   var from = $stateParams.from;
 
   $scope.recipe = {
     id: id
   };
+
+  RecipeService.get(id).then(function(recipe){
+    $scope.recipe = recipe;
+  });
 })
 
 

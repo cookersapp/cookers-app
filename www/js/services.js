@@ -19,23 +19,16 @@ angular.module('ionicApp.services', [])
 
     function getProduct(barcode){
         return loadProducts().then(function(products){
-            for(var i in products){
-                if(products[i].barcode == barcode){
-                    return products[i];
-                }
-            }
-            return null;
+            return _.find(products, function(product){
+                return product.barcode === barcode; 
+            });
         });
     }
     function loadProducts(){
         if(!productsPromise){
             productsPromise = $http.get('data/products.json').then(function(result) {
                 console.log('ProductService.loadProducts', result);
-                var products = [];
-                angular.forEach(result.data, function(product) {
-                    products.push(product);
-                });
-                return products;
+                return result.data;
             }).then(null, function(error){
                 console.error('ProductService.loadProducts', error);
             });
@@ -47,6 +40,7 @@ angular.module('ionicApp.services', [])
 })
 
 .factory('IngredientService', function(){
+    // if has field "products" it's a category
     var service = {
         get: function(id){console.log('TODO: getSeenRecipes');}
     };
@@ -54,10 +48,38 @@ angular.module('ionicApp.services', [])
     return service;
 })
 
-.factory('RecipeService', function(){
+.factory('RecipeService', function($http){
+    var recipesPromise;
     var service = {
-
+        getAll: getAllRecipes,
+        get: getRecipe
     };
+
+    function getAllRecipes(ids){
+        return loadRecipes().then(function(recipes){
+            return _.filter(recipes, function(recipe){
+                return !ids || _.contains(ids, recipe.id);
+            });
+        });
+    }
+    function getRecipe(id){
+        return loadRecipes().then(function(recipes){
+            return _.find(recipes, function(recipe){
+                return recipe.id === id; 
+            });
+        });
+    }
+    function loadRecipes(){
+        if(!recipesPromise){
+            recipesPromise = $http.get('data/recipes.json').then(function(result) {
+                console.log('RecipeService.loadRecipes', result);
+                return result.data;
+            }).then(null, function(error){
+                console.error('RecipeService.loadRecipes', error);
+            });
+        }
+        return recipesPromise;
+    }
 
     return service;
 });
