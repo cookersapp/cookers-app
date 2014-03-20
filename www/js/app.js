@@ -55,6 +55,34 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
   })
   // sidemenu.recipe.cook
   // sidemenu.meal
+  .state('sidemenu.shoppinglist', {
+    url: "/shoppinglist",
+    abstract: true,
+    views: {
+      'menuContent': {
+        templateUrl: "templates/shoppinglist/tabs.html",
+        controller: 'ShoppinglistCtrl'
+      }
+    }
+  })
+  .state('sidemenu.shoppinglist.cart', {
+    url: "/cart",
+    views: {
+      'cart-tab': {
+        templateUrl: "templates/shoppinglist/cart.html",
+        controller: 'ShoppinglistCartCtrl'
+      }
+    }
+  })
+  .state('sidemenu.shoppinglist.products', {
+    url: "/products/:category",
+    views: {
+      'products-tab': {
+        templateUrl: "templates/shoppinglist/ingredients.html",
+        controller: 'ShoppinglistProductsCtrl'
+      }
+    }
+  })
   .state('sidemenu.feedback', {
     url: "/feedback",
     views: {

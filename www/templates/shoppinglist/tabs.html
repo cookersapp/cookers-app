@@ -1,0 +1,21 @@
+<ion-view title="Listes de courses" left-buttons="leftButtons" right-buttons="rightButtons">
+    <div ng-if="current.cart === null">
+        <ion-content has-header="true" padding="true">
+            <p>Aucune liste existante !!!</p>
+            <p>Créez-en une !!!</p>
+        </ion-content>
+    </div>
+    <div ng-if="current.cart !== null" class="shoppinglist">
+        <ion-tabs tabs-style="tabs-icon-top" tabs-type="tabs-positive">
+
+            <ion-tab title="Panier" icon="ion-home" ui-sref="sidemenu.shoppinglist.cart">
+                <ion-nav-view name="cart-tab"></ion-nav-view>
+            </ion-tab>
+
+            <ion-tab title="Produits" icon="ion-ios7-information" ui-sref="sidemenu.shoppinglist.products">
+                <ion-nav-view name="products-tab"></ion-nav-view>
+            </ion-tab>
+
+        </ion-tabs>
+    </div>
+</ion-view>

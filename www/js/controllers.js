@@ -137,9 +137,9 @@ angular.module('ionicApp.controllers', [])
   };
   $scope.linkedRecipes = [];
 
-  ProductService.get(barcode).then(function(product){
+  ProductService.getAsync(barcode).then(function(product){
     $scope.product = product;
-    RecipeService.getAll(product.linkedRecipes).then(function(recipes){
+    RecipeService.getAllAsync(product.linkedRecipes).then(function(recipes){
       $scope.linkedRecipes = recipes;
     });
   });
@@ -164,9 +164,68 @@ angular.module('ionicApp.controllers', [])
     id: id
   };
 
-  RecipeService.get(id).then(function(recipe){
+  RecipeService.getAsync(id).then(function(recipe){
     $scope.recipe = recipe;
   });
+})
+
+
+.controller('ShoppinglistCtrl', function($scope, ShoppinglistService){
+  $scope.current = {
+    cart: ShoppinglistService.getCurrentCart()
+  };
+
+  $scope.cartItemClick = function(item){
+    // TODO
+    console.log('click on item', item);
+  };
+
+  $scope.isInCart = function(ingredient){
+    var cart = $scope.current.cart;
+    if(cart && cart.categories){
+      for(var i in cart.categories){
+        var category = cart.categories[i];
+        for(var j in category.items){
+          if(category.items[j].ingredient.id === ingredient.id){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+})
+
+
+.controller('ShoppinglistCartCtrl', function($scope){
+
+})
+
+
+.controller('ShoppinglistProductsCtrl', function($scope, $state, $stateParams, IngredientService, ShoppinglistService, UtilService){
+  var category = $stateParams.category ? $stateParams.category : 'root';
+
+  $scope.ingredient = {};
+  $scope.rowIngredients = [];
+  IngredientService.getAsync(category).then(function(ingredient){
+    $scope.ingredient = ingredient;
+    if($scope.ingredient.products){
+      $scope.rowIngredients = UtilService.toRows($scope.ingredient.products, 4);
+    }
+  });
+
+  $scope.ingredientClick = function(ingredient){
+    if(ingredient.isCategory){
+      $state.go('sidemenu.shoppinglist.products', {category: ingredient.id});
+    } else {
+      var cartItem = ShoppinglistService.getCurrentCartItem(ingredient);
+      if(cartItem){
+        console.log('TODO: show cart item details !');
+      } else {
+        ShoppinglistService.addToCurrentCart(ingredient);
+      }
+    }
+  };
 })
 
 

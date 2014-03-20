@@ -1,0 +1,36 @@
+<ion-content has-header="true" has-footer="true" padding="true">
+    <p>
+        Liste de courses: {{current.cart.name}}
+    </p>
+    <div class="list">
+        <div ng-repeat="category in current.cart.categories">
+            <div class="item item-divider">
+                {{category.name}}
+            </div>
+            <div ng-repeat="item in category.items">
+                <div class="item item-avatar" ng-click="cartItemClick(item)">
+                    <img ng-src="img/ingredients/100x100/{{item.ingredient.image}}" />
+                    <h2>{{item.ingredient.name}}</h2>
+                    <p>{{item.note}}</p>
+                    <span class="item-note">
+                        {{item.quantity}} {{item.quantityUnit}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!--
+<div ng-repeat="cart_item in categorized_cart">
+<div ng-if="cart_item.ingredient.type === 'category'" class="item item-divider">
+{{cart_item.ingredient.name}}
+</div>
+<div ng-if="cart_item.ingredient.type !== 'category'" class="item item-avatar" ng-click="showIngredietDetailsModal(cart_item)">
+<img ng-src="img/ingredients/100x100/{{cart_item.ingredient.id}}.jpg" />
+<h2>{{cart_item.ingredient.name}}</h2>
+<p>{{cart_item.note}}</p>
+<span class="item-note">
+{{cart_item.quantity}}
+</span>
+</div>
+</div>-->
+    </div>
+</ion-content>
