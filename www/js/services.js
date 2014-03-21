@@ -47,7 +47,7 @@ angular.module('ionicApp.services', [])
     var ingredientsPromise;
     var service = {
         getAsync: getIngredientAsync,
-        getParentAsync: getParentIngredientAsync
+        getParentsAsync: getParentsIngredientAsync
     };
 
     function getIngredientAsync(ids){
@@ -71,9 +71,9 @@ angular.module('ionicApp.services', [])
     function isCategory(ingredient){
         return ingredient.products !== undefined;
     }
-    function getParentIngredientAsync(id){
+    function getParentsIngredientAsync(id){
         return loadIngredientsAsync().then(function(ingredients){
-            return UtilService.findParentTree(ingredients, getIngredientChildren, function(ingredient){
+            return UtilService.findParentsTree(ingredients, getIngredientChildren, function(ingredient){
                 return ingredient.id === id; 
             });
         });
@@ -146,16 +146,25 @@ angular.module('ionicApp.services', [])
     var service = {
         getCurrentCart: function(){return currentCart;},
         getCurrentCartItem: function(ingredient){return getItem(currentCart, ingredient);},
-        addToCurrentCart: function(ingredient){addItem(currentCart, ingredient);}
+        addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addItem(currentCart, ingredient, notes, quantity, quantityUnit);}
     };
 
-    function addItem(cart, ingredient){
-        var item = createItem(ingredient);
-        IngredientService.getParentAsync(ingredient.id).then(function(parent){
-            var cartCategory = getCategory(cart, parent);
-            if(!cartCategory){cartCategory = addCategory(cart, parent);}
-            cartCategory.items.push(item);
-        });
+    function addItem(cart, ingredient, notes, quantity, quantityUnit){
+        if(typeof ingredient === 'string'){
+            IngredientService.getAsync(ingredient).then(function(ingredient){
+                addItem(cart, ingredient, notes, quantity, quantityUnit);
+            });
+        } else if(ingredient){
+            var item = createItem(ingredient, notes, quantity, quantityUnit);
+            IngredientService.getParentsAsync(ingredient.id).then(function(parents){
+                if(parents && parents.length > 1) {
+                    // parents[0]: root, parents[1]: top category, parents[length-1]: elt
+                    var cartCategory = getCategory(cart, parents[1]);
+                    if(!cartCategory){cartCategory = addCategory(cart, parents[1]);}
+                    cartCategory.items.push(item);
+                }
+            });
+        }
     }
     function exist(cart, ingredient){
         return getItem(cart, ingredient) !== undefined;
@@ -201,14 +210,14 @@ angular.module('ionicApp.services', [])
             items: []
         };
     }
-    function createItem(ingredient){
+    function createItem(ingredient, notes, quantity, quantityUnit){
         return {
             added: moment().valueOf(),
             bought: false,
             ingredient: ingredient,
-            note: "",
-            quantity: "",
-            quantityUnit: ""
+            notes: notes,
+            quantity: quantity,
+            quantityUnit: quantityUnit
         };
     }
 
@@ -221,7 +230,7 @@ angular.module('ionicApp.services', [])
         mapTree: mapTree,
         filterTree: filterTree,
         findTree: findTree,
-        findParentTree: findParentTree,
+        findParentsTree: findParentsTree,
         toRows: toRows
     };
 
@@ -258,15 +267,14 @@ angular.module('ionicApp.services', [])
             }
         }
     }
-    function findParentTree(tree, getChildren, test){
+    function findParentsTree(tree, getChildren, test){
         var children = getChildren(tree);
         if(test(tree)){
-            return 'root';
+            return [tree];
         } else if(children){
             for(var i in children){
-                var res = findParentTree(children[i], getChildren, test);
-                if(res === 'root'){ return tree; }
-                else if(res){ return res; }
+                var res = findParentsTree(children[i], getChildren, test);
+                if(res){return [tree].concat(res);}
             }
         }
     }

@@ -441,7 +441,7 @@
         "cookTime": 40,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 1, "name": "paquet de lasagnes", "ingredient": "lasagnes", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "paquet de lasagnes", "ingredient": "pates-lasagnes", "unit": "unit", "role": "primary"},
             {"quantity": 500, "name": "g de crevettes décortiquées", "ingredient": "crevette", "unit": "g", "role": "primary"},
             {"quantity": 1, "name": "petite boîte de champignons en tranches", "ingredient": "champignon", "unit": "unit", "role": "secondary"},
             {"quantity": 0.5, "name": "cuillerée à café de 4 épices", "ingredient": "epice", "unit": "petite cuillère", "role": "secondary"},

@@ -156,16 +156,45 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeService){
+.controller('RecipeCtrl', function($scope, $state, $stateParams, $ionicModal, RecipeService, ShoppinglistService){
   var id = $stateParams.id;
   var from = $stateParams.from;
 
   $scope.recipe = {
     id: id
   };
-
   RecipeService.getAsync(id).then(function(recipe){
     $scope.recipe = recipe;
+  });
+
+  // add ingredients to list
+  $scope.ingredientsModal = {};
+  $ionicModal.fromTemplateUrl('templates/add-recipe-ingredients.modal.html', function(modal) {
+    $scope.ingredientsModal.modal = modal;
+  }, {
+    scope: $scope,
+    animation: 'slide-in-up'
+  });
+  $scope.ingredientsModal.open = function(){
+    $scope.ingredientsModal.data = {
+      ingredients: $scope.recipe.ingredients
+    };
+    $scope.ingredientsModal.modal.show();
+  };
+  $scope.ingredientsModal.close = function(){
+    $scope.ingredientsModal.modal.hide();
+  };
+  $scope.ingredientsModal.addToCart = function(){
+    for(var i in $scope.ingredientsModal.data.ingredients){
+      var ingredient = $scope.ingredientsModal.data.ingredients[i];
+      ShoppinglistService.addToCurrentCart(ingredient.ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
+    }
+    $scope.ingredientsModal.modal.hide();
+    $state.go('sidemenu.shoppinglist.cart');
+  };
+
+  $scope.$on('$destroy', function() {
+    $scope.ingredientsModal.modal.remove();
   });
 })
 
@@ -215,7 +244,7 @@ angular.module('ionicApp.controllers', [])
   });
   $scope.cartModal.open = function(){
     $scope.cartModal.title = "Informations liste";
-    $scope.cartModal.cartData = {
+    $scope.cartModal.data = {
       name: $scope.current.cart.name
     };
     $scope.cartModal.modal.show();
@@ -227,7 +256,7 @@ angular.module('ionicApp.controllers', [])
     // TODO delete cart !!!
   };
   $scope.cartModal.save = function(){
-    $scope.current.cart.name = $scope.cartModal.cartData.name;
+    $scope.current.cart.name = $scope.cartModal.data.name;
     $scope.cartModal.modal.hide();
   };
 
@@ -250,7 +279,9 @@ angular.module('ionicApp.controllers', [])
   IngredientService.getAsync(category).then(function(ingredient){
     $scope.ingredient = ingredient;
     if($scope.ingredient.products){
-      $scope.rowIngredients = UtilService.toRows($scope.ingredient.products, 4);
+      $scope.rowIngredients = UtilService.toRows(_.filter($scope.ingredient.products, function(product){
+        return product.grid;
+      }), 4);
     }
   });
 
