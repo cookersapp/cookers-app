@@ -146,9 +146,13 @@ angular.module('ionicApp.services', [])
     var service = {
         getCurrentCart: function(){return currentCart;},
         getCurrentCartItem: function(ingredient){return getItem(currentCart, ingredient);},
-        addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addItem(currentCart, ingredient, notes, quantity, quantityUnit);}
+        addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addItem(currentCart, ingredient, notes, quantity, quantityUnit);},
+        clearCurrentCart: function(){clearCart(currentCart);}
     };
 
+    function clearCart(cart){
+        cart.categories = [];
+    }
     function addItem(cart, ingredient, notes, quantity, quantityUnit){
         if(typeof ingredient === 'string'){
             IngredientService.getAsync(ingredient).then(function(ingredient){
@@ -165,9 +169,6 @@ angular.module('ionicApp.services', [])
                 }
             });
         }
-    }
-    function exist(cart, ingredient){
-        return getItem(cart, ingredient) !== undefined;
     }
     function getItem(cart, ingredient){
         if(cart && cart.categories){

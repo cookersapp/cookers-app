@@ -5,7 +5,10 @@
             <input type="text" placeholder="Search">
         </label>
     </div>
-    <div class="list">
+    <div ng-hide="current.cart.categories.length > 0">
+        La liste est vide
+    </div>
+    <div class="list" ng-show="current.cart.categories.length > 0">
         <div ng-repeat="category in current.cart.categories">
             <div class="item item-divider">
                 {{category.name}}
