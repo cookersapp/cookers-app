@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.utils', 'ionicApp.tutorial', 'ionicApp.sidemenu', 'ionicApp.shoppinglist', 'ionicApp.informations'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -7,20 +7,20 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
   $stateProvider
   .state('tutorial', {
     url: '/tutorial',
-    templateUrl: 'templates/tutorial.html',
+    templateUrl: 'app/tutorial/tutorial.html',
     controller: 'TutorialCtrl'
   })
   .state('sidemenu', {
     url: "/sidemenu",
     abstract: true,
-    templateUrl: "templates/side-menu.html",
+    templateUrl: "app/layout/sidemenu.html",
     controller: 'SideMenuCtrl'
   })
   .state('sidemenu.home', {
     url: "/home",
     views: {
       'menuContent': {
-        templateUrl: "templates/home.html",
+        templateUrl: "app/home.html",
         controller: 'HomeCtrl'
       }
     }
@@ -29,7 +29,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/product/:barcode?from",
     views: {
       'menuContent': {
-        templateUrl: "templates/product.html",
+        templateUrl: "app/product.html",
         controller: 'ProductCtrl'
       }
     }
@@ -39,7 +39,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/ingredient/:id?from",
     views: {
       'menuContent': {
-        templateUrl: "templates/ingredient.html",
+        templateUrl: "app/ingredient.html",
         controller: 'IngredientCtrl'
       }
     }
@@ -48,7 +48,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/recipe/:id?from",
     views: {
       'menuContent': {
-        templateUrl: "templates/recipe.html",
+        templateUrl: "app/recipe.html",
         controller: 'RecipeCtrl'
       }
     }
@@ -60,7 +60,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     abstract: true,
     views: {
       'menuContent': {
-        templateUrl: "templates/shoppinglist/tabs.html",
+        templateUrl: "app/shoppinglist/tabs.html",
         controller: 'ShoppinglistCtrl'
       }
     }
@@ -69,7 +69,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/cart",
     views: {
       'cart-tab': {
-        templateUrl: "templates/shoppinglist/cart.html",
+        templateUrl: "app/shoppinglist/cart.html",
         controller: 'ShoppinglistCartCtrl'
       }
     }
@@ -78,7 +78,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/products/:category",
     views: {
       'products-tab': {
-        templateUrl: "templates/shoppinglist/ingredients.html",
+        templateUrl: "app/shoppinglist/ingredients.html",
         controller: 'ShoppinglistProductsCtrl'
       }
     }
@@ -87,7 +87,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/recipes",
     views: {
       'recipes-tab': {
-        templateUrl: "templates/shoppinglist/recipes.html",
+        templateUrl: "app/shoppinglist/recipes.html",
         controller: 'ShoppinglistRecipesCtrl'
       }
     }
@@ -96,7 +96,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/feedback",
     views: {
       'menuContent': {
-        templateUrl: "templates/feedback.html",
+        templateUrl: "app/infos/feedback.html",
         controller: 'FeedbackCtrl'
       }
     }
@@ -105,7 +105,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/faq",
     views: {
       'menuContent': {
-        templateUrl: "templates/faq.html",
+        templateUrl: "app/infos/faq.html",
         controller: 'FaqCtrl'
       }
     }
@@ -114,7 +114,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/informations",
     views: {
       'menuContent': {
-        templateUrl: "templates/informations.html",
+        templateUrl: "app/infos/informations.html",
         controller: 'InformationsCtrl'
       }
     }
@@ -123,7 +123,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/device",
     views: {
       'menuContent': {
-        templateUrl: "templates/device.html",
+        templateUrl: "app/infos/device.html",
         controller: 'DeviceCtrl'
       }
     }
