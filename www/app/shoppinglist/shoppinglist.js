@@ -8,11 +8,27 @@ angular.module('ionicApp.shoppinglist', [])
         getCurrentCart: function(){return currentCart;},
         getCurrentCartItem: function(ingredient){return getItem(currentCart, ingredient);},
         addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addItem(currentCart, ingredient, notes, quantity, quantityUnit);},
+        deleteFromCurrentCart: function(item){deleteItem(currentCart, item);},
         clearCurrentCart: function(){clearCart(currentCart);}
     };
 
     function clearCart(cart){
         cart.categories = [];
+    }
+    function deleteItem(cart, item){
+        if(cart && cart.categories){
+            for(var i in cart.categories){
+                var category = cart.categories[i];
+                for(var j in category.items){
+                    if(category.items[j].ingredient.id === item.ingredient.id){
+                        category.items.splice(j, 1);
+                        if(category.items.length === 0){
+                            cart.categories.splice(i, 1);
+                        }
+                    }
+                }
+            }
+        }
     }
     function addItem(cart, ingredient, notes, quantity, quantityUnit){
         if(typeof ingredient === 'string'){
@@ -93,12 +109,6 @@ angular.module('ionicApp.shoppinglist', [])
         cart: ShoppinglistService.getCurrentCart()
     };
 
-
-    $scope.cartItemClick = function(item){
-        // TODO
-        console.log('click on item', item);
-    };
-
     $scope.isInCart = function(ingredient){
         return ShoppinglistService.getCurrentCartItem(ingredient)!== undefined;
     };
@@ -145,6 +155,40 @@ angular.module('ionicApp.shoppinglist', [])
     $scope.cartModal.save = function(){
         $scope.current.cart.name = $scope.cartModal.data.name;
         $scope.cartModal.modal.hide();
+    };
+
+    // item details modal
+    $scope.itemModal = {};
+    ModalService.shoppinglist.itemDetails($scope, function(modal) {
+        $scope.itemModal.modal = modal;
+    });
+    $scope.itemModal.open = function(item){
+        $scope.itemModal.item = item;
+        $scope.itemModal.data = {
+            notes: item.notes,
+            quantity: item.quantity,
+            quantityUnit: item.quantityUnit
+        };
+        $scope.itemModal.modal.show();
+    };
+    $scope.itemModal.close = function(){
+        $scope.itemModal.modal.hide();
+    };
+    $scope.itemModal.delete = function(){
+        ShoppinglistService.deleteFromCurrentCart($scope.itemModal.item);
+        $scope.itemModal.modal.hide();
+    };
+    $scope.itemModal.save = function(){
+        $scope.itemModal.item.notes = $scope.itemModal.data.notes;
+        $scope.itemModal.item.quantity = $scope.itemModal.data.quantity;
+        $scope.itemModal.item.quantityUnit = $scope.itemModal.data.quantityUnit;
+        $scope.itemModal.modal.hide();
+    };
+
+    $scope.cartItemClick = function(item){
+        // TODO
+        $scope.itemModal.open(item);
+        console.log('click on item', item);
     };
 
     $scope.$on('$destroy', function() {

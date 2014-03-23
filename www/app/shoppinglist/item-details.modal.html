@@ -1,0 +1,26 @@
+<div class="modal">
+    <header class="bar bar-header bar-positive">
+        <h1 class="title">{{itemModal.item.ingredient.name}}</h1>
+        <button class="button button-clear button-primary" ng-click="itemModal.close()">Annuler</button>
+    </header>
+    <ion-content has-header="true" padding="true">
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Notes</span>
+                <input type="text" ng-model="itemModal.data.notes" placeholder="">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Quantité</span>
+                <input type="text" ng-model="itemModal.data.quantity" placeholder="">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Unité</span>
+                <input type="text" ng-model="itemModal.data.quantityUnit" placeholder="">
+            </label>
+            <div class="button-bar">
+                <button class="button button-full button-assertive" ng-click="itemModal.delete()">Supprimer</button>
+                <button class="button button-full button-balanced" ng-click="itemModal.save()">Enregistrer</button>
+            </div>
+        </div>
+    </ion-content>
+</div>

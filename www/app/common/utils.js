@@ -7,7 +7,8 @@ angular.module('ionicApp.utils', [])
             addIngredientsToList: function(scope, callback){ createModal('app/add-recipe-ingredients.modal.html', scope, callback); }
         },
         shoppinglist: {
-            editCart: function(scope, callback){ createModal('app/shoppinglist/edit-cart.modal.html', scope, callback); }
+            editCart: function(scope, callback){ createModal('app/shoppinglist/edit-cart.modal.html', scope, callback); },
+            itemDetails: function(scope, callback){ createModal('app/shoppinglist/item-details.modal.html', scope, callback); }
         }
     };
 
