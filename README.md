@@ -6,19 +6,24 @@ Create your shopping list easily with recipe recommandations
 
 ### features
 
-- add recipe ingredient to current cart (or choose one if multi-cart)
-- details on cart items
-- details on products (with notes and nutrtion)
+- get geoloc on scans
 - suggested recipes on shoppinglist
 - products and recipes history
 - most common ingredients in ingredient grid
 - breadcumbs on ingredient grid
-- change cart modal (and multi-cart)
+- details on products (with notes and nutrtion)
+- add multi cart (change and create carts)
+- on recipes choose cart to add ingredients
 
 ### data
 
 - ratings on products (from noteo)
 - create all recipe ingredients
+
+### done
+
+- details on cart items
+- add recipe ingredient to current cart
 
 ## Technicals
 

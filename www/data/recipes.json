@@ -10,9 +10,9 @@
         "cookTime": 15,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 4, "name": "côtes de porc", "ingredient": "cote-de-porc", "unit": "unit", "role": "primary"},
-            {"quantity": 5, "name": "cuillères à soupe de miel", "ingredient": "miel", "unit": "grosse cuillère", "role": "primary"},
-            {"quantity": null, "name": "sauce soja", "ingredient": "sauce-soja", "unit": null, "role": "secondary"}
+            {"quantity": 4, "name": "côtes de porc", "id": "cote-de-porc", "unit": "unit", "role": "primary"},
+            {"quantity": 5, "name": "cuillères à soupe de miel", "id": "miel", "unit": "grosse cuillère", "role": "primary"},
+            {"quantity": null, "name": "sauce soja", "id": "sauce-soja", "unit": null, "role": "secondary"}
         ],
         "instructions": [
             "Mettre 3 cuillères à soupe de miel et les côtes de porc dans un plat, les arroser abondamment de sauce soja, laisser marine 2 ou 3 heures!",
@@ -35,9 +35,9 @@
         "cookTime": 30,
         "servings": {"quantity": 12, "name": "personnes"},
         "ingredients": [
-            {"quantity": 1, "name": "kg de courgettes", "ingredient": "courgette", "unit": "kg", "role": "primary"},
-            {"quantity": 6, "name": "oeufs", "ingredient": "oeuf", "unit": "unit", "role": "secondary"},
-            {"quantity": 120, "name": "g de crème fraîche", "ingredient": "creme-fraiche", "unit": "g", "role": "usual"}
+            {"quantity": 1, "name": "kg de courgettes", "id": "courgette", "unit": "kg", "role": "primary"},
+            {"quantity": 6, "name": "oeufs", "id": "oeuf", "unit": "unit", "role": "secondary"},
+            {"quantity": 120, "name": "g de crème fraîche", "id": "creme-fraiche", "unit": "g", "role": "usual"}
         ],
         "instructions": [
             "Faire cuire les courgettes sans enlever la peau.",
@@ -62,15 +62,15 @@
         "cookTime": 25,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 4, "name": "pavés de saumon frais", "ingredient": "pave-de-saumon", "unit": "unit", "role": "primary"},
-            {"quantity": 20, "name": "tomates cerises", "ingredient": "tomate-cerise", "unit": "unit", "role": "secondary"},
-            {"quantity": 20, "name": "champignons de Paris frais", "ingredient": "champignon-de-paris", "unit": "unit", "role": "secondary"},
-            {"quantity": null, "name": "ail", "ingredient": "ail", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "citron", "ingredient": "citron", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre du moulin", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": 4, "name": "brins d'aneth", "ingredient": "aneth", "unit": "unit", "role": "optionnal"}
+            {"quantity": 4, "name": "pavés de saumon frais", "id": "pave-de-saumon", "unit": "unit", "role": "primary"},
+            {"quantity": 20, "name": "tomates cerises", "id": "tomate-cerise", "unit": "unit", "role": "secondary"},
+            {"quantity": 20, "name": "champignons de Paris frais", "id": "champignon-de-paris", "unit": "unit", "role": "secondary"},
+            {"quantity": null, "name": "ail", "id": "ail", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "citron", "id": "citron", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre du moulin", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": 4, "name": "brins d'aneth", "id": "aneth", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Couper les tomates cerises en deux.",
@@ -95,15 +95,15 @@
         "cookTime": 15,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 2, "name": "poivrons rouges", "ingredient": "poivron-rouge", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "poivrons verts", "ingredient": "poivron-vert", "unit": "unit", "role": "primary"},
-            {"quantity": 600, "name": "g de pâtes (style coudes raillés ou torti)", "ingredient": "pates", "unit": "g", "role": "primary"},
-            {"quantity": 0.5, "name": "barre de chèvre type ste Maure", "ingredient": "fromage-de-chevre", "unit": "unit", "role": "primary"},
-            {"quantity": 250, "name": "g de crème fraiche", "ingredient": "creme-fraiche", "unit": "g", "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "herbes de Provence", "ingredient": "herbes-de-provence", "unit": null, "role": "optionnal"}
+            {"quantity": 2, "name": "poivrons rouges", "id": "poivron-rouge", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "poivrons verts", "id": "poivron-vert", "unit": "unit", "role": "primary"},
+            {"quantity": 600, "name": "g de pâtes (style coudes raillés ou torti)", "id": "pates", "unit": "g", "role": "primary"},
+            {"quantity": 0.5, "name": "barre de chèvre type ste Maure", "id": "fromage-de-chevre", "unit": "unit", "role": "primary"},
+            {"quantity": 250, "name": "g de crème fraiche", "id": "creme-fraiche", "unit": "g", "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "herbes de Provence", "id": "herbes-de-provence", "unit": null, "role": "optionnal"}
         ],
         "instructions": [
             "Laver et épépiner les poivrons et les couper en dés.",
@@ -127,14 +127,14 @@
         "cookTime": null,
         "servings": {"quantity": 1, "name": "verre"},
         "ingredients": [
-            {"quantity": 2, "name": "mesures de Vodka", "ingredient": "vodka", "unit": "mesure", "role": "primary"},
-            {"quantity": 4, "name": "mesures de jus de tomate", "ingredient": "jus-de-tomate", "unit": "mesure", "role": "secondary"},
-            {"quantity": 1, "name": "mesure de sauce Worcestershire", "ingredient": "sauce-worcestershire", "unit": "mesure", "role": "secondary"},
-            {"quantity": 0.5, "name": "mesure de jus de citron", "ingredient": "jus-de-citron", "unit": "mesure", "role": "secondary"},
-            {"quantity": 4, "name": "gouttes de sauce piquante", "ingredient": "sauce-piquante", "unit": "goutte", "role": "optionnal"},
-            {"quantity": 1, "name": "cuillère à café de raifort", "ingredient": "raifort", "unit": "petite cuillère", "role": "optionnal"},
-            {"quantity": 0.125, "name": "quartier de citron", "ingredient": "citron", "unit": "quartier", "role": "optionnal"},
-            {"quantity": 1, "name": "branche de céleri", "ingredient": "celeri", "unit": "unit", "role": "optionnal"}
+            {"quantity": 2, "name": "mesures de Vodka", "id": "vodka", "unit": "mesure", "role": "primary"},
+            {"quantity": 4, "name": "mesures de jus de tomate", "id": "jus-de-tomate", "unit": "mesure", "role": "secondary"},
+            {"quantity": 1, "name": "mesure de sauce Worcestershire", "id": "sauce-worcestershire", "unit": "mesure", "role": "secondary"},
+            {"quantity": 0.5, "name": "mesure de jus de citron", "id": "jus-de-citron", "unit": "mesure", "role": "secondary"},
+            {"quantity": 4, "name": "gouttes de sauce piquante", "id": "sauce-piquante", "unit": "goutte", "role": "optionnal"},
+            {"quantity": 1, "name": "cuillère à café de raifort", "id": "raifort", "unit": "petite cuillère", "role": "optionnal"},
+            {"quantity": 0.125, "name": "quartier de citron", "id": "citron", "unit": "quartier", "role": "optionnal"},
+            {"quantity": 1, "name": "branche de céleri", "id": "celeri", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Mélanger tous les ingrédients dans un verre à mélange. Verser dans un grand verre rempli de glaçons. Garnir avec le céleri et citron."
@@ -155,15 +155,15 @@
         "cookTime": 15,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 300, "name": "g de tagliatelles", "ingredient": "pates-tagliatelle", "unit": "g", "role": "primary"},
-            {"quantity": 300, "name": "g de petits pois frais ou surgelés", "ingredient": "petits-pois", "unit": "g", "role": "primary"},
-            {"quantity": 125, "name": "g de mascarpone", "ingredient": "mascarpone", "unit": "g", "role": "primary"},
-            {"quantity": 40, "name": "g de copeaux de parmesan", "ingredient": "parmesan", "unit": "g", "role": "secondary"},
-            {"quantity": 1, "name": "oignon", "ingredient": "oignon", "unit": "unit", "role": "usual"},
-            {"quantity": 1, "name": "gousse d'ail", "ingredient": "ail", "unit": "unit", "role": "usual"},
-            {"quantity": null, "name": "huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"}
+            {"quantity": 300, "name": "g de tagliatelles", "id": "pates-tagliatelle", "unit": "g", "role": "primary"},
+            {"quantity": 300, "name": "g de petits pois frais ou surgelés", "id": "petits-pois", "unit": "g", "role": "primary"},
+            {"quantity": 125, "name": "g de mascarpone", "id": "mascarpone", "unit": "g", "role": "primary"},
+            {"quantity": 40, "name": "g de copeaux de parmesan", "id": "parmesan", "unit": "g", "role": "secondary"},
+            {"quantity": 1, "name": "oignon", "id": "oignon", "unit": "unit", "role": "usual"},
+            {"quantity": 1, "name": "gousse d'ail", "id": "ail", "unit": "unit", "role": "usual"},
+            {"quantity": null, "name": "huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"}
         ],
         "instructions": [
             "Faites bouillir une grande casserole d'eau salée.",
@@ -189,13 +189,13 @@
         "cookTime": 10,
         "servings": {"quantity": 6, "name": "personnes"},
         "ingredients": [
-            {"quantity": 500, "name": "g de pâtes type tagliatelle (ou autre selon vos préférences)", "ingredient": "pates-tagliatelle", "unit": "g", "role": "primary"},
-            {"quantity": 3, "name": "escalopes de poulet (ou dinde)", "ingredient": "escalope-de-poulet", "unit": "unit", "role": "primary"},
-            {"quantity": 200, "name": "g de gorgonzola", "ingredient": "gorgonzola", "unit": "g", "role": "primary"},
-            {"quantity": 25, "name": "cl de crème", "ingredient": "creme", "unit": "cl", "role": "usual"},
-            {"quantity": 1, "name": "noix de beurre", "ingredient": "beurre", "unit": "unit", "role": "usual"},
-            {"quantity": 1, "name": "pincée de sel", "ingredient": "sel", "unit": "pincée", "role": "usual"},
-            {"quantity": 1, "name": "pincée de poivre", "ingredient": "poivre", "unit": "pincée", "role": "usual"}
+            {"quantity": 500, "name": "g de pâtes type tagliatelle (ou autre selon vos préférences)", "id": "pates-tagliatelle", "unit": "g", "role": "primary"},
+            {"quantity": 3, "name": "escalopes de poulet (ou dinde)", "id": "escalope-de-poulet", "unit": "unit", "role": "primary"},
+            {"quantity": 200, "name": "g de gorgonzola", "id": "gorgonzola", "unit": "g", "role": "primary"},
+            {"quantity": 25, "name": "cl de crème", "id": "creme", "unit": "cl", "role": "usual"},
+            {"quantity": 1, "name": "noix de beurre", "id": "beurre", "unit": "unit", "role": "usual"},
+            {"quantity": 1, "name": "pincée de sel", "id": "sel", "unit": "pincée", "role": "usual"},
+            {"quantity": 1, "name": "pincée de poivre", "id": "poivre", "unit": "pincée", "role": "usual"}
         ],
         "instructions": [
             "Faire cuire les tagliatelles selon le temps de cuisson indiqué.",
@@ -222,12 +222,12 @@
         "cookTime": 60,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 400, "name": "g de tagliatelles fraîches", "ingredient": "pates-tagliatelle", "unit": "g", "role": "primary"},
-            {"quantity": 0.5, "name": "Saint-Marcellin", "ingredient": "saint-marcellin", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "petit poivron rouge", "ingredient": "poivron-rouge", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "grosse boîte de tomates pelées", "ingredient": "tomate", "unit": "unit", "role": "secondary"},
-            {"quantity": 2, "name": "gousses d'ail", "ingredient": "ail", "unit": "unit", "role": "usual"},
-            {"quantity": null, "name": "huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"}
+            {"quantity": 400, "name": "g de tagliatelles fraîches", "id": "pates-tagliatelle", "unit": "g", "role": "primary"},
+            {"quantity": 0.5, "name": "Saint-Marcellin", "id": "saint-marcellin", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "petit poivron rouge", "id": "poivron-rouge", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "grosse boîte de tomates pelées", "id": "tomate", "unit": "unit", "role": "secondary"},
+            {"quantity": 2, "name": "gousses d'ail", "id": "ail", "unit": "unit", "role": "usual"},
+            {"quantity": null, "name": "huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"}
         ],
         "instructions": [
             "Découper le poivron en petits cubes. Faites cuire à feu moyen dans une casserole avec un filet d'huile d'olive à feu vif 5 min, puis à feu moyen, en rajoutant un petit verre d'eau pendant 15 min.",
@@ -254,11 +254,11 @@
         "cookTime": 0,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 1, "name": "gros ananas bien mûr", "ingredient": "ananas", "unit": "unit", "role": "primary"},
-            {"quantity": 100, "name": "g de sucre de canne", "ingredient": "sucre-de-canne", "unit": "g", "role": "secondary"},
-            {"quantity": 20, "name": "cl d'eau", "ingredient": "eau", "unit": "cl", "role": "usual"},
-            {"quantity": null, "name": "menthe fraîche", "ingredient": "menthe", "unit": null, "role": "optionnal"},
-            {"quantity": null, "name": "glaçons", "ingredient": "glacons", "unit": null, "role": "optionnal"}
+            {"quantity": 1, "name": "gros ananas bien mûr", "id": "ananas", "unit": "unit", "role": "primary"},
+            {"quantity": 100, "name": "g de sucre de canne", "id": "sucre-de-canne", "unit": "g", "role": "secondary"},
+            {"quantity": 20, "name": "cl d'eau", "id": "eau", "unit": "cl", "role": "usual"},
+            {"quantity": null, "name": "menthe fraîche", "id": "menthe", "unit": null, "role": "optionnal"},
+            {"quantity": null, "name": "glaçons", "id": "glacons", "unit": null, "role": "optionnal"}
         ],
         "instructions": [
             "A préparer 2 heures minimum avant de consommer et à conserver au réfrigérateur.",
@@ -288,14 +288,14 @@
         "cookTime": 7,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 5, "name": "blancs de poulet", "ingredient": "blanc-de-poulet", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "petite boîte d'ananas en morceaux", "ingredient": "ananas", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "cube de bouillon de volaille", "ingredient": "bouillon-de-volaille", "unit": "unit", "role": "secondary"},
-            {"quantity": null, "name": "un peu de maïzena", "ingredient": "maizena", "unit": null, "role": "secondary"},
-            {"quantity": null, "name": "sauce soja", "ingredient": "sauce-soja", "unit": null, "role": "secondary"},
-            {"quantity": 3, "name": "cuillères de sucre fin", "ingredient": "sucre", "unit": "petite cuillère", "role": "usual"},
-            {"quantity": null, "name": "huile d'arachide", "ingredient": "huile-d-arachide", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "une pincée de sel", "ingredient": "sel", "unit": null, "role": "usual"}
+            {"quantity": 5, "name": "blancs de poulet", "id": "blanc-de-poulet", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "petite boîte d'ananas en morceaux", "id": "ananas", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "cube de bouillon de volaille", "id": "bouillon-de-volaille", "unit": "unit", "role": "secondary"},
+            {"quantity": null, "name": "un peu de maïzena", "id": "maizena", "unit": null, "role": "secondary"},
+            {"quantity": null, "name": "sauce soja", "id": "sauce-soja", "unit": null, "role": "secondary"},
+            {"quantity": 3, "name": "cuillères de sucre fin", "id": "sucre", "unit": "petite cuillère", "role": "usual"},
+            {"quantity": null, "name": "huile d'arachide", "id": "huile-d-arachide", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "une pincée de sel", "id": "sel", "unit": null, "role": "usual"}
         ],
         "instructions": [
             "Coupez les blancs de poulet en fines lamelles. Réservez au frais.",
@@ -320,12 +320,12 @@
         "cookTime": 0,
         "servings": {"quantity": 8, "name": "personnes"},
         "ingredients": [
-            {"quantity": 1, "name": "paquet de boudoirs ou de biscuits à la cuillère", "ingredient": "boudoir", "unit": "unit", "role": "primary"},
-            {"quantity": 1, "name": "boîte d'ananas au sirop (ou un ananas frais)", "ingredient": "ananas", "unit": "unit", "role": "primary"},
-            {"quantity": 250, "name": "g de Mascarpone", "ingredient": "mascarpone", "unit": "g", "role": "primary"},
-            {"quantity": 2, "name": "oeufs", "ingredient": "oeuf", "unit": "unit", "role": "secondary"},
-            {"quantity": 2, "name": "cuillères à soupe de sucre", "ingredient": "sucre", "unit": "grosse cuillère", "role": "usual"},
-            {"quantity": null, "name": "vermicelles au chocolat", "ingredient": "vermicelles-au-chocolat", "unit": null, "role": "optionnal"}
+            {"quantity": 1, "name": "paquet de boudoirs ou de biscuits à la cuillère", "id": "boudoir", "unit": "unit", "role": "primary"},
+            {"quantity": 1, "name": "boîte d'ananas au sirop (ou un ananas frais)", "id": "ananas", "unit": "unit", "role": "primary"},
+            {"quantity": 250, "name": "g de Mascarpone", "id": "mascarpone", "unit": "g", "role": "primary"},
+            {"quantity": 2, "name": "oeufs", "id": "oeuf", "unit": "unit", "role": "secondary"},
+            {"quantity": 2, "name": "cuillères à soupe de sucre", "id": "sucre", "unit": "grosse cuillère", "role": "usual"},
+            {"quantity": null, "name": "vermicelles au chocolat", "id": "vermicelles-au-chocolat", "unit": null, "role": "optionnal"}
         ],
         "instructions": [
             "Disposer les biscuits au fond d'un plat carré ou rectangulaire.",
@@ -351,13 +351,13 @@
         "cookTime": 0,
         "servings": {"quantity": 10, "name": "personnes"},
         "ingredients": [
-            {"quantity": 350, "name": "g d’ananas coupés", "ingredient": "ananas", "unit": "g", "role": "primary"},
-            {"quantity": 30, "name": "cl de kirsch", "ingredient": "kirsch", "unit": "cl", "role": "primary"},
-            {"quantity": 1, "name": "bouteille de vin blanc sec", "ingredient": "vin-blanc", "unit": "unit", "role": "secondary"},
-            {"quantity": 2, "name": "bouteilles de champagne ou mousseux", "ingredient": "champagne", "unit": "unit", "role": "secondary"},
-            {"quantity": 200, "name": "g de sucre roux", "ingredient": "sucre-roux", "unit": "g", "role": "usual"},
-            {"quantity": 4, "name": "sachets de sucre vanillé", "ingredient": "sucre-vanille", "unit": "unit", "role": "usual"},
-            {"quantity": 1, "name": "gousse de vanille", "ingredient": "vanille", "unit": "unit", "role": "optionnal"}
+            {"quantity": 350, "name": "g d’ananas coupés", "id": "ananas", "unit": "g", "role": "primary"},
+            {"quantity": 30, "name": "cl de kirsch", "id": "kirsch", "unit": "cl", "role": "primary"},
+            {"quantity": 1, "name": "bouteille de vin blanc sec", "id": "vin-blanc", "unit": "unit", "role": "secondary"},
+            {"quantity": 2, "name": "bouteilles de champagne ou mousseux", "id": "champagne", "unit": "unit", "role": "secondary"},
+            {"quantity": 200, "name": "g de sucre roux", "id": "sucre-roux", "unit": "g", "role": "usual"},
+            {"quantity": 4, "name": "sachets de sucre vanillé", "id": "sucre-vanille", "unit": "unit", "role": "usual"},
+            {"quantity": 1, "name": "gousse de vanille", "id": "vanille", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Verser les ananas avec le jus dans un récipient. Ajouter le sucre, le kirsch, le sucre vanillé, le vin blanc, la gousse de vanille (tout sauf le mousseux).",
@@ -382,13 +382,13 @@
         "cookTime": 0,
         "servings": {"quantity": 6, "name": "personnes"},
         "ingredients": [
-            {"quantity": 2, "name": "melons", "ingredient": "melon", "unit": "unit", "role": "primary"},
-            {"quantity": 200, "name": "g de crevettes roses ou grises décortiquées et fraîches", "ingredient": "crevette", "unit": "g", "role": "primary"},
-            {"quantity": 250, "name": "g de coeur de palmier", "ingredient": "coeur-de-palmier", "unit": "g", "role": "secondary"},
-            {"quantity": 40, "name": "cl de crème fraîche épaisse (légère)", "ingredient": "creme-fraiche", "unit": "cl", "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": 1, "name": "bouquet de ciboulette fraîche", "ingredient": "ciboulette", "unit": "unit", "role": "optionnal"}
+            {"quantity": 2, "name": "melons", "id": "melon", "unit": "unit", "role": "primary"},
+            {"quantity": 200, "name": "g de crevettes roses ou grises décortiquées et fraîches", "id": "crevette", "unit": "g", "role": "primary"},
+            {"quantity": 250, "name": "g de coeur de palmier", "id": "coeur-de-palmier", "unit": "g", "role": "secondary"},
+            {"quantity": 40, "name": "cl de crème fraîche épaisse (légère)", "id": "creme-fraiche", "unit": "cl", "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": 1, "name": "bouquet de ciboulette fraîche", "id": "ciboulette", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Couper les melons en deux et en faire des petites boules (ou des petits morceaux) mettre dans une passoire et laisser au frais.",
@@ -414,10 +414,10 @@
         "cookTime": 5,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 6, "name": "oeufs", "ingredient": "oeuf", "unit": "unit", "role": "primary"},
-            {"quantity": 250, "name": "g de crevettes cuites", "ingredient": "crevette", "unit": "g", "role": "primary"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "huile de tournesol", "ingredient": "huile-de-tournesol", "unit": null, "role": "usual"}
+            {"quantity": 6, "name": "oeufs", "id": "oeuf", "unit": "unit", "role": "primary"},
+            {"quantity": 250, "name": "g de crevettes cuites", "id": "crevette", "unit": "g", "role": "primary"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "huile de tournesol", "id": "huile-de-tournesol", "unit": null, "role": "usual"}
         ],
         "instructions": [
             "Cassez les œufs, poivrez.",
@@ -441,17 +441,17 @@
         "cookTime": 40,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 1, "name": "paquet de lasagnes", "ingredient": "pates-lasagnes", "unit": "unit", "role": "primary"},
-            {"quantity": 500, "name": "g de crevettes décortiquées", "ingredient": "crevette", "unit": "g", "role": "primary"},
-            {"quantity": 1, "name": "petite boîte de champignons en tranches", "ingredient": "champignon", "unit": "unit", "role": "secondary"},
-            {"quantity": 0.5, "name": "cuillerée à café de 4 épices", "ingredient": "epice", "unit": "petite cuillère", "role": "secondary"},
-            {"quantity": 100, "name": "g de fromage râpé", "ingredient": "fromage-rape", "unit": "g", "role": "secondary"},
-            {"quantity": null, "name": "sauce béchamel", "ingredient": "bechamel", "unit": null, "role": "secondary"},
-            {"quantity": 2, "name": "cuillères à soupe de beurre", "ingredient": "beurre", "unit": "grosse cuillère", "role": "usual"},
-            {"quantity": 2, "name": "gousses d'ail", "ingredient": "ail", "unit": "unit", "role": "usual"},
-            {"quantity": 0.5, "name": "cuillerée de sel", "ingredient": "sel", "unit": "grosse cuillère", "role": "usual"},
-            {"quantity": 0.5, "name": "cuillerée de poivre", "ingredient": "poivre", "unit": "grosse cuillère", "role": "usual"},
-            {"quantity": 1, "name": "bouquet de persil", "ingredient": "persil", "unit": "unit", "role": "optionnal"}
+            {"quantity": 1, "name": "paquet de lasagnes", "id": "pates-lasagnes", "unit": "unit", "role": "primary"},
+            {"quantity": 500, "name": "g de crevettes décortiquées", "id": "crevette", "unit": "g", "role": "primary"},
+            {"quantity": 1, "name": "petite boîte de champignons en tranches", "id": "champignon", "unit": "unit", "role": "secondary"},
+            {"quantity": 0.5, "name": "cuillerée à café de 4 épices", "id": "epice", "unit": "petite cuillère", "role": "secondary"},
+            {"quantity": 100, "name": "g de fromage râpé", "id": "fromage-rape", "unit": "g", "role": "secondary"},
+            {"quantity": null, "name": "sauce béchamel", "id": "bechamel", "unit": null, "role": "secondary"},
+            {"quantity": 2, "name": "cuillères à soupe de beurre", "id": "beurre", "unit": "grosse cuillère", "role": "usual"},
+            {"quantity": 2, "name": "gousses d'ail", "id": "ail", "unit": "unit", "role": "usual"},
+            {"quantity": 0.5, "name": "cuillerée de sel", "id": "sel", "unit": "grosse cuillère", "role": "usual"},
+            {"quantity": 0.5, "name": "cuillerée de poivre", "id": "poivre", "unit": "grosse cuillère", "role": "usual"},
+            {"quantity": 1, "name": "bouquet de persil", "id": "persil", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Dans une poêle, mettre huile d'olive + beurre + ail + sel + poivre + 4 épices + crevettes et bien mélanger.",
@@ -482,13 +482,13 @@
         "cookTime": 20,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 500, "name": "g de morue salée (sous vide)", "ingredient": "morue", "unit": "g", "role": "primary"},
-            {"quantity": 500, "name": "g de pommes de terre", "ingredient": "pomme-de-terre", "unit": "g", "role": "secondary"},
-            {"quantity": null, "name": "huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "ail", "ingredient": "ail", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": 1, "name": "bouquet de persil non frisé", "ingredient": "persil", "unit": "unit", "role": "optionnal"}
+            {"quantity": 500, "name": "g de morue salée (sous vide)", "id": "morue", "unit": "g", "role": "primary"},
+            {"quantity": 500, "name": "g de pommes de terre", "id": "pomme-de-terre", "unit": "g", "role": "secondary"},
+            {"quantity": null, "name": "huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "ail", "id": "ail", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": 1, "name": "bouquet de persil non frisé", "id": "persil", "unit": "unit", "role": "optionnal"}
         ],
         "instructions": [
             "Prévoir 36 h pour dessaler la morue",
@@ -515,15 +515,15 @@
         "cookTime": 4,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 500, "name": "g de morue sèche (ou poisson blanc frais)", "ingredient": "morue", "unit": "g", "role": "primary"},
-            {"quantity": 1, "name": "oeuf", "ingredient": "oeuf", "unit": "unit", "role": "secondary"},
-            {"quantity": 250, "name": "g de farine", "ingredient": "farine", "unit": "g", "role": "usual"},
-            {"quantity": 20, "name": "cl de lait", "ingredient": "lait", "unit": "cl", "role": "usual"},
-            {"quantity": null, "name": "sel selon votre goût", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre selon votre goût", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "huile pour friture", "ingredient": "huile-de-tournesol", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "ciboulette ou oignon de pays (cive)", "ingredient": "ciboulette", "unit": null, "role": "optionnal"},
-            {"quantity": null, "name": "piment selon votre goût", "ingredient": "piment", "unit": null, "role": "optionnal"}
+            {"quantity": 500, "name": "g de morue sèche (ou poisson blanc frais)", "id": "morue", "unit": "g", "role": "primary"},
+            {"quantity": 1, "name": "oeuf", "id": "oeuf", "unit": "unit", "role": "secondary"},
+            {"quantity": 250, "name": "g de farine", "id": "farine", "unit": "g", "role": "usual"},
+            {"quantity": 20, "name": "cl de lait", "id": "lait", "unit": "cl", "role": "usual"},
+            {"quantity": null, "name": "sel selon votre goût", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre selon votre goût", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "huile pour friture", "id": "huile-de-tournesol", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "ciboulette ou oignon de pays (cive)", "id": "ciboulette", "unit": null, "role": "optionnal"},
+            {"quantity": null, "name": "piment selon votre goût", "id": "piment", "unit": null, "role": "optionnal"}
         ],
         "instructions": [
             "Faites tremper la morue dans de l'eau froide pendant 24 heures (en changeant l'eau 2 ou 3 fois), puis enlevez ensuite la peau et les arètes (Attention : ce trempage est inutile si vous utilisez du poisson blanc frais).",
@@ -548,17 +548,17 @@
         "cookTime": 15,
         "servings": {"quantity": 4, "name": "personnes"},
         "ingredients": [
-            {"quantity": 800, "name": "g de morue", "ingredient": "morue", "unit": "g", "role": "primary"},
-            {"quantity": 3, "name": "courgettes", "ingredient": "courgette", "unit": "unit", "role": "secondary"},
-            {"quantity": 1, "name": "petite boîte de tomates pelées", "ingredient": "tomate", "unit": "unit", "role": "secondary"},
-            {"quantity": 4, "name": "pommes de terre cuites à l'eau", "ingredient": "pomme-de-terre", "unit": "unit", "role": "secondary"},
-            {"quantity": 1, "name": "oignon", "ingredient": "oignon", "unit": "unit", "role": "usual"},
-            {"quantity": 6, "name": "gousses d’ail", "ingredient": "ail", "unit": "unit", "role": "usual"},
-            {"quantity": null, "name": "Huile d'olive", "ingredient": "huile-d-olive", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "sel", "ingredient": "sel", "unit": null, "role": "usual"},
-            {"quantity": null, "name": "poivre", "ingredient": "poivre", "unit": null, "role": "usual"},
-            {"quantity": 1, "name": "pincée de muscade", "ingredient": "muscade", "unit": "pincée", "role": "optionnal"},
-            {"quantity": 1, "name": "pincée de basilic", "ingredient": "basilic", "unit": "pincée", "role": "optionnal"}
+            {"quantity": 800, "name": "g de morue", "id": "morue", "unit": "g", "role": "primary"},
+            {"quantity": 3, "name": "courgettes", "id": "courgette", "unit": "unit", "role": "secondary"},
+            {"quantity": 1, "name": "petite boîte de tomates pelées", "id": "tomate", "unit": "unit", "role": "secondary"},
+            {"quantity": 4, "name": "pommes de terre cuites à l'eau", "id": "pomme-de-terre", "unit": "unit", "role": "secondary"},
+            {"quantity": 1, "name": "oignon", "id": "oignon", "unit": "unit", "role": "usual"},
+            {"quantity": 6, "name": "gousses d’ail", "id": "ail", "unit": "unit", "role": "usual"},
+            {"quantity": null, "name": "Huile d'olive", "id": "huile-d-olive", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "sel", "id": "sel", "unit": null, "role": "usual"},
+            {"quantity": null, "name": "poivre", "id": "poivre", "unit": null, "role": "usual"},
+            {"quantity": 1, "name": "pincée de muscade", "id": "muscade", "unit": "pincée", "role": "optionnal"},
+            {"quantity": 1, "name": "pincée de basilic", "id": "basilic", "unit": "pincée", "role": "optionnal"}
         ],
         "instructions": [
             "La veille, déssalez la morue.",

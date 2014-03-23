@@ -111,11 +111,15 @@ angular.module('ionicApp.services', [])
     };
 
     function getAllRecipesAsync(ids){
-        return loadRecipesAsync().then(function(recipes){
-            return _.filter(recipes, function(recipe){
-                return !ids || _.contains(ids, recipe.id);
+        if(ids){
+            return loadRecipesAsync().then(function(recipes){
+                return _.filter(recipes, function(recipe){
+                    return _.contains(ids, recipe.id);
+                });
             });
-        });
+        } else {
+            return loadRecipesAsync();
+        }
     }
     function getRecipeAsync(id){
         return loadRecipesAsync().then(function(recipes){

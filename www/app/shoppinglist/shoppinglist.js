@@ -232,6 +232,50 @@ angular.module('ionicApp.shoppinglist', [])
 })
 
 
-.controller('ShoppinglistRecipesCtrl', function($scope){
+.controller('ShoppinglistRecipesCtrl', function($scope, RecipeService){
+    $scope.suggestedRecipes = [];
 
+    RecipeService.getAllAsync().then(function(recipes){
+        $scope.suggestedRecipes = getSuggestedRecipes($scope.current.cart, recipes);
+    });
+
+    function getSuggestedRecipes(cart, recipes){
+        function getCartIngredients(cart){
+            var ret = [];
+            if(cart && cart.categories){
+                for(var i in cart.categories){
+                    var category = cart.categories[i];
+                    for(var j in category.items){
+                        ret.push(category.items[j].ingredient);
+                    }
+                }
+            }
+            return ret;
+        }
+        function recipeRating(recipe, ingredients){
+            var a = _.filter(ingredients, function(ingredient){
+                for(var i in recipe.ingredients){
+                    if(recipe.ingredients[i].id === ingredient.id){
+                        return true;
+                    }
+                }
+                return false;
+            });
+            return a.length;
+        }
+        var ret = [];
+        var cartIngredients = getCartIngredients(cart);
+        for(var i in recipes){
+            ret.push({
+                rating: recipeRating(recipes[i], cartIngredients),
+                recipe: recipes[i]
+            });
+        }
+        ret.sort(function(a, b){
+           return - (a.rating - b.rating); 
+        });
+        return _.filter(ret, function(suggested){
+            return suggested.rating > 0;
+        });
+    }
 });
