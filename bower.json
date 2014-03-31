@@ -1,0 +1,24 @@
+{
+  "name": "retail-scan",
+  "version": "0.0.1",
+  "authors": [
+    "Loïc Knuchel <loicknuchel@gmail.com>"
+  ],
+  "description": "recipe app",
+  "main": "www/index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "moment": "~2.5.1",
+    "ngstorage": "~0.3.0"
+  }
+}

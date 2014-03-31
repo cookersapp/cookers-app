@@ -2,7 +2,10 @@
 *.sw*
 platforms/^.*
 
+*~
 .cordova
-bower_components
+merges
 platforms
 plugins
+www/bower_components
+
