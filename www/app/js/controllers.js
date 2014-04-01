@@ -102,8 +102,7 @@ angular.module('ionicApp.controllers', [])
   $scope.ingredientsModal.addToCart = function(){
     for(var i in $scope.ingredientsModal.data.ingredients){
       var ingredient = $scope.ingredientsModal.data.ingredients[i];
-      console.log('add to cart', ingredient);
-      ShoppinglistService.addToCurrentCart(ingredient.ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
+      ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
     }
     $scope.ingredientsModal.modal.hide();
     $state.go('sidemenu.shoppinglist.cart');
