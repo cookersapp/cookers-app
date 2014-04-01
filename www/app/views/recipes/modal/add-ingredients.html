@@ -5,7 +5,10 @@
     </header>
     <ion-content has-header="true" padding="true">
         <div class="list">
-            <li class="item" ng-repeat="ingredient in ingredientsModal.data.ingredients">
+            <li class="item item-checkbox" ng-repeat="ingredient in ingredientsModal.data.ingredients">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="ingredient.shouldAdd">
+                </label>
                 {{ingredient.quantity}} {{ingredient.name}}
             </li>
         </div>

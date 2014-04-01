@@ -122,6 +122,10 @@ angular.module('ionicApp.controllers', [])
       recipe: $scope.recipe,
       ingredients: $scope.recipe.ingredients
     };
+    for(var i in $scope.ingredientsModal.data.ingredients){
+      var ingredient = $scope.ingredientsModal.data.ingredients[i];
+      ingredient.shouldAdd = ingredient.role !== 'usual';
+    }
     $scope.ingredientsModal.modal.show();
   };
   $scope.ingredientsModal.close = function(){
@@ -130,7 +134,9 @@ angular.module('ionicApp.controllers', [])
   $scope.ingredientsModal.addToCart = function(){
     for(var i in $scope.ingredientsModal.data.ingredients){
       var ingredient = $scope.ingredientsModal.data.ingredients[i];
-      ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
+      if(ingredient.shouldAdd){
+        ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
+      }
     }
     $scope.ingredientsModal.modal.hide();
     UserService.boughtRecipe($scope.ingredientsModal.data.recipe);
