@@ -26,6 +26,7 @@ angular.module('ionicApp.services', [])
 .factory('UtilsService', function(){
     var service = {
         cleverFilter: cleverFilter,
+        cleverTreeFilter: cleverTreeFilter,
         mapTree: mapTree,
         filterTree: filterTree,
         findTree: findTree,
@@ -46,6 +47,24 @@ angular.module('ionicApp.services', [])
         } else if(Array.isArray(ids)){
             return allPromise.then(function(elts){
                 return _.filter(elts, function(elt){
+                    return _.contains(ids, getId(elt));
+                });
+            });
+        }
+    }
+    function cleverTreeFilter(allPromise, getChildren, ids, getId){
+        if(ids === undefined){
+            return allPromise;
+        } else if(typeof ids === 'string'){
+            var id = ids;
+            return allPromise.then(function(elts){
+                return findTree(elts, getChildren, function(elt){
+                    return getId(elt) === id; 
+                });
+            });
+        } else if(Array.isArray(ids)){
+            return allPromise.then(function(elts){
+                return filterTree(elts, getChildren, function(elt){
                     return _.contains(ids, getId(elt));
                 });
             });
@@ -142,7 +161,7 @@ angular.module('ionicApp.services', [])
     };
 
     function getIngredientAsync(ids){
-        return UtilsService.cleverFilter(loadIngredientsAsync(), ids, function(ingredient){
+        return UtilsService.cleverTreeFilter(loadIngredientsAsync(), getChildren, ids, function(ingredient){
             return ingredient.id;
         });
     }
@@ -151,12 +170,12 @@ angular.module('ionicApp.services', [])
     }
     function getParentsIngredientAsync(id){
         return loadIngredientsAsync().then(function(ingredients){
-            return UtilsService.findParentsTree(ingredients, getIngredientChildren, function(ingredient){
+            return UtilsService.findParentsTree(ingredients, getChildren, function(ingredient){
                 return ingredient.id === id; 
             });
         });
     }
-    function getIngredientChildren(ingredient){
+    function getChildren(ingredient){
         return [].concat(
             ingredient.products ? ingredient.products : [],
             ingredient.subproducts ? ingredient.subproducts : []);
@@ -166,7 +185,7 @@ angular.module('ionicApp.services', [])
             ingredientsPromise = $http.get('data/ingredients.json').then(function(result) {
                 console.log('IngredientService.loadIngredients', result);
                 var ingredientTree = result.data;
-                UtilsService.mapTree(ingredientTree, getIngredientChildren, function(ingredient){
+                UtilsService.mapTree(ingredientTree, getChildren, function(ingredient){
                     ingredient.isCategory = isCategory(ingredient);
                 });
                 return ingredientTree;

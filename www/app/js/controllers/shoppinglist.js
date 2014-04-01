@@ -133,7 +133,7 @@ angular.module('ionicApp.shoppinglist', [])
 .controller('ShoppinglistRecipesCtrl', function($scope, RecipeService){
     $scope.suggestedRecipes = [];
 
-    RecipeService.getAllAsync().then(function(recipes){
+    RecipeService.getAsync().then(function(recipes){
         $scope.suggestedRecipes = getSuggestedRecipes($scope.current.cart, recipes);
     });
 
