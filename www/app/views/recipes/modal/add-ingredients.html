@@ -8,9 +8,11 @@
             <li class="item" ng-repeat="ingredient in ingredientsModal.data.ingredients">
                 {{ingredient.quantity}} {{ingredient.name}}
             </li>
-            <div class="button-bar">
-                <button class="button button-full button-balanced" ng-click="ingredientsModal.addToCart()">Enregistrer</button>
-            </div>
         </div>
     </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <div class="button-bar">
+            <a class="button button-balanced" ng-click="ingredientsModal.addToCart()">Enregistrer</a>
+        </div>
+    </ion-footer-bar>
 </div>
