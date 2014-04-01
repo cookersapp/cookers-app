@@ -5,9 +5,9 @@ angular.module('ionicApp.controllers', [])
   $scope.$storage = $localStorage;
 
   // Check if the user already did the tutorial and play it if not
-  if(!$scope.$storage.didTutorial) {
+  /*if(!$scope.$storage.didTutorial) {
     $state.go('tutorial');
-  }
+  }*/
 
   $scope.sideMenuClick = function(path, args){
     $state.go(path, args);
