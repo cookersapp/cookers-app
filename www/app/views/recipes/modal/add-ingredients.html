@@ -13,7 +13,7 @@
                 <label class="checkbox">
                     <input type="checkbox" ng-model="ingredient.shouldAdd">
                 </label>
-                {{ingredient.quantity ? ingredient.quantity * ingredientsModal.data.servings.quantity / ingredientsModal.data.initServingsQuantity : ''}} {{ingredient.name}}
+                {{ingredient.quantity ? ingredient.quantity * ingredientsModal.data.servings.quantity / ingredientsModal.data.initServingsQuantity : '' | number:2}} {{ingredient.name}}
             </li>
         </div>
     </ion-content>
