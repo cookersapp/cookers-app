@@ -10,6 +10,11 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     templateUrl: 'app/views/tutorial/tutorial.html',
     controller: 'TutorialCtrl'
   })
+  .state('scan', {
+    url: "/scan",
+    template: "",
+    controller: 'ScanCtrl'
+  })
   .state('sidemenu', {
     url: "/sidemenu",
     abstract: true,
@@ -136,6 +141,12 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
         controller: 'DeviceCtrl'
       }
     }
+  });
+})
+
+.run(function($rootScope) {
+  $rootScope.$on('$stateChangeSuccess', function(event, to, toParams, from, fromParams) {
+    $rootScope.$previousState = from;
   });
 });
 

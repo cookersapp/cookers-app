@@ -10,13 +10,8 @@ angular.module('ionicApp.controllers', [])
   }
 
   $scope.sideMenuClick = function(path, args){
-    if(path === 'scan'){
-      $scope.sideMenuController.close();
-      $scope.makeScan();
-    } else {
-      $state.go(path, args);
-      $scope.sideMenuController.close();
-    }
+    $state.go(path, args);
+    $scope.sideMenuController.close();
   };
 
   $scope.leftButtons = [{
@@ -25,27 +20,32 @@ angular.module('ionicApp.controllers', [])
       $scope.sideMenuController.toggleLeft();
     }
   }];
+})
 
-  $scope.makeScan = function(from) {
-    cordova.plugins.barcodeScanner.scan(
-      function (result) {
-        if(!result.cancelled){
-          $state.go('sidemenu.product', {barcode: result.text, from: from});
-        }
-      }, 
-      function (error) {
-        alert("Scanning failed: " + error);
+
+.controller('ScanCtrl', function($scope, $state, $stateParams){
+  var from = $stateParams.from;
+
+  cordova.plugins.barcodeScanner.scan(
+    function (result) {
+      if(!result.cancelled){
+        $state.go('sidemenu.product', {barcode: result.text, from: from});
+      } else {
+        $state.go($rootScope.$previousState);
       }
-    );
-  };
+    }, 
+    function (error) {
+      alert("Scanning failed: " + error);
+    }
+  );
 })
 
 
 .controller('HomeCtrl', function($scope, RecipeService, UserService){
   $scope.boughtRecipes = [];
-  
+
   var boughtRecipesIds = _.map(UserService.getBoughtRecipes(5), function(hist){return hist.id;});
-  
+
   RecipeService.getAsync(boughtRecipesIds).then(function(recipes){
     $scope.boughtRecipes = recipes;
   });
@@ -55,11 +55,11 @@ angular.module('ionicApp.controllers', [])
 .controller('HistoryCtrl', function($scope, ProductService, RecipeService, UserService){
   $scope.recipeHistory = [];
   $scope.productHistory = [];
-  
+
   var recipeHistoryIds = _.map(UserService.getSeenRecipes(5), function(hist){return hist.id;});
   console.log(recipeHistoryIds);
   var productHistoryIds = _.map(UserService.getScannedProducts(5), function(hist){return hist.id;});
-  
+
   RecipeService.getAsync(recipeHistoryIds).then(function(recipes){
     $scope.recipeHistory = recipes;
   });
@@ -80,10 +80,12 @@ angular.module('ionicApp.controllers', [])
 
   ProductService.getAsync(barcode).then(function(product){
     $scope.product = product;
-    UserService.seeProduct(product);
-    RecipeService.getAsync(product.linkedRecipes).then(function(recipes){
-      $scope.linkedRecipes = recipes;
-    });
+    if(product){
+      UserService.seeProduct(product);
+      RecipeService.getAsync(product.linkedRecipes).then(function(recipes){
+        $scope.linkedRecipes = recipes;
+      });
+    }
   });
 })
 

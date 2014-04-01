@@ -1,6 +1,9 @@
 <ion-view title="Produit" left-buttons="leftButtons">
     <ion-content class="has-header">
-        <div ng-if="!product.name">
+        <div ng-if="!product">
+            Produit introuvable ...
+        </div>
+        <div ng-if="product && !product.name">
             Recherche du produit {{product.barcode}} ...
         </div>
         <div class="list card" ng-if="product.name">
