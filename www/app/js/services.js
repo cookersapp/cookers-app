@@ -234,7 +234,12 @@ angular.module('ionicApp.services', [])
         var res = [];
         for(var i=0; i<user.length; i++){
             if(user[i].elt === elt && (!action || user[i].action === action)){
-                res.push(user[i]);
+                var exist = _.find(res, function(r){
+                    return r.id === user[i].id;
+                });
+                if(!exist){
+                    res.push(user[i]);
+                }
             }
             if(max && res.length >= max){
                 return res;

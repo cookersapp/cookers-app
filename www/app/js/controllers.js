@@ -57,7 +57,6 @@ angular.module('ionicApp.controllers', [])
   $scope.productHistory = [];
 
   var recipeHistoryIds = _.map(UserService.getSeenRecipes(5), function(hist){return hist.id;});
-  console.log(recipeHistoryIds);
   var productHistoryIds = _.map(UserService.getScannedProducts(5), function(hist){return hist.id;});
 
   RecipeService.getAsync(recipeHistoryIds).then(function(recipes){
@@ -119,7 +118,8 @@ angular.module('ionicApp.controllers', [])
   });
   $scope.ingredientsModal.open = function(){
     $scope.ingredientsModal.data = {
-      recipe: $scope.recipe,
+      initServingsQuantity: $scope.recipe.servings.quantity,
+      servings: $scope.recipe.servings,
       ingredients: $scope.recipe.ingredients
     };
     for(var i in $scope.ingredientsModal.data.ingredients){
@@ -132,14 +132,16 @@ angular.module('ionicApp.controllers', [])
     $scope.ingredientsModal.modal.hide();
   };
   $scope.ingredientsModal.addToCart = function(){
-    for(var i in $scope.ingredientsModal.data.ingredients){
-      var ingredient = $scope.ingredientsModal.data.ingredients[i];
+    var data = $scope.ingredientsModal.data;
+    for(var i in data.ingredients){
+      var ingredient = data.ingredients[i];
       if(ingredient.shouldAdd){
-        ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
+        var quantity = ingredient.quantity ? ingredient.quantity * data.servings.quantity / data.initServingsQuantity : '';
+        ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", quantity, ingredient.unit);
       }
     }
     $scope.ingredientsModal.modal.hide();
-    UserService.boughtRecipe($scope.ingredientsModal.data.recipe);
+    UserService.boughtRecipe($scope.recipe);
     $state.go('sidemenu.shoppinglist.cart');
   };
 
