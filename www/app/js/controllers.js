@@ -41,12 +41,35 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('HomeCtrl', function($scope){
-
+.controller('HomeCtrl', function($scope, RecipeService, UserService){
+  $scope.boughtRecipes = [];
+  
+  var boughtRecipesIds = _.map(UserService.getBoughtRecipes(5), function(hist){return hist.id;});
+  
+  RecipeService.getAsync(boughtRecipesIds).then(function(recipes){
+    $scope.boughtRecipes = recipes;
+  });
 })
 
 
-.controller('ProductCtrl', function($scope, $stateParams, ProductService, RecipeService){
+.controller('HistoryCtrl', function($scope, ProductService, RecipeService, UserService){
+  $scope.recipeHistory = [];
+  $scope.productHistory = [];
+  
+  var recipeHistoryIds = _.map(UserService.getSeenRecipes(5), function(hist){return hist.id;});
+  console.log(recipeHistoryIds);
+  var productHistoryIds = _.map(UserService.getScannedProducts(5), function(hist){return hist.id;});
+  
+  RecipeService.getAsync(recipeHistoryIds).then(function(recipes){
+    $scope.recipeHistory = recipes;
+  });
+  ProductService.getAsync(productHistoryIds).then(function(products){
+    $scope.productHistory = products;
+  });
+})
+
+
+.controller('ProductCtrl', function($scope, $stateParams, ProductService, RecipeService, UserService){
   var barcode = $stateParams.barcode;
   var from = $stateParams.from;
 
@@ -57,7 +80,8 @@ angular.module('ionicApp.controllers', [])
 
   ProductService.getAsync(barcode).then(function(product){
     $scope.product = product;
-    RecipeService.getAllAsync(product.linkedRecipes).then(function(recipes){
+    UserService.seeProduct(product);
+    RecipeService.getAsync(product.linkedRecipes).then(function(recipes){
       $scope.linkedRecipes = recipes;
     });
   });
@@ -74,7 +98,7 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope, $state, $stateParams, RecipeService, ShoppinglistService, ModalService){
+.controller('RecipeCtrl', function($scope, $state, $stateParams, RecipeService, ShoppinglistService, ModalService, UserService){
   var id = $stateParams.id;
   var from = $stateParams.from;
 
@@ -83,6 +107,7 @@ angular.module('ionicApp.controllers', [])
   };
   RecipeService.getAsync(id).then(function(recipe){
     $scope.recipe = recipe;
+    UserService.seeRecipe(recipe);
   });
 
   // add ingredients to list
@@ -92,6 +117,7 @@ angular.module('ionicApp.controllers', [])
   });
   $scope.ingredientsModal.open = function(){
     $scope.ingredientsModal.data = {
+      recipe: $scope.recipe,
       ingredients: $scope.recipe.ingredients
     };
     $scope.ingredientsModal.modal.show();
@@ -105,6 +131,7 @@ angular.module('ionicApp.controllers', [])
       ShoppinglistService.addToCurrentCart(ingredient, "("+$scope.recipe.name+")", ingredient.quantity, ingredient.unit);
     }
     $scope.ingredientsModal.modal.hide();
+    UserService.boughtRecipe($scope.ingredientsModal.data.recipe);
     $state.go('sidemenu.shoppinglist.cart');
   };
 

@@ -15,18 +15,17 @@
             </div>
         </div>
 
-        <div class="list" ng-if="recipeHistory.length > 0">
+        <div class="list" ng-if="boughtRecipes.length > 0">
             <div class="item item-divider">
                 Dernières recettes achetées
             </div>
-            <a ng-repeat="entry in recipeHistory"
+            <a ng-repeat="recipe in boughtRecipes"
                class="item item-thumbnail-left"
-               href="#/recipe/{{entry.recipe.id}}"
+               ui-sref="sidemenu.recipe({id: recipe.id, from: 'history'})"
                type="item-link">
-                <img ng-src="img/recipe/{{entry.recipe.thumbnail}}">
-                <!-- <img ng-src="img/placeholder80x80.gif"> -->
-                <h2>{{entry.recipe.name}}</h2>
-                <p>{{entry.recipe.category}} - {{entry.recipe.difficulty}} - {{entry.recipe.budget}}</p>
+                <img ng-src="img/recipe/160x160/{{recipe.image}}">
+                <h2>{{recipe.name}}</h2>
+                <p>{{recipe.category}} - {{recipe.difficulty}} - {{recipe.budget}}</p>
             </a>
         </div>
     </ion-content>

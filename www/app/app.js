@@ -25,6 +25,15 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
       }
     }
   })
+  .state('sidemenu.history', {
+    url: "/history",
+    views: {
+      'menuContent': {
+        templateUrl: "app/views/history/all.html",
+        controller: 'HistoryCtrl'
+      }
+    }
+  })
   .state('sidemenu.product', {
     url: "/product/:barcode?from",
     views: {

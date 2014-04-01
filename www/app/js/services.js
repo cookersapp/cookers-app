@@ -25,6 +25,7 @@ angular.module('ionicApp.services', [])
 
 .factory('UtilsService', function(){
     var service = {
+        cleverFilter: cleverFilter,
         mapTree: mapTree,
         filterTree: filterTree,
         findTree: findTree,
@@ -32,6 +33,24 @@ angular.module('ionicApp.services', [])
         toRows: toRows
     };
 
+    function cleverFilter(allPromise, ids, getId){
+        if(ids === undefined){
+            return allPromise;
+        } else if(typeof ids === 'string'){
+            var id = ids;
+            return allPromise.then(function(elts){
+                return _.find(elts, function(elt){
+                    return getId(elt) === id; 
+                });
+            });
+        } else if(Array.isArray(ids)){
+            return allPromise.then(function(elts){
+                return _.filter(elts, function(elt){
+                    return _.contains(ids, getId(elt));
+                });
+            });
+        }
+    }
     function mapTree(tree, getChildren, apply){
         apply(tree);
         var children = getChildren(tree);
@@ -88,31 +107,16 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('UserService', function(){
-    var service = {
-        getSeenRecipes: function(){console.log('TODO: getSeenRecipes');},
-        getBoughtRecipes: function(){console.log('TODO: getBoughtRecipes');},
-        getScannedProducts: function(){console.log('TODO: getScannedProducts');},
-        getBoughtProducts: function(){console.log('TODO: getBoughtProducts');}
-    };
-
-    return service;
-})
-
-
-.factory('ProductService', function($http){
+.factory('ProductService', function($http, UtilsService){
     var productsPromise;
     var service = {
-        getAsync: getProductAsync
+        getAsync: function(barcodes){
+            return UtilsService.cleverFilter(loadProductsAsync(), barcodes, function(product){
+                return product.barcode;
+            });
+        }
     };
 
-    function getProductAsync(barcode){
-        return loadProductsAsync().then(function(products){
-            return _.find(products, function(product){
-                return product.barcode === barcode; 
-            });
-        });
-    }
     function loadProductsAsync(){
         if(!productsPromise){
             productsPromise = $http.get('data/products.json').then(function(result) {
@@ -138,22 +142,9 @@ angular.module('ionicApp.services', [])
     };
 
     function getIngredientAsync(ids){
-        if(ids === undefined){
-            return loadIngredients();
-        } else if(Array.isArray(ids)){
-            return loadIngredientsAsync().then(function(ingredients){
-                return UtilsService.filterTree(ingredients, getIngredientChildren, function(ingredient){
-                    return _.contains(ids, ingredient.id);
-                });
-            });
-        } else if(typeof ids === 'string'){
-            var id = ids;
-            return loadIngredientsAsync().then(function(ingredients){
-                return UtilsService.findTree(ingredients, getIngredientChildren, function(ingredient){
-                    return ingredient.id === id; 
-                });
-            });
-        }
+        return UtilsService.cleverFilter(loadIngredientsAsync(), ids, function(ingredient){
+            return ingredient.id;
+        });
     }
     function isCategory(ingredient){
         return ingredient.products !== undefined;
@@ -190,31 +181,16 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('RecipeService', function($http){
+.factory('RecipeService', function($http, UtilsService){
     var recipesPromise;
     var service = {
-        getAllAsync: getAllRecipesAsync,
-        getAsync: getRecipeAsync
+        getAsync: function(ids){
+            return UtilsService.cleverFilter(loadRecipesAsync(), ids, function(recipe){
+                return recipe.id;
+            });
+        }
     };
 
-    function getAllRecipesAsync(ids){
-        if(ids){
-            return loadRecipesAsync().then(function(recipes){
-                return _.filter(recipes, function(recipe){
-                    return _.contains(ids, recipe.id);
-                });
-            });
-        } else {
-            return loadRecipesAsync();
-        }
-    }
-    function getRecipeAsync(id){
-        return loadRecipesAsync().then(function(recipes){
-            return _.find(recipes, function(recipe){
-                return recipe.id === id; 
-            });
-        });
-    }
     function loadRecipesAsync(){
         if(!recipesPromise){
             recipesPromise = $http.get('data/recipes.json').then(function(result) {
@@ -225,6 +201,46 @@ angular.module('ionicApp.services', [])
             });
         }
         return recipesPromise;
+    }
+
+    return service;
+})
+
+
+.factory('UserService', function($localStorage){
+    if(!$localStorage.user){$localStorage.user = [];}
+    var user = $localStorage.user;
+    var service = {
+        seeRecipe: function(recipe){addEvent('recipe', recipe.id, 'see');},
+        boughtRecipe: function(recipe){addEvent('recipe', recipe.id, 'bought');},
+        seeProduct: function(product){addEvent('product', product.barcode, 'see');},
+        boughtProduct: function(product){addEvent('product', product.barcode, 'bought');},
+        getSeenRecipes: function(max){return find('recipe', 'see', max);},
+        getBoughtRecipes: function(max){return find('recipe', 'bought', max);},
+        getScannedProducts: function(max){return find('product', 'see', max);},
+        getBoughtProducts: function(max){return find('product', 'bought', max);}
+    };
+
+    function addEvent(elt, id, action){
+        user.unshift({
+            elt: elt,
+            id: id,
+            action: action,
+            time: moment().valueOf()
+        });
+    }
+
+    function find(elt, action, max){
+        var res = [];
+        for(var i=0; i<user.length; i++){
+            if(user[i].elt === elt && (!action || user[i].action === action)){
+                res.push(user[i]);
+            }
+            if(max && res.length >= max){
+                return res;
+            }
+        }
+        return res;
     }
 
     return service;
