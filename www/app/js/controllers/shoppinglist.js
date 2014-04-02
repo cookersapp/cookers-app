@@ -93,7 +93,7 @@ angular.module('ionicApp.shoppinglist', [])
 })
 
 
-.controller('ShoppinglistCartCtrl', function($scope){
+.controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService){
     $scope.buyItem = function(item){
         ShoppinglistService.buyFromCurrentCart(item);
     };

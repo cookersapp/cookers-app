@@ -294,11 +294,11 @@ angular.module('ionicApp.services', [])
 
     function clearCart(cart){
         cart.categories = [];
+        cart.boughtItems = [];
     }
     function buyItem(cart, item){
         if(cart && deleteItem(cart, item)){
             item.bought = moment().valueOf();
-            if(!cart.boughtItems){cart.boughtItems = [];}
             cart.boughtItems.push(item);
         }
     }
@@ -378,7 +378,8 @@ angular.module('ionicApp.services', [])
     function createCart(){
         return {
             name: "Liste du "+moment().format('LL'),
-            categories: []
+            categories: [],
+            boughtItems: []
         };
     }
     function createCategory(categoryIngredient){
@@ -388,8 +389,7 @@ angular.module('ionicApp.services', [])
             shortname: categoryIngredient.shortname,
             image: categoryIngredient.image,
             grid: categoryIngredient.grid,
-            items: [],
-            boughtItems: []
+            items: []
         };
     }
     function createItem(ingredient, notes, quantity, quantityUnit){
