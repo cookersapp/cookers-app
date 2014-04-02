@@ -7,3 +7,4 @@ merges
 platforms/android/CordovaLib/ant-build
 platforms/android/ant-build
 www/bower_components
+node_modules

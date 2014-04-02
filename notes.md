@@ -1,55 +1,8 @@
-# Take some notes here
+# Take some notes and reminders here
 
-## Getting started with ionic framework
+## Technicals
 
-- create a folder : ```mkdir myapp```
-- go to this folder : ```cd myapp```
-- create your phonegap app : ```phonegap create . "com.example.app" "MyApp"```
-- create your angular app 
-    - with [yeoman](http://yeoman.io/) : ```yo angular --minsafe```
-    - with [ngTailor](https://github.com/lauterry/ngTailor) : ```grunt-init angular --force```
-- change angular app dist folder to www : in Gruntfile change ```distDir: 'dist',``` by ```distDir: 'www',```
-- move www/config.xml to app folder : ```mv www/config.xml app/```
-- add app/config.xml to be copied in www folder in Gruntfile.js : ???
-- remove folder www : ```rm -rf www```
-- edit app/config.xml if needed
-- create app/phonegap.js with :
-```
-(function(){})();
-```
-- add app/phonegap.js script to app/index.html
-- add needed phonegap plugins : 
-
-- add file .gitignore :
-```
-npm-debug.log
-www
-platforms
-plugins
-```
-
-## Abréviations : 
-
-- Application   : app, project
-
-- Templates     : tpl, views,   tmpl, partials
-- JavaScript    : src, scripts, js
-- CSS           : css, styles
-- Images        : img, images
-- livrairies    : lib, vendor
-- Polices       :      fonts
-- Configuration : cfg, config, conf, settings
-- Common        : common
-- Test          :      tests
-- Autres        :      assets, resources, plugins, components
-
-- Controllers   : ctl, controllers, ctrl
-- Services      : srv, services
-- Directives    : dir, directives
-- Filtres       :      filters
-- Modèles       :      models
-
-- Minified      : bin, dist, target, build
+- add [barcode plugin](https://github.com/wildabeast/BarcodeScanner) : ```cordova plugin add https://github.com/wildabeast/BarcodeScanner.git``` ([explanation](http://stackoverflow.com/questions/20548106/how-to-install-barcodescanner-plugin-on-cordova-phonegap-eclipse-for-android-a))
 
 ## Folder structure :
 
@@ -103,3 +56,54 @@ form [Mathieu Robin talk](http://mathrobin.github.io/talks/JavaScript/30minutes3
 - Tools
     - [ngTailor](https://github.com/lauterry/ngTailor)
     - [ngModules](http://ngmodules.org/)
+
+## Abréviations : 
+
+- Application   : app, project
+
+- Templates     : tpl, views,   tmpl, partials
+- JavaScript    : src, scripts, js
+- CSS           : css, styles
+- Images        : img, images
+- livrairies    : lib, vendor
+- Polices       :      fonts
+- Configuration : cfg, config, conf, settings
+- Common        : common
+- Test          :      tests
+- Autres        :      assets, resources, plugins, components
+
+- Controllers   : ctl, controllers, ctrl
+- Services      : srv, services
+- Directives    : dir, directives
+- Filtres       :      filters
+- Modèles       :      models
+
+- Minified      : bin, dist, target, build
+
+## Getting started with ionic framework (not finalized...)
+
+- create a folder : ```mkdir myapp```
+- go to this folder : ```cd myapp```
+- create your phonegap app : ```phonegap create . "com.example.app" "MyApp"```
+- create your angular app 
+    - with [yeoman](http://yeoman.io/) : ```yo angular --minsafe```
+    - with [ngTailor](https://github.com/lauterry/ngTailor) : ```grunt-init angular --force```
+- change angular app dist folder to www : in Gruntfile change ```distDir: 'dist',``` by ```distDir: 'www',```
+- move www/config.xml to app folder : ```mv www/config.xml app/```
+- add app/config.xml to be copied in www folder in Gruntfile.js : ???
+- remove folder www : ```rm -rf www```
+- edit app/config.xml if needed
+- create app/phonegap.js with :
+```
+(function(){})();
+```
+- add app/phonegap.js script to app/index.html
+- add needed phonegap plugins : 
+
+- add file .gitignore :
+```
+npm-debug.log
+www
+platforms
+plugins
+```
