@@ -234,6 +234,32 @@ angular.module('ionicApp.services', [])
 })
 
 
+.factory('DataService', function($http, UtilsService){
+    var dataPromise;
+    var service = {
+        getUnitsAsync: function(){
+            return loadDataAsync().then(function(data){
+                return data.units;
+            });
+        }
+    };
+
+    function loadDataAsync(){
+        if(!dataPromise){
+            dataPromise = $http.get('data/data.json').then(function(result) {
+                console.log('DataService.loadData', result);
+                return result.data;
+            }).then(null, function(error){
+                console.error('DataService.loadData', error);
+            });
+        }
+        return dataPromise;
+    }
+
+    return service;
+})
+
+
 .factory('UserService', function($localStorage){
     if(!$localStorage.user){$localStorage.user = [];}
     var user = $localStorage.user;

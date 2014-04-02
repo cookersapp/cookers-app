@@ -11,11 +11,12 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Quantité</span>
-                <input type="text" ng-model="itemModal.data.quantity" placeholder="">
+                <input type="number" ng-model="itemModal.data.quantity" placeholder="">
             </label>
             <label class="item item-input">
                 <span class="input-label">Unité</span>
                 <input type="text" ng-model="itemModal.data.quantityUnit" placeholder="">
+                <!--<select ng-model="itemModal.data.quantityUnit" ng-options="unit for unit in data.units"></select>-->
             </label>
             <div class="button-bar">
                 <button class="button button-full button-assertive" ng-click="itemModal.delete()">Supprimer</button>

@@ -1,11 +1,18 @@
 angular.module('ionicApp.shoppinglist', [])
 
 
-.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, ModalService){
+.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, ModalService, DataService){
     $scope.rightButtons = [];
     $scope.current = {
         cart: ShoppinglistService.getCurrentCart()
     };
+    $scope.data = {
+        units: []
+    }
+    
+    DataService.getUnitsAsync().then(function(units){
+        $scope.data.units = units;
+    });
 
     $scope.isInCart = function(ingredient){
         return ShoppinglistService.getCurrentCartItem(ingredient)!== undefined;
