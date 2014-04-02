@@ -1,0 +1,11 @@
+<ion-content has-header="true" has-footer="true" padding="true">
+    <h4>Recettes correspondant à votre liste de courses</h4>
+    <div class="list" ng-if="suggestedRecipes">
+        <a ng-repeat="suggestion in suggestedRecipes" class="item item-thumbnail-left"
+           ui-sref="sidemenu.recipe({id: suggestion.recipe.id, from: 'linked-cart'})">
+            <img ng-src="img/recipe/80x80/{{suggestion.recipe.image}}">
+            <h2>{{suggestion.recipe.name}}</h2>
+            <p>{{suggestion.recipe.category}} - {{suggestion.recipe.difficulty}} - {{suggestion.recipe.budget}}</p>
+        </a>
+    </div>
+</ion-content>
