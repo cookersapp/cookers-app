@@ -1,4 +1,10 @@
 <ion-content has-header="true" has-footer="true">
+    <div>
+        <span ng-repeat="parent in parents">
+            <a ui-sref="sidemenu.shoppinglist.products({category: parent.id})">{{parent.name}}</a>
+            <span ng-show="!$last">></span>
+        </span>
+    </div>
     <div ng-repeat="ingredientRow in rowIngredients" class="row">
         <div ng-repeat="ingredient in ingredientRow" class="col col-25">
             <div class="product-square" ng-class="{category: ingredient.isCategory, active: isInCart(ingredient)}" ng-click="ingredientClick(ingredient)">

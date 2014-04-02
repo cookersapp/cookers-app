@@ -169,9 +169,17 @@ angular.module('ionicApp.services', [])
         return ingredient.products !== undefined;
     }
     function getParentsIngredientAsync(id){
+        if(id === undefined){
+            return null;
+        } else if(typeof id === 'string'){
+            // nothing
+        } else {
+            id = id.id;
+        }
+        
         return loadIngredientsAsync().then(function(ingredients){
             return UtilsService.findParentsTree(ingredients, getChildren, function(ingredient){
-                return ingredient.id === id; 
+                return ingredient.id === id;
             });
         });
     }

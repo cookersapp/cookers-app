@@ -27,7 +27,7 @@ angular.module('ionicApp.shoppinglist', [])
     ];
 
     $scope.changeCart = function(){
-        console.log('TODO : changeCart');
+        alert('Change cart : not implemented yet !');
     };
 
     // edit cart modal
@@ -82,15 +82,9 @@ angular.module('ionicApp.shoppinglist', [])
         $scope.itemModal.item.quantityUnit = $scope.itemModal.data.quantityUnit;
         $scope.itemModal.modal.hide();
     };
-
+    
     $scope.cartItemClick = function(item){
         $scope.itemModal.open(item);
-    };
-    $scope.buyItem = function(item){
-        ShoppinglistService.buyFromCurrentCart(item);
-    };
-    $scope.unbuyItem = function(item){
-        ShoppinglistService.unbuyFromCurrentCart(item);
     };
 
     $scope.$on('$destroy', function() {
@@ -100,7 +94,12 @@ angular.module('ionicApp.shoppinglist', [])
 
 
 .controller('ShoppinglistCartCtrl', function($scope){
-
+    $scope.buyItem = function(item){
+        ShoppinglistService.buyFromCurrentCart(item);
+    };
+    $scope.unbuyItem = function(item){
+        ShoppinglistService.unbuyFromCurrentCart(item);
+    };
 })
 
 
@@ -109,6 +108,8 @@ angular.module('ionicApp.shoppinglist', [])
 
     $scope.ingredient = {};
     $scope.rowIngredients = [];
+    $scope.parents = [];
+    
     IngredientService.getAsync(category).then(function(ingredient){
         $scope.ingredient = ingredient;
         if($scope.ingredient.products){
@@ -117,6 +118,9 @@ angular.module('ionicApp.shoppinglist', [])
             }), 4);
         }
     });
+    IngredientService.getParentsAsync(category).then(function(parents){
+        $scope.parents = parents;
+    });
 
     $scope.ingredientClick = function(ingredient){
         if(ingredient.isCategory){
@@ -124,7 +128,6 @@ angular.module('ionicApp.shoppinglist', [])
         } else {
             var cartItem = ShoppinglistService.getCurrentCartItem(ingredient);
             if(cartItem){
-                console.log('TODO: show cart item details !');
                 $scope.cartItemClick(cartItem);
             } else {
                 ShoppinglistService.addToCurrentCart(ingredient);
