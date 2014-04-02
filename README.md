@@ -18,7 +18,21 @@ This project require several tools, if they are not installed, please do.
 
 ## Getting started
 
-- Get the code : git clone git@bitbucket.org:loicknuchel/retail-scan-app-ionic.git
+- Get the code : ```git clone git@bitbucket.org:loicknuchel/retail-scan-app-ionic.git```
+- Go to created folder : ```cd retail-scan-app-ionic```
+- Install bower dependencies : ```bower install```
+- Create platforms folder : ```mkdir platforms```
+- Create plugins folder : ```mkdir plugins```
+- Add needed platforms :
+    - ```ionic platform add android```
+- Add needed plugins : 
+    - ```cordova plugin add org.apache.cordova.device```
+    - ```cordova plugin add org.apache.cordova.console```
+    - ```cordova plugin add org.apache.cordova.statusbar```
+    - ```cordova plugin add https://github.com/wildabeast/BarcodeScanner.git```
+- Launch app : ```ionic run android```
+
+... not working now... :(
 
 ## Todo
 
