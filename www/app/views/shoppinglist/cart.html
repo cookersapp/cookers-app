@@ -6,7 +6,7 @@
         </label>
     </div>
     <div ng-hide="current.cart.categories.length > 0">
-        La liste est vide
+        Aucun produit à acheter...
     </div>
     <div class="list" ng-show="current.cart.categories.length > 0">
         <div ng-repeat="category in current.cart.categories">
@@ -16,12 +16,33 @@
             <div ng-repeat="item in category.items">
                 <div class="item item-avatar" ng-click="cartItemClick(item)">
                     <img ng-src="img/ingredients/100x100/{{item.ingredient.image}}" />
+                    <label class="checkbox" style="float: right;">
+                        <input type="checkbox" ng-click="buyItem(item)">
+                    </label>
                     <h2>{{item.ingredient.name}}</h2>
                     <p>{{item.notes}}</p>
                     <span class="item-note">
                         {{item.quantity}} {{item.quantityUnit}}
                     </span>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="list" ng-show="current.cart.boughtItems.length > 0">
+        <div class="item item-divider">
+            Produits achetés
+        </div>
+        <div ng-repeat="item in current.cart.boughtItems">
+            <div class="item item-avatar" ng-click="cartItemClick(item)">
+                <img ng-src="img/ingredients/100x100/{{item.ingredient.image}}" />
+                <label class="checkbox" style="float: right;">
+                    <input type="checkbox" checked ng-click="unbuyItem(item)">
+                </label>
+                <h2>{{item.ingredient.name}}</h2>
+                <p>{{item.notes}}</p>
+                <span class="item-note">
+                    {{item.quantity}} {{item.quantityUnit}}
+                </span>
             </div>
         </div>
     </div>

@@ -84,9 +84,13 @@ angular.module('ionicApp.shoppinglist', [])
     };
 
     $scope.cartItemClick = function(item){
-        // TODO
         $scope.itemModal.open(item);
-        console.log('click on item', item);
+    };
+    $scope.buyItem = function(item){
+        ShoppinglistService.buyFromCurrentCart(item);
+    };
+    $scope.unbuyItem = function(item){
+        ShoppinglistService.unbuyFromCurrentCart(item);
     };
 
     $scope.$on('$destroy', function() {

@@ -277,13 +277,33 @@ angular.module('ionicApp.services', [])
     var service = {
         getCurrentCart: function(){return currentCart;},
         getCurrentCartItem: function(ingredient){return getItem(currentCart, ingredient);},
-        addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addItem(currentCart, ingredient, notes, quantity, quantityUnit);},
+        addToCurrentCart: function(ingredient, notes, quantity, quantityUnit){addIngredient(currentCart, ingredient, notes, quantity, quantityUnit);},
+        buyFromCurrentCart: function(item){buyItem(currentCart, item);},
+        unbuyFromCurrentCart: function(item){unbuyItem(currentCart, item);},
         deleteFromCurrentCart: function(item){deleteItem(currentCart, item);},
         clearCurrentCart: function(){clearCart(currentCart);}
     };
 
     function clearCart(cart){
         cart.categories = [];
+    }
+    function buyItem(cart, item){
+        if(cart && deleteItem(cart, item)){
+            item.bought = moment().valueOf();
+            if(!cart.boughtItems){cart.boughtItems = [];}
+            cart.boughtItems.push(item);
+        }
+    }
+    function unbuyItem(cart, item){
+        if(cart && cart.boughtItems){
+            for(var i in cart.boughtItems){
+                if(cart.boughtItems[i].ingredient.id === item.ingredient.id){
+                    cart.boughtItems.splice(i, 1);
+                    item.bought = moment().valueOf();
+                    addItem(cart, item);
+                }
+            }
+        }
     }
     function deleteItem(cart, item){
         if(cart && cart.categories){
@@ -295,26 +315,21 @@ angular.module('ionicApp.services', [])
                         if(category.items.length === 0){
                             cart.categories.splice(i, 1);
                         }
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
-    function addItem(cart, ingredient, notes, quantity, quantityUnit){
+    function addIngredient(cart, ingredient, notes, quantity, quantityUnit){
         if(typeof ingredient === 'string'){
             IngredientService.getAsync(ingredient).then(function(ingredient){
-                addItem(cart, ingredient, notes, quantity, quantityUnit);
+                addIngredient(cart, ingredient, notes, quantity, quantityUnit);
             });
         } else if(ingredient){
             var item = createItem(ingredient, notes, quantity, quantityUnit);
-            IngredientService.getParentsAsync(ingredient.id).then(function(parents){
-                if(parents && parents.length > 1) {
-                    // parents[0]: root, parents[1]: top category, parents[length-1]: elt
-                    var cartCategory = getCategory(cart, parents[1]);
-                    if(!cartCategory){cartCategory = addCategory(cart, parents[1]);}
-                    cartCategory.items.push(item);
-                }
-            });
+            addItem(cart, item);
         }
     }
     function getItem(cart, ingredient){
@@ -328,6 +343,16 @@ angular.module('ionicApp.services', [])
                 }
             }
         }
+    }
+    function addItem(cart, item){
+        IngredientService.getParentsAsync(item.ingredient.id).then(function(parents){
+            if(parents && parents.length > 1) {
+                // parents[0]: root, parents[1]: top category, parents[length-1]: elt
+                var cartCategory = getCategory(cart, parents[1]);
+                if(!cartCategory){cartCategory = addCategory(cart, parents[1]);}
+                cartCategory.items.push(item);
+            }
+        });
     }
     function getCategory(cart, categoryIngredient){
         return _.find(cart.categories, function(category){
@@ -355,7 +380,8 @@ angular.module('ionicApp.services', [])
             shortname: categoryIngredient.shortname,
             image: categoryIngredient.image,
             grid: categoryIngredient.grid,
-            items: []
+            items: [],
+            boughtItems: []
         };
     }
     function createItem(ingredient, notes, quantity, quantityUnit){

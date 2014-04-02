@@ -11,7 +11,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     controller: 'TutorialCtrl'
   })
   .state('scan', {
-    url: "/scans",
+    url: "/scan",
     template: "",
     controller: 'ScanCtrl'
   })
