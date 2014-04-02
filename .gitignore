@@ -3,8 +3,8 @@
 platforms/^.*
 
 *~
-.cordova
 merges
-platforms
-plugins
+platforms/android/CordovaLib/ant-build
+platforms/android/ant-build
+platforms/android/assets
 www/bower_components
