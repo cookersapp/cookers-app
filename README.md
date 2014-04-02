@@ -16,24 +16,26 @@ This project require several tools, if they are not installed, please do.
 
 ## Getting started
 
+Here are the few steps to get things working :
+
 - Get the code : ```git clone git@bitbucket.org:loicknuchel/retail-scan-app-ionic.git```
 - Go to created folder : ```cd retail-scan-app-ionic```
 - Install grunt dependencies : ```npm install```
 - Install bower dependencies : ```bower install```
-- You are ready !!!!
+- You are ready !!!! \o/
 
 To run the app, you have many ways :
 
 - In desktop browser :
     - move the project under a webserver and open ```www/index.html```
     - use grunt : run ```grunt serve``` from root folder
-    - use [Bracket](http://brackets.io/) editor and use live preview feature on ```www/index.html```
+    - use [Bracket](http://brackets.io/) editor : activate live preview feature on ```www/index.html```
 - In android emulator : ```ionic emulate android``` (your android environment and emulator must have been setted)
 - In your android device : ```ionic run android``` (your android environment must have been setted and your phone connected)
 
 ## Todo
 
-See trello board : https://trello.com/b/fdodl9nl/retail-scan
+See [trello board](https://trello.com/b/fdodl9nl/retail-scan)
 
 ## Incoming features
 
