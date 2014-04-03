@@ -1,0 +1,24 @@
+<ion-view title="User logs" left-buttons="leftButtons">
+    <ion-content has-header="true" padding="true">
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Action</th>
+                    <th>Elt</th>
+                    <th>Id</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="log in logs">
+                    <td>{{log.time}}</td>
+                    <td>{{log.action}}</td>
+                    <td>{{log.elt}}</td>
+                    <td>{{log.id}}</td>
+                    <td>{{log.data}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ion-content>
+</ion-view>

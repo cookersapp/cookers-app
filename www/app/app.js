@@ -142,11 +142,20 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'google-maps', 'ionicApp.servi
       }
     }
   })
+  .state('sidemenu.logs', {
+    url: "/logs",
+    views: {
+      'menuContent': {
+        templateUrl: "app/views/hidden/logs.html",
+        controller: 'LogsCtrl'
+      }
+    }
+  })
   .state('sidemenu.device', {
     url: "/device",
     views: {
       'menuContent': {
-        templateUrl: "app/views/infos/device.html",
+        templateUrl: "app/views/hidden/device.html",
         controller: 'DeviceCtrl'
       }
     }

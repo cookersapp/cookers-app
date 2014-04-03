@@ -23,7 +23,7 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ScanCtrl', function($scope, $state, $stateParams){
+.controller('ScanCtrl', function($scope, $state, $stateParams, UserService){
   var from = $stateParams.from;
 
   cordova.plugins.barcodeScanner.scan(
@@ -234,6 +234,11 @@ angular.module('ionicApp.controllers', [])
   }
 
   navigator.geolocation.getCurrentPosition(onSuccess, onError);
+})
+
+
+.controller('LogsCtrl', function($scope, UserService){
+  $scope.logs = UserService.getLogHistory();
 })
 
 
