@@ -40,6 +40,7 @@ See [trello board](https://trello.com/b/fdodl9nl/retail-scan)
 ## Incoming features
 
 - get geoloc on scans
+- associate recipes with ingredients (in ingredients details)
 - most common ingredients in ingredient grid
 - breadcumbs on ingredient grid
 - details on products (with notes and nutrtion)
@@ -55,3 +56,9 @@ See [trello board](https://trello.com/b/fdodl9nl/retail-scan)
     - statusbar (```cordova plugin add org.apache.cordova.statusbar```)
     - [barcodescanner](https://github.com/wildabeast/BarcodeScanner) (```cordova plugin add https://github.com/wildabeast/BarcodeScanner.git```)
     - [geolocation](https://cordova.apache.org/docs/en/3.0.0/cordova_geolocation_geolocation.md.html) (```cordova plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-geolocation.git```)
+
+## Technos
+
+- Mobile : Look at [ratchet](http://goratchet.com/)
+- Back end : [Play/Scala](http://www.playframework.com/) vs [RESTX](http://restx.io/) vs [dropwizard](https://dropwizard.github.io/dropwizard/)
+- API docs : [apiary](http://apiary.io/) vs [daux.io](http://daux.io/) vs [flatdoc](http://ricostacruz.com/flatdoc/)
