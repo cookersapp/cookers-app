@@ -25,11 +25,12 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ScanCtrl', function($scope, $state, $stateParams, UserService){
   var from = $stateParams.from;
+  var start = moment().valueOf();
 
   cordova.plugins.barcodeScanner.scan(
     function (result) {
       if(!result.cancelled){
-        UserService.makeScan(result.text, from);
+        UserService.makeScan(result.text, from, moment().valueOf() - start);
         $state.go('sidemenu.product', {barcode: result.text, from: from});
       } else {
         $state.go($rootScope.$previousState);
@@ -172,7 +173,6 @@ angular.module('ionicApp.controllers', [])
     });
 
     navigator.geolocation.getCurrentPosition(function(pos) {
-      console.log(pos);
       $scope.map.center = {
         latitude: pos.coords.latitude,
         longitude: pos.coords.longitude
@@ -238,6 +238,7 @@ angular.module('ionicApp.controllers', [])
 
 
 .controller('LogsCtrl', function($scope, UserService){
+  $scope.formated = true;
   $scope.logs = UserService.getLogHistory();
 })
 

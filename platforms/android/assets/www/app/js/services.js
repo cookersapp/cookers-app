@@ -265,23 +265,26 @@ angular.module('ionicApp.services', [])
     if(!$localStorage.user.logs){$localStorage.user.logs = [];}
     var _user = $localStorage.user;
     var service = {
-        makeScan: function(barcode, from){
+        makeScan: function(barcode, from, duration){
+            var time = moment().valueOf();
             navigator.geolocation.getCurrentPosition(function(position) {
-                logEvent('scan', 'make', barcode, {
+                logEvent('scan', 'make', barcode, time, {
                     from: from,
-                    position: position.coords
+                    position: position.coords,
+                    duration: duration
                 });
             }, function(error) {
-                logEvent('scan', 'make', barcode, {
+                logEvent('scan', 'make', barcode, time, {
                     from: from,
+                    duration: duration,
                     position: error
                 });
             });
         },
-        seeRecipe: function(recipe){logEvent('recipe', 'see', recipe.id);},
-        boughtRecipe: function(recipe){logEvent('recipe', 'bought', recipe.id);},
-        seeProduct: function(product){logEvent('product', 'see', product.barcode);},
-        boughtProduct: function(product){logEvent('product', 'bought', product.barcode);},
+        seeRecipe: function(recipe){logEvent('recipe', 'see', recipe.id, moment().valueOf());},
+        boughtRecipe: function(recipe){logEvent('recipe', 'bought', recipe.id, moment().valueOf());},
+        seeProduct: function(product){logEvent('product', 'see', product.barcode, moment().valueOf());},
+        boughtProduct: function(product){logEvent('product', 'bought', product.barcode, moment().valueOf());},
         getSeenRecipes: function(max){return findInLogs('recipe', 'see', max);},
         getBoughtRecipes: function(max){return findInLogs('recipe', 'bought', max);},
         getScannedProducts: function(max){return findInLogs('product', 'see', max);},
@@ -289,12 +292,12 @@ angular.module('ionicApp.services', [])
         getLogHistory: function(){return _user.logs;}
     };
 
-    function logEvent(elt, action, id, data){
+    function logEvent(elt, action, id, time, data){
         _user.logs.unshift({
             elt: elt,
             action: action,
             id: id,
-            time: moment().valueOf(),
+            time: time,
             data: data
         });
     }

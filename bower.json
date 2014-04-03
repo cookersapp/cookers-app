@@ -20,6 +20,7 @@
     "lodash": "~2.4.1",
     "moment": "~2.5.1",
     "ngstorage": "~0.3.0",
-    "angular-google-maps": "~1.0.18"
+    "angular-google-maps": "~1.0.18",
+    "bootstrap": "~3.1.1"
   }
 }

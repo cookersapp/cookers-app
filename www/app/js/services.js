@@ -265,16 +265,18 @@ angular.module('ionicApp.services', [])
     if(!$localStorage.user.logs){$localStorage.user.logs = [];}
     var _user = $localStorage.user;
     var service = {
-        makeScan: function(barcode, from){
+        makeScan: function(barcode, from, duration){
             var time = moment().valueOf();
             navigator.geolocation.getCurrentPosition(function(position) {
                 logEvent('scan', 'make', barcode, time, {
                     from: from,
-                    position: position.coords
+                    position: position.coords,
+                    duration: duration
                 });
             }, function(error) {
                 logEvent('scan', 'make', barcode, time, {
                     from: from,
+                    duration: duration,
                     position: error
                 });
             });

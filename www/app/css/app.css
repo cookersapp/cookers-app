@@ -1,3 +1,8 @@
+/* Global calsses */
+.nowrap {
+    white-space: nowrap;
+}
+
 .angular-google-map-container {
     height: 800px;
 }

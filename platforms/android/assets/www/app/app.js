@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngStorage', 'google-maps', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.tutorial', 'ionicApp.shoppinglist'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'google-maps', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.filters', 'ionicApp.tutorial', 'ionicApp.shoppinglist'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
