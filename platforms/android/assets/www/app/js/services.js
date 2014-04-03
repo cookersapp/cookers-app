@@ -176,7 +176,7 @@ angular.module('ionicApp.services', [])
         } else {
             id = id.id;
         }
-        
+
         return loadIngredientsAsync().then(function(ingredients){
             return UtilsService.findParentsTree(ingredients, getChildren, function(ingredient){
                 return ingredient.id === id;
@@ -261,37 +261,54 @@ angular.module('ionicApp.services', [])
 
 
 .factory('UserService', function($localStorage){
-    if(!$localStorage.user){$localStorage.user = [];}
-    var user = $localStorage.user;
+    if(!$localStorage.user){$localStorage.user = {};}
+    if(!$localStorage.user.logs){$localStorage.user.logs = [];}
+    var _user = $localStorage.user;
     var service = {
-        seeRecipe: function(recipe){addEvent('recipe', recipe.id, 'see');},
-        boughtRecipe: function(recipe){addEvent('recipe', recipe.id, 'bought');},
-        seeProduct: function(product){addEvent('product', product.barcode, 'see');},
-        boughtProduct: function(product){addEvent('product', product.barcode, 'bought');},
-        getSeenRecipes: function(max){return find('recipe', 'see', max);},
-        getBoughtRecipes: function(max){return find('recipe', 'bought', max);},
-        getScannedProducts: function(max){return find('product', 'see', max);},
-        getBoughtProducts: function(max){return find('product', 'bought', max);}
+        makeScan: function(barcode, from){
+            navigator.geolocation.getCurrentPosition(function(position) {
+                logEvent('scan', 'make', barcode, {
+                    from: from,
+                    position: position.coords
+                });
+            }, function(error) {
+                logEvent('scan', 'make', barcode, {
+                    from: from,
+                    position: error
+                });
+            });
+        },
+        seeRecipe: function(recipe){logEvent('recipe', 'see', recipe.id);},
+        boughtRecipe: function(recipe){logEvent('recipe', 'bought', recipe.id);},
+        seeProduct: function(product){logEvent('product', 'see', product.barcode);},
+        boughtProduct: function(product){logEvent('product', 'bought', product.barcode);},
+        getSeenRecipes: function(max){return findInLogs('recipe', 'see', max);},
+        getBoughtRecipes: function(max){return findInLogs('recipe', 'bought', max);},
+        getScannedProducts: function(max){return findInLogs('product', 'see', max);},
+        getBoughtProducts: function(max){return findInLogs('product', 'bought', max);},
+        getLogHistory: function(){return _user.logs;}
     };
 
-    function addEvent(elt, id, action){
-        user.unshift({
+    function logEvent(elt, action, id, data){
+        _user.logs.unshift({
             elt: elt,
-            id: id,
             action: action,
-            time: moment().valueOf()
+            id: id,
+            time: moment().valueOf(),
+            data: data
         });
     }
 
-    function find(elt, action, max){
+    function findInLogs(elt, action, max){
         var res = [];
-        for(var i=0; i<user.length; i++){
-            if(user[i].elt === elt && (!action || user[i].action === action)){
+        var logs = _user.logs;
+        for(var i=0; i<logs.length; i++){
+            if(logs[i].elt === elt && (!action || logs[i].action === action)){
                 var exist = _.find(res, function(r){
-                    return r.id === user[i].id;
+                    return r.id === logs[i].id;
                 });
                 if(!exist){
-                    res.push(user[i]);
+                    res.push(logs[i]);
                 }
             }
             if(max && res.length >= max){

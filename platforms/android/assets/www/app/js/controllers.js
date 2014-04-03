@@ -29,6 +29,7 @@ angular.module('ionicApp.controllers', [])
   cordova.plugins.barcodeScanner.scan(
     function (result) {
       if(!result.cancelled){
+        UserService.makeScan(result.text, from);
         $state.go('sidemenu.product', {barcode: result.text, from: from});
       } else {
         $state.go($rootScope.$previousState);

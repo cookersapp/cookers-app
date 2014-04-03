@@ -48,15 +48,6 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'google-maps', 'ionicApp.servi
       }
     }
   })
-  .state('sidemenu.leaflet', {
-    url: "/leaflet",
-    views: {
-      'menuContent': {
-        templateUrl: "app/views/map/leaflet.html",
-        controller: 'LeafletCtrl'
-      }
-    }
-  })
   .state('sidemenu.product', {
     url: "/product/:barcode?from",
     views: {
