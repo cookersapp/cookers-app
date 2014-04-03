@@ -151,6 +151,39 @@ angular.module('ionicApp.controllers', [])
 })
 
 
+.controller('GoogleMapCtrl', function($scope, $ionicLoading) {
+  $scope.map = {
+    center: {
+      latitude: 45,
+      longitude: -73
+    },
+    zoom: 8
+  };
+
+  $scope.centerOnMe = function() {
+    if(!$scope.map) {
+      return;
+    }
+
+    $scope.loading = $ionicLoading.show({
+      content: 'Getting current location...',
+      showBackdrop: false
+    });
+
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      console.log(pos);
+      $scope.map.center = {
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude
+      };
+      $scope.loading.hide();
+    }, function(error) {
+      alert('Unable to get location: ' + error.message);
+    });
+  };
+})
+
+
 .controller('FeedbackCtrl', function($scope){
 
 })
@@ -165,6 +198,41 @@ angular.module('ionicApp.controllers', [])
   $scope.app = {
     version: "0.0.1"
   };
+
+  // onSuccess Callback
+  // This method accepts a Position object, which contains the
+  // current GPS coordinates
+  //
+  var onSuccess = function(position) {
+    alert('Latitude: '          + position.coords.latitude          + '\n' +
+          'Longitude: '         + position.coords.longitude         + '\n' +
+          'Altitude: '          + position.coords.altitude          + '\n' +
+          'Accuracy: '          + position.coords.accuracy          + '\n' +
+          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+          'Heading: '           + position.coords.heading           + '\n' +
+          'Speed: '             + position.coords.speed             + '\n' +
+          'Timestamp: '         + position.timestamp                + '\n');
+  };
+
+  /*
+   *                      wifi        gps
+   * Latitude           : 48.8572059  48.8571593
+   * Longitude          : 2.4043088   2.4042639
+   * Altitude           : null        null
+   * Accuracy           : 20          67.01799774169922
+   * Altitude accuracy  : null        null
+   * Heading            : NaN         NaN
+   * Speed              : 0           0
+   */
+
+  // onError Callback receives a PositionError object
+  //
+  function onError(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+  }
+
+  navigator.geolocation.getCurrentPosition(onSuccess, onError);
 })
 
 

@@ -162,6 +162,11 @@ angular.module('ionicApp.shoppinglist', [])
                     }
                 }
             }
+            if(cart && cart.bought){
+                for(var i in cart.bought){
+                    ret.push(cart.bought[i]);
+                }
+            }
             return ret;
         }
         function recipeRating(recipe, ingredients){

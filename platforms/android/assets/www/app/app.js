@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.tutorial', 'ionicApp.shoppinglist'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'google-maps', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.tutorial', 'ionicApp.shoppinglist'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -36,6 +36,24 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
       'menuContent': {
         templateUrl: "app/views/history/all.html",
         controller: 'HistoryCtrl'
+      }
+    }
+  })
+  .state('sidemenu.googlemap', {
+    url: "/googlemap",
+    views: {
+      'menuContent': {
+        templateUrl: "app/views/map/googlemap.html",
+        controller: 'GoogleMapCtrl'
+      }
+    }
+  })
+  .state('sidemenu.leaflet', {
+    url: "/leaflet",
+    views: {
+      'menuContent': {
+        templateUrl: "app/views/map/leaflet.html",
+        controller: 'LeafletCtrl'
       }
     }
   })
