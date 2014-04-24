@@ -1,0 +1,14 @@
+[
+  {"id": "cannelloni", "name": "cannelloni", "plural": "cannelloni", "type": "unusual"},
+  {"id": "epinard", "name": "épinard", "plural": "épinards", "type": "unusual"},
+  {"id": "ricotta", "name": "ricotta", "plural": "ricotta", "type": "unusual"},
+  {"id": "parmesan", "name": "parmesan", "plural": "parmesan", "type": "unusual"},
+  {"id": "ail", "name": "ail", "plural": "ail", "type": "usual"},
+  {"id": "oignon", "name": "oignon", "plural": "oignon", "type": "usual"},
+  {"id": "beurre", "name": "beurre", "plural": "beurre", "type": "common"},
+  {"id": "farine", "name": "farine", "plural": "farine", "type": "usual"},
+  {"id": "lait", "name": "lait", "plural": "lait", "type": "usual"},
+  {"id": "sel", "name": "sel", "plural": "sel", "type": "common"},
+  {"id": "poivre", "name": "poivre", "plural": "poivre", "type": "common"},
+  {"id": "huile", "name": "huile", "plural": "huile", "type": "common"}
+]

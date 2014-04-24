@@ -1,0 +1,52 @@
+[
+{ 
+  "id": "Cannecloni-aux-epinards-ricotta-gratines-au-parmesan",
+  "title": "Cannelloni aux épinards, ricotta, gratinés au parmesan",
+  "image": "",
+  "url": "http://cuisine.journaldesfemmes.com/recette/323109-cannellonis-ricotta-epinard",
+  "category": "Plat principal",
+  "difficulty": "facile",
+  "budget": "",
+  "preparationTime": {"quantity": 25, "unit": "minute"},
+  "cookTime": {"quantity": 30, "unit": "minute"},
+  "eatTime": {"quantity": 55, "unit": "minute"},
+  "serving": {"quantity": 4, "unit": "personne"},
+  "tools": ["poele", "casserole", "fouet", "plat-a-gratin"],
+  "ingredients": [
+    {"quantity": 12, "unit": "piece", "pre": "", "food": "cannelloni", "post": "", "role": "primary"},
+    {"quantity": 500, "unit": "gramme", "pre": "d'", "food": "epinard", "post": "hachés", "role": "primary"},
+    {"quantity": 250, "unit": "gramme", "pre": "de", "food": "ricotta", "post": "", "role": "secondary"},
+    {"quantity": 100, "unit": "gramme", "pre": "de", "food": "parmesan", "post": "", "role": "secondary"},
+    {"quantity": 1, "unit": "gousse", "pre": "d'", "food": "ail", "post": "", "role": "other"},
+    {"quantity": 1, "unit": "piece", "pre": "", "food": "oignon", "post": "", "role": "other"},
+    {"quantity": 50, "unit": "gramme", "pre": "de", "food": "beurre", "post": "", "role": "other"},
+    {"quantity": 30, "unit": "gramme", "pre": "de", "food": "farine", "post": "", "role": "other"},
+    {"quantity": 50, "unit": "centilitre", "pre": "de", "food": "lait", "post": "", "role": "other"},
+    {"quantity": null, "unit": "none", "pre": "", "food": "sel", "post": "", "role": "other"},
+    {"quantity": null, "unit": "none", "pre": "", "food": "poivre", "post": "", "role": "other"},
+    {"quantity": null, "unit": "none", "pre": "", "food": "huile", "post": "", "role": "other"}
+  ],
+  "instructions": [
+    "Epluchez l’oignon et l’ail et détaillez-les. Placez-les dans une poêle huilée et faites-les revenir rapidement. Ajoutez ensuite les épinards hachés surgelés. Laissez cuire à feu moyen en remuant de temps en temps, pendant 8 minutes. Une fois les épinards cuits ajoutez la ricotta et mélangez. Salez et poivrez si nécessaire.",
+    "Pendant ce temps réalisez la béchamel : Placez le beurre dans une casserole et laissez le fondre, ajoutez ensuite la farine en remuant fortement à l’aide d’un fouet. Vous devez obtenir une sorte de boule. Ajoutez ensuite progressivement le lait jusqu’à ce que la béchamel ait une consistance assez liquide. Salez, poivrez à convenance et ajoutez la noix de muscade. Nappez le fond d’un plat à gratin d’une fine couche de béchamel.",
+    "Garnissez les rouleaux de cannellonis de la farce aux épinards et disposez-les dans le plat à gratin. Nappez du restant de béchamel, saupoudrez de parmesan et de gruyère puis placez au four à 200°C pendant 30 minutes.",
+    "Servez chaud."
+  ],
+  "cuisine": [
+    {"type": "text", "content": "Faites chauffer le four à 200° et sortez vos ingrédients"},
+    {"type": "text", "content": "<h1>Effectuer vos préparations</h1>Epluchez l'oignon, coupez-le en petits morceaux<br/>Epluchez l'ail, coupez-le en petits morceaux<br/>Pesez les épinards, réservez<br/>Pesez la ricotta, réservez<br/>Pesez le beurre, coupez-le et mettez-le dans une casserole, réservez<br/>Mesurez le lait, réservez<br/>Pesez la farine, réservez<br/>Sortez vos plats<br/>Sortez les cannelloni<br/>Faites chauffer une poêle avec un peu d'huile"},
+    {"type": "text", "content": "<h1>Béchamel</h1>Faites fondre le beurre<br/>Ajoutez la farine en remuant à l'aide d'un fouet<br/>Votre mélange forme à présent une sorte de boule<br/>Ajoutez progessivement le lait jusqu'à ce que la béchamel ait une consistance assez liquide<br/>Salez, poivrez<br/>Réservez (en refroidissant, la béchamel va se densifier pour la  rendre plus liquide, faites la réchauffer en remuant)"},
+    {"type": "text", "content": "<h1>La farce</h1>Placez dans une poêle huilée l'ail et l'oignon<br/>Faites les revenir pendant 5 minutes en les remuant<br/>Ajoutez les épinards hachés<br/>Laissez cuire à feu moyen en remuant de temps en temps pendant 8 minutes<br/>Ajoutez la ricotta et mélangez<br/>Goûtez et salez poivrez si nécessaire"},
+    {"type": "text", "content": "<h1>Dressage</h1>Nappez le fond de votre plat avec un peu de béchamel<br/>Garnissez les rouleaux de cannelloni avec la farce<br/>Disposez-les dans le plat à gratin<br/>Nappez du restant de béchamel<br/>Saupoudrez de parmesan<br/>Enfournez (200°, 30 minutes)"},
+    {"type": "text", "content": "<h1>C'est prêt !</h1>"}
+  ],
+  "tags": ["Pâtes", "Parmesan", "Plat"]
+}
+]
+  
+
+  
+
+  
+
+  

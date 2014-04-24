@@ -1,0 +1,30 @@
+{
+  "unit": [
+    {"id": "centilitre", "plural": "centilitre", "abbr": "cl", "type": "volume"},
+    {"id": "gramme", "plural": "grammes", "abbr": "g", "type": "weight"},
+    {"id": "piece", "plural": "pieces", "abbr": "pce", "type": "number"},
+    {"id": "gousse", "plural": "gousses", "abbr": "???", "type": "number"},
+    {"id": "minute", "plural": "minutes", "abbr": "min", "type": "time"},
+    {"id": "personne", "plural": "personnes", "abbr": "pers", "type": "serving"},
+    {"id": "none", "plural": "", "abbr": "", "type": "all"}
+  ],
+  "ingredient": {
+    "role": [
+      {"id": "primary"},
+      {"id": "secondary"},
+      {"id": "other"}
+    ],
+    "type": [
+      {"id": "common", "desc": "Ingrédient que tout le monde possède chez soi"},
+      {"id": "usual", "desc": "Ingrédient que la plupart des gens possède"},
+      {"id": "unusual", "desc": "Ingrédient que es gens devront probablement acheter"},
+      {"id": "rare", "desc": "Ingrédient qui est potentiellement inconnu des gens"}
+    ]
+  },
+  "tool": [
+    {"id": "poele", "name": "Poêle"},
+    {"id": "casserole", "name": "Casserole"},
+    {"id": "fouet", "name": "Fouet"},
+    {"id": "plat-a-gratin", "name": "Plat à gratin"}
+  ]
+}
