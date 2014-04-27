@@ -4,28 +4,28 @@ angular.module('ionicApp.controllers', [])
 .controller('SideMenuCtrl', function($scope) {
   'use strict';
   $scope.header = {
-    style: "bar-positive",
-    align: "center"
+    style: 'bar-positive',
+    align: 'center'
   };
 })
 
 
 .controller('HomeCtrl', function($scope, Log) {
   'use strict';
-  $scope.header.style = "bar-positive";
-  $scope.header.align = "center";
+  $scope.header.style = 'bar-positive';
+  $scope.header.align = 'center';
   Log.info('test');
 })
 
 
 .controller('ShoppinglistCtrl', function($scope, IngredientService) {
   'use strict';
-  $scope.header.style = "bar-royal";
-  $scope.header.align = "left";
+  $scope.header.style = 'bar-royal';
+  $scope.header.align = 'left';
   $scope.ingredients = [];
   $scope.ingredientGrid = {};
   $scope.list = {
-    name: "Your list",
+    name: 'Your list',
     cart: []
   };
   
@@ -35,35 +35,38 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCartCtrl', function($scope) {
+.controller('ShoppinglistCartCtrl', function($scope, Log) {
   'use strict';
-  $scope.search = "";
+  $scope.search = '';
 
   $scope.editList = function(){
-    alert('editList : not implemented yet !');
+    Log.alert('editList : not implemented yet !');
   };
   $scope.changeList = function(){
-    alert('changeList : not implemented yet !');
+    Log.alert('changeList : not implemented yet !');
   };
   $scope.shareList = function(){
-    alert('shareList : not implemented yet !');
+    Log.alert('shareList : not implemented yet !');
+  };
+  $scope.addToList = function(ingredient){
+    
   };
 })
 
 
-.controller('ShoppinglistProductsCtrl', function($scope) {
+.controller('ShoppinglistProductsCtrl', function($scope, Log) {
   'use strict';
 
   $scope.done = function(){
-    alert('done : not implemented yet !');
+    Log.alert('done : not implemented yet !');
   };
 })
 
 
 .controller('RecipesCtrl', function($scope) {
   'use strict';
-  $scope.header.style = "bar-assertive";
-  $scope.header.align = "center";
+  $scope.header.style = 'bar-assertive';
+  $scope.header.align = 'center';
 })
 
 
@@ -79,37 +82,39 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope) {
+.controller('RecipeCtrl', function($scope, Log) {
   'use strict';
   
   $scope.favorite = function(){
-    alert('favorite : not implemented yet !');
+    Log.alert('favorite : not implemented yet !');
   };
   $scope.share = function(){
-    alert('share : not implemented yet !');
+    Log.alert('share : not implemented yet !');
   };
   $scope.addToList = function(){
-    alert('addToList : not implemented yet !');
+    Log.alert('addToList : not implemented yet !');
   };
 })
 
 
 .controller('LogsCtrl', function($scope, UserService){
+  'use strict';
   $scope.formated = true;
   $scope.logs = UserService.getLogHistory();
 })
 
 
-.controller('DeviceCtrl', function($scope, $localStorage){
+.controller('DeviceCtrl', function($scope, $localStorage, Log){
+  'use strict';
   $scope.$storage = $localStorage;
 
-  ionic.Platform.ready(function(){
-    $scope.device = ionic.Platform.device();
+  window.ionic.Platform.ready(function(){
+    $scope.device = window.ionic.Platform.device();
   });
 
   $scope.resetApp = function(){
     $scope.$storage.$reset();
-    alert('Application réinitialisée !');
-    ionic.Platform.exitApp();
+    Log.alert('Application réinitialisée !');
+    window.ionic.Platform.exitApp();
   };
 });

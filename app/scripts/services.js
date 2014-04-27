@@ -2,6 +2,7 @@ angular.module('ionicApp.services', [])
 
 
 .factory('IngredientService', function($http, Log){
+    'use strict';
     var ingredientsPromise;
     var service = {
         getAsync: getIngredientAsync
@@ -11,7 +12,7 @@ angular.module('ionicApp.services', [])
         if(id === undefined){
             return loadIngredientsAsync();
         } else {
-            throw "Can't load getIngredientAsync with id <"+id+">";
+            throw 'Can\'t load getIngredientAsync with id <'+id+'>';
         }
     }
 
@@ -33,6 +34,7 @@ angular.module('ionicApp.services', [])
 
 
 .factory('UserService', function($localStorage){
+    'use strict';
     if(!$localStorage.user){$localStorage.user = {};}
     if(!$localStorage.user.logs){$localStorage.user.logs = [];}
     var _user = $localStorage.user;
@@ -77,11 +79,10 @@ angular.module('ionicApp.services', [])
     function findInLogs(elt, action, max){
         var res = [];
         var logs = _user.logs;
+        var matchId = function(r){ return r.id === logs[i].id; };
         for(var i=0; i<logs.length; i++){
             if(logs[i].elt === elt && (!action || logs[i].action === action)){
-                var exist = _.find(res, function(r){
-                    return r.id === logs[i].id;
-                });
+                var exist = _.find(res, matchId);
                 if(!exist){
                     res.push(logs[i]);
                 }
@@ -98,9 +99,10 @@ angular.module('ionicApp.services', [])
 
 
 .factory('Util', function(){
+    'use strict';
     var service = {
         isDevice: function(){
-            return ionic.Platform.isCordova();
+            return window.ionic.Platform.isCordova();
         }
     };
 
@@ -109,8 +111,10 @@ angular.module('ionicApp.services', [])
 
 
 .factory('Log', function(Util){
+    'use strict';
     var logLevel = Util.isDevice() ? 3 : 0;
     var service = {
+        alert: function(msg, obj){window.alert(msg+'\n'+JSON.stringify(obj));},
         debug: function(msg, obj){write(0, msg, obj);},
         log: function(msg, obj){write(1, msg, obj);},
         info: function(msg, obj){write(2, msg, obj);},
@@ -125,27 +129,27 @@ angular.module('ionicApp.services', [])
         if(level >= logLevel){
             switch(level){
                 case 0:
-                    if(Util.isDevice()){alert("DEBUG :\n"+msg+"\n"+JSON.stringify(obj));}
+                    if(Util.isDevice()){service.alert('DEBUG :\n'+msg, obj);}
                     else {console.log(msg, obj);}
                     break;
                 case 1:
-                    if(Util.isDevice()){alert("LOG :\n"+msg+"\n"+JSON.stringify(obj));}
+                    if(Util.isDevice()){service.alert('LOG :\n'+msg, obj);}
                     else {console.log(msg, obj);}
                     break;
                 case 2:
-                    if(Util.isDevice()){alert("INFO :\n"+msg+"\n"+JSON.stringify(obj));}
+                    if(Util.isDevice()){service.alert('INFO :\n'+msg, obj);}
                     else {console.info(msg, obj);}
                     break;
                 case 3:
-                    if(Util.isDevice()){alert("WARN :\n"+msg+"\n"+JSON.stringify(obj));}
+                    if(Util.isDevice()){service.alert('WARN :\n'+msg, obj);}
                     else {console.warn(msg, obj);}
                     break;
                 case 4:
-                    if(Util.isDevice()){alert("ERROR :\n"+msg+"\n"+JSON.stringify(obj));}
+                    if(Util.isDevice()){service.alert('ERROR :\n'+msg, obj);}
                     else {console.error(msg, obj);}
                     break;
                 default:
-                    alert('ERROR: unknow log level <'+level+'>');
+                    service.alert('ERROR: unknow log level <'+level+'>');
             }
         }
     }

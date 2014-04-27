@@ -4,7 +4,7 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
   'use strict';
   $ionicPlatform.ready(function() {
     if(window.StatusBar) {
-      StatusBar.styleDefault();
+      window.StatusBar.styleDefault();
     }
   });
 })
@@ -15,79 +15,79 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
 
   $stateProvider
   .state('sidemenu', {
-    url: "/sidemenu",
+    url: '/sidemenu',
     abstract: true,
-    templateUrl: "views/sidemenu.html",
+    templateUrl: 'views/sidemenu.html',
     controller: 'SideMenuCtrl'
   })
   .state('sidemenu.home', {
-    url: "/home",
+    url: '/home',
     views: {
       'menuContent': {
-        templateUrl: "views/home.html",
+        templateUrl: 'views/home.html',
         controller: 'HomeCtrl'
       }
     }
   })
   .state('sidemenu.shoppinglist', {
-    url: "/shoppinglist",
+    url: '/shoppinglist',
     abstract: true,
     views: {
       'menuContent': {
-        template: "<ui-view></ui-view>",
+        template: '<ui-view></ui-view>',
         controller: 'ShoppinglistCtrl'
       }
     }
   })
   .state('sidemenu.shoppinglist.cart', {
-    url: "/cart",
-    templateUrl: "views/shoppinglist/current.html",
+    url: '/cart',
+    templateUrl: 'views/shoppinglist/current.html',
     controller: 'ShoppinglistCartCtrl'
   })
   .state('sidemenu.shoppinglist.addingredients', {
-    url: "/addproducts",
-    templateUrl: "views/shoppinglist/addingredients.html",
+    url: '/addproducts',
+    templateUrl: 'views/shoppinglist/addingredients.html',
     controller: 'ShoppinglistProductsCtrl'
   })
   .state('sidemenu.recipes', {
-    url: "/recipes",
+    url: '/recipes',
     abstract: true,
     views: {
       'menuContent': {
-        template: "<ui-view></ui-view>",
+        template: '<ui-view></ui-view>',
         controller: 'RecipesCtrl'
       }
     }
   })
   .state('sidemenu.recipes.search', {
-    url: "/search",
-    templateUrl: "views/recipes/search.html",
+    url: '/search',
+    templateUrl: 'views/recipes/search.html',
     controller: 'RecipesSearchCtrl'
   })
   .state('sidemenu.recipes.results', {
-    url: "/results",
-    templateUrl: "views/recipes/results.html",
+    url: '/results',
+    templateUrl: 'views/recipes/results.html',
     controller: 'RecipesResultsCtrl'
   })
   .state('sidemenu.recipes.recipe', {
-    url: "/:id",
-    templateUrl: "views/recipes/recipe.html",
+    url: '/:id',
+    templateUrl: 'views/recipes/recipe.html',
     controller: 'RecipeCtrl'
   })
   .state('sidemenu.logs', {
-    url: "/logs",
+    url: '/logs',
     views: {
       'menuContent': {
-        templateUrl: "views/hidden/logs.html",
+        templateUrl: 'views/hidden/logs.html',
         controller: 'LogsCtrl'
       }
     }
   })
   .state('sidemenu.device', {
-    url: "/device",
+    url: '/device',
     views: {
       'menuContent': {
-        templateUrl: "views/hidden/device.html",
+        templateUrl: 'views/hidden/device.html',
         controller: 'DeviceCtrl'
       }
     }
