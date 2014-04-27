@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers', 'ionicApp.filters'])
 
 .run(function($ionicPlatform) {
   'use strict';
@@ -73,6 +73,24 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: "/:id",
     templateUrl: "views/recipes/recipe.html",
     controller: 'RecipeCtrl'
+  })
+  .state('sidemenu.logs', {
+    url: "/logs",
+    views: {
+      'menuContent': {
+        templateUrl: "views/hidden/logs.html",
+        controller: 'LogsCtrl'
+      }
+    }
+  })
+  .state('sidemenu.device', {
+    url: "/device",
+    views: {
+      'menuContent': {
+        templateUrl: "views/hidden/device.html",
+        controller: 'DeviceCtrl'
+      }
+    }
   });
 });
 

@@ -1,5 +1,102 @@
 angular.module('ionicApp.services', [])
 
+
+.factory('IngredientService', function($http, Log){
+    var ingredientsPromise;
+    var service = {
+        getAsync: getIngredientAsync
+    };
+
+    function getIngredientAsync(id){
+        if(id === undefined){
+            return loadIngredientsAsync();
+        } else {
+            throw "Can't load getIngredientAsync with id <"+id+">";
+        }
+    }
+
+    function loadIngredientsAsync(){
+        if(!ingredientsPromise){
+            ingredientsPromise = $http.get('data/ingredients.json').then(function(result) {
+                Log.log('IngredientService.loadIngredientsAsync', result);
+                var ingredients = result.data;
+                return ingredients;
+            }).then(null, function(error){
+                Log.error('IngredientService.loadIngredientsAsync', error);
+            });
+        }
+        return ingredientsPromise;
+    }
+
+    return service;
+})
+
+
+.factory('UserService', function($localStorage){
+    if(!$localStorage.user){$localStorage.user = {};}
+    if(!$localStorage.user.logs){$localStorage.user.logs = [];}
+    var _user = $localStorage.user;
+    var service = {
+        makeScan: function(barcode, from, duration){
+            var time = moment().valueOf();
+            navigator.geolocation.getCurrentPosition(function(position) {
+                logEvent('scan', 'make', barcode, time, {
+                    from: from,
+                    position: position.coords,
+                    duration: duration
+                });
+            }, function(error) {
+                logEvent('scan', 'make', barcode, time, {
+                    from: from,
+                    duration: duration,
+                    position: error
+                });
+            });
+        },
+        seeRecipe: function(recipe){logEvent('recipe', 'see', recipe.id, moment().valueOf());},
+        boughtRecipe: function(recipe){logEvent('recipe', 'bought', recipe.id, moment().valueOf());},
+        seeProduct: function(product){logEvent('product', 'see', product.barcode, moment().valueOf());},
+        boughtProduct: function(product){logEvent('product', 'bought', product.barcode, moment().valueOf());},
+        getSeenRecipes: function(max){return findInLogs('recipe', 'see', max);},
+        getBoughtRecipes: function(max){return findInLogs('recipe', 'bought', max);},
+        getScannedProducts: function(max){return findInLogs('product', 'see', max);},
+        getBoughtProducts: function(max){return findInLogs('product', 'bought', max);},
+        getLogHistory: function(){return _user.logs;}
+    };
+
+    function logEvent(elt, action, id, time, data){
+        _user.logs.unshift({
+            elt: elt,
+            action: action,
+            id: id,
+            time: time,
+            data: data
+        });
+    }
+
+    function findInLogs(elt, action, max){
+        var res = [];
+        var logs = _user.logs;
+        for(var i=0; i<logs.length; i++){
+            if(logs[i].elt === elt && (!action || logs[i].action === action)){
+                var exist = _.find(res, function(r){
+                    return r.id === logs[i].id;
+                });
+                if(!exist){
+                    res.push(logs[i]);
+                }
+            }
+            if(max && res.length >= max){
+                return res;
+            }
+        }
+        return res;
+    }
+
+    return service;
+})
+
+
 .factory('Util', function(){
     var service = {
         isDevice: function(){
@@ -9,6 +106,7 @@ angular.module('ionicApp.services', [])
 
     return service;
 })
+
 
 .factory('Log', function(Util){
     var logLevel = Util.isDevice() ? 3 : 0;
@@ -50,36 +148,6 @@ angular.module('ionicApp.services', [])
                     alert('ERROR: unknow log level <'+level+'>');
             }
         }
-    }
-
-    return service;
-})
-
-.factory('IngredientService', function($http, Log){
-    var ingredientsPromise;
-    var service = {
-        getAsync: getIngredientAsync
-    };
-
-    function getIngredientAsync(id){
-        if(id === undefined){
-            return loadIngredientsAsync();
-        } else {
-            throw "Can't load getIngredientAsync with id <"+id+">";
-        }
-    }
-
-    function loadIngredientsAsync(){
-        if(!ingredientsPromise){
-            ingredientsPromise = $http.get('data/ingredients.json').then(function(result) {
-                Log.log('IngredientService.loadIngredientsAsync', result);
-                var ingredients = result.data;
-                return ingredients;
-            }).then(null, function(error){
-                Log.error('IngredientService.loadIngredientsAsync', error);
-            });
-        }
-        return ingredientsPromise;
     }
 
     return service;

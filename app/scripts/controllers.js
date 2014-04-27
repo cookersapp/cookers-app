@@ -1,5 +1,6 @@
 angular.module('ionicApp.controllers', [])
 
+
 .controller('SideMenuCtrl', function($scope) {
   'use strict';
   $scope.header = {
@@ -8,12 +9,14 @@ angular.module('ionicApp.controllers', [])
   };
 })
 
+
 .controller('HomeCtrl', function($scope, Log) {
   'use strict';
   $scope.header.style = "bar-positive";
   $scope.header.align = "center";
   Log.info('test');
 })
+
 
 .controller('ShoppinglistCtrl', function($scope, IngredientService) {
   'use strict';
@@ -31,6 +34,7 @@ angular.module('ionicApp.controllers', [])
   });
 })
 
+
 .controller('ShoppinglistCartCtrl', function($scope) {
   'use strict';
   $scope.search = "";
@@ -46,6 +50,7 @@ angular.module('ionicApp.controllers', [])
   };
 })
 
+
 .controller('ShoppinglistProductsCtrl', function($scope) {
   'use strict';
 
@@ -54,21 +59,25 @@ angular.module('ionicApp.controllers', [])
   };
 })
 
+
 .controller('RecipesCtrl', function($scope) {
   'use strict';
   $scope.header.style = "bar-assertive";
   $scope.header.align = "center";
 })
 
+
 .controller('RecipesSearchCtrl', function($scope) {
   'use strict';
 
 })
 
+
 .controller('RecipesResultsCtrl', function($scope) {
   'use strict';
 
 })
+
 
 .controller('RecipeCtrl', function($scope) {
   'use strict';
@@ -81,5 +90,26 @@ angular.module('ionicApp.controllers', [])
   };
   $scope.addToList = function(){
     alert('addToList : not implemented yet !');
+  };
+})
+
+
+.controller('LogsCtrl', function($scope, UserService){
+  $scope.formated = true;
+  $scope.logs = UserService.getLogHistory();
+})
+
+
+.controller('DeviceCtrl', function($scope, $localStorage){
+  $scope.$storage = $localStorage;
+
+  ionic.Platform.ready(function(){
+    $scope.device = ionic.Platform.device();
+  });
+
+  $scope.resetApp = function(){
+    $scope.$storage.$reset();
+    alert('Application réinitialisée !');
+    ionic.Platform.exitApp();
   };
 });

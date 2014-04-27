@@ -1,0 +1,20 @@
+<ion-view title="Device infos">
+    <ion-nav-bar>
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content class="padding">
+        <p>Informations sur le téléphone :</p>
+        <p>device.model: {{device.model}}</p>
+        <p>device.platform: {{device.platform}}</p>
+        <p>device.uuid: {{device.uuid}}</p>
+        <p>device.version: {{device.version}}</p>
+        <p>
+            <button class="button button-assertive" ng-click="resetApp()">
+                Reset app !
+            </button>
+        </p>
+    </ion-content>
+</ion-view>
