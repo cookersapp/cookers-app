@@ -1,9 +1,15 @@
 <ion-view title="Accueil">
+    <ion-nav-bar ng-class="header.style" ng-attr-align-title="{{header.align}}">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </ion-nav-buttons>
     <ion-content class="padding">
         <div class="dashboard">
             <div class="row">
                 <div class="col col-50">
-                    <button class="button button-royal" ui-sref="sidemenu.shoppinglist">Liste de course</button>
+                    <button class="button button-royal" ui-sref="sidemenu.shoppinglist.cart">Liste de course</button>
                 </div>
                 <div class="col col-50">
                     <button class="button button-assertive">Recettes</button>

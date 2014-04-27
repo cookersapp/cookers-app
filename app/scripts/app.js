@@ -31,12 +31,23 @@ angular.module('ionicApp', ['ionic', 'ionicApp.controllers'])
   })
   .state('sidemenu.shoppinglist', {
     url: "/shoppinglist",
+    abstract: true,
     views: {
       'menuContent': {
-        templateUrl: "views/shoppinglist/current.html",
+        template: "<ui-view></ui-view>",
         controller: 'ShoppinglistCtrl'
       }
     }
+  })
+  .state('sidemenu.shoppinglist.cart', {
+    url: "/cart",
+    templateUrl: "views/shoppinglist/current.html",
+    controller: 'ShoppinglistCartCtrl'
+  })
+  .state('sidemenu.shoppinglist.addproducts', {
+    url: "/addproducts",
+    templateUrl: "views/shoppinglist/addproducts.html",
+    controller: 'ShoppinglistProductsCtrl'
   });
 });
 

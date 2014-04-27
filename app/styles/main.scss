@@ -1,4 +1,6 @@
 @import 'colors';
+@import 'ionic_override';
+@import 'global';
 
 .dashboard button {
     font-size: 2em;
@@ -6,49 +8,89 @@
     height: 170px;
 }
 
-.item.item-border-light,
-.item.item-border-stable,
-.item.item-border-positive,
-.item.item-border-calm,
-.item.item-border-balanced,
-.item.item-border-energized,
-.item.item-border-assertive,
-.item.item-border-royal,
-.item.item-border-dark,
-.item.item-border-gray {
-    border-left: 10px solid #fff;
+.shoppinglist .item-divider {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    min-height: 25px;
 }
-.item-icon-left.item-border-light .icon,
-.item-icon-left.item-border-stable .icon,
-.item-icon-left.item-border-positive .icon,
-.item-icon-left.item-border-calm .icon,
-.item-icon-left.item-border-balanced .icon,
-.item-icon-left.item-border-energized .icon,
-.item-icon-left.item-border-assertive .icon,
-.item-icon-left.item-border-royal .icon,
-.item-icon-left.item-border-dark .icon,
-.item-icon-left.item-border-gray .icon {
-    left: 2px;
+.shoppinglist .item-avatar {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-height: 55px;
 }
-.item-icon-left.item-border-light,
-.item-icon-left.item-border-stable,
-.item-icon-left.item-border-positive,
-.item-icon-left.item-border-calm,
-.item-icon-left.item-border-balanced,
-.item-icon-left.item-border-energized,
-.item-icon-left.item-border-assertive,
-.item-icon-left.item-border-royal,
-.item-icon-left.item-border-dark,
-.item-icon-left.item-border-gray {
-    padding-left: 37px;
+.shoppinglist .item-avatar > img:first-child {
+    top: 0px;
 }
-.item.item-border-light {border-color: $color-light-border; border-left-color: $color-light;}
-.item.item-border-stable {border-color: $color-stable-border; border-left-color: $color-stable;}
-.item.item-border-positive {border-color: $color-positive-border; border-left-color: $color-positive;}
-.item.item-border-calm {border-color: $color-calm-border; border-left-color: $color-calm;}
-.item.item-border-balanced {border-color: $color-balanced-border; border-left-color: $color-balanced;}
-.item.item-border-energized {border-color: $color-energized-border; border-left-color: $color-energized;}
-.item.item-border-assertive {border-color: $color-assertive-border; border-left-color: $color-assertive;}
-.item.item-border-royal {border-color: $color-royal-border; border-left-color: $color-royal;}
-.item.item-border-dark {border-color: $color-dark-border; border-left-color: $color-dark;}
-.item.item-border-gray {border-color: $color-gray-border; border-left-color: $color-gray;}
+.shoppinglist .item-avatar .pull-right {
+    float: right;
+    border-left: 1px solid #ccc;
+    margin-left: 10px;
+}
+.shoppinglist .item-avatar .pull-right .checkbox {
+    padding: 5px 0px 5px 10px;
+}
+.shoppinglist.bought .item-divider {
+    border-color: $color-balanced-border;
+    background-color: $color-balanced;
+    color: $color-balanced-font;
+}
+.shoppinglist.bought .item h2 {
+    text-decoration: line-through;
+}
+
+.product-grid {
+    background: #eee;
+}
+.product-grid .product.category {
+    position: relative;
+}
+.product-grid .product.category:after {
+    position: absolute;
+    top: 37px;
+    right: 7px;
+    color: #555;
+    content: "\f125";
+    font-size: 24px;
+    font-family: 'Ionicons';
+    line-height: 1;
+    speak: none;
+}
+.product-grid .product .img {
+
+}
+.product-grid .product .img img {
+    max-width: 100%;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.product-grid .product .img div {
+    display: none;
+}
+.product-grid .product .name {
+    text-align: center;
+}
+
+
+
+
+
+
+.product-grid .product.selected .img {
+    position: relative;
+}
+.product-grid .product.selected .img img {
+    border: 1px solid $color-balanced-border;
+}
+.product-grid .product.selected .img div {
+    display: block;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    background: $color-balanced;
+    border: 1px solid $color-balanced-border;
+    color: $color-balanced-font;
+    text-align: center;
+}
