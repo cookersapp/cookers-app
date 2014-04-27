@@ -25,6 +25,9 @@
     "tests"
   ],
   "dependencies": {
-    "ionic": "v1.0.0-beta.1"
+    "ionic": "v1.0.0-beta.1",
+    "moment": "~2.6.0",
+    "ngstorage": "~0.3.0",
+    "lodash": "~2.4.1"
   }
 }

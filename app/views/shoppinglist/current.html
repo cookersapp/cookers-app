@@ -14,9 +14,19 @@
         <div class="list">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Chercher et ajouter un produit">
+                <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search">
             </label>
-            <a class="item item-icon-left" ui-sref="sidemenu.shoppinglist.addproducts">
+            <div class="item ingredient-search" ng-if="search">
+                <div ng-repeat="ingredient in ingredients | filter:search" class="ingredient">
+                    <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
+                    <div class="name">{{ingredient.name}}</div>
+                </div>
+                <div class="ingredient">
+                    <img ng-src="images/ingredients/100x100/unknown.png">
+                    <div class="name">{{search}}</div>
+                </div>
+            </div>
+            <a class="item item-icon-left" ui-sref="sidemenu.shoppinglist.addingredients">
                 <i class="icon ion-plus-circled"></i>
                 Ajouter des produits
             </a>

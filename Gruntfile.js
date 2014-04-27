@@ -237,6 +237,7 @@ module.exports = function (grunt) {
             '*.html',
             'views/**/*.html',
             'fonts/*',
+            'data/*',
             'res/*'
           ]
         }, {

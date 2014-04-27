@@ -8,24 +8,32 @@ angular.module('ionicApp.controllers', [])
   };
 })
 
-.controller('HomeCtrl', function($scope) {
+.controller('HomeCtrl', function($scope, Log) {
   'use strict';
   $scope.header.style = "bar-positive";
   $scope.header.align = "center";
+  Log.info('test');
 })
 
-.controller('ShoppinglistCtrl', function($scope) {
+.controller('ShoppinglistCtrl', function($scope, IngredientService) {
   'use strict';
   $scope.header.style = "bar-royal";
   $scope.header.align = "left";
+  $scope.ingredients = [];
+  $scope.ingredientGrid = {};
   $scope.list = {
     name: "Your list",
     cart: []
   };
+  
+  IngredientService.getAsync().then(function(ingredients){
+    $scope.ingredients = ingredients;
+  });
 })
 
 .controller('ShoppinglistCartCtrl', function($scope) {
   'use strict';
+  $scope.search = "";
 
   $scope.editList = function(){
     alert('editList : not implemented yet !');

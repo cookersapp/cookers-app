@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ionicApp.controllers'])
+angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp.controllers'])
 
 .run(function($ionicPlatform) {
   'use strict';
@@ -44,9 +44,9 @@ angular.module('ionicApp', ['ionic', 'ionicApp.controllers'])
     templateUrl: "views/shoppinglist/current.html",
     controller: 'ShoppinglistCartCtrl'
   })
-  .state('sidemenu.shoppinglist.addproducts', {
+  .state('sidemenu.shoppinglist.addingredients', {
     url: "/addproducts",
-    templateUrl: "views/shoppinglist/addproducts.html",
+    templateUrl: "views/shoppinglist/addingredients.html",
     controller: 'ShoppinglistProductsCtrl'
   })
   .state('sidemenu.recipes', {
