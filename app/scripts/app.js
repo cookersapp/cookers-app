@@ -1,4 +1,4 @@
-angular.module('IonicBoilerplate', ['ionic', 'IonicBoilerplate.controllers'])
+angular.module('ionicApp', ['ionic', 'ionicApp.controllers'])
 
 .run(function($ionicPlatform) {
   'use strict';
@@ -11,52 +11,32 @@ angular.module('IonicBoilerplate', ['ionic', 'IonicBoilerplate.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   'use strict';
+  $urlRouterProvider.otherwise('/sidemenu/home');
+
   $stateProvider
-
-  .state('app', {
-    url: '/app',
+  .state('sidemenu', {
+    url: "/sidemenu",
     abstract: true,
-    templateUrl: 'views/menu.html',
-    controller: 'AppCtrl'
+    templateUrl: "views/sidemenu.html",
+    controller: 'SideMenuCtrl'
   })
-
-  .state('app.search', {
-    url: '/search',
+  .state('sidemenu.home', {
+    url: "/home",
     views: {
-      'menuContent' :{
-        templateUrl: 'views/search.html'
+      'menuContent': {
+        templateUrl: "views/home.html",
+        controller: 'HomeCtrl'
       }
     }
   })
-
-  .state('app.browse', {
-    url: '/browse',
+  .state('sidemenu.shoppinglist', {
+    url: "/shoppinglist",
     views: {
-      'menuContent' :{
-        templateUrl: 'views/browse.html'
-      }
-    }
-  })
-  .state('app.playlists', {
-    url: '/playlists',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/playlists.html',
-        controller: 'PlaylistsCtrl'
-      }
-    }
-  })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/playlist.html',
-        controller: 'PlaylistCtrl'
+      'menuContent': {
+        templateUrl: "views/shoppinglist/current.html",
+        controller: 'ShoppinglistCtrl'
       }
     }
   });
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
 });
 

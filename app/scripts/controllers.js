@@ -1,23 +1,16 @@
-angular.module('IonicBoilerplate.controllers', [])
+angular.module('ionicApp.controllers', [])
 
-.controller('AppCtrl', function($scope) {
+.controller('SideMenuCtrl', function($scope) {
   'use strict';
 
 })
 
-.controller('PlaylistsCtrl', function($scope) {
+.controller('HomeCtrl', function($scope) {
   'use strict';
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+  
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('ShoppinglistCtrl', function($scope) {
   'use strict';
-
+  
 });

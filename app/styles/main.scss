@@ -1,0 +1,54 @@
+@import 'colors';
+
+.dashboard button {
+    font-size: 2em;
+    width: 100%;
+    height: 170px;
+}
+
+.item.item-border-light,
+.item.item-border-stable,
+.item.item-border-positive,
+.item.item-border-calm,
+.item.item-border-balanced,
+.item.item-border-energized,
+.item.item-border-assertive,
+.item.item-border-royal,
+.item.item-border-dark,
+.item.item-border-gray {
+    border-left: 10px solid #fff;
+}
+.item-icon-left.item-border-light .icon,
+.item-icon-left.item-border-stable .icon,
+.item-icon-left.item-border-positive .icon,
+.item-icon-left.item-border-calm .icon,
+.item-icon-left.item-border-balanced .icon,
+.item-icon-left.item-border-energized .icon,
+.item-icon-left.item-border-assertive .icon,
+.item-icon-left.item-border-royal .icon,
+.item-icon-left.item-border-dark .icon,
+.item-icon-left.item-border-gray .icon {
+    left: 2px;
+}
+.item-icon-left.item-border-light,
+.item-icon-left.item-border-stable,
+.item-icon-left.item-border-positive,
+.item-icon-left.item-border-calm,
+.item-icon-left.item-border-balanced,
+.item-icon-left.item-border-energized,
+.item-icon-left.item-border-assertive,
+.item-icon-left.item-border-royal,
+.item-icon-left.item-border-dark,
+.item-icon-left.item-border-gray {
+    padding-left: 37px;
+}
+.item.item-border-light {border-color: $color-light-border; border-left-color: $color-light;}
+.item.item-border-stable {border-color: $color-stable-border; border-left-color: $color-stable;}
+.item.item-border-positive {border-color: $color-positive-border; border-left-color: $color-positive;}
+.item.item-border-calm {border-color: $color-calm-border; border-left-color: $color-calm;}
+.item.item-border-balanced {border-color: $color-balanced-border; border-left-color: $color-balanced;}
+.item.item-border-energized {border-color: $color-energized-border; border-left-color: $color-energized;}
+.item.item-border-assertive {border-color: $color-assertive-border; border-left-color: $color-assertive;}
+.item.item-border-royal {border-color: $color-royal-border; border-left-color: $color-royal;}
+.item.item-border-dark {border-color: $color-dark-border; border-left-color: $color-dark;}
+.item.item-border-gray {border-color: $color-gray-border; border-left-color: $color-gray;}
