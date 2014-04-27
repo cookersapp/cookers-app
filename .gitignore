@@ -1,0 +1,13 @@
+app/bower_components/
+app/fonts/
+.sass-cache/
+.tmp/
+coverage/
+hooks/
+merges/
+node_modules/
+platforms/
+plugins/
+www/
+
+*~

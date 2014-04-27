@@ -1,0 +1,30 @@
+{
+  "name": "retail-scan",
+  "version": "0.0.1",
+  "homepage": "https://bitbucket.org/loicknuchel/retail-scan-app-ionic",
+  "authors": [
+    "Loïc Knuchel <loicknuchel@gmail.com>"
+  ],
+  "description": "Create your shopping list easily with recipe recommandations",
+  "main": "app/index.html",
+  "keywords": [
+    "cordova",
+    "ionic",
+    "mobile",
+    "hybrid"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "www/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ionic": "v1.0.0-beta.1"
+  }
+}
