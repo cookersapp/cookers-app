@@ -44,4 +44,34 @@ angular.module('ionicApp.controllers', [])
   $scope.done = function(){
     alert('done : not implemented yet !');
   };
+})
+
+.controller('RecipesCtrl', function($scope) {
+  'use strict';
+  $scope.header.style = "bar-assertive";
+  $scope.header.align = "center";
+})
+
+.controller('RecipesSearchCtrl', function($scope) {
+  'use strict';
+
+})
+
+.controller('RecipesResultsCtrl', function($scope) {
+  'use strict';
+
+})
+
+.controller('RecipeCtrl', function($scope) {
+  'use strict';
+  
+  $scope.favorite = function(){
+    alert('favorite : not implemented yet !');
+  };
+  $scope.share = function(){
+    alert('share : not implemented yet !');
+  };
+  $scope.addToList = function(){
+    alert('addToList : not implemented yet !');
+  };
 });

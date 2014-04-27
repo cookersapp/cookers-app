@@ -48,6 +48,31 @@ angular.module('ionicApp', ['ionic', 'ionicApp.controllers'])
     url: "/addproducts",
     templateUrl: "views/shoppinglist/addproducts.html",
     controller: 'ShoppinglistProductsCtrl'
+  })
+  .state('sidemenu.recipes', {
+    url: "/recipes",
+    abstract: true,
+    views: {
+      'menuContent': {
+        template: "<ui-view></ui-view>",
+        controller: 'RecipesCtrl'
+      }
+    }
+  })
+  .state('sidemenu.recipes.search', {
+    url: "/search",
+    templateUrl: "views/recipes/search.html",
+    controller: 'RecipesSearchCtrl'
+  })
+  .state('sidemenu.recipes.results', {
+    url: "/results",
+    templateUrl: "views/recipes/results.html",
+    controller: 'RecipesResultsCtrl'
+  })
+  .state('sidemenu.recipes.recipe', {
+    url: "/:id",
+    templateUrl: "views/recipes/recipe.html",
+    controller: 'RecipeCtrl'
   });
 });
 

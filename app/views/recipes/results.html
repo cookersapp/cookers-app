@@ -1,0 +1,21 @@
+<ion-view title="Ananas">
+    <ion-nav-bar ng-class="header.style" ng-attr-align-title="{{header.align}}">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-search" ui-sref="sidemenu.recipes.search"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="list">
+            <div class="item item-divider">18 recettes pourraient vous correspondre</div>
+            <a class="item item-thumbnail-left" ui-sref="sidemenu.recipes.recipe({id: 'toto'})">
+                <img src="images/recipe/80x80/poulet-a-l-ananas.jpg">
+                <h2>Poulet à l'ananas</h2>
+                <p>Plat principal, 4/5</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

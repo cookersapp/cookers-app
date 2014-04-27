@@ -1,0 +1,61 @@
+<ion-view title="Poulet à l'ananas">
+    <ion-nav-bar ng-class="header.style" ng-attr-align-title="{{header.align}}">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-ios7-star-outline" ng-click="favorite()"></button>
+        <button class="button button-icon ion-share" ng-click="share()"></button>
+    </ion-nav-buttons>
+    <ion-content class="recipe">
+        <img src="images/recipe/450x150/poulet-a-l-ananas.jpg" style="width: 100%">
+        <div class="meta padding">
+            <b>Plat principal</b><br>
+            <i class="icon ion-speedometer"></i> Difficulté: facile<br>
+            <i class="icon ion-pricetag"></i> Prix: 4€/personne environ<br>
+            <i class="icon ion-thumbsup"></i> Note: 4/5 (1 vote)<br>
+            <i class="icon ion-clock"></i> Préparation: 20 minutes
+        </div>
+        <div class="padding">
+            <h4>Ingrédients (4 personnes)</h4>
+            <ul>
+                <li>5 blancs de poulet</li>
+                <li>1 petite boîte d'anans en morceaux</li>
+                <li>1 cube de bouillon de volaille</li>
+                <li>un peu de maïzena</li>
+                <li>de la sauce soja</li>
+                <li>3 cuillère de sucre fin</li>
+            </ul>
+            <h4>Ustensiles</h4>
+            <ul>
+                <li>Poele</li>
+            </ul>
+            <h4>Préparation</h4>
+            <p>Coupez les blancs de poulet en fines lamelles. Réservez au frais.</p>
+            <p>Egouttez les ananas. Faites fondre le bouillon cube dans un peu d'eau.</p>
+            <p>Dans une poêle anti-adhésive, verser quelques cuillères à soupe d'huile et faire chauffer. Quand celle ci est bien chaude, y faire revenir les ananas. Ajouter le bouillon afin que celui ci recouvre entièrement les ananas. Laissez cuire 2 mn, puis ajouter la maïzena afin d'épaissir la sauce.</p>
+            <p>Mettre le poulet dans la sauce ainsi que le sucre, la pincée de sel et la sauce soja. Laissez mijoter le tout jusqu'à complète cuisson. Rectifier l'assaisonnement si nécessaire.</p>
+            <p>Servir avec du riz.</p>
+        </div>
+        <div class="list">
+            <div class="item item-divider">Commentaires</div>
+            <div class="item">
+                Bla bla
+            </div>
+            <br>
+            <div class="item item-divider">Recettes similaires</div>
+            <a class="item item-thumbnail-left" ui-sref="sidemenu.recipes.recipe({id: 'toto'})">
+                <img src="images/recipe/80x80/poulet-a-l-ananas.jpg">
+                <h2>Poulet à l'ananas</h2>
+                <p>Plat principal, 4/5</p>
+            </a>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-dark">
+        <div class="buttons">
+            <button class="button button-balanced" ng-click="addToList()">&nbsp;Ajouter les ingrédients à ma liste de courses&nbsp;</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

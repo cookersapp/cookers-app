@@ -18,8 +18,17 @@
     padding-bottom: 5px;
     min-height: 55px;
 }
-.shoppinglist .item-avatar > img:first-child {
+.shoppinglist .item-avatar .main {
+    padding-right: 40px;
+}
+.shoppinglist .item-avatar .main > img:first-child {
+    position: absolute;
     top: 0px;
+    left: 15px;
+    max-width: 40px;
+    max-height: 40px;
+    width: 100%;
+    border-radius: 4px;
 }
 .shoppinglist .item-avatar .pull-right {
     float: right;
@@ -37,6 +46,10 @@
 .shoppinglist.bought .item h2 {
     text-decoration: line-through;
 }
+
+
+
+
 
 .product-grid {
     background: #eee;
@@ -71,12 +84,6 @@
 .product-grid .product .name {
     text-align: center;
 }
-
-
-
-
-
-
 .product-grid .product.selected .img {
     position: relative;
 }
@@ -93,4 +100,13 @@
     border: 1px solid $color-balanced-border;
     color: $color-balanced-font;
     text-align: center;
+}
+
+
+
+
+
+.recipe .meta {
+    background: #eee;
+    margin-top: -5px;
 }
