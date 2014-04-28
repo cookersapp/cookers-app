@@ -1,0 +1,17 @@
+<div class="modal">
+    <header class="bar bar-header" ng-class="header.style">
+        <h1 class="title">{{switchList.title}}</h1>
+        <button class="button button-clear button-primary" ng-click="switchList.modal.hide()">Annuler</button>
+    </header>
+    <ion-content>
+        <button class="button button-block button-balanced" ng-click="createListForm()">
+            Créez une nouvelle liste
+        </button>
+        <div class="list">
+            <div class="item item-divider">Vos listes :</div>
+            <div class="item" ng-repeat="list in switchList.data" ng-click="switchToList(list)">
+                <h2>{{list.name}}</h2>
+            </div>
+        </div>
+    </ion-content>
+</div>

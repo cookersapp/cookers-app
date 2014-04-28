@@ -17,15 +17,30 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCtrl', function($scope, IngredientService) {
+.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, Log) {
   'use strict';
+  // TODO : don't show in suggestions ingredients already in list
+  // TODO : buyIngredient && unbuyIngredient
+  // TODO : ingredientDetails
+  // TODO : parse search input
   $scope.header.style = 'bar-royal';
   $scope.header.align = 'left';
   $scope.ingredients = [];
   $scope.ingredientGrid = {};
-  $scope.list = {
-    name: 'Your list',
-    cart: []
+  $scope.list = ShoppinglistService.getCurrentList();
+
+  $scope.ingredientClick = function(ingredient){
+    ShoppinglistService.addToCurrentList(ingredient);
+  };
+  $scope.unknownClick = function(name){
+    $scope.ingredientClick({
+      id: name,
+      name: name,
+      plural: name,
+      img: "unknown.png",
+      category: "autre",
+      type: "usual"
+    });
   };
 
   IngredientService.getAsync().then(function(ingredients){
@@ -34,21 +49,61 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCartCtrl', function($scope, Log) {
+.controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService, ModalService, Log) {
   'use strict';
   $scope.search = '';
 
-  $scope.editList = function(){
-    Log.alert('editList : not implemented yet !');
+  $scope.editList = {};
+  ModalService.shoppinglist.editList($scope, function(modal) {
+    $scope.editList.modal = modal;
+  });
+  $scope.switchList = {};
+  ModalService.shoppinglist.switchList($scope, function(modal) {
+    $scope.switchList.modal = modal;
+  });
+
+  $scope.createListForm = function(){
+    $scope.editList.title = 'Nouvelle liste';
+    $scope.editList.create = true;
+    $scope.editList.data = ShoppinglistService.newList();
+    $scope.editList.modal.show();
   };
-  $scope.changeList = function(){
-    Log.alert('changeList : not implemented yet !');
+  $scope.createList = function(){
+    $scope.list = ShoppinglistService.addList($scope.editList.data);
+    $scope.editList.modal.hide();
+    $scope.switchList.modal.hide();
+  };
+  $scope.editListForm = function(){
+    $scope.editList.title = 'Modifier la liste';
+    $scope.editList.create = false;
+    $scope.editList.data = angular.copy($scope.list);
+    $scope.editList.modal.show();
+  };
+  $scope.deleteList = function(){
+    $scope.list = ShoppinglistService.removeCurrentList();
+    $scope.editList.modal.hide();
+  };
+  $scope.clearList = function(){
+    ShoppinglistService.clearCurrentList();
+    $scope.editList.modal.hide();
+  };
+  $scope.updateList = function(){
+    angular.copy($scope.editList.data, $scope.list);
+    $scope.editList.modal.hide();
+  };
+  $scope.switchListForm = function(){
+    // TODO : BUG : if editList is called before and you want to create a new list, modal editList will comes under model switchList :(
+    $scope.switchList.title = 'Changer de liste';
+    $scope.switchList.data = ShoppinglistService.getAllLists();
+    $scope.switchList.modal.show();
+  };
+  $scope.switchToList = function(list){
+    $scope.list = ShoppinglistService.setCurrentList(list);
+    // TODO : BUG : sometimes, list don't switch ... :(
+    $scope.switchList.modal.hide();
   };
   $scope.shareList = function(){
     Log.alert('shareList : not implemented yet !');
-  };
-  $scope.addToList = function(ingredient){
-    Log.alert('addToList : not implemented yet !');
   };
 })
 

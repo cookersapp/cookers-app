@@ -5,23 +5,28 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </ion-nav-buttons>
-    <ion-nav-buttons side="right">
-        <button class="button button-icon ion-compose" ng-click="editList()"></button>
-        <button class="button button-icon ion-shuffle" ng-click="changeList()"></button>
+    <ion-nav-buttons side="right" ng-if="list !== null">
+        <button class="button button-icon ion-compose" ng-click="editListForm()"></button>
+        <button class="button button-icon ion-shuffle" ng-click="switchListForm()"></button>
         <button class="button button-icon ion-share" ng-click="shareList()"></button>
     </ion-nav-buttons>
-    <ion-content>
+    <ion-content ng-show="list === null">
+        <button class="button button-block button-balanced" ng-click="createListForm()">
+            Créez votre première liste
+        </button>
+    </ion-content>
+    <ion-content ng-show="list !== null">
         <div class="list">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
                 <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search">
             </label>
             <div class="item ingredient-search" ng-show="search">
-                <div ng-repeat="ingredient in ingredients | filter:search" class="ingredient" ng-click="addToList(ingredient)">
+                <div ng-repeat="ingredient in ingredients | filter:search" class="ingredient" ng-click="ingredientClick(ingredient)">
                     <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
                     <div class="name">{{ingredient.name}}</div>
                 </div>
-                <div class="ingredient">
+                <div class="ingredient" ng-click="unknownClick(search)">
                     <img ng-src="images/ingredients/100x100/unknown.png">
                     <div class="name">{{search}}</div>
                 </div>
@@ -32,38 +37,74 @@
             </a>
         </div>
 
-        <div class="list shoppinglist">
-            <div class="item item-divider">Fruits</div>
-            <div class="item item-avatar">
-                <div class="pull-right">
-                    <label class="checkbox">
-                        <input type="checkbox">
-                    </label>
-                </div>
-                <div class="main">
-                    <img src="images/ingredients/100x100/ananas.jpg">
-                    <h2>Ananas</h2>
-                    <span class="item-note">3 pièces</span>
-                    <p>Bien mûr</p>
+        <div class="list shoppinglist" ng-show="list.categories.length > 0">
+            <div ng-repeat="category in list.categories">
+                <div class="item item-divider">{{category.plural}}</div>
+                <div class="item item-avatar" ng-repeat="item in category.items">
+                    <div class="pull-right">
+                        <label class="checkbox">
+                            <input type="checkbox">
+                        </label>
+                    </div>
+                    <div class="main">
+                        <img ng-src="images/ingredients/100x100/{{item.ingredient.img}}">
+                        <h2>{{item.ingredient.name}}</h2>
+                        <span class="item-note">{{item.quantity}} {{item.quantityUnit}}</span>
+                        <p>{{item.notes}}<p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="list shoppinglist bought">
+        <div class="list shoppinglist bought" ng-show="list.boughtItems.length > 0">
             <div class="item item-divider">Produits achetés</div>
-            <div class="item item-avatar">
+            <div class="item item-avatar" ng-repeat="item in list.boughtItems">
                 <div class="pull-right">
                     <label class="checkbox">
                         <input type="checkbox" checked>
                     </label>
                 </div>
                 <div class="main">
-                    <img src="images/ingredients/100x100/ananas.jpg">
-                    <h2>Ananas</h2>
+                    <img ng-src="images/ingredients/100x100/{{item.img}}">
+                    <h2>{{item.name}}</h2>
                     <span class="item-note">3 pièces</span>
                     <p>Bien mûr</p>
                 </div>
             </div>
         </div>
+
+        <!--<div class="list shoppinglist">
+<div class="item item-divider">Fruits</div>
+<div class="item item-avatar">
+<div class="pull-right">
+<label class="checkbox">
+<input type="checkbox">
+</label>
+</div>
+<div class="main">
+<img src="images/ingredients/100x100/ananas.jpg">
+<h2>Ananas</h2>
+<span class="item-note">3 pièces</span>
+<p>Bien mûr</p>
+</div>
+</div>
+</div>
+
+<div class="list shoppinglist bought">
+<div class="item item-divider">Produits achetés</div>
+<div class="item item-avatar">
+<div class="pull-right">
+<label class="checkbox">
+<input type="checkbox" checked>
+</label>
+</div>
+<div class="main">
+<img src="images/ingredients/100x100/ananas.jpg">
+<h2>Ananas</h2>
+<span class="item-note">3 pièces</span>
+<p>Bien mûr</p>
+</div>
+</div>
+</div>-->
     </ion-content>
 </ion-view>

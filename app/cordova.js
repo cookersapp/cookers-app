@@ -1,4 +1,4 @@
-var cordova = {
+/*var cordova = {
     plugins: {
         barcodeScanner: {
             scan: function(success, fail){
@@ -16,4 +16,4 @@ var cordova = {
 // override ionic functions !!!
 ionic.Platform.exitApp = function(){
     location.reload();
-};
+};*/

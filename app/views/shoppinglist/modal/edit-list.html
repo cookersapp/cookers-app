@@ -1,0 +1,22 @@
+<div class="modal">
+    <header class="bar bar-header" ng-class="header.style">
+        <h1 class="title">{{editList.title}}</h1>
+        <button class="button button-clear button-primary" ng-click="editList.modal.hide()">Annuler</button>
+    </header>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Nom</span>
+                <input type="text" ng-model="editList.data.name" placeholder="">
+            </label>
+            <div class="button-bar" ng-if="!editList.create">
+                <button class="button button-full button-assertive" ng-click="deleteList()">Supprimer</button>
+                <button class="button button-full button-energized" ng-click="clearList()">Vider</button>
+                <button class="button button-full button-balanced" ng-click="updateList()">Enregistrer</button>
+            </div>
+            <div class="button-bar" ng-if="editList.create">
+                <button class="button button-full button-balanced" ng-click="createList()">Créer</button>
+            </div>
+        </div>
+    </ion-content>
+</div>

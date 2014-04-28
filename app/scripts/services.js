@@ -1,32 +1,166 @@
 angular.module('ionicApp.services', [])
 
 
-.factory('IngredientService', function($http, Log){
+.factory('IngredientService', function(DataArrayService){
     'use strict';
-    var ingredientsPromise;
+    var dataUrl = 'data/ingredients.json';
     var service = {
-        getAsync: getIngredientAsync
+        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
     };
 
-    function getIngredientAsync(id){
-        if(id === undefined){
-            return loadIngredientsAsync();
-        } else {
-            throw 'Can\'t load getIngredientAsync with id <'+id+'>';
+    return service;
+})
+
+
+.factory('CategoryService', function(DataArrayService){
+    'use strict';
+    var dataUrl = 'data/ingredient_categories.json';
+    var service = {
+        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
+    };
+
+    return service;
+})
+
+
+.factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService){
+    if(!$localStorage.shoppingLists){$localStorage.shoppingLists = createLists();}
+    var shoppingLists = $localStorage.shoppingLists;
+    var service = {
+        getAllLists: function(){return shoppingLists.lists;},
+        getCurrentList: getCurrentList,
+        newList: function(){return createList();},
+        addList: addList,
+        removeCurrentList: removeCurrentList,
+        clearCurrentList: clearCurrentList,
+        setCurrentList: setCurrentList,
+        getCurrentListItem: getCurrentListItem,
+        existInCurrentList: existInCurrentList,
+        addToCurrentList: addIngredientToCurrentList
+    };
+
+    function getCurrentList(){
+        return shoppingLists.current !== null ? shoppingLists.lists[shoppingLists.current] : null;
+    }
+    function addList(list){
+        shoppingLists.lists.unshift(list);
+        shoppingLists.current = 0;
+        return getCurrentList();
+    }
+    function removeCurrentList(){
+        if(shoppingLists.current !== null){
+            shoppingLists.lists.splice(shoppingLists.current, 1);
+            if(shoppingLists.lists.length > 0){
+                shoppingLists.current = 0;
+            } else {
+                shoppingLists.current = null;
+            }
+        }
+        return getCurrentList();
+    }
+    function clearCurrentList(){
+        var list = getCurrentList();
+        if(list !== null){
+            list.categories = [];
+            list.boughtItems = [];
         }
     }
-
-    function loadIngredientsAsync(){
-        if(!ingredientsPromise){
-            ingredientsPromise = $http.get('data/ingredients.json').then(function(result) {
-                Log.log('IngredientService.loadIngredientsAsync', result);
-                var ingredients = result.data;
-                return ingredients;
-            }).then(null, function(error){
-                Log.error('IngredientService.loadIngredientsAsync', error);
-            });
+    function setCurrentList(list){
+        // TODO test if list is an int (=> index) or an object (=> list)
+        var index = shoppingLists.lists.indexOf(list);
+        if(index !== -1){
+            shoppingLists.current = index;
         }
-        return ingredientsPromise;
+        return getCurrentList();
+    }
+    function getCurrentListItem(ingredient){
+        var list = getCurrentList();
+        for(var i in list.categories){
+            for(var j in list.categories[i]){
+                if(list.categories[i][j].ingredient.id === ingredient.id){
+                    return list.categories[i][j];
+                }
+            }
+        }
+        for(var i in list.boughtItems){
+            if(list.boughtItems[i].ingredient.id === ingredient.id){
+                return list.boughtItems[i];
+            }
+        }
+    }
+    function existInCurrentList(ingredient){
+        return getCurrentListItem(ingredient) !== undefined;
+    }
+    function addIngredientToCurrentList(ingredient, notes, quantity, quantityUnit){
+        var list = getCurrentList();
+        if(list !== null){
+            if(typeof ingredient === 'string'){
+                IngredientService.getAsync(ingredient).then(function(ingredient){
+                    addToCurrentList(ingredient, notes, quantity, quantityUnit);
+                });
+            } else if(ingredient && !existInCurrentList(ingredient)){
+                var item = createItem(ingredient, notes, quantity, quantityUnit);
+                addItemToList(list, item);
+            }
+        }
+    }
+    function addItemToList(list, item){
+        CategoryService.getAsync(item.ingredient.category).then(function(category){
+            if(category) {
+                var listCategory = getListCategory(list, category);
+                if(!listCategory){listCategory = addCategoryToList(list, category);}
+                listCategory.items.push(item);
+            }
+        });
+    }
+    function getListCategory(list, ingredientCategory){
+        return _.find(list.categories, function(category){
+            return category.id === ingredientCategory.id; 
+        });
+    }
+    function addCategoryToList(list, category){
+        var listCategory = createCategory(category);
+        list.categories.push(listCategory);
+        list.categories.sort(function(a, b){
+            return a.order - b.order;
+        });
+        return listCategory;
+    }
+
+    function createItem(ingredient, notes, quantity, quantityUnit){
+        return {
+            added: moment().valueOf(),
+            bought: false,
+            ingredient: ingredient,
+            notes: notes,
+            quantity: quantity,
+            quantityUnit: quantityUnit
+        };
+    }
+    function createCategory(category){
+        return {
+            id: category.id,
+            name: category.name,
+            plural: category.plural,
+            img: category.img,
+            order: category.order,
+            items: []
+        };
+    }
+    function createList(){
+        return {
+            // TODO : generate id
+            created: moment().valueOf(),
+            name: "Liste du "+moment().format('LL'),
+            categories: [],
+            boughtItems: []
+        };
+    }
+    function createLists(){
+        return {
+            current: null,
+            lists: []
+        };
     }
 
     return service;
@@ -92,6 +226,63 @@ angular.module('ionicApp.services', [])
             }
         }
         return res;
+    }
+
+    return service;
+})
+
+
+.factory('ModalService', function($ionicModal){
+    var service = {
+        shoppinglist: {
+            editList: function(scope, callback){ createModal('views/shoppinglist/modal/edit-list.html', scope, callback); },
+            switchList: function(scope, callback){ createModal('views/shoppinglist/modal/switch-list.html', scope, callback); },
+            itemDetails: function(scope, callback){ createModal('views/shoppinglist/modal/edit-item.html', scope, callback); }
+        }
+    };
+
+    function createModal(url, scope, callback){
+        $ionicModal.fromTemplateUrl(url, callback, {
+            scope: scope,
+            animation: 'slide-in-up'
+        });
+    }
+
+    return service;
+})
+
+
+.factory('DataArrayService', function($http, Log){
+    'use strict';
+    var arrayPromise = [];
+    var service = {
+        getAsync: getAsync
+    };
+
+    function getAsync(dataUrl, id){
+        if(id === undefined){
+            return loadAsync(dataUrl);
+        } else if(typeof id === 'string'){
+            return loadAsync(dataUrl).then(function(elts){
+                return _.find(elts, function(elt){
+                    return elt.id === id; 
+                });
+            });
+        } else {
+            throw 'Can\'t load getAsync for '+dataUrl+' with id <'+id+'>';
+        }
+    }
+
+    function loadAsync(dataUrl){
+        if(!arrayPromise[dataUrl]){
+            arrayPromise[dataUrl] = $http.get(dataUrl).then(function(result) {
+                Log.log('DataArrayService.loadAsync('+dataUrl+')', result);
+                return result.data;
+            }).then(null, function(error){
+                Log.error('DataArrayService.loadAsync('+dataUrl+')', error);
+            });
+        }
+        return arrayPromise[dataUrl];
     }
 
     return service;
