@@ -16,7 +16,7 @@
                 <i class="icon ion-search placeholder-icon"></i>
                 <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search">
             </label>
-            <div class="item ingredient-search" ng-if="search">
+            <div class="item ingredient-search" ng-show="search">
                 <div ng-repeat="ingredient in ingredients | filter:search" class="ingredient" ng-click="addToList(ingredient)">
                     <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
                     <div class="name">{{ingredient.name}}</div>

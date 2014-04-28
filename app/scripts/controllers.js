@@ -14,7 +14,6 @@ angular.module('ionicApp.controllers', [])
   'use strict';
   $scope.header.style = 'bar-positive';
   $scope.header.align = 'center';
-  Log.info('test');
 })
 
 
