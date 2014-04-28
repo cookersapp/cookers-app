@@ -3,7 +3,7 @@
 ## Technicals
 
 - Nexus 4 size : 384x640 px
-- add [barcode plugin](https://github.com/wildabeast/BarcodeScanner) : ```cordova plugin add https://github.com/wildabeast/BarcodeScanner.git``` ([explanation](http://stackoverflow.com/questions/20548106/how-to-install-barcodescanner-plugin-on-cordova-phonegap-eclipse-for-android-a))
+- add [barcode plugin](https://github.com/wildabeast/BarcodeScanner) : `cordova plugin add https://github.com/wildabeast/BarcodeScanner.git` ([explanation](http://stackoverflow.com/questions/20548106/how-to-install-barcodescanner-plugin-on-cordova-phonegap-eclipse-for-android-a))
 
 ## Folder structure :
 

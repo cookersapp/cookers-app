@@ -32,10 +32,9 @@ To run the app, you have many ways :
 - In desktop browser :
     - `grunt serve` to test on your computer
 - In your android device :
-    - `mkdir platforms` create platforms folder (essential for cordova)
-    - `mkdir plugins` create plugins folder (essential for cordova)
-    - `mkdir www` create www folder (essential for cordova)
+    - `mkdir platforms plugins www` create folders platforms plugins www (essential for cordova)
     - `cordova platform add android` add android platform to the project
+    - `cordova plugin add https://github.com/wildabeast/BarcodeScanner.git` to install barcode scanner plugin
     - `grunt build && cordova run android` to run app on your phone
 
 # Grunt commands

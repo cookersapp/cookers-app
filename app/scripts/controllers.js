@@ -28,7 +28,7 @@ angular.module('ionicApp.controllers', [])
     name: 'Your list',
     cart: []
   };
-  
+
   IngredientService.getAsync().then(function(ingredients){
     $scope.ingredients = ingredients;
   });
@@ -49,7 +49,7 @@ angular.module('ionicApp.controllers', [])
     Log.alert('shareList : not implemented yet !');
   };
   $scope.addToList = function(ingredient){
-    
+    Log.alert('addToList : not implemented yet !');
   };
 })
 
@@ -84,7 +84,7 @@ angular.module('ionicApp.controllers', [])
 
 .controller('RecipeCtrl', function($scope, Log) {
   'use strict';
-  
+
   $scope.favorite = function(){
     Log.alert('favorite : not implemented yet !');
   };
@@ -94,6 +94,51 @@ angular.module('ionicApp.controllers', [])
   $scope.addToList = function(){
     Log.alert('addToList : not implemented yet !');
   };
+})
+
+
+.controller('ScanCtrl', function($scope, $state, $stateParams, UserService){
+  'use strict';
+  var from = $stateParams.from;
+  var start = moment().valueOf();
+
+  cordova.plugins.barcodeScanner.scan(
+    function (result) {
+      if(!result.cancelled){
+        UserService.makeScan(result.text, from, moment().valueOf() - start);
+        $state.go('sidemenu.product', {barcode: result.text, from: from});
+      } else {
+        $state.go($rootScope.$previousState);
+      }
+    }, 
+    function (error) {
+      alert("Scanning failed: " + error);
+    }
+  );
+})
+
+
+.controller('ProductCtrl', function($scope, $stateParams/*, ProductService, RecipeService*/, UserService){
+  'use strict';
+  $scope.header.style = 'bar-balanced';
+  $scope.header.align = 'center';
+  var barcode = $stateParams.barcode;
+  var from = $stateParams.from;
+
+  $scope.product = {
+    barcode: barcode
+  };
+  $scope.linkedRecipes = [];
+
+  /*ProductService.getAsync(barcode).then(function(product){
+    $scope.product = product;
+    if(product){
+      UserService.seeProduct(product);
+      RecipeService.getAsync(product.linkedRecipes).then(function(recipes){
+        $scope.linkedRecipes = recipes;
+      });
+    }
+  });*/
 })
 
 
