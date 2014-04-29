@@ -20,7 +20,6 @@ angular.module('ionicApp.controllers', [])
 .controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
   // TODO : don't show in suggestions ingredients already in list
-  // TODO : buyIngredient && unbuyIngredient
   // TODO : ingredientDetails : improve design !!!
   // TODO : parse search input
   $scope.header.style = 'bar-royal';
@@ -75,7 +74,34 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService, ModalService, Log) {
   'use strict';
-  $scope.search = '';
+  $scope.search = {
+    dirty: ''
+  };
+  /*
+  // TODO !!!
+  var units = [
+    {"id": "g"},
+    {"id": "kg"}
+  ];
+  var matcher = {
+    quantity: /\d+ /
+  };
+  $scope.$watch('search.dirty', function(value){
+    $scope.search.parsed = parseSearch(value);
+  });
+  
+  var str = "1 kg de pomme de terre";
+  console.log(parseSearch(str));
+  
+  function parseSearch(str){
+    console.log('quantity matcher', str.match(matcher.quantity));
+    
+    return {
+      quantity: "",
+      quantityUnit: "",
+      value: str
+    };
+  }*/
 
   $scope.editList = {};
   ModalService.shoppinglist.editList($scope, function(modal) {

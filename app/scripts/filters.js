@@ -1,6 +1,7 @@
 angular.module('ionicApp.filters', [])
 
 .filter('date', function(){
+    "use strict";
     return function(date) {
         if (date && typeof(date.format) !== 'function') {
             date = moment(date);
@@ -10,6 +11,7 @@ angular.module('ionicApp.filters', [])
 })
 
 .filter('time', function(){
+    "use strict";
     return function(date) {
         if (date && typeof(date.format) !== 'function') {
             date = moment(date);
@@ -19,6 +21,7 @@ angular.module('ionicApp.filters', [])
 })
 
 .filter('datetime', function(){
+    "use strict";
     return function(date) {
         if (date && typeof(date.format) !== 'function') {
             date = moment(date);
@@ -28,6 +31,7 @@ angular.module('ionicApp.filters', [])
 })
 
 .filter('duration', function(){
+    "use strict";
     return function(duration) {
         if (duration && typeof(duration.format) !== 'function') {
             duration = moment.duration(duration);
@@ -37,10 +41,29 @@ angular.module('ionicApp.filters', [])
 })
 
 .filter('seconds', function(){
+    "use strict";
     return function(duration) {
         if (duration && typeof(duration.format) !== 'function') {
             duration = moment.duration(duration);
         }
         return duration ? duration.asSeconds() : ' - ';
+    };
+})
+
+
+.filter('notIn', function () {
+    "use strict";
+    return function (baseArray, lookupArray) {
+        if (!angular.isUndefined(baseArray) && !angular.isUndefined(lookupArray)) {
+            var tempArray = [];
+            angular.forEach(baseArray, function (elt) {
+                if(_.findIndex(lookupArray, function(e){return e.id === elt.id;}) === -1){
+                    tempArray.push(elt);
+                }
+            });
+            return tempArray;
+        } else {
+            return baseArray;
+        }
     };
 });

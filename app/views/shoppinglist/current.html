@@ -19,16 +19,17 @@
         <div class="list">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search">
+                <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search.dirty">
             </label>
-            <div class="item ingredient-search" ng-show="search">
-                <div ng-repeat="ingredient in ingredients | filter:search" class="ingredient" ng-click="ingredientClick(ingredient)">
+            <!--<pre>{{search.parsed | json}}</pre>-->
+            <div class="item ingredient-search" ng-show="search.dirty">
+                <div class="ingredient" ng-repeat="ingredient in ingredients | filter:search.dirty" ng-click="ingredientClick(ingredient)">
                     <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
                     <div class="name">{{ingredient.name}}</div>
                 </div>
-                <div class="ingredient" ng-click="unknownClick(search)">
+                <div class="ingredient" ng-click="unknownClick(search.dirty)">
                     <img ng-src="images/ingredients/100x100/unknown.png">
-                    <div class="name">{{search}}</div>
+                    <div class="name">{{search.dirty}}</div>
                 </div>
             </div>
             <a class="item item-icon-left" ui-sref="sidemenu.shoppinglist.addingredients">
