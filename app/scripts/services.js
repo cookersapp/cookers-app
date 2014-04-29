@@ -23,7 +23,7 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService){
+.factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService, Log){
     if(!$localStorage.shoppingLists){$localStorage.shoppingLists = createLists();}
     var shoppingLists = $localStorage.shoppingLists;
     var service = {
@@ -37,7 +37,9 @@ angular.module('ionicApp.services', [])
         getCurrentListItem: getCurrentListItem,
         existInCurrentList: existInCurrentList,
         addToCurrentList: addIngredientToCurrentList,
-        removeFromCurrentList: removeIngredientFromCurrentList
+        removeFromCurrentList: removeIngredientFromCurrentList,
+        buyFromCurrentList: buyFromCurrentList,
+        unbuyFromCurrentList: unbuyFromCurrentList
     };
 
     function getCurrentList(){
@@ -126,12 +128,45 @@ angular.module('ionicApp.services', [])
         }
         return false;
     }
+    function buyFromCurrentList(item){
+        var list = getCurrentList();
+        for(var i in list.categories){
+            for(var j in list.categories[i].items){
+                if(list.categories[i].items[j].ingredient.id === item.ingredient.id){
+                    var tmp = list.categories[i].items.splice(j, 1)[0];
+                    tmp.bought = true;
+                    if(list.categories[i].items.length === 0){
+                        list.categories.splice(i, 1);
+                    }
+                    list.boughtItems.unshift(tmp);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    function unbuyFromCurrentList(item){
+        var list = getCurrentList();
+        for(var i in list.boughtItems){
+            if(list.boughtItems[i].ingredient.id === item.ingredient.id){
+                var tmp = list.boughtItems.splice(i, 1)[0];
+                tmp.bought = false;
+                addItemToList(list, tmp);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     function addItemToList(list, item){
         CategoryService.getAsync(item.ingredient.category).then(function(category){
-            if(category) {
+            if(category){
                 var listCategory = getListCategory(list, category);
                 if(!listCategory){listCategory = addCategoryToList(list, category);}
                 listCategory.items.push(item);
+            } else {
+                Log.error('Unknown category <'+item.ingredient.category+'>');
             }
         });
     }

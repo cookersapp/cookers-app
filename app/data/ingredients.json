@@ -1,8 +1,8 @@
 [
-    {"id": "cannelloni", "name": "cannelloni", "plural": "cannelloni", "img": "cannelloni.jpg", "category": "", "type": "unusual"},
+    {"id": "cannelloni", "name": "cannelloni", "plural": "cannelloni", "img": "cannelloni.jpg", "category": "autre", "type": "unusual"},
     {"id": "epinard", "name": "épinard", "plural": "épinards", "img": "epinard.jpg", "category": "legume", "type": "unusual"},
     {"id": "ricotta", "name": "ricotta", "plural": "ricotta", "img": "ricotta.png", "category": "fromage", "type": "unusual"},
-    {"id": "parmesan", "name": "parmesan", "plural": "parmesan", "img": "parmesan.jpg", "category": "fromage:p", "type": "unusual"},
+    {"id": "parmesan", "name": "parmesan", "plural": "parmesan", "img": "parmesan.jpg", "category": "fromage", "type": "unusual"},
     {"id": "ail", "name": "ail", "plural": "ail", "img": "ail.jpg", "category": "legume", "type": "usual"},
     {"id": "oignon", "name": "oignon", "plural": "oignon", "img": "oignon.jpg", "category": "legume", "type": "usual"},
     {"id": "beurre", "name": "beurre", "plural": "beurre", "img": "beurre.jpg", "category": "cremerie", "type": "common"},

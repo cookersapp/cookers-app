@@ -129,6 +129,13 @@ angular.module('ionicApp.controllers', [])
   $scope.shareList = function(){
     Log.alert('shareList : not implemented yet !');
   };
+  
+  $scope.buyItem = function(item){
+    ShoppinglistService.buyFromCurrentList(item);
+  };
+  $scope.unbuyItem = function(item){
+    ShoppinglistService.unbuyFromCurrentList(item);
+  };
 })
 
 
