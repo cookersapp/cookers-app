@@ -24,12 +24,15 @@
 }
 .shoppinglist .item-avatar .main > img:first-child {
     position: absolute;
-    top: 0px;
+    top: 5px;
     left: 15px;
     max-width: 40px;
     max-height: 40px;
     width: 100%;
     border-radius: 4px;
+}
+.shoppinglist .item-avatar .main p {
+    margin: 0px;
 }
 .shoppinglist .item-avatar .pull-right {
     float: right;
