@@ -17,11 +17,11 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, Log) {
+.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
   // TODO : don't show in suggestions ingredients already in list
   // TODO : buyIngredient && unbuyIngredient
-  // TODO : ingredientDetails
+  // TODO : ingredientDetails : improve design !!!
   // TODO : parse search input
   $scope.header.style = 'bar-royal';
   $scope.header.align = 'left';
@@ -29,8 +29,17 @@ angular.module('ionicApp.controllers', [])
   $scope.ingredientGrid = {};
   $scope.list = ShoppinglistService.getCurrentList();
 
+  $scope.itemDetails = {};
+  ModalService.shoppinglist.itemDetails($scope, function(modal) {
+    $scope.itemDetails.modal = modal;
+  });
+
   $scope.ingredientClick = function(ingredient){
-    ShoppinglistService.addToCurrentList(ingredient);
+    if(ShoppinglistService.existInCurrentList(ingredient)){
+      $scope.itemClick(ShoppinglistService.getCurrentListItem(ingredient));
+    } else {
+      ShoppinglistService.addToCurrentList(ingredient);
+    }
   };
   $scope.unknownClick = function(name){
     $scope.ingredientClick({
@@ -41,6 +50,21 @@ angular.module('ionicApp.controllers', [])
       category: "autre",
       type: "usual"
     });
+  };
+  $scope.itemClick = function(item){
+    $scope.itemDetails.title = 'Product';
+    $scope.itemDetails.item = item;
+    $scope.itemDetails.data = angular.copy(item);
+    $scope.itemDetails.modal.show();
+  };
+  $scope.deleteItem = function(){
+    console.log($scope.itemDetails.item);
+    ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
+    $scope.itemDetails.modal.hide();
+  };
+  $scope.updateItem = function(){
+    angular.copy($scope.itemDetails.data, $scope.itemDetails.item);
+    $scope.itemDetails.modal.hide();
   };
 
   IngredientService.getAsync().then(function(ingredients){

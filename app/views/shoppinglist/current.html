@@ -46,7 +46,7 @@
                             <input type="checkbox">
                         </label>
                     </div>
-                    <div class="main">
+                    <div class="main" ng-click="itemClick(item)">
                         <img ng-src="images/ingredients/100x100/{{item.ingredient.img}}">
                         <h2>{{item.ingredient.name}}</h2>
                         <span class="item-note">{{item.quantity}} {{item.quantityUnit}}</span>

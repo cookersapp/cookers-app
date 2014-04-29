@@ -36,7 +36,8 @@ angular.module('ionicApp.services', [])
         setCurrentList: setCurrentList,
         getCurrentListItem: getCurrentListItem,
         existInCurrentList: existInCurrentList,
-        addToCurrentList: addIngredientToCurrentList
+        addToCurrentList: addIngredientToCurrentList,
+        removeFromCurrentList: removeIngredientFromCurrentList
     };
 
     function getCurrentList(){
@@ -76,9 +77,9 @@ angular.module('ionicApp.services', [])
     function getCurrentListItem(ingredient){
         var list = getCurrentList();
         for(var i in list.categories){
-            for(var j in list.categories[i]){
-                if(list.categories[i][j].ingredient.id === ingredient.id){
-                    return list.categories[i][j];
+            for(var j in list.categories[i].items){
+                if(list.categories[i].items[j].ingredient.id === ingredient.id){
+                    return list.categories[i].items[j];
                 }
             }
         }
@@ -103,6 +104,27 @@ angular.module('ionicApp.services', [])
                 addItemToList(list, item);
             }
         }
+    }
+    function removeIngredientFromCurrentList(item){
+        var list = getCurrentList();
+        for(var i in list.categories){
+            for(var j in list.categories[i].items){
+                if(list.categories[i].items[j].ingredient.id === item.ingredient.id){
+                    list.categories[i].items.splice(j, 1);
+                    if(list.categories[i].items.length === 0){
+                        list.categories.splice(i, 1);
+                    }
+                    return true;
+                }
+            }
+        }
+        for(var i in list.boughtItems){
+            if(list.boughtItems[i].ingredient.id === item.ingredient.id){
+                list.boughtItems.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
     }
     function addItemToList(list, item){
         CategoryService.getAsync(item.ingredient.category).then(function(category){
@@ -237,7 +259,7 @@ angular.module('ionicApp.services', [])
         shoppinglist: {
             editList: function(scope, callback){ createModal('views/shoppinglist/modal/edit-list.html', scope, callback); },
             switchList: function(scope, callback){ createModal('views/shoppinglist/modal/switch-list.html', scope, callback); },
-            itemDetails: function(scope, callback){ createModal('views/shoppinglist/modal/edit-item.html', scope, callback); }
+            itemDetails: function(scope, callback){ createModal('views/shoppinglist/modal/item-details.html', scope, callback); }
         }
     };
 
