@@ -78,7 +78,7 @@ angular.module('ionicApp.controllers', [])
     dirty: ''
   };
   /*
-  // TODO !!!
+  // TODO => move to service
   var units = [
     {"id": "g"},
     {"id": "kg"}
