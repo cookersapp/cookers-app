@@ -66,4 +66,22 @@ angular.module('ionicApp.filters', [])
             return baseArray;
         }
     };
+})
+
+
+.filter('not', function () {
+    "use strict";
+    return function (baseArray, test) {
+        if (!angular.isUndefined(baseArray) && !angular.isUndefined(test)) {
+            var tempArray = [];
+            angular.forEach(baseArray, function (elt) {
+                if(test){
+                    tempArray.push(elt);
+                }
+            });
+            return tempArray;
+        } else {
+            return baseArray;
+        }
+    };
 });

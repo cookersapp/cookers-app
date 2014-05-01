@@ -23,6 +23,7 @@
             </label>
             <!--<pre>{{search.parsed | json}}</pre>-->
             <div class="item ingredient-search" ng-show="search.dirty">
+                <!-- ingredient in ingredients | filter:search.dirty | not:isIngredientInCurrentList(ingredient) => NOT WORKING :( -->
                 <div class="ingredient" ng-repeat="ingredient in ingredients | filter:search.dirty" ng-click="ingredientClick(ingredient)">
                     <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
                     <div class="name">{{ingredient.name}}</div>

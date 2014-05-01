@@ -77,6 +77,11 @@ angular.module('ionicApp.controllers', [])
     ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };
+  
+  $scope.isIngredientInCurrentList = function(ingredient){
+    var item = ShoppinglistService.createItem(ingredient);
+    return ShoppinglistService.existInCurrentList(item);
+  };
 
   IngredientService.getAsync().then(function(ingredients){
     $scope.ingredients = ingredients;
