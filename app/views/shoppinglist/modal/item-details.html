@@ -18,9 +18,12 @@
                 <input type="text" ng-model="itemDetails.data.quantityUnit" placeholder="">
                 <!--<select ng-model="itemDetails.data.quantityUnit" ng-options="unit for unit in data.units"></select>-->
             </label>
-            <div class="button-bar">
+            <div class="button-bar" ng-if="itemDetails.update">
                 <button class="button button-full button-assertive" ng-click="deleteItem()">Supprimer</button>
                 <button class="button button-full button-balanced" ng-click="updateItem()">Enregistrer</button>
+            </div>
+            <div class="button-bar" ng-if="!itemDetails.update">
+                <button class="button button-full button-balanced" ng-click="addItem()">Ajouter à la liste</button>
             </div>
         </div>
     </ion-content>

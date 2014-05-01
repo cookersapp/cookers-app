@@ -19,9 +19,19 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
+  // Done : open ingredient details when you add it to a list
+  
   // TODO : don't show in suggestions ingredients already in list
-  // TODO : ingredientDetails : improve design !!!
   // TODO : parse search input
+  // BUG : screen blink on phone :(
+  // TODO : typer les champ de texte pour que le clavier ne commence pas par une majuscule...
+  // TODO : ajouter la liste des unités possibles
+  // TODO : set focus on search field when click on suggested ingredient
+  // TODO : add a clear search button when it has some text
+  // TODO : ingredientDetails : improve design !!! (show picture, name & category)
+  // TODO : allow to change ingredient category (in ingredientDetails)
+  // TODO : for unknown ingredient, allow to change name & picture (in addition on category)
+  // TODO : save ingredients, ingredient categories & units on localstorage to allow users to add & customize them (and sync with API)
   $scope.header.style = 'bar-royal';
   $scope.header.align = 'left';
   $scope.ingredients = [];
@@ -33,36 +43,38 @@ angular.module('ionicApp.controllers', [])
     $scope.itemDetails.modal = modal;
   });
 
+  $scope.unknownClick = function(name){
+    var ingredient = ShoppinglistService.createIngredient(name);
+    $scope.ingredientClick(ingredient);
+  };
   $scope.ingredientClick = function(ingredient){
-    if(ShoppinglistService.existInCurrentList(ingredient)){
+    /*if(ShoppinglistService.existInCurrentList(ingredient)){
       $scope.itemClick(ShoppinglistService.getCurrentListItem(ingredient));
     } else {
       ShoppinglistService.addToCurrentList(ingredient);
-    }
-  };
-  $scope.unknownClick = function(name){
-    $scope.ingredientClick({
-      id: name,
-      name: name,
-      plural: name,
-      img: "unknown.png",
-      category: "autre",
-      type: "usual"
-    });
+    }*/
+    var item = ShoppinglistService.createItem(ingredient);
+    $scope.itemClick(item);
   };
   $scope.itemClick = function(item){
     $scope.itemDetails.title = 'Product';
+    $scope.itemDetails.update = ShoppinglistService.existInCurrentList(item);
     $scope.itemDetails.item = item;
     $scope.itemDetails.data = angular.copy(item);
     $scope.itemDetails.modal.show();
   };
-  $scope.deleteItem = function(){
-    console.log($scope.itemDetails.item);
-    ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
+  $scope.addItem = function(){
+    angular.copy($scope.itemDetails.data, $scope.itemDetails.item);
+    ShoppinglistService.addToCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };
   $scope.updateItem = function(){
     angular.copy($scope.itemDetails.data, $scope.itemDetails.item);
+    $scope.itemDetails.modal.hide();
+  };
+  $scope.deleteItem = function(){
+    console.log($scope.itemDetails.item);
+    ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };
 
@@ -89,13 +101,13 @@ angular.module('ionicApp.controllers', [])
   $scope.$watch('search.dirty', function(value){
     $scope.search.parsed = parseSearch(value);
   });
-  
+
   var str = "1 kg de pomme de terre";
   console.log(parseSearch(str));
-  
+
   function parseSearch(str){
     console.log('quantity matcher', str.match(matcher.quantity));
-    
+
     return {
       quantity: "",
       quantityUnit: "",
@@ -155,7 +167,7 @@ angular.module('ionicApp.controllers', [])
   $scope.shareList = function(){
     Log.alert('shareList : not implemented yet !');
   };
-  
+
   $scope.buyItem = function(item){
     ShoppinglistService.buyFromCurrentList(item);
   };

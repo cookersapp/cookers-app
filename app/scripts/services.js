@@ -23,7 +23,7 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService, Log){
+.factory('ShoppinglistService', function($localStorage, CategoryService, Log){
     if(!$localStorage.shoppingLists){$localStorage.shoppingLists = createLists();}
     var shoppingLists = $localStorage.shoppingLists;
     var service = {
@@ -36,8 +36,10 @@ angular.module('ionicApp.services', [])
         setCurrentList: setCurrentList,
         getCurrentListItem: getCurrentListItem,
         existInCurrentList: existInCurrentList,
-        addToCurrentList: addIngredientToCurrentList,
-        removeFromCurrentList: removeIngredientFromCurrentList,
+        createIngredient: createIngredient,
+        createItem: function(ingredient){return createItem(ingredient, null, null, null);},
+        addToCurrentList: addToCurrentList,
+        removeFromCurrentList: removeFromCurrentList,
         buyFromCurrentList: buyFromCurrentList,
         unbuyFromCurrentList: unbuyFromCurrentList
     };
@@ -76,42 +78,37 @@ angular.module('ionicApp.services', [])
         }
         return getCurrentList();
     }
-    function getCurrentListItem(ingredient){
+    function getCurrentListItem(item){
         var list = getCurrentList();
         for(var i in list.categories){
             for(var j in list.categories[i].items){
-                if(list.categories[i].items[j].ingredient.id === ingredient.id){
+                if(list.categories[i].items[j].id === item.id){
                     return list.categories[i].items[j];
                 }
             }
         }
         for(var i in list.boughtItems){
-            if(list.boughtItems[i].ingredient.id === ingredient.id){
+            if(list.boughtItems[i].id === item.id){
                 return list.boughtItems[i];
             }
         }
     }
-    function existInCurrentList(ingredient){
-        return getCurrentListItem(ingredient) !== undefined;
+    function existInCurrentList(item){
+        return getCurrentListItem(item) !== undefined;
     }
-    function addIngredientToCurrentList(ingredient, notes, quantity, quantityUnit){
+    function addToCurrentList(item){
         var list = getCurrentList();
         if(list !== null){
-            if(typeof ingredient === 'string'){
-                IngredientService.getAsync(ingredient).then(function(ingredient){
-                    addToCurrentList(ingredient, notes, quantity, quantityUnit);
-                });
-            } else if(ingredient && !existInCurrentList(ingredient)){
-                var item = createItem(ingredient, notes, quantity, quantityUnit);
-                addItemToList(list, item);
+            if(item && !existInCurrentList(item)){
+                addToList(list, item);
             }
         }
     }
-    function removeIngredientFromCurrentList(item){
+    function removeFromCurrentList(item){
         var list = getCurrentList();
         for(var i in list.categories){
             for(var j in list.categories[i].items){
-                if(list.categories[i].items[j].ingredient.id === item.ingredient.id){
+                if(list.categories[i].items[j].id === item.id){
                     list.categories[i].items.splice(j, 1);
                     if(list.categories[i].items.length === 0){
                         list.categories.splice(i, 1);
@@ -121,7 +118,7 @@ angular.module('ionicApp.services', [])
             }
         }
         for(var i in list.boughtItems){
-            if(list.boughtItems[i].ingredient.id === item.ingredient.id){
+            if(list.boughtItems[i].id === item.id){
                 list.boughtItems.splice(i, 1);
                 return true;
             }
@@ -132,7 +129,7 @@ angular.module('ionicApp.services', [])
         var list = getCurrentList();
         for(var i in list.categories){
             for(var j in list.categories[i].items){
-                if(list.categories[i].items[j].ingredient.id === item.ingredient.id){
+                if(list.categories[i].items[j].id === item.id){
                     var tmp = list.categories[i].items.splice(j, 1)[0];
                     tmp.bought = true;
                     if(list.categories[i].items.length === 0){
@@ -148,10 +145,10 @@ angular.module('ionicApp.services', [])
     function unbuyFromCurrentList(item){
         var list = getCurrentList();
         for(var i in list.boughtItems){
-            if(list.boughtItems[i].ingredient.id === item.ingredient.id){
+            if(list.boughtItems[i].id === item.id){
                 var tmp = list.boughtItems.splice(i, 1)[0];
                 tmp.bought = false;
-                addItemToList(list, tmp);
+                addToList(list, tmp);
                 return true;
             }
         }
@@ -159,20 +156,20 @@ angular.module('ionicApp.services', [])
     }
 
 
-    function addItemToList(list, item){
-        CategoryService.getAsync(item.ingredient.category).then(function(category){
+    function addToList(list, item){
+        CategoryService.getAsync(item.category).then(function(category){
             if(category){
                 var listCategory = getListCategory(list, category);
                 if(!listCategory){listCategory = addCategoryToList(list, category);}
                 listCategory.items.push(item);
             } else {
-                Log.error('Unknown category <'+item.ingredient.category+'>');
+                Log.error('Unknown category <'+item.category+'>');
             }
         });
     }
-    function getListCategory(list, ingredientCategory){
-        return _.find(list.categories, function(category){
-            return category.id === ingredientCategory.id; 
+    function getListCategory(list, category){
+        return _.find(list.categories, function(elt){
+            return elt.id === category.id; 
         });
     }
     function addCategoryToList(list, category){
@@ -184,8 +181,20 @@ angular.module('ionicApp.services', [])
         return listCategory;
     }
 
+    function createIngredient(name){
+        return {
+            id: name,
+            name: name,
+            plural: name,
+            img: "unknown.png",
+            category: "autre",
+            type: "usual"
+        };
+    }
     function createItem(ingredient, notes, quantity, quantityUnit){
         return {
+            id: ingredient.id,
+            category: ingredient.category,
             added: moment().valueOf(),
             bought: false,
             ingredient: ingredient,
