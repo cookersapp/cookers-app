@@ -1,6 +1,17 @@
 angular.module('ionicApp.services', [])
 
 
+.factory('RecipeService', function(DataArrayService){
+    'use strict';
+    var dataUrl = 'data/recipes.json';
+    var service = {
+        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
+    };
+
+    return service;
+})
+
+
 .factory('IngredientService', function(DataArrayService){
     'use strict';
     var dataUrl = 'data/ingredients.json';

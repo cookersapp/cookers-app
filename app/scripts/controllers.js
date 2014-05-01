@@ -20,9 +20,10 @@ angular.module('ionicApp.controllers', [])
 .controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
   // Done : open ingredient details when you add it to a list
-  
+
   // TODO : don't show in suggestions ingredients already in list
   // TODO : parse search input
+  // TODO : add price data for ingredients (for recipe estimates...)
   // BUG : screen blink on phone :(
   // TODO : typer les champ de texte pour que le clavier ne commence pas par une majuscule...
   // TODO : ajouter la liste des unités possibles
@@ -77,7 +78,7 @@ angular.module('ionicApp.controllers', [])
     ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };
-  
+
   $scope.isIngredientInCurrentList = function(ingredient){
     var item = ShoppinglistService.createItem(ingredient);
     return ShoppinglistService.existInCurrentList(item);
@@ -182,14 +183,30 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipesResultsCtrl', function($scope) {
+.controller('RecipesResultsCtrl', function($scope, RecipeService) {
   'use strict';
+  $scope.recipes = [];
 
+  // TODO : search !!!
+  RecipeService.getAsync().then(function(recipes){
+    console.log(recipes)
+    $scope.recipes = recipes;
+  });
 })
 
 
-.controller('RecipeCtrl', function($scope, Log) {
+.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, UserService, Log) {
   'use strict';
+  var id = $stateParams.id;
+  var from = $stateParams.from;
+  $scope.recipe = {
+    id: id
+  };
+
+  RecipeService.getAsync(id).then(function(recipe){
+    $scope.recipe = recipe;
+    UserService.seeRecipe(recipe);
+  });
 
   $scope.favorite = function(){
     Log.alert('favorite : not implemented yet !');
