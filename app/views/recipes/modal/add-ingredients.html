@@ -9,12 +9,14 @@
             <input type="range" name="volume" min="0" max="20" ng-model="toCurrentList.data.serving">
         </div>
         <div class="list">
-            <li class="item item-checkbox" ng-repeat="ingredient in toCurrentList.data.ingredients" ng-click="ingredient.shouldAdd=!ingredient.shouldAdd">
+            <li class="item item-checkbox" ng-repeat="ingredient in toCurrentList.data.ingredients">
                 <label class="checkbox">
                     <input type="checkbox" ng-model="ingredient.shouldAdd" ng-init="ingredient.shouldAdd = ingredient.role!='other'">
                 </label>
-                {{ingredient.quantity ? (ingredient.quantity * toCurrentList.data.serving / toCurrentList.init.serving | number:2) : ''}} {{ingredient.quantityUnit !== 'piece' ? ingredient.quantityUnit : ''}}
-                {{ingredient.pre}}{{ingredient.name}}{{ingredient.post}}
+                <div ng-click="ingredient.shouldAdd=!ingredient.shouldAdd">
+                    {{ingredient.quantity ? (ingredient.quantity * toCurrentList.data.serving / toCurrentList.init.serving | number:2) : ''}} {{ingredient.quantityUnit !== 'piece' ? ingredient.quantityUnit : ''}}
+                    {{ingredient.pre}}{{ingredient.name}}{{ingredient.post}}
+                </div>
             </li>
         </div>
     </ion-content>
