@@ -89,36 +89,14 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService, ModalService, Log) {
+.controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService, ShoppingParserService, ModalService, Log) {
   'use strict';
   $scope.search = {
     dirty: ''
   };
-  /*
-  // TODO => move to service
-  var units = [
-    {"id": "g"},
-    {"id": "kg"}
-  ];
-  var matcher = {
-    quantity: /\d+ /
-  };
   $scope.$watch('search.dirty', function(value){
-    $scope.search.parsed = parseSearch(value);
+    $scope.search.parsed = ShoppingParserService.parse(value);
   });
-
-  var str = "1 kg de pomme de terre";
-  console.log(parseSearch(str));
-
-  function parseSearch(str){
-    console.log('quantity matcher', str.match(matcher.quantity));
-
-    return {
-      quantity: "",
-      quantityUnit: "",
-      value: str
-    };
-  }*/
 
   $scope.editList = {};
   ModalService.shoppinglist.editList($scope, function(modal) {

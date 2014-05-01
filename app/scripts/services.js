@@ -318,6 +318,33 @@ angular.module('ionicApp.services', [])
 })
 
 
+.factory('ShoppingParserService', function(Log){
+    var service = {
+        parse: parse
+    };
+
+    function parse(str){
+
+        var ret = {
+            quantity: "",
+            quantityUnit: "",
+            value: str
+        };
+        return ret;
+    }
+
+    var matcher = {
+        quantity: /\d+ /
+    };
+
+    var tests = [
+        "1 kg de pomme de terre"
+    ];
+
+    return service;
+})
+
+
 .factory('DataArrayService', function($http, Log){
     'use strict';
     var arrayPromise = [];
