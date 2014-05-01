@@ -22,18 +22,18 @@
             {"quantity": 1, "tool": "plat à gratin", "toolId": "plat-a-gratin"}
         ],
         "ingredients": [
-            {"quantity": 12, "quantityUnit": "piece", "pre": "", "ingredient": "cannelloni", "ingredientId": "cannelloni", "post": "", "role": "primary"},
-            {"quantity": 500, "quantityUnit": "gramme", "pre": "d'", "ingredient": "épinard", "ingredientId": "epinard", "post": " hachés", "role": "primary"},
-            {"quantity": 250, "quantityUnit": "gramme", "pre": "de ", "ingredient": "ricotta", "ingredientId": "ricotta", "post": "", "role": "secondary"},
-            {"quantity": 100, "quantityUnit": "gramme", "pre": "de ", "ingredient": "parmesan", "ingredientId": "parmesan", "post": "", "role": "secondary"},
-            {"quantity": 1, "quantityUnit": "gousse", "pre": "d'", "ingredient": "ail", "ingredientId": "ail", "post": "", "role": "other"},
-            {"quantity": 1, "quantityUnit": "piece", "pre": "", "ingredient": "oignon", "ingredientId": "oignon", "post": "", "role": "other"},
-            {"quantity": 50, "quantityUnit": "gramme", "pre": "de ", "ingredient": "beurre", "ingredientId": "beurre", "post": "", "role": "other"},
-            {"quantity": 30, "quantityUnit": "gramme", "pre": "de ", "ingredient": "farine", "ingredientId": "farine", "post": "", "role": "other"},
-            {"quantity": 50, "quantityUnit": "centilitre", "pre": "de ", "ingredient": "lait", "ingredientId": "lait", "post": "", "role": "other"},
-            {"quantity": null, "quantityUnit": null, "pre": "", "ingredient": "sel", "ingredientId": "sel", "post": "", "role": "other"},
-            {"quantity": null, "quantityUnit": null, "pre": "", "ingredient": "poivre", "ingredientId": "poivre", "post": "", "role": "other"},
-            {"quantity": null, "quantityUnit": null, "pre": "", "ingredient": "huile", "ingredientId": "huile", "post": "", "role": "other"}
+            {"quantity": 12, "quantityUnit": "piece", "pre": "", "name": "cannelloni", "ingredientId": "cannelloni", "post": "", "role": "primary"},
+            {"quantity": 500, "quantityUnit": "gramme", "pre": "d'", "name": "épinard", "ingredientId": "epinard", "post": " hachés", "role": "primary"},
+            {"quantity": 250, "quantityUnit": "gramme", "pre": "de ", "name": "ricotta", "ingredientId": "ricotta", "post": "", "role": "secondary"},
+            {"quantity": 100, "quantityUnit": "gramme", "pre": "de ", "name": "parmesan", "ingredientId": "parmesan", "post": "", "role": "secondary"},
+            {"quantity": 1, "quantityUnit": "gousse", "pre": "d'", "name": "ail", "ingredientId": "ail", "post": "", "role": "other"},
+            {"quantity": 1, "quantityUnit": "piece", "pre": "", "name": "oignon", "ingredientId": "oignon", "post": "", "role": "other"},
+            {"quantity": 50, "quantityUnit": "gramme", "pre": "de ", "name": "beurre", "ingredientId": "beurre", "post": "", "role": "other"},
+            {"quantity": 30, "quantityUnit": "gramme", "pre": "de ", "name": "farine", "ingredientId": "farine", "post": "", "role": "other"},
+            {"quantity": 50, "quantityUnit": "centilitre", "pre": "de ", "name": "lait", "ingredientId": "lait", "post": "", "role": "other"},
+            {"quantity": null, "quantityUnit": null, "pre": "", "name": "sel", "ingredientId": "sel", "post": "", "role": "other"},
+            {"quantity": null, "quantityUnit": null, "pre": "", "name": "poivre", "ingredientId": "poivre", "post": "", "role": "other"},
+            {"quantity": null, "quantityUnit": null, "pre": "", "name": "huile", "ingredientId": "huile", "post": "", "role": "other"}
         ],
         "instructions": [
             "Epluchez l’oignon et l’ail et détaillez-les. Placez-les dans une poêle huilée et faites-les revenir rapidement. Ajoutez ensuite les épinards hachés surgelés. Laissez cuire à feu moyen en remuant de temps en temps, pendant 8 minutes. Une fois les épinards cuits ajoutez la ricotta et mélangez. Salez et poivrez si nécessaire.",

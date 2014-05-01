@@ -1,0 +1,26 @@
+<div class="modal">
+    <header class="bar bar-header" ng-class="header.style">
+        <h1 class="title">{{toCurrentList.title}}</h1>
+        <button class="button button-clear button-primary" ng-click="toCurrentList.modal.hide()">Annuler</button>
+    </header>
+    <ion-content>
+        Pour {{toCurrentList.data.serving}} {{toCurrentList.data.servingUnit}}
+        <div class="range range-positive">
+            <input type="range" name="volume" min="0" max="20" ng-model="toCurrentList.data.serving">
+        </div>
+        <div class="list">
+            <li class="item item-checkbox" ng-repeat="ingredient in toCurrentList.data.ingredients" ng-click="ingredient.shouldAdd=!ingredient.shouldAdd">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="ingredient.shouldAdd" ng-init="ingredient.shouldAdd = ingredient.role!='other'">
+                </label>
+                {{ingredient.quantity ? (ingredient.quantity * toCurrentList.data.serving / toCurrentList.init.serving | number:2) : ''}} {{ingredient.quantityUnit !== 'piece' ? ingredient.quantityUnit : ''}}
+                {{ingredient.pre}}{{ingredient.name}}{{ingredient.post}}
+            </li>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <div class="button-bar">
+            <a class="button button-balanced" ng-click="addIngredientsToList(toCurrentList.data.name, toCurrentList.data.ingredients, toCurrentList.data.serving/toCurrentList.init.serving)">Ajouter à la liste</a>
+        </div>
+    </ion-footer-bar>
+</div>

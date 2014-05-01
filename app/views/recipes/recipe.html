@@ -23,13 +23,13 @@
             <ul class="ingredients">
                 <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}" ng-if="ingredient.role !== 'other'">
                     {{ingredient.quantity}} {{ingredient.quantityUnit !== 'piece' ? ingredient.quantityUnit : ''}}
-                    {{ingredient.pre}}{{ingredient.ingredient}}{{ingredient.post}}
+                    {{ingredient.pre}}{{ingredient.name}}{{ingredient.post}}
                 </li>
             </ul>
             <div class="ingredients">
                 <span ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}" ng-if="ingredient.role === 'other'">
                     {{ingredient.quantity}} {{ingredient.quantityUnit !== 'piece' ? ingredient.quantityUnit : ''}}
-                    {{ingredient.pre}}{{ingredient.ingredient}}{{ingredient.post}}<span ng-if="!$last">, </span>
+                    {{ingredient.pre}}{{ingredient.name}}{{ingredient.post}}<span ng-if="!$last">, </span>
                 </span>
             </div>
             <h4>Ustensiles</h4>
@@ -57,7 +57,7 @@
     </ion-content>
     <ion-footer-bar class="bar-dark">
         <div class="buttons">
-            <button class="button button-balanced" ng-click="addToList()">&nbsp;Ajouter les ingrédients à ma liste de courses&nbsp;</button>
+            <button class="button button-balanced" ng-click="addIngredientsToListForm(recipe)">&nbsp;Ajouter les ingrédients à ma liste de courses&nbsp;</button>
         </div>
     </ion-footer-bar>
 </ion-view>

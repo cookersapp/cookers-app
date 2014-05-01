@@ -195,7 +195,7 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, UserService, Log) {
+.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, ShoppinglistService, UserService, ModalService, Log) {
   'use strict';
   var id = $stateParams.id;
   var from = $stateParams.from;
@@ -208,14 +208,39 @@ angular.module('ionicApp.controllers', [])
     UserService.seeRecipe(recipe);
   });
 
+
+  $scope.toCurrentList = {};
+  ModalService.recipe.ingredientsToShoppinglist($scope, function(modal) {
+    $scope.toCurrentList.modal = modal;
+  });
+
   $scope.favorite = function(){
     Log.alert('favorite : not implemented yet !');
   };
   $scope.share = function(){
     Log.alert('share : not implemented yet !');
   };
-  $scope.addToList = function(){
-    Log.alert('addToList : not implemented yet !');
+  $scope.addIngredientsToListForm = function(recipe){
+    $scope.toCurrentList.title = 'Ajouter à la liste de courses';
+    $scope.toCurrentList.init = angular.copy(recipe);
+    $scope.toCurrentList.data = angular.copy(recipe);
+    $scope.toCurrentList.modal.show();
+  };
+  $scope.addIngredientsToList = function(recipeName, ingredients, quantityFactor){
+    for(var i in ingredients){
+      var ingredient = ingredients[i];
+      if(ingredient.shouldAdd){
+        var notes = recipeName;
+        var quantity = ingredient.quantity ? ingredient.quantity * quantityFactor : null;
+        var quantityUnit = ingredient.quantityUnit;
+
+        // TODO : choose list to add items (and create one if needed...)
+        var item = ShoppinglistService.createItem(ingredient.ingredientId, notes, quantity, quantityUnit);
+        ShoppinglistService.addToCurrentList(item);
+      }
+    }
+    // TODO : show toast to confirm...
+    $scope.toCurrentList.modal.hide();
   };
 })
 

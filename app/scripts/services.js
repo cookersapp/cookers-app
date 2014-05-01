@@ -34,7 +34,7 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('ShoppinglistService', function($localStorage, CategoryService, Log){
+.factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService, Log){
     if(!$localStorage.shoppingLists){$localStorage.shoppingLists = createLists();}
     var shoppingLists = $localStorage.shoppingLists;
     var service = {
@@ -48,7 +48,7 @@ angular.module('ionicApp.services', [])
         getCurrentListItem: getCurrentListItem,
         existInCurrentList: existInCurrentList,
         createIngredient: createIngredient,
-        createItem: function(ingredient){return createItem(ingredient, null, null, null);},
+        createItem: createItem,
         addToCurrentList: addToCurrentList,
         removeFromCurrentList: removeFromCurrentList,
         buyFromCurrentList: buyFromCurrentList,
@@ -109,9 +109,18 @@ angular.module('ionicApp.services', [])
     }
     function addToCurrentList(item){
         var list = getCurrentList();
-        if(list !== null){
-            if(item && !existInCurrentList(item)){
-                addToList(list, item);
+        if(list !== null && item){
+            if(typeof item.ingredient === 'string'){
+                IngredientService.getAsync(item.id).then(function(ingredient){
+                    item.ingredient = ingredient;
+                    addToCurrentList(item);
+                });
+            } else {
+                if(!existInCurrentList(item)){
+                    addToList(list, item);
+                } else {
+                    // TODO : sum quantities (item should get a list of source)
+                }
             }
         }
     }
@@ -168,13 +177,13 @@ angular.module('ionicApp.services', [])
 
 
     function addToList(list, item){
-        CategoryService.getAsync(item.category).then(function(category){
+        CategoryService.getAsync(item.ingredient.category).then(function(category){
             if(category){
                 var listCategory = getListCategory(list, category);
                 if(!listCategory){listCategory = addCategoryToList(list, category);}
                 listCategory.items.push(item);
             } else {
-                Log.error('Unknown category <'+item.category+'>');
+                Log.error('Unknown category <'+item.ingredient.category+'>');
             }
         });
     }
@@ -204,8 +213,7 @@ angular.module('ionicApp.services', [])
     }
     function createItem(ingredient, notes, quantity, quantityUnit){
         return {
-            id: ingredient.id,
-            category: ingredient.category,
+            id: ingredient.id ? ingredient.id : ingredient,
             added: moment().valueOf(),
             bought: false,
             ingredient: ingredient,
@@ -315,6 +323,9 @@ angular.module('ionicApp.services', [])
             editList: function(scope, callback){ createModal('views/shoppinglist/modal/edit-list.html', scope, callback); },
             switchList: function(scope, callback){ createModal('views/shoppinglist/modal/switch-list.html', scope, callback); },
             itemDetails: function(scope, callback){ createModal('views/shoppinglist/modal/item-details.html', scope, callback); }
+        },
+        recipe: {
+            ingredientsToShoppinglist: function(scope, callback){ createModal('views/recipes/modal/add-ingredients.html', scope, callback); }
         }
     };
 
