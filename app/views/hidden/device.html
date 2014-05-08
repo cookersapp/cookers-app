@@ -7,10 +7,11 @@
     </ion-nav-buttons>
     <ion-content class="padding">
         <p>Informations sur le téléphone :</p>
-        <p>device.model: {{device.model}}</p>
-        <p>device.platform: {{device.platform}}</p>
-        <p>device.uuid: {{device.uuid}}</p>
-        <p>device.version: {{device.version}}</p>
+        <p>Platform: {{device.platform}} {{device.version}}</p>
+        <p>Cordova version: {{device.cordova}}</p>
+        <p>Phone model: {{device.model}}</p>
+        <p>Phone name: {{device.name}}</p>
+        <p>uuid: {{device.uuid}}</p>
         <p>
             <button class="button button-assertive" ng-click="resetApp()">
                 Reset app !
