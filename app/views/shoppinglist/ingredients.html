@@ -1,0 +1,46 @@
+<ion-view title="{{list.name}}">
+    <ion-nav-bar class="shoppinglist" ng-attr-align-title="{{header.align}}">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon ion-checkmark"  ui-sref="sidemenu.shoppinglist.cart"></button>
+    </ion-nav-buttons>
+    <ion-content class="ingredient-grid">
+        <div class="list" style="margin-bottom: 0px;">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search.dirty">
+                <button class="input-btn" ng-click="clearSearch()" ng-if="search.dirty !== ''">clear</button>
+            </label>
+            <!--<pre>{{search.parsed | json}}</pre>-->
+            <div class="item ingredient-search" ng-show="search.dirty">
+                <!-- ingredient in ingredients | filter:search.dirty | not:isIngredientInCurrentList(ingredient) => NOT WORKING :( -->
+                <div class="ingredient" ng-repeat="ingredient in ingredients | filter:search.dirty" ng-click="ingredientAdd(ingredient)">
+                    <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
+                    <div class="name">{{ingredient.name}}</div>
+                </div>
+                <div class="ingredient" ng-click="unknownAdd(search.dirty)">
+                    <img ng-src="images/ingredients/100x100/unknown.png">
+                    <div class="name">{{search.dirty}}</div>
+                </div>
+            </div>
+        </div>
+        <ol class="breadcrumb">
+            <li ng-repeat="item in categoryPath"><a ui-sref="sidemenu.shoppinglist.ingredients({category: item.id})">{{item.plural}}</a></li>
+        </ol>
+        <div class="grid">
+            <div class="row" ng-repeat="ingredientRow in rowIngredients">
+                <div class="col col-25 elt {{ingredient.type}}" ng-repeat="ingredient in ingredientRow" ng-class="{added: alreadyAdded(ingredient)}" ng-click="ingredientClick(ingredient)">
+                    <div class="img">
+                        <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
+                        <div>Ajouté</div>
+                    </div>
+                    <div class="name">{{ingredient.plural}}</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

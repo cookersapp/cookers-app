@@ -27,16 +27,11 @@ angular.module('ionicApp.controllers', [])
     $scope.itemDetails.modal = modal;
   });
 
-  $scope.unknownClick = function(name){
+  $scope.unknownAdd = function(name){
     var ingredient = ShoppinglistService.createIngredient(name);
-    $scope.ingredientClick(ingredient);
+    $scope.ingredientAdd(ingredient);
   };
-  $scope.ingredientClick = function(ingredient){
-    /*if(ShoppinglistService.existInCurrentList(ingredient)){
-      $scope.itemClick(ShoppinglistService.getCurrentListItem(ingredient));
-    } else {
-      ShoppinglistService.addToCurrentList(ingredient);
-    }*/
+  $scope.ingredientAdd = function(ingredient){
     var item = ShoppinglistService.createItem(ingredient);
     $scope.itemClick(item);
   };
@@ -75,13 +70,6 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ShoppinglistCartCtrl', function($scope, ShoppinglistService, ShoppingParserService, ModalService, Log) {
   'use strict';
-  $scope.search = {
-    dirty: ''
-  };
-  $scope.$watch('search.dirty', function(value){
-    $scope.search.parsed = ShoppingParserService.parse(value);
-  });
-
   $scope.editList = {};
   ModalService.shoppinglist.editList($scope, function(modal) {
     $scope.editList.modal = modal;
@@ -144,11 +132,52 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistProductsCtrl', function($scope, Log) {
+.controller('ShoppinglistIngredientsCtrl', function($scope, $stateParams, $state, IngredientGridService, ShoppinglistService, ShoppingParserService, Util, Log) {
   'use strict';
+  var category = $stateParams.category ? $stateParams.category : 'root';
+  $scope.rowIngredients = [];
+  $scope.categoryPath = [];
+  $scope.search = {
+    dirty: ''
+  };
+  $scope.$watch('search.dirty', function(value){
+    $scope.search.parsed = ShoppingParserService.parse(value);
+  });
 
-  $scope.done = function(){
-    Log.alert('done : not implemented yet !');
+  IngredientGridService.getAsync(category).then(function(results){
+    if(results && results.length > 0){
+      $scope.rowIngredients = Util.toRows(results, 4);
+    } else {
+      Log.error('No results for category <'+category+'> !');
+    }
+  });
+  IngredientGridService.getPathAsync(category).then(function(path){
+    if(path && path.length > 0){
+      $scope.categoryPath = path;
+    } else {
+      Log.error('No path for category <'+category+'> !');
+    }
+  });
+
+  $scope.clearSearch = function(){
+    console.log('clearSearch');
+    $scope.search.dirty = '';
+  };
+
+  $scope.alreadyAdded = function(ingredient){
+    var item = ShoppinglistService.createItem(ingredient);
+    return ShoppinglistService.existInCurrentList(item);
+  };
+
+  $scope.ingredientClick = function(ingredient){
+    if(ingredient.type === 'category'){
+      $state.go('sidemenu.shoppinglist.ingredients', {category: ingredient.id});
+    } else if($scope.alreadyAdded(ingredient)){
+      var item = ShoppinglistService.createItem(ingredient);
+      $scope.itemClick(item);
+    } else {
+      $scope.ingredientAdd(ingredient);
+    }
   };
 })
 

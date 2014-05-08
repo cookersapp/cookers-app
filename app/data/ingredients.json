@@ -1,14 +1,14 @@
 [
-    {"id": "cannelloni", "name": "cannelloni", "plural": "cannelloni", "img": "cannelloni.jpg", "category": "autre", "type": "unusual"},
-    {"id": "epinard", "name": "épinard", "plural": "épinards", "img": "epinard.jpg", "category": "legume", "type": "unusual"},
-    {"id": "ricotta", "name": "ricotta", "plural": "ricotta", "img": "ricotta.png", "category": "fromage", "type": "unusual"},
-    {"id": "parmesan", "name": "parmesan", "plural": "parmesan", "img": "parmesan.jpg", "category": "fromage", "type": "unusual"},
-    {"id": "ail", "name": "ail", "plural": "ail", "img": "ail.jpg", "category": "legume", "type": "usual"},
-    {"id": "oignon", "name": "oignon", "plural": "oignon", "img": "oignon.jpg", "category": "legume", "type": "usual"},
-    {"id": "beurre", "name": "beurre", "plural": "beurre", "img": "beurre.jpg", "category": "cremerie", "type": "common"},
-    {"id": "farine", "name": "farine", "plural": "farine", "img": "farine.jpg", "category": "feculent", "type": "usual"},
-    {"id": "lait", "name": "lait", "plural": "lait", "img": "lait.jpeg", "category": "cremerie", "type": "usual"},
-    {"id": "sel", "name": "sel", "plural": "sel", "img": "sel.jpg", "category": "epicerie", "type": "common"},
-    {"id": "poivre", "name": "poivre", "plural": "poivre", "img": "poivre.jpg", "category": "epicerie", "type": "common"},
-    {"id": "huile", "name": "huile", "plural": "huile", "img": "huile.jpg", "category": "epicerie", "type": "common"}
+    {"id": "cannelloni",    "type": "ingredient",   "name": "cannelloni",   "plural": "cannelloni", "img": "cannelloni.jpg",    "category": "autre",    "usage": "unusual"   },
+    {"id": "epinard",       "type": "ingredient",   "name": "épinard",      "plural": "épinards",   "img": "epinard.jpg",       "category": "legume",   "usage": "unusual"   },
+    {"id": "ricotta",       "type": "ingredient",   "name": "ricotta",      "plural": "ricotta",    "img": "ricotta.png",       "category": "fromage",  "usage": "unusual"   },
+    {"id": "parmesan",      "type": "ingredient",   "name": "parmesan",     "plural": "parmesan",   "img": "parmesan.jpg",      "category": "fromage",  "usage": "unusual"   },
+    {"id": "ail",           "type": "ingredient",   "name": "ail",          "plural": "ail",        "img": "ail.jpg",           "category": "legume",   "usage": "usual"     },
+    {"id": "oignon",        "type": "ingredient",   "name": "oignon",       "plural": "oignon",     "img": "oignon.jpg",        "category": "legume",   "usage": "usual"     },
+    {"id": "beurre",        "type": "ingredient",   "name": "beurre",       "plural": "beurre",     "img": "beurre.jpg",        "category": "cremerie", "usage": "common"    },
+    {"id": "farine",        "type": "ingredient",   "name": "farine",       "plural": "farine",     "img": "farine.jpg",        "category": "feculent", "usage": "usual"     },
+    {"id": "lait",          "type": "ingredient",   "name": "lait",         "plural": "lait",       "img": "lait.jpeg",         "category": "cremerie", "usage": "usual"     },
+    {"id": "sel",           "type": "ingredient",   "name": "sel",          "plural": "sel",        "img": "sel.jpg",           "category": "epicerie", "usage": "common"    },
+    {"id": "poivre",        "type": "ingredient",   "name": "poivre",       "plural": "poivre",     "img": "poivre.jpg",        "category": "epicerie", "usage": "common"    },
+    {"id": "huile",         "type": "ingredient",   "name": "huile",        "plural": "huile",      "img": "huile.jpg",         "category": "epicerie", "usage": "common"    }
 ]

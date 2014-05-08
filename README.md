@@ -16,7 +16,7 @@ This project require several tools, if they are not installed, please do.
 Other libs :
 
 - [ionic 1.0.0-beta.4](http://ionicframework.com/) : installed via bower
-- Cordova plugins : [BarcodeScanner](https://github.com/wildabeast/BarcodeScanner)
+- Cordova plugins : [BarcodeScanner](https://github.com/wildabeast/BarcodeScanner), [device](https://github.com/apache/cordova-plugin-device/blob/master/doc/index.md)
 
 ## Getting started
 
@@ -47,6 +47,7 @@ To run the app, you have many ways :
 
 ## Todo
 
+- back button problems : often go back to home !!!
 - don't show in suggestions ingredients already in list
 - parse search input to get quantity & quantityUnit
 - add price data for ingredients (for recipe estimates...)

@@ -119,3 +119,37 @@
 }
 .button.history { @include elt-colors($color-history, $color-history-border, $color-history-font); }
 .item.item-border.history {border-color: $color-history;}
+
+
+.item-input .input-btn {
+    background-color: #f8f8f8;
+    color: #444;
+    border-radius: 4px;
+    padding: 5px 12px;
+    margin-right: 10px;
+    border: none;
+}
+
+.breadcrumb {
+    padding: 5px 15px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    list-style: none;
+    //background-color: #f5f5f5;
+    border-radius: 4px;
+}
+.breadcrumb > li {
+    display: inline-block;
+    a {
+        color: #428bca;
+        text-decoration: none;
+    }
+}
+.breadcrumb > li:last-child, .breadcrumb > li:last-child a {
+    color: #999;
+}
+.breadcrumb > li + li:before {
+    content: "/\00a0";
+    padding: 0 5px;
+    color: #ccc;
+}

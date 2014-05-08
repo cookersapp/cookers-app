@@ -1,0 +1,30 @@
+{"id": "root", "type": "category", "ingredients": [
+    {"id": "custom", "type": "category", "ingredients": []},
+    {"id": "fruit", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "legume", "type": "category", "ingredients": [
+        {"id": "epinard", "type": "ingredient"}
+    ]},
+    {"id": "feculent", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "viande", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "poisson", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "fromage", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "cremerie", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "epicerie", "type": "category", "ingredients": [
+
+    ]},
+    {"id": "autre", "type": "category", "ingredients": [
+
+    ]}
+]}

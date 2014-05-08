@@ -44,10 +44,10 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     templateUrl: 'views/shoppinglist/current.html',
     controller: 'ShoppinglistCartCtrl'
   })
-  .state('sidemenu.shoppinglist.addingredients', {
-    url: '/addproducts',
-    templateUrl: 'views/shoppinglist/addingredients.html',
-    controller: 'ShoppinglistProductsCtrl'
+  .state('sidemenu.shoppinglist.ingredients', {
+    url: '/ingredients/:category',
+    templateUrl: 'views/shoppinglist/ingredients.html',
+    controller: 'ShoppinglistIngredientsCtrl'
   })
   .state('sidemenu.recipes', {
     url: '/recipes',

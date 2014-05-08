@@ -34,6 +34,67 @@ angular.module('ionicApp.services', [])
 })
 
 
+.factory('IngredientGridService', function($q, CategoryService, IngredientService, ShoppinglistService, DataTreeService){
+    'use strict';
+    var dataUrl = 'data/ingredient_grid.json';
+    var getChildren = function(tree){return tree.ingredients;};
+    var dataPromise;
+    var service = {
+        getAsync: getAsync,
+        getPathAsync: getPathAsync
+    };
+
+    function getAsync(id){
+        if(id === 'custom'){
+            return getMostPopular();
+        } else {
+            return DataTreeService.getAsync(dataUrl, getChildren, id).then(function(tree){
+                if(typeof id === 'string' && tree && tree.ingredients){
+                    // if not enough data, don't show Custom category
+                    if(ShoppinglistService.getAllLists().length < 2){
+                        var index = _.findIndex(tree.ingredients, {'id': 'custom'});
+                        if(index !== -1){
+                            tree.ingredients.splice(index, 1);
+                        }
+                    }
+
+                    return fetchDataFor(tree.ingredients);
+                } else {
+                    return tree;
+                }
+            });
+        }
+    }
+
+    function getPathAsync(id){
+        return DataTreeService.getPathAsync(dataUrl, getChildren, id).then(function(path){
+            return fetchDataFor(path);
+        });
+    }
+
+    function fetchDataFor(ingredients){
+        var ingredientPromises = [];
+        for(var i in ingredients){
+            var ingredient = ingredients[i];
+            if(ingredient.type === 'category'){
+                ingredientPromises.push(CategoryService.getAsync(ingredient.id));
+            } else if(ingredient.type === 'ingredient'){
+                ingredientPromises.push(IngredientService.getAsync(ingredient.id));
+            } else {
+                Log.error('Unknown type of ingredient grid: <'+ingredient.type+'>');
+            }
+        }
+        return $q.all(ingredientPromises);
+    }
+
+    function getMostPopular(){
+        return $q.when([]);
+    }
+
+    return service;
+})
+
+
 .factory('ShoppinglistService', function($localStorage, IngredientService, CategoryService, Log){
     if(!$localStorage.shoppingLists){$localStorage.shoppingLists = createLists();}
     var shoppingLists = $localStorage.shoppingLists;
@@ -404,13 +465,100 @@ angular.module('ionicApp.services', [])
 })
 
 
+.factory('DataTreeService', function($http, Log){
+    'use strict';
+    var arrayPromise = [];
+    var service = {
+        getAsync: getAsync,
+        getPathAsync: getPathAsync
+    };
+
+    function getAsync(dataUrl, getChildren, id){
+        if(id === undefined){
+            return loadAsync(dataUrl);
+        } else if(typeof id === 'string'){
+            return loadAsync(dataUrl).then(function(tree){
+                return findTree(tree, getChildren, function(elt){
+                    return elt.id === id; 
+                });
+            });
+        } else {
+            throw 'Can\'t load getAsync for '+dataUrl+' with id <'+id+'>';
+        }
+    }
+    
+    function getPathAsync(dataUrl, getChildren, id){
+        if(id === undefined){
+            return loadAsync(dataUrl).then(function(root){
+                return [root];
+            });
+        } else if(typeof id === 'string'){
+            return loadAsync(dataUrl).then(function(tree){
+                return findTreePath(tree, getChildren, function(elt){
+                    return elt.id === id; 
+                });
+            });
+        } else {
+            throw 'Can\'t load getAsync for '+dataUrl+' with id <'+id+'>';
+        }
+    }
+
+    function findTree(tree, getChildren, test){
+        var children = getChildren(tree);
+        if(test(tree)){
+            return tree;
+        } else if(children){
+            for(var i in children){
+                var res = findTree(children[i], getChildren, test);
+                if(res && res !== -1){ return res; }
+            }
+        }
+        return -1;
+    }
+    function findTreePath(tree, getChildren, test){
+        var children = getChildren(tree);
+        if(test(tree)){
+            return [tree];
+        } else if(children){
+            for(var i in children){
+                var res = findTreePath(children[i], getChildren, test);
+                if(res){return [tree].concat(res);}
+            }
+        }
+    }
+
+    function loadAsync(dataUrl){
+        if(!arrayPromise[dataUrl]){
+            arrayPromise[dataUrl] = $http.get(dataUrl).then(function(result) {
+                Log.log('DataTreeService.loadAsync('+dataUrl+')', result);
+                return result.data;
+            }).then(null, function(error){
+                Log.error('DataTreeService.loadAsync('+dataUrl+')', error);
+            });
+        }
+        return arrayPromise[dataUrl];
+    }
+
+    return service;
+})
+
+
 .factory('Util', function(){
     'use strict';
     var service = {
         isDevice: function(){
             return window.ionic.Platform.isWebView();
-        }
+        },
+        toRows: toRows
     };
+
+    function toRows(data, cols){
+        return _.map(_.groupBy(data, function(v, i) {
+            return Math.floor(i / cols);
+        }), function(v) {
+            return v;
+        });
+    }
 
     return service;
 })

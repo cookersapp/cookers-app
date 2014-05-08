@@ -17,23 +17,7 @@
     </ion-content>
     <ion-content ng-show="list !== null">
         <div class="list">
-            <label class="item item-input">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="text" placeholder="Chercher et ajouter un produit" ng-model="search.dirty">
-            </label>
-            <!--<pre>{{search.parsed | json}}</pre>-->
-            <div class="item ingredient-search" ng-show="search.dirty">
-                <!-- ingredient in ingredients | filter:search.dirty | not:isIngredientInCurrentList(ingredient) => NOT WORKING :( -->
-                <div class="ingredient" ng-repeat="ingredient in ingredients | filter:search.dirty" ng-click="ingredientClick(ingredient)">
-                    <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
-                    <div class="name">{{ingredient.name}}</div>
-                </div>
-                <div class="ingredient" ng-click="unknownClick(search.dirty)">
-                    <img ng-src="images/ingredients/100x100/unknown.png">
-                    <div class="name">{{search.dirty}}</div>
-                </div>
-            </div>
-            <a class="item item-icon-left" ui-sref="sidemenu.shoppinglist.addingredients">
+            <a class="item item-icon-left" ui-sref="sidemenu.shoppinglist.ingredients">
                 <i class="icon ion-plus-circled"></i>
                 Ajouter des produits
             </a>
@@ -66,7 +50,7 @@
                         <input type="checkbox" checked ng-model="item.bought" ng-change="unbuyItem(item)">
                     </label>
                 </div>
-                <div class="main">
+                <div class="main" ng-click="itemClick(item)">
                     <img ng-src="images/ingredients/100x100/{{item.ingredient.img}}">
                     <h2>{{item.ingredient.name}}</h2>
                     <span class="item-note">{{item.quantity}} {{item.quantityUnit}}</span>
