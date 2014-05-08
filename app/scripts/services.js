@@ -408,7 +408,7 @@ angular.module('ionicApp.services', [])
     'use strict';
     var service = {
         isDevice: function(){
-            return window.ionic.Platform.isCordova();
+            return window.ionic.Platform.isWebView();
         }
     };
 

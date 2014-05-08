@@ -19,20 +19,6 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
-  // Done : open ingredient details when you add it to a list
-
-  // TODO : don't show in suggestions ingredients already in list
-  // TODO : parse search input
-  // TODO : add price data for ingredients (for recipe estimates...)
-  // BUG : screen blink on phone :(
-  // TODO : typer les champ de texte pour que le clavier ne commence pas par une majuscule...
-  // TODO : ajouter la liste des unités possibles
-  // TODO : set focus on search field when click on suggested ingredient
-  // TODO : add a clear search button when it has some text
-  // TODO : ingredientDetails : improve design !!! (show picture, name & category)
-  // TODO : allow to change ingredient category (in ingredientDetails)
-  // TODO : for unknown ingredient, allow to change name & picture (in addition on category)
-  // TODO : save ingredients, ingredient categories & units on localstorage to allow users to add & customize them (and sync with API)
   $scope.header.style = 'bar-royal';
   $scope.header.align = 'left';
   $scope.ingredients = [];

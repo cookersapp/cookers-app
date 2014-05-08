@@ -3,7 +3,7 @@
         <h1 class="title">{{toCurrentList.title}}</h1>
         <button class="button button-clear button-primary" ng-click="toCurrentList.modal.hide()">Annuler</button>
     </header>
-    <ion-content>
+    <ion-content class="has-header">
         Pour {{toCurrentList.data.serving}} {{toCurrentList.data.servingUnit}}
         <div class="range range-positive">
             <input type="range" name="volume" min="0" max="20" ng-model="toCurrentList.data.serving">
