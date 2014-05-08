@@ -1,7 +1,7 @@
-@import 'colors';
-@import 'ionic_override';
-@import 'bootstrap';
-@import 'global';
+@import '_colors';
+@import '_ionic_override';
+@import '_bootstrap_copy';
+@import '_global';
 
 .dashboard button {
     font-size: 2em;

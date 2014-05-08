@@ -1,0 +1,25 @@
+@import '_colors';
+
+.bar .button {
+    padding: 0 2px;
+}
+
+.item.item-border {
+    border-left: 10px solid #fff;
+}
+.item-icon-left.item-border {
+    padding-left: 37px;
+}
+.item-icon-left.item-border .icon {
+    left: 2px;
+}
+.item.item-border.border-light {border-color: $color-light;}
+.item.item-border.border-stable {border-color: $color-stable;}
+.item.item-border.border-positive {border-color: $color-positive;}
+.item.item-border.border-calm {border-color: $color-calm;}
+.item.item-border.border-balanced {border-color: $color-balanced;}
+.item.item-border.border-energized {border-color: $color-energized;}
+.item.item-border.border-assertive {border-color: $color-assertive;}
+.item.item-border.border-royal {border-color: $color-royal;}
+.item.item-border.border-dark {border-color: $color-dark;}
+.item.item-border.border-gray {border-color: $color-gray-border;}

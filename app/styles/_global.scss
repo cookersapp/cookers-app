@@ -1,0 +1,121 @@
+@import '_colors';
+
+@mixin elt-colors($bg, $border, $font) {
+    background-color: $bg;
+    border-color: $border;
+    color: $font;
+}
+
+
+
+.bar.home {
+    @include elt-colors($color-home, $color-home-border, $color-home-font);
+    background-image: linear-gradient(0deg, $color-home-border, $color-home-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-home, $color-home-border, $color-home-font);
+    }
+    .title {
+        color: $color-home-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.home { @include elt-colors($color-home, $color-home-border, $color-home-font); }
+.item.item-border.home {border-color: $color-home;}
+
+
+
+.bar.recipes {
+    @include elt-colors($color-recipes, $color-recipes-border, $color-recipes-font);
+    background-image: linear-gradient(0deg, $color-recipes-border, $color-recipes-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-recipes, $color-recipes-border, $color-recipes-font);
+    }
+    .title {
+        color: $color-recipes-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.recipes { @include elt-colors($color-recipes, $color-recipes-border, $color-recipes-font); }
+.item.item-border.recipes {border-color: $color-recipes;}
+
+
+
+.bar.shoppinglist {
+    @include elt-colors($color-shoppinglist, $color-shoppinglist-border, $color-shoppinglist-font);
+    background-image: linear-gradient(0deg, $color-shoppinglist-border, $color-shoppinglist-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-shoppinglist, $color-shoppinglist-border, $color-shoppinglist-font);
+    }
+    .title {
+        color: $color-shoppinglist-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.shoppinglist { @include elt-colors($color-shoppinglist, $color-shoppinglist-border, $color-shoppinglist-font); }
+.item.item-border.shoppinglist {border-color: $color-shoppinglist;}
+
+
+
+.bar.scan {
+    @include elt-colors($color-scan, $color-scan-border, $color-scan-font);
+    background-image: linear-gradient(0deg, $color-scan-border, $color-scan-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-scan, $color-scan-border, $color-scan-font);
+    }
+    .title {
+        color: $color-scan-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.scan { @include elt-colors($color-scan, $color-scan-border, $color-scan-font); }
+.item.item-border.scan {border-color: $color-scan;}
+
+
+
+.bar.product {
+    @include elt-colors($color-product, $color-product-border, $color-product-font);
+    background-image: linear-gradient(0deg, $color-product-border, $color-product-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-product, $color-product-border, $color-product-font);
+    }
+    .title {
+        color: $color-product-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.product { @include elt-colors($color-product, $color-product-border, $color-product-font); }
+.item.item-border.product {border-color: $color-product;}
+
+
+
+.bar.history {
+    @include elt-colors($color-history, $color-history-border, $color-history-font);
+    background-image: linear-gradient(0deg, $color-history-border, $color-history-border 50%, transparent 50%);
+    .button {
+        @include elt-colors($color-history, $color-history-border, $color-history-font);
+    }
+    .title {
+        color: $color-history-font;
+    }
+    .button.button-icon, .button.button-clear {
+        border-color: transparent;
+        background: none;
+    }
+}
+.button.history { @include elt-colors($color-history, $color-history-border, $color-history-font); }
+.item.item-border.history {border-color: $color-history;}

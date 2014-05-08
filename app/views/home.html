@@ -1,5 +1,5 @@
 <ion-view title="Accueil">
-    <ion-nav-bar ng-class="header.style" ng-attr-align-title="{{header.align}}">
+    <ion-nav-bar class="home" ng-attr-align-title="{{header.align}}">
         <ion-nav-back-button class="button-icon ion-arrow-left-c"></ion-nav-back-button>
     </ion-nav-bar>
     <ion-nav-buttons side="left">
@@ -9,18 +9,18 @@
         <div class="dashboard">
             <div class="row">
                 <div class="col col-50">
-                    <button class="button button-royal" ui-sref="sidemenu.shoppinglist.cart">Liste de course</button>
+                    <button class="button recipes" ui-sref="sidemenu.recipes.search">Recettes</button>
                 </div>
                 <div class="col col-50">
-                    <button class="button button-assertive" ui-sref="sidemenu.recipes.search">Recettes</button>
+                    <button class="button shoppinglist" ui-sref="sidemenu.shoppinglist.cart">Liste de course</button>
                 </div>
             </div>
             <div class="row">
                 <div class="col col-50">
-                    <button class="button button-balanced" ui-sref="scan">Scan</button>
+                    <button class="button scan" ui-sref="scan">Scan</button>
                 </div>
                 <div class="col col-50">
-                    <button class="button button-energized">Historique</button>
+                    <button class="button history">Historique</button>
                 </div>
             </div>
             <!-- Autres : cuisine -->

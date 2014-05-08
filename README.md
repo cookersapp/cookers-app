@@ -60,9 +60,7 @@ To run the app, you have many ways :
 - for unknown ingredient, allow to change name & picture (in addition on category)
 - save ingredients, ingredient categories & units on localstorage to allow users to add & customize them (and sync with API)
   
-- ajouter plugin cordova "device"
 - filtres sur les photos de recette (oeil de poisson)
-- inverser l'ordre "Liste de courses" et "Recettes"
 - liste de course
     - mettre 2 boutons cote à cote : "Taper ma liste de course" et "cherche des ingrédients"
     - masquer les produits achetés (les afficher en cliquant sur le bandeau "Produits achetés")

@@ -4,7 +4,6 @@ angular.module('ionicApp.controllers', [])
 .controller('SideMenuCtrl', function($scope) {
   'use strict';
   $scope.header = {
-    style: 'bar-positive',
     align: 'center'
   };
 })
@@ -12,14 +11,12 @@ angular.module('ionicApp.controllers', [])
 
 .controller('HomeCtrl', function($scope, Log) {
   'use strict';
-  $scope.header.style = 'bar-positive';
   $scope.header.align = 'center';
 })
 
 
 .controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
   'use strict';
-  $scope.header.style = 'bar-royal';
   $scope.header.align = 'left';
   $scope.ingredients = [];
   $scope.ingredientGrid = {};
@@ -158,7 +155,6 @@ angular.module('ionicApp.controllers', [])
 
 .controller('RecipesCtrl', function($scope) {
   'use strict';
-  $scope.header.style = 'bar-assertive';
   $scope.header.align = 'center';
 })
 
@@ -254,7 +250,6 @@ angular.module('ionicApp.controllers', [])
 
 .controller('ProductCtrl', function($scope, $stateParams/*, ProductService, RecipeService*/, UserService){
   'use strict';
-  $scope.header.style = 'bar-balanced';
   $scope.header.align = 'center';
   var barcode = $stateParams.barcode;
   var from = $stateParams.from;
