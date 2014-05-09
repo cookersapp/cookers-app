@@ -57,7 +57,19 @@ angular.module('ionicApp.services', [])
                             tree.ingredients.splice(index, 1);
                         }
                     }
+                    
+                    // don't show categories with no ingredient inside
+                    console.log('ICI', tree.ingredients);
+                    var max = tree.ingredients.length;
+                    for(var i=0; i<max; i++){
+                        if(tree.ingredients[i].id !== 'custom' && tree.ingredients[i].type === 'category' && tree.ingredients[i].ingredients.length === 0){
+                            tree.ingredients.splice(i, 1);
+                            i--;
+                            max--;
+                        }
+                    }
 
+                    // get ingredients data and return them
                     return fetchDataFor(tree.ingredients);
                 } else {
                     return tree;

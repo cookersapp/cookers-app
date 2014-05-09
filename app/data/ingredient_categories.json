@@ -1,13 +1,14 @@
 [
     {"id": "fruit",     "type": "category", "name": "Fruit",        "plural": "Fruits",     "img": "fruits.jpg",    "order": 1},
     {"id": "legume",    "type": "category", "name": "Légume",       "plural": "Légumes",    "img": "legumes.jpg",   "order": 2},
-    {"id": "feculent",  "type": "category", "name": "Féculent",     "plural": "Féculents",  "img": "unknown.png",   "order": 3},
-    {"id": "viande",    "type": "category", "name": "Viande",       "plural": "Viandes",    "img": "unknown.png",   "order": 4},
-    {"id": "poisson",   "type": "category", "name": "Poisson",      "plural": "Poissons",   "img": "unknown.png",   "order": 5},
+    {"id": "feculent",  "type": "category", "name": "Féculent",     "plural": "Féculents",  "img": "feculents.jpg", "order": 3},
+    {"id": "viande",    "type": "category", "name": "Viande",       "plural": "Viandes",    "img": "viande.jpg",    "order": 4},
+    {"id": "poisson",   "type": "category", "name": "Poisson",      "plural": "Poissons",   "img": "poisson.jpg",   "order": 5},
     {"id": "fromage",   "type": "category", "name": "Fromage",      "plural": "Fromages",   "img": "unknown.png",   "order": 6},
     {"id": "cremerie",  "type": "category", "name": "Crèmerie",     "plural": "Crèmerie",   "img": "unknown.png",   "order": 7},
-    {"id": "epicerie",  "type": "category", "name": "Epicerie",     "plural": "Epicerie",   "img": "unknown.png",   "order": 8},
-    {"id": "autre",     "type": "category", "name": "Autre",        "plural": "Autres",     "img": "unknown.png",   "order": 9},
+    {"id": "epicerie",  "type": "category", "name": "Epicerie",     "plural": "Epicerie",   "img": "epices.jpg",    "order": 8},
+    {"id": "boisson",   "type": "category", "name": "Boisson",      "plural": "Boissons",   "img": "boissons.png",  "order": 9},
+    {"id": "autre",     "type": "category", "name": "Autre",        "plural": "Autres",     "img": "ajout.jpg",     "order": 10},
     {"id": "root",      "type": "category", "name": "Ingrédient",   "plural": "Ingrédients","img": "unknown.png"},
     {"id": "custom",    "type": "category", "name": "Populaire",    "plural": "Populaires", "img": "unknown.png"}
 ]

@@ -1,13 +1,27 @@
 {"id": "root", "type": "category", "ingredients": [
     {"id": "custom", "type": "category", "ingredients": []},
     {"id": "fruit", "type": "category", "ingredients": [
-
+        {"id": "ananas", "type": "ingredient"},
+        {"id": "banane", "type": "ingredient"},
+        {"id": "abricot", "type": "ingredient"},
+        {"id": "cerise", "type": "ingredient"}
     ]},
     {"id": "legume", "type": "category", "ingredients": [
-        {"id": "epinard", "type": "ingredient"}
+        {"id": "artichaut", "type": "ingredient"},
+        {"id": "aubergine", "type": "ingredient"},
+        {"id": "avocat", "type": "ingredient"},
+        {"id": "betterave", "type": "ingredient"},
+        {"id": "carotte", "type": "ingredient"},
+        {"id": "chou", "type": "ingredient"},
+        {"id": "citron", "type": "ingredient"},
+        {"id": "concombre", "type": "ingredient"},
+        {"id": "epinard", "type": "ingredient"},
+        {"id": "ail", "type": "ingredient"},
+        {"id": "oignon", "type": "ingredient"}
     ]},
     {"id": "feculent", "type": "category", "ingredients": [
-
+        {"id": "farine", "type": "ingredient"},
+        {"id": "cannelloni", "type": "ingredient"}
     ]},
     {"id": "viande", "type": "category", "ingredients": [
 
@@ -16,13 +30,17 @@
 
     ]},
     {"id": "fromage", "type": "category", "ingredients": [
-
+        {"id": "ricotta", "type": "ingredient"},
+        {"id": "parmesan", "type": "ingredient"}
     ]},
     {"id": "cremerie", "type": "category", "ingredients": [
-
+        {"id": "beurre", "type": "ingredient"},
+        {"id": "lait", "type": "ingredient"}
     ]},
     {"id": "epicerie", "type": "category", "ingredients": [
-
+        {"id": "sel", "type": "ingredient"},
+        {"id": "poivre", "type": "ingredient"},
+        {"id": "huile", "type": "ingredient"}
     ]},
     {"id": "autre", "type": "category", "ingredients": [
 

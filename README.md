@@ -47,23 +47,23 @@ To run the app, you have many ways :
 
 ## Todo
 
-- back button problems : often go back to home !!!
-- don't show in suggestions ingredients already in list
-- parse search input to get quantity & quantityUnit
+- ingredientDetails : improve design !!! (show picture, name, category & price info / put field "notes" at the end)
 - add price data for ingredients (for recipe estimates...)
+- don't show in suggestions for ingredients already in list
+
+- back button problems : often go back to home !!!
+- parse search input to get quantity & quantityUnit
 - typer les champ de texte pour que le clavier ne commence pas par une majuscule...
 - ajouter la liste des unités possibles
 - remove search text when add ingredient but keep focus
 - add a clear search button when it has some text
-- ingredientDetails : improve design !!! (show picture, name, category & price info / put field "notes" at the end)
+- save ingredients, ingredient categories & units on localstorage to allow users to add & customize them (and sync with API)
 - allow to change ingredient category (in ingredientDetails)
 - allow to create & organize ingredient categories
 - for unknown ingredient, allow to change name & picture (in addition on category)
-- save ingredients, ingredient categories & units on localstorage to allow users to add & customize them (and sync with API)
   
 - filtres sur les photos de recette (oeil de poisson)
 - liste de course
-    - mettre 2 boutons cote à cote : "Taper ma liste de course" et "cherche des ingrédients"
     - masquer les produits achetés (les afficher en cliquant sur le bandeau "Produits achetés")
 - Other : see [trello board](https://trello.com/b/fdodl9nl/retail-scan)
 
