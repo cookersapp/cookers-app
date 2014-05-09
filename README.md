@@ -49,7 +49,7 @@ To run the app, you have many ways :
 
 - ingredientDetails : improve design !!! (show picture, name, category & price info / put field "notes" at the end)
 - add price data for ingredients (for recipe estimates...)
-- don't show in suggestions for ingredients already in list
+- ingredientSearch : don't show ingredients already in list, set max elements to 17, filter only on name, order by popularity
 
 - back button problems : often go back to home !!!
 - parse search input to get quantity & quantityUnit

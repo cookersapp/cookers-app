@@ -54,13 +54,17 @@
 
 
 
-.ingredient-search, .ingredient-grid {
+.ingredient-grid {
     background: #eee;
     padding: 0px;
-}
-.ingredient-search .ingredient {
-    float: left;
-    padding: 2px;
+    .ingredient-search {
+        background: #ccc;
+        padding: 0px;
+        .ingredient {
+            float: left;
+            padding: 2px;
+        }
+    }
 }
 .ingredient-search .ingredient img,
 .ingredient-grid .grid .elt img {
@@ -74,14 +78,29 @@
     width: 60px;
 }
 .ingredient-search .ingredient .name {
+    max-width: 60px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     font-size: 12px;
     text-align: center;
     margin-top: -5px;
 }
 
 
-.ingredient-grid .grid .elt.category {
+.ingredient-grid .grid .elt {
     position: relative;
+    padding: 2px 3px;
+    .img {
+        position: relative;
+        margin-bottom: -7px;
+        .ribbon {
+            display: none;
+        }
+    }
+    .name {
+        text-align: center;
+    }
 }
 .ingredient-grid .grid .elt.category:after {
     position: absolute;
@@ -94,28 +113,23 @@
     line-height: 1;
     speak: none;
 }
-.ingredient-grid .grid .elt .img div {
-    display: none;
-}
-.ingredient-grid .grid .elt .name {
-    text-align: center;
-}
-.ingredient-grid .grid .elt.added .img {
-    position: relative;
-}
-.ingredient-grid .grid .elt.added .img img {
-    border: 1px solid $color-balanced-border;
-}
-.ingredient-grid .grid .elt.added .img div {
-    display: block;
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    width: 100%;
-    background: $color-balanced;
-    border: 1px solid $color-balanced-border;
-    color: $color-balanced-font;
-    text-align: center;
+.ingredient-grid .grid .elt.added {
+    .img {
+        img {
+            border: 1px solid $color-balanced-border;
+        }
+        .ribbon {
+            display: block;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            background: $color-balanced;
+            border: 1px solid $color-balanced-border;
+            color: $color-balanced-font;
+            text-align: center;
+        }
+    }
 }
 
 

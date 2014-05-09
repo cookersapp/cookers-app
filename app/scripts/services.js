@@ -57,9 +57,8 @@ angular.module('ionicApp.services', [])
                             tree.ingredients.splice(index, 1);
                         }
                     }
-                    
+
                     // don't show categories with no ingredient inside
-                    console.log('ICI', tree.ingredients);
                     var max = tree.ingredients.length;
                     for(var i=0; i<max; i++){
                         if(tree.ingredients[i].id !== 'custom' && tree.ingredients[i].type === 'category' && tree.ingredients[i].ingredients.length === 0){
@@ -96,7 +95,18 @@ angular.module('ionicApp.services', [])
                 Log.error('Unknown type of ingredient grid: <'+ingredient.type+'>');
             }
         }
-        return $q.all(ingredientPromises);
+        return $q.all(ingredientPromises).then(function(results){
+            // remove not found elts
+            var max = results.length;
+            for(var i=0; i<max; i++){
+                if(results[i] === undefined){
+                    results.splice(i, 1);
+                    i--;
+                    max--;
+                }
+            }
+            return results;
+        });
     }
 
     function getMostPopular(){
@@ -464,10 +474,10 @@ angular.module('ionicApp.services', [])
     function loadAsync(dataUrl){
         if(!arrayPromise[dataUrl]){
             arrayPromise[dataUrl] = $http.get(dataUrl).then(function(result) {
-                Log.log('DataArrayService.loadAsync('+dataUrl+')', result);
+                Log.log('asyncArray('+dataUrl+')', result);
                 return result.data;
             }).then(null, function(error){
-                Log.error('DataArrayService.loadAsync('+dataUrl+')', error);
+                Log.error('asyncArray('+dataUrl+')', error);
             });
         }
         return arrayPromise[dataUrl];
@@ -498,7 +508,7 @@ angular.module('ionicApp.services', [])
             throw 'Can\'t load getAsync for '+dataUrl+' with id <'+id+'>';
         }
     }
-    
+
     function getPathAsync(dataUrl, getChildren, id){
         if(id === undefined){
             return loadAsync(dataUrl).then(function(root){
@@ -542,10 +552,10 @@ angular.module('ionicApp.services', [])
     function loadAsync(dataUrl){
         if(!arrayPromise[dataUrl]){
             arrayPromise[dataUrl] = $http.get(dataUrl).then(function(result) {
-                Log.log('DataTreeService.loadAsync('+dataUrl+')', result);
+                Log.log('asyncTree('+dataUrl+')', result);
                 return result.data;
             }).then(null, function(error){
-                Log.error('DataTreeService.loadAsync('+dataUrl+')', error);
+                Log.error('asyncTree('+dataUrl+')', error);
             });
         }
         return arrayPromise[dataUrl];

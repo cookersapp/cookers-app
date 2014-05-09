@@ -36,7 +36,7 @@
                 <div class="col col-25 elt {{ingredient.type}}" ng-repeat="ingredient in ingredientRow" ng-class="{added: alreadyAdded(ingredient)}" ng-click="ingredientClick(ingredient)">
                     <div class="img">
                         <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
-                        <div>Ajouté</div>
+                        <div class="ribbon">Ajouté</div>
                     </div>
                     <div class="name">{{ingredient.plural}}</div>
                 </div>

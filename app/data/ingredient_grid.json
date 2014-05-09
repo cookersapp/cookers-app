@@ -17,6 +17,8 @@
         {"id": "concombre", "type": "ingredient"},
         {"id": "epinard", "type": "ingredient"},
         {"id": "ail", "type": "ingredient"},
+        {"id": "ail2", "type": "ingredient"},
+        {"id": "ail3", "type": "ingredient"},
         {"id": "oignon", "type": "ingredient"}
     ]},
     {"id": "feculent", "type": "category", "ingredients": [
