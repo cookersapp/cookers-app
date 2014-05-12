@@ -22,7 +22,7 @@ angular.module('ionicApp.controllers', [])
   $scope.ingredientUnits = [];
   $scope.ingredientGrid = {};
   $scope.list = ShoppinglistService.getCurrentList();
-  
+
   DataService.getUnitsAsync().then(function(units){
     $scope.ingredientUnits = units;
   });
@@ -31,6 +31,28 @@ angular.module('ionicApp.controllers', [])
   ModalService.shoppinglist.itemDetails($scope, function(modal) {
     $scope.itemDetails.modal = modal;
   });
+
+  /*function getPriceRef(item){
+    if(item){
+      var unitId = item.quantityUnit && item.quantityUnit.id ? item.quantityUnit.id : item.quantityUnit;
+      var prices = item.ingredient.prices;
+      if(prices.length > 0){
+        var price =  prices[0];
+        for(var i in prices){
+          if(prices[i].unit === unitId){
+            price = prices[i];
+          }
+        }
+        return price;
+      }
+    }
+  };
+  function getPrice(item){
+    var ref = getPriceRef(item);
+    if(ref){
+      return item.quantity * ref.price;
+    }
+  }*/
 
   $scope.unknownAdd = function(name){
     var ingredient = ShoppinglistService.createIngredient(name);
@@ -63,7 +85,6 @@ angular.module('ionicApp.controllers', [])
     $scope.itemDetails.modal.hide();
   };
   $scope.updateItem = function(){
-    console.log('newItem', $scope.itemDetails.data.item);
     angular.copy($scope.itemDetails.data.item, $scope.itemDetails.item);
     $scope.itemDetails.item.quantityUnit = _.find($scope.ingredientUnits, {id: $scope.itemDetails.item.quantityUnit});
     $scope.itemDetails.modal.hide();
@@ -230,7 +251,7 @@ angular.module('ionicApp.controllers', [])
     id: id
   };
   $scope.ingredientUnits = [];
-  
+
   DataService.getUnitsAsync().then(function(units){
     $scope.ingredientUnits = units;
   });

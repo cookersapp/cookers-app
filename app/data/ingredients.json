@@ -8,7 +8,7 @@
         "category": "fruit",
         "usage": "usual",
         "prices": [
-            {"price": 1.95, "unit": "€/pce"}
+            {"price": 1.95, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "banane",
@@ -19,7 +19,7 @@
         "category": "fruit",
         "usage": "usual",
         "prices": [
-            {"price": 1.79, "unit": "€/kg"}
+            {"price": 1.79, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "abricot",
@@ -30,7 +30,7 @@
         "category": "fruit",
         "usage": "usual",
         "prices": [
-            {"price": 2.87, "unit": "€/kg"}
+            {"price": 2.87, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "cerise",
@@ -41,7 +41,7 @@
         "category": "fruit",
         "usage": "usual",
         "prices": [
-            {"price": 5.74, "unit": "€/kg"}
+            {"price": 5.74, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "artichaut",
@@ -52,7 +52,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 1.50, "unit": "€/pce"}
+            {"price": 1.50, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "aubergine",
@@ -63,7 +63,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.60, "unit": "€/pce"}
+            {"price": 0.60, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "avocat",
@@ -74,7 +74,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.99, "unit": "€/pce"}
+            {"price": 0.99, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "betterave",
@@ -85,7 +85,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 4.58, "unit": "€/kg"}
+            {"price": 4.58, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "chou",
@@ -96,7 +96,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 1.69, "unit": "€/pce"}
+            {"price": 1.69, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "citron",
@@ -107,7 +107,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.40, "unit": "€/pce"}
+            {"price": 0.40, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "concombre",
@@ -118,7 +118,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.99, "unit": "€/pce"}
+            {"price": 0.99, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "ail",
@@ -129,7 +129,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.66, "unit": "€/pce"}
+            {"price": 0.66, "currency": "€", "unit": "pce"}
         ]
     }, {
         "id": "carotte",
@@ -140,7 +140,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 1.35, "unit": "€/kg"}
+            {"price": 1.35, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "epinard",
@@ -151,7 +151,7 @@
         "category": "legume",
         "usage": "unusual",
         "prices": [
-            {"price": 2.01, "unit": "€/kg"}
+            {"price": 2.01, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "oignon",
@@ -162,7 +162,7 @@
         "category": "legume",
         "usage": "usual",
         "prices": [
-            {"price": 0.89, "unit": "€/kg"}
+            {"price": 0.89, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "farine",
@@ -173,7 +173,7 @@
         "category": "feculent",
         "usage": "usual",
         "prices": [
-            {"price": 0.94, "unit": "€/kg"}
+            {"price": 0.94, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "cannelloni",
@@ -184,7 +184,7 @@
         "category": "feculent",
         "usage": "unusual",
         "prices": [
-            {"price": 5.20, "unit": "€/kg"}
+            {"price": 5.20, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "ricotta",
@@ -195,7 +195,7 @@
         "category": "fromage",
         "usage": "unusual",
         "prices": [
-            {"price": 9.04, "unit": "€/kg"}
+            {"price": 9.04, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "parmesan",
@@ -206,7 +206,7 @@
         "category": "fromage",
         "usage": "unusual",
         "prices": [
-            {"price": 23.75, "unit": "€/kg"}
+            {"price": 23.75, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "beurre",
@@ -217,7 +217,7 @@
         "category": "cremerie",
         "usage": "common",
         "prices": [
-            {"price": 5.64, "unit": "€/kg"}
+            {"price": 5.64, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "lait",
@@ -228,7 +228,7 @@
         "category": "cremerie",
         "usage": "usual",
         "prices": [
-            {"price": 2.78, "unit": "€/l"}
+            {"price": 2.78, "currency": "€", "unit": "l"}
         ]
     }, {
         "id": "sel",
@@ -239,7 +239,7 @@
         "category": "epicerie",
         "usage": "common",
         "prices": [
-            {"price": 4.80, "unit": "€/kg"}
+            {"price": 4.80, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "poivre",
@@ -250,7 +250,7 @@
         "category": "epicerie",
         "usage": "common",
         "prices": [
-            {"price": 44.58, "unit": "€/kg"}
+            {"price": 44.58, "currency": "€", "unit": "kg"}
         ]
     }, {
         "id": "huile",
@@ -261,7 +261,7 @@
         "category": "epicerie",
         "usage": "common",
         "prices": [
-            {"price": 5.21, "unit": "€/l"}
+            {"price": 5.21, "currency": "€", "unit": "l"}
         ]
     }
 ]
