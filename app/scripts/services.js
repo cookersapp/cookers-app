@@ -63,6 +63,36 @@ angular.module('ionicApp.services', [])
 })
 
 
+.factory('DataService', function($http, DataArrayService, Log){
+    'use strict';
+    var dataUrl = 'data/data.json';
+    var dataPromise;
+    var service = {
+        getUnitsAsync: function(id){return DataArrayService.findAsync(getData('unit'), id);}
+    };
+    
+    function getData(field){
+        return loadAsync().then(function(data){
+            return data[field];
+        });
+    }
+
+    function loadAsync(){
+        if(!dataPromise){
+            dataPromise = $http.get(dataUrl).then(function(result) {
+                Log.log('asyncData('+dataUrl+')', result);
+                return result.data;
+            }).then(null, function(error){
+                Log.error('asyncData('+dataUrl+')', error);
+            });
+        }
+        return dataPromise;
+    }
+
+    return service;
+})
+
+
 .factory('IngredientGridService', function($q, CategoryService, IngredientService, ShoppinglistService, DataTreeService){
     'use strict';
     var dataUrl = 'data/ingredient_grid.json';
@@ -479,25 +509,30 @@ angular.module('ionicApp.services', [])
 })
 
 
-.factory('DataArrayService', function($http, Log){
+.factory('DataArrayService', function($http, $q, Log){
     'use strict';
     var arrayPromise = [];
     var service = {
-        getAsync: getAsync
+        getAsync: getAsync,
+        findAsync: findAsync
     };
 
-    function getAsync(dataUrl, id){
+    function findAsync(dataPromise, id){
         if(id === undefined){
-            return loadAsync(dataUrl);
+            return dataPromise;
         } else if(typeof id === 'string'){
-            return loadAsync(dataUrl).then(function(elts){
+            return dataPromise.then(function(elts){
                 return _.find(elts, function(elt){
                     return elt.id === id; 
                 });
             });
         } else {
-            throw 'Can\'t load getAsync for '+dataUrl+' with id <'+id+'>';
+            throw 'Can\'t load findAsync for '+data+' with id <'+id+'>';
         }
+    }
+
+    function getAsync(dataUrl, id){
+        return findAsync(loadAsync(dataUrl), id);
     }
 
     function loadAsync(dataUrl){

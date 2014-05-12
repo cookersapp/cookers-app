@@ -1,12 +1,12 @@
 {
   "unit": [
-    {"id": "cl", "plural": "centilitre", "abbr": "cl", "type": "volume"},
-    {"id": "g", "plural": "grammes", "abbr": "g", "type": "weight"},
-    {"id": "pce", "plural": "pieces", "abbr": "pce", "type": "number"},
-    {"id": "gousse", "plural": "gousses", "abbr": "???", "type": "number"},
-    {"id": "min", "plural": "minutes", "abbr": "min", "type": "time"},
-    {"id": "pers", "plural": "personnes", "abbr": "pers", "type": "serving"},
-    {"id": "none", "plural": "", "abbr": "", "type": "all"}
+    {"id": "cl",        "name": "cl",       "fullname": "centilitre",   "type": "volume"},
+    {"id": "g",         "name": "g",        "fullname": "gramme",       "type": "weight"},
+    {"id": "pce",       "name": "pièce",    "fullname": "pièce",        "type": "number"},
+    {"id": "gousse",    "name": "gousse",   "fullname": "gousse",       "type": "number"},
+    {"id": "min",       "name": "min",      "fullname": "minute",       "type": "time"},
+    {"id": "pers",      "name": "pers",     "fullname": "personne",     "type": "serving"},
+    {"id": "none",      "name": "none",     "fullname": "none",         "type": "all"}
   ],
   "ingredient": {
     "role": [

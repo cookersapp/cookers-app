@@ -35,7 +35,7 @@
                     <div class="main" ng-click="itemClick(item)">
                         <img ng-src="images/ingredients/100x100/{{item.ingredient.img}}">
                         <h2>{{item.ingredient.name}}</h2>
-                        <span class="item-note">{{item.quantity}} {{item.quantityUnit}}</span>
+                        <span class="item-note">{{item.quantity}} {{item.quantityUnit.name}}</span>
                         <p>{{item.notes}}<p>
                     </div>
                 </div>
@@ -50,10 +50,10 @@
                         <input type="checkbox" checked ng-model="item.bought" ng-change="unbuyItem(item)">
                     </label>
                 </div>
-                <div class="main" ng-click="itemClick(item)">
+                <div class="main" ng-click="itemClick(item)" style="min-height: 40px;">
                     <img ng-src="images/ingredients/100x100/{{item.ingredient.img}}">
                     <h2>{{item.ingredient.name}}</h2>
-                    <span class="item-note">{{item.quantity}} {{item.quantityUnit}}</span>
+                    <span class="item-note">{{item.quantity}} {{item.quantityUnit.name}}</span>
                     <p>{{item.notes}}</p>
                 </div>
             </div>

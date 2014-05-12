@@ -15,12 +15,17 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, ModalService, Log) {
+.controller('ShoppinglistCtrl', function($scope, ShoppinglistService, IngredientService, CategoryService, DataService, ModalService, Log) {
   'use strict';
   $scope.header.align = 'left';
   $scope.ingredients = [];
+  $scope.ingredientUnits = [];
   $scope.ingredientGrid = {};
   $scope.list = ShoppinglistService.getCurrentList();
+  
+  DataService.getUnitsAsync().then(function(units){
+    $scope.ingredientUnits = units;
+  });
 
   $scope.itemDetails = {};
   ModalService.shoppinglist.itemDetails($scope, function(modal) {
@@ -36,23 +41,34 @@ angular.module('ionicApp.controllers', [])
     $scope.itemClick(item);
   };
   $scope.itemClick = function(item){
+    console.log('item', item);
     $scope.itemDetails.title = 'Product';
     $scope.itemDetails.update = ShoppinglistService.existInCurrentList(item);
     $scope.itemDetails.item = item;
-    $scope.itemDetails.data = angular.copy(item);
+    $scope.itemDetails.data = {
+      item: angular.copy(item),
+      category: null,
+      units: []
+    };
+    if($scope.itemDetails.data.item.quantityUnit){$scope.itemDetails.data.item.quantityUnit = $scope.itemDetails.data.item.quantityUnit.id;}
+    CategoryService.getAsync(item.ingredient.category).then(function(category){
+      $scope.itemDetails.data.category = category;
+    });
     $scope.itemDetails.modal.show();
   };
   $scope.addItem = function(){
-    angular.copy($scope.itemDetails.data, $scope.itemDetails.item);
+    angular.copy($scope.itemDetails.data.item, $scope.itemDetails.item);
+    $scope.itemDetails.item.quantityUnit = _.find($scope.ingredientUnits, {id: $scope.itemDetails.item.quantityUnit});
     ShoppinglistService.addToCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };
   $scope.updateItem = function(){
-    angular.copy($scope.itemDetails.data, $scope.itemDetails.item);
+    console.log('newItem', $scope.itemDetails.data.item);
+    angular.copy($scope.itemDetails.data.item, $scope.itemDetails.item);
+    $scope.itemDetails.item.quantityUnit = _.find($scope.ingredientUnits, {id: $scope.itemDetails.item.quantityUnit});
     $scope.itemDetails.modal.hide();
   };
   $scope.deleteItem = function(){
-    console.log($scope.itemDetails.item);
     ShoppinglistService.removeFromCurrentList($scope.itemDetails.item);
     $scope.itemDetails.modal.hide();
   };

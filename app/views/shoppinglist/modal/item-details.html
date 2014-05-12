@@ -5,18 +5,31 @@
     </header>
     <ion-content class="has-header">
         <div class="list">
-            <label class="item item-input">
-                <span class="input-label">Notes</span>
-                <input type="text" ng-model="itemDetails.data.notes" placeholder="">
-            </label>
+            <a class="item item-thumbnail-left">
+                <img ng-src="images/ingredients/100x100/{{itemDetails.data.item.ingredient.img}}">
+                <h2>{{itemDetails.data.item.ingredient.name}}</h2>
+                <p>{{itemDetails.data.category ? itemDetails.data.category.name : itemDetails.data.item.ingredient.category}}</p>
+            </a>
+            <!--<label class="item item-input item-select">
+<div class="input-label">Quantité</div>
+<input type="number" ng-model="itemDetails.data.item.quantity" placeholder="">
+<select ng-model="itemDetails.data.item.quantityUnit">
+<option ng-repeat="unit in ingredientUnits" value="{{unit.id}}" ng-selected="unit.id === itemDetails.data.item.quantityUnit.id">{{unit.name}}</option>
+</select>
+</label>-->
             <label class="item item-input">
                 <span class="input-label">Quantité</span>
-                <input type="number" ng-model="itemDetails.data.quantity" placeholder="">
+                <input type="number" ng-model="itemDetails.data.item.quantity" placeholder="">
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">Unité</div>
+                <select ng-model="itemDetails.data.item.quantityUnit">
+                    <option ng-repeat="unit in ingredientUnits" value="{{unit.id}}" ng-selected="unit.id === itemDetails.data.item.quantityUnit.id">{{unit.name}}</option>
+                </select>
             </label>
             <label class="item item-input">
-                <span class="input-label">Unité</span>
-                <input type="text" ng-model="itemDetails.data.quantityUnit" placeholder="">
-                <!--<select ng-model="itemDetails.data.quantityUnit" ng-options="unit for unit in data.units"></select>-->
+                <span class="input-label">Notes</span>
+                <input type="text" ng-model="itemDetails.data.item.notes" placeholder="">
             </label>
             <div class="button-bar" ng-if="itemDetails.update">
                 <button class="button button-full button-assertive" ng-click="deleteItem()">Supprimer</button>
