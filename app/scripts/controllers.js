@@ -261,42 +261,48 @@ angular.module('ionicApp.controllers', [])
   var from = $stateParams.from;
   var start = moment().valueOf();
 
-  cordova.plugins.barcodeScanner.scan(
-    function (result) {
-      if(!result.cancelled){
-        UserService.makeScan(result.text, from, moment().valueOf() - start);
-        $state.go('sidemenu.product', {barcode: result.text, from: from});
-      } else {
-        $state.go($rootScope.$previousState);
+  if(ionic.Platform.isWebView()){
+    cordova.plugins.barcodeScanner.scan(
+      function (result) {
+        if(!result.cancelled){
+          UserService.makeScan(result.text, from, moment().valueOf() - start);
+          $state.go('sidemenu.product', {barcode: result.text, from: from});
+        } else {
+          $state.go($rootScope.$previousState);
+        }
+      }, 
+      function (error) {
+        alert("Scanning failed: " + error);
       }
-    }, 
-    function (error) {
-      alert("Scanning failed: " + error);
-    }
-  );
+    );
+  } else {
+    var barcode = prompt('Barcode :');
+    UserService.makeScan(barcode, from, moment().valueOf() - start);
+    $state.go('sidemenu.product', {barcode: barcode, from: from});
+  }
 })
 
 
-.controller('ProductCtrl', function($scope, $stateParams/*, ProductService, RecipeService*/, UserService){
+.controller('ProductCtrl', function($scope, $stateParams, ProductService, RecipeService, UserService){
   'use strict';
   $scope.header.align = 'center';
   var barcode = $stateParams.barcode;
   var from = $stateParams.from;
 
   $scope.product = {
-    barcode: barcode
+    id: barcode
   };
   $scope.linkedRecipes = [];
 
-  /*ProductService.getAsync(barcode).then(function(product){
+  ProductService.getAsync(barcode).then(function(product){
     $scope.product = product;
     if(product){
       UserService.seeProduct(product);
-      RecipeService.getAsync(product.linkedRecipes).then(function(recipes){
+      RecipeService.matchWithAsync(product.ingredient).then(function(recipes){
         $scope.linkedRecipes = recipes;
       });
     }
-  });*/
+  });
 })
 
 

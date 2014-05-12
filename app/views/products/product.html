@@ -14,7 +14,7 @@
         </div>
         <div class="list card" ng-if="product.name">
             <div class="item item-avatar">
-                <img ng-src="img/product/160x160/{{product.image}}">
+                <img ng-src="images/products/160x160/{{product.img}}">
                 <h2>{{product.name}}</h2>
                 <p>Marque: {{product.brand}}</p>
             </div>
@@ -27,9 +27,8 @@
             <div class="item item-divider">
                 Cuisinez ce produit :
             </div>
-            <a ng-repeat="recipe in linkedRecipes" class="item item-thumbnail-left"
-               ui-sref="sidemenu.recipe({id: recipe.id, from: 'linked-product'})">
-                <img ng-src="img/recipe/80x80/{{recipe.image}}">
+            <a class="item item-thumbnail-left" ng-repeat="recipe in linkedRecipes" ui-sref="sidemenu.recipes.recipe({id: recipe.id})">
+                <img ng-src="images/recipes/80x80/{{recipe.img}}">
                 <h2>{{recipe.name}}</h2>
                 <p>{{recipe.category}} - {{recipe.difficulty}} - {{recipe.budget}}</p>
             </a>

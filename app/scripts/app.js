@@ -14,6 +14,11 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
   $urlRouterProvider.otherwise('/sidemenu/home');
 
   $stateProvider
+  .state('scan', {
+    url: "/scan",
+    template: "",
+    controller: 'ScanCtrl'
+  })
   .state('sidemenu', {
     url: '/sidemenu',
     abstract: true,
@@ -73,11 +78,6 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     url: '/:id',
     templateUrl: 'views/recipes/recipe.html',
     controller: 'RecipeCtrl'
-  })
-  .state('scan', {
-    url: "/scan",
-    template: "",
-    controller: 'ScanCtrl'
   })
   .state('sidemenu.product', {
     url: "/product/:barcode?from",

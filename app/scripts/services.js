@@ -5,7 +5,25 @@ angular.module('ionicApp.services', [])
     'use strict';
     var dataUrl = 'data/recipes.json';
     var service = {
-        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
+        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);},
+        matchWithAsync: function(ingredient){
+            var ingredientId = ingredient;
+            if(typeof ingredient !== 'string'){ingredientId = ingredient.id;}
+            return DataArrayService.getAsync(dataUrl).then(function(recipes){
+                var ret = [];
+                for(var i in recipes){
+                    var recipe = recipes[i];
+                    for(var j in recipe.ingredients){
+                        var ingredient = recipe.ingredients[j];
+                        if(ingredient.ingredientId === ingredientId){
+                            ret.push(recipe);
+                            break;
+                        }
+                    }
+                }
+                return ret;
+            });
+        }
     };
 
     return service;
@@ -26,6 +44,17 @@ angular.module('ionicApp.services', [])
 .factory('CategoryService', function(DataArrayService){
     'use strict';
     var dataUrl = 'data/ingredient_categories.json';
+    var service = {
+        getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
+    };
+
+    return service;
+})
+
+
+.factory('ProductService', function(DataArrayService){
+    'use strict';
+    var dataUrl = 'data/products.json';
     var service = {
         getAsync: function(id){return DataArrayService.getAsync(dataUrl, id);}
     };
