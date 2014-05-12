@@ -1,7 +1,9 @@
 {
   "unit": [
     {"id": "cl",        "name": "cl",       "fullname": "centilitre",   "type": "volume"},
+    {"id": "l",         "name": "l",        "fullname": "litre",        "type": "volume"},
     {"id": "g",         "name": "g",        "fullname": "gramme",       "type": "weight"},
+    {"id": "kg",        "name": "kg",       "fullname": "kilo",         "type": "weight"},
     {"id": "pce",       "name": "pièce",    "fullname": "pièce",        "type": "number"},
     {"id": "gousse",    "name": "gousse",   "fullname": "gousse",       "type": "number"},
     {"id": "min",       "name": "min",      "fullname": "minute",       "type": "time"},

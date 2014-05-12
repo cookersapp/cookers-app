@@ -22,15 +22,15 @@
             {"quantity": 1, "tool": "plat à gratin", "toolId": "plat-a-gratin"}
         ],
         "ingredients": [
-            {"quantity": 12, "quantityUnit": "piece", "pre": "", "name": "cannelloni", "ingredientId": "cannelloni", "post": "", "role": "primary"},
-            {"quantity": 500, "quantityUnit": "gramme", "pre": "d'", "name": "épinard", "ingredientId": "epinard", "post": " hachés", "role": "primary"},
-            {"quantity": 250, "quantityUnit": "gramme", "pre": "de ", "name": "ricotta", "ingredientId": "ricotta", "post": "", "role": "secondary"},
-            {"quantity": 100, "quantityUnit": "gramme", "pre": "de ", "name": "parmesan", "ingredientId": "parmesan", "post": "", "role": "secondary"},
+            {"quantity": 12, "quantityUnit": "pce", "pre": "", "name": "cannelloni", "ingredientId": "cannelloni", "post": "", "role": "primary"},
+            {"quantity": 500, "quantityUnit": "g", "pre": "d'", "name": "épinard", "ingredientId": "epinard", "post": " hachés", "role": "primary"},
+            {"quantity": 250, "quantityUnit": "g", "pre": "de ", "name": "ricotta", "ingredientId": "ricotta", "post": "", "role": "secondary"},
+            {"quantity": 100, "quantityUnit": "g", "pre": "de ", "name": "parmesan", "ingredientId": "parmesan", "post": "", "role": "secondary"},
             {"quantity": 1, "quantityUnit": "gousse", "pre": "d'", "name": "ail", "ingredientId": "ail", "post": "", "role": "other"},
-            {"quantity": 1, "quantityUnit": "piece", "pre": "", "name": "oignon", "ingredientId": "oignon", "post": "", "role": "other"},
-            {"quantity": 50, "quantityUnit": "gramme", "pre": "de ", "name": "beurre", "ingredientId": "beurre", "post": "", "role": "other"},
-            {"quantity": 30, "quantityUnit": "gramme", "pre": "de ", "name": "farine", "ingredientId": "farine", "post": "", "role": "other"},
-            {"quantity": 50, "quantityUnit": "centilitre", "pre": "de ", "name": "lait", "ingredientId": "lait", "post": "", "role": "other"},
+            {"quantity": 1, "quantityUnit": "pce", "pre": "", "name": "oignon", "ingredientId": "oignon", "post": "", "role": "other"},
+            {"quantity": 50, "quantityUnit": "g", "pre": "de ", "name": "beurre", "ingredientId": "beurre", "post": "", "role": "other"},
+            {"quantity": 30, "quantityUnit": "g", "pre": "de ", "name": "farine", "ingredientId": "farine", "post": "", "role": "other"},
+            {"quantity": 50, "quantityUnit": "cl", "pre": "de ", "name": "lait", "ingredientId": "lait", "post": "", "role": "other"},
             {"quantity": null, "quantityUnit": null, "pre": "", "name": "sel", "ingredientId": "sel", "post": "", "role": "other"},
             {"quantity": null, "quantityUnit": null, "pre": "", "name": "poivre", "ingredientId": "poivre", "post": "", "role": "other"},
             {"quantity": null, "quantityUnit": null, "pre": "", "name": "huile", "ingredientId": "huile", "post": "", "role": "other"}

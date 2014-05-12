@@ -1,26 +1,267 @@
 [
-    {"id": "ananas",        "type": "ingredient",   "name": "ananas",       "plural": "ananas",     "img": "ananas.jpg",        "category": "fruit",    "usage": "usual"    },
-    {"id": "banane",        "type": "ingredient",   "name": "banane",       "plural": "bananes",    "img": "banane.jpg",        "category": "fruit",    "usage": "usual"    },
-    {"id": "abricot",       "type": "ingredient",   "name": "abricot",      "plural": "abricots",   "img": "abricot.jpg",       "category": "fruit",    "usage": "usual"    },
-    {"id": "cerise",        "type": "ingredient",   "name": "cerise",       "plural": "cerises",    "img": "cerise.jpg",        "category": "fruit",    "usage": "usual"    },
-    {"id": "artichaut",     "type": "ingredient",   "name": "artichaut",    "plural": "artichauts", "img": "artichaut.jpg",     "category": "legume",   "usage": "usual"    },
-    {"id": "aubergine",     "type": "ingredient",   "name": "aubergine",    "plural": "aubergines", "img": "aubergine.jpg",     "category": "legume",   "usage": "usual"    },
-    {"id": "avocat",        "type": "ingredient",   "name": "avocat",       "plural": "avocats",    "img": "avocat.jpg",        "category": "legume",   "usage": "usual"    },
-    {"id": "betterave",     "type": "ingredient",   "name": "betterave",    "plural": "betteraves", "img": "betterave.jpg",     "category": "legume",   "usage": "usual"    },
-    {"id": "carotte",       "type": "ingredient",   "name": "carotte",      "plural": "carottes",   "img": "carotte.jpg",       "category": "legume",   "usage": "usual"    },
-    {"id": "chou",          "type": "ingredient",   "name": "chou",         "plural": "choux",      "img": "chou.jpg",          "category": "legume",   "usage": "usual"    },
-    {"id": "citron",        "type": "ingredient",   "name": "citron",       "plural": "citrons",    "img": "citron.jpg",        "category": "legume",   "usage": "usual"    },
-    {"id": "concombre",     "type": "ingredient",   "name": "concombre",    "plural": "concombres", "img": "concombre.jpg",     "category": "legume",   "usage": "usual"    },
-    {"id": "epinard",       "type": "ingredient",   "name": "épinard",      "plural": "épinards",   "img": "epinard.jpg",       "category": "legume",   "usage": "unusual"  },
-    {"id": "ail",           "type": "ingredient",   "name": "ail",          "plural": "ail",        "img": "ail.jpg",           "category": "legume",   "usage": "usual"    },
-    {"id": "oignon",        "type": "ingredient",   "name": "oignon",       "plural": "oignon",     "img": "oignon.jpg",        "category": "legume",   "usage": "usual"    },
-    {"id": "farine",        "type": "ingredient",   "name": "farine",       "plural": "farine",     "img": "farine.jpg",        "category": "feculent", "usage": "usual"    },
-    {"id": "cannelloni",    "type": "ingredient",   "name": "cannelloni",   "plural": "cannelloni", "img": "cannelloni.jpg",    "category": "feculent", "usage": "unusual"  },
-    {"id": "ricotta",       "type": "ingredient",   "name": "ricotta",      "plural": "ricotta",    "img": "ricotta.png",       "category": "fromage",  "usage": "unusual"  },
-    {"id": "parmesan",      "type": "ingredient",   "name": "parmesan",     "plural": "parmesan",   "img": "parmesan.jpg",      "category": "fromage",  "usage": "unusual"  },
-    {"id": "beurre",        "type": "ingredient",   "name": "beurre",       "plural": "beurre",     "img": "beurre.jpg",        "category": "cremerie", "usage": "common"   },
-    {"id": "lait",          "type": "ingredient",   "name": "lait",         "plural": "lait",       "img": "lait.jpeg",         "category": "cremerie", "usage": "usual"    },
-    {"id": "sel",           "type": "ingredient",   "name": "sel",          "plural": "sel",        "img": "sel.jpg",           "category": "epicerie", "usage": "common"   },
-    {"id": "poivre",        "type": "ingredient",   "name": "poivre",       "plural": "poivre",     "img": "poivre.jpg",        "category": "epicerie", "usage": "common"   },
-    {"id": "huile",         "type": "ingredient",   "name": "huile",        "plural": "huile",      "img": "huile.jpg",         "category": "epicerie", "usage": "common"   }
+    {
+        "id": "ananas",
+        "type": "ingredient",
+        "name": "ananas",
+        "plural": "ananas",
+        "img": "ananas.jpg",
+        "category": "fruit",
+        "usage": "usual",
+        "prices": [
+            {"price": 1.95, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "banane",
+        "type": "ingredient",
+        "name": "banane",
+        "plural": "bananes",
+        "img": "banane.jpg",
+        "category": "fruit",
+        "usage": "usual",
+        "prices": [
+            {"price": 1.79, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "abricot",
+        "type": "ingredient",
+        "name": "abricot",
+        "plural": "abricots",
+        "img": "abricot.jpg",
+        "category": "fruit",
+        "usage": "usual",
+        "prices": [
+            {"price": 2.87, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "cerise",
+        "type": "ingredient",
+        "name": "cerise",
+        "plural": "cerises",
+        "img": "cerise.jpg",
+        "category": "fruit",
+        "usage": "usual",
+        "prices": [
+            {"price": 5.74, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "artichaut",
+        "type": "ingredient",
+        "name": "artichaut",
+        "plural": "artichauts",
+        "img": "artichaut.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 1.50, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "aubergine",
+        "type": "ingredient",
+        "name": "aubergine",
+        "plural": "aubergines",
+        "img": "aubergine.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.60, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "avocat",
+        "type": "ingredient",
+        "name": "avocat",
+        "plural": "avocats",
+        "img": "avocat.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.99, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "betterave",
+        "type": "ingredient",
+        "name": "betterave",
+        "plural": "betteraves",
+        "img": "betterave.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 4.58, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "chou",
+        "type": "ingredient",
+        "name": "chou",
+        "plural": "choux",
+        "img": "chou.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 1.69, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "citron",
+        "type": "ingredient",
+        "name": "citron",
+        "plural": "citrons",
+        "img": "citron.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.40, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "concombre",
+        "type": "ingredient",
+        "name": "concombre",
+        "plural": "concombres",
+        "img": "concombre.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.99, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "ail",
+        "type": "ingredient",
+        "name": "ail",
+        "plural": "ail",
+        "img": "ail.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.66, "unit": "€/pce"}
+        ]
+    }, {
+        "id": "carotte",
+        "type": "ingredient",
+        "name": "carotte",
+        "plural": "carottes",
+        "img": "carotte.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 1.35, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "epinard",
+        "type": "ingredient",
+        "name": "épinard",
+        "plural": "épinards",
+        "img": "epinard.jpg",
+        "category": "legume",
+        "usage": "unusual",
+        "prices": [
+            {"price": 2.01, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "oignon",
+        "type": "ingredient",
+        "name": "oignon",
+        "plural": "oignons",
+        "img": "oignon.jpg",
+        "category": "legume",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.89, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "farine",
+        "type": "ingredient",
+        "name": "farine",
+        "plural": "farine",
+        "img": "farine.jpg",
+        "category": "feculent",
+        "usage": "usual",
+        "prices": [
+            {"price": 0.94, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "cannelloni",
+        "type": "ingredient",
+        "name": "cannelloni",
+        "plural": "cannelloni",
+        "img": "cannelloni.jpg",
+        "category": "feculent",
+        "usage": "unusual",
+        "prices": [
+            {"price": 5.20, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "ricotta",
+        "type": "ingredient",
+        "name": "ricotta",
+        "plural": "ricotta",
+        "img": "ricotta.png",
+        "category": "fromage",
+        "usage": "unusual",
+        "prices": [
+            {"price": 9.04, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "parmesan",
+        "type": "ingredient",
+        "name": "parmesan",
+        "plural": "parmesan",
+        "img": "parmesan.jpg",
+        "category": "fromage",
+        "usage": "unusual",
+        "prices": [
+            {"price": 23.75, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "beurre",
+        "type": "ingredient",
+        "name": "beurre",
+        "plural": "beurre",
+        "img": "beurre.jpg",
+        "category": "cremerie",
+        "usage": "common",
+        "prices": [
+            {"price": 5.64, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "lait",
+        "type": "ingredient",
+        "name": "lait",
+        "plural": "lait",
+        "img": "lait.jpeg",
+        "category": "cremerie",
+        "usage": "usual",
+        "prices": [
+            {"price": 2.78, "unit": "€/l"}
+        ]
+    }, {
+        "id": "sel",
+        "type": "ingredient",
+        "name": "sel",
+        "plural": "sel",
+        "img": "sel.jpg",
+        "category": "epicerie",
+        "usage": "common",
+        "prices": [
+            {"price": 4.80, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "poivre",
+        "type": "ingredient",
+        "name": "poivre",
+        "plural": "poivre",
+        "img": "poivre.jpg",
+        "category": "epicerie",
+        "usage": "common",
+        "prices": [
+            {"price": 44.58, "unit": "€/kg"}
+        ]
+    }, {
+        "id": "huile",
+        "type": "ingredient",
+        "name": "huile",
+        "plural": "huile",
+        "img": "huile.jpg",
+        "category": "epicerie",
+        "usage": "common",
+        "prices": [
+            {"price": 5.21, "unit": "€/l"}
+        ]
+    }
 ]

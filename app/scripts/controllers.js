@@ -222,13 +222,18 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, ShoppinglistService, UserService, ModalService, Log) {
+.controller('RecipeCtrl', function($scope, $stateParams, DataService, RecipeService, ShoppinglistService, UserService, ModalService, Log) {
   'use strict';
   var id = $stateParams.id;
   var from = $stateParams.from;
   $scope.recipe = {
     id: id
   };
+  $scope.ingredientUnits = [];
+  
+  DataService.getUnitsAsync().then(function(units){
+    $scope.ingredientUnits = units;
+  });
 
   RecipeService.getAsync(id).then(function(recipe){
     $scope.recipe = recipe;
@@ -259,7 +264,7 @@ angular.module('ionicApp.controllers', [])
       if(ingredient.shouldAdd){
         var notes = recipeName;
         var quantity = ingredient.quantity ? ingredient.quantity * quantityFactor : null;
-        var quantityUnit = ingredient.quantityUnit;
+        var quantityUnit = _.find($scope.ingredientUnits, {id: ingredient.quantityUnit});
 
         // TODO : choose list to add items (and create one if needed...)
         var item = ShoppinglistService.createItem(ingredient.ingredientId, notes, quantity, quantityUnit);
