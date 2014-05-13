@@ -227,18 +227,22 @@ angular.module('ionicApp.controllers', [])
 
 .controller('RecipesSearchCtrl', function($scope, IngredientService) {
   'use strict';
-  $scope.search = '';
+  $scope.search = {
+    text: '',
+    ingredients: [],
+    price: 5,
+    time: 15
+  };
   $scope.ingredients = [];
-  $scope.searchIngredients = [];
   IngredientService.getAsync().then(function(ingredients){
     $scope.ingredients = ingredients;
   });
   
   $scope.selectIngredient = function(ingredient){
-    $scope.searchIngredients.push(ingredient);
+    $scope.search.ingredients.push(ingredient);
   };
   $scope.unselectIngredient = function(index){
-    $scope.searchIngredients.splice(index, 1);
+    $scope.search.ingredients.splice(index, 1);
   };
 })
 
