@@ -69,6 +69,26 @@ angular.module('ionicApp.filters', [])
 })
 
 
+.filter('max', function () {
+    "use strict";
+    return function (baseArray, maxLength) {
+        if (!angular.isUndefined(baseArray) && !angular.isUndefined(maxLength)) {
+            var tempArray = [];
+            for(var i=0; i<baseArray.length; i++){
+                if(i<maxLength){
+                    tempArray.push(baseArray[i]);
+                } else {
+                    break;
+                }
+            }
+            return tempArray;
+        } else {
+            return baseArray;
+        }
+    };
+})
+
+
 .filter('not', function () {
     "use strict";
     return function (baseArray, test) {

@@ -57,34 +57,31 @@
 .ingredient-grid {
     background: #eee;
     padding: 0px;
-    .ingredient-search {
-        background: #ccc;
-        padding: 0px;
-        .ingredient {
-            float: left;
-            padding: 2px;
+
+}
+.ingredient-search {
+    background: #ccc;
+    padding: 0px;
+    .ingredient {
+        float: left;
+        padding: 2px;
+        img {
+            width: 60px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .name {
+            max-width: 60px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 12px;
+            text-align: center;
+            margin-top: -5px;
         }
     }
-}
-.ingredient-search .ingredient img,
-.ingredient-grid .grid .elt img {
-    width: 100%;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-.ingredient-search .ingredient img {
-    width: 60px;
-}
-.ingredient-search .ingredient .name {
-    max-width: 60px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 12px;
-    text-align: center;
-    margin-top: -5px;
 }
 
 
@@ -96,6 +93,13 @@
         margin-bottom: -7px;
         .ribbon {
             display: none;
+        }
+        img {
+            width: 100%;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     }
     .name {

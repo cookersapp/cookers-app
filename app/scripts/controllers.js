@@ -27,6 +27,10 @@ angular.module('ionicApp.controllers', [])
     $scope.ingredientUnits = units;
   });
 
+  IngredientService.getAsync().then(function(ingredients){
+    $scope.ingredients = ingredients;
+  });
+
   $scope.itemDetails = {};
   ModalService.shoppinglist.itemDetails($scope, function(modal) {
     $scope.itemDetails.modal = modal;
@@ -98,10 +102,6 @@ angular.module('ionicApp.controllers', [])
     var item = ShoppinglistService.createItem(ingredient);
     return ShoppinglistService.existInCurrentList(item);
   };
-
-  IngredientService.getAsync().then(function(ingredients){
-    $scope.ingredients = ingredients;
-  });
 })
 
 
@@ -225,9 +225,21 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('RecipesSearchCtrl', function($scope) {
+.controller('RecipesSearchCtrl', function($scope, IngredientService) {
   'use strict';
-
+  $scope.search = '';
+  $scope.ingredients = [];
+  $scope.searchIngredients = [];
+  IngredientService.getAsync().then(function(ingredients){
+    $scope.ingredients = ingredients;
+  });
+  
+  $scope.selectIngredient = function(ingredient){
+    $scope.searchIngredients.push(ingredient);
+  };
+  $scope.unselectIngredient = function(index){
+    $scope.searchIngredients.splice(index, 1);
+  };
 })
 
 
