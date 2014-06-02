@@ -1,5 +1,9 @@
 # Take some notes and reminders here
 
+## Important
+
+see http://forum.ionicframework.com/t/chat-tutorial-using-beta3-epic/3848
+
 ## Technicals
 
 - Nexus 4 size : 384x640 px
