@@ -253,7 +253,7 @@ angular.module('ionicApp.controllers', [])
 
   // TODO : search !!!
   RecipeService.getAsync().then(function(recipes){
-    console.log(recipes)
+    console.log(recipes);
     $scope.recipes = recipes;
   });
 })
@@ -314,7 +314,7 @@ angular.module('ionicApp.controllers', [])
 })
 
 
-.controller('ScanCtrl', function($scope, $state, $stateParams, UserService){
+.controller('ScanCtrl', function($rootScope, $scope, $state, $stateParams, UserService){
   'use strict';
   var from = $stateParams.from;
   var start = moment().valueOf();
@@ -328,9 +328,9 @@ angular.module('ionicApp.controllers', [])
         } else {
           $state.go($rootScope.$previousState);
         }
-      }, 
+      },
       function (error) {
-        alert("Scanning failed: " + error);
+        alert('Scanning failed: ' + error);
       }
     );
   } else {

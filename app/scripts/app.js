@@ -15,8 +15,8 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
 
   $stateProvider
   .state('scan', {
-    url: "/scan",
-    template: "",
+    url: '/scan',
+    template: '',
     controller: 'ScanCtrl'
   })
   .state('sidemenu', {
@@ -80,10 +80,10 @@ angular.module('ionicApp', ['ionic', 'ngStorage', 'ionicApp.services', 'ionicApp
     controller: 'RecipeCtrl'
   })
   .state('sidemenu.product', {
-    url: "/product/:barcode?from",
+    url: '/product/:barcode?from',
     views: {
       'menuContent': {
-        templateUrl: "views/products/product.html",
+        templateUrl: 'views/products/product.html',
         controller: 'ProductCtrl'
       }
     }
