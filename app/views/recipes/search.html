@@ -5,33 +5,19 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </ion-nav-buttons>
-    <ion-content>
-        <div class="list">
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">Ingrédients</span>
-                <input type="text" ng-model="search.text" placeholder="">
-            </label>
-            <div class="item ingredient-search" ng-show="search.text">
-                <div class="ingredient" ng-repeat="ingredient in ingredients | filter:search.text | notIn:search.ingredients | max:18"
-                     ng-click="selectIngredient(ingredient)">
-                    <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
-                    <div class="name">{{ingredient.name}}</div>
-                </div>
+    <ion-content class="padding">
+        <div>
+            <h3>Prix ( &lt; {{search.price | number:0}} €/personne) :</h3>
+            <div class="range range-assertive">
+                € <input type="range" name="price" min="4" max="20" ng-model="search.price"> € € €
             </div>
-            <div class="item ingredient-search" ng-show="search.ingredients.length > 0" style="background: white;">
-                <div class="ingredient" ng-repeat="ingredient in search.ingredients" ng-click="unselectIngredient($index)">
-                    <img ng-src="images/ingredients/100x100/{{ingredient.img}}">
-                    <div class="name">{{ingredient.name}}</div>
-                </div>
-            </div>
-            <div class="item range range-assertive">
-                <span class="input-label" style="min-width: 170px;">Prix ( &lt; {{search.price | number:0}} €/personne)</span>
-                € <input type="range" name="volume" min="4" max="20" ng-model="search.price"> € € €
-            </div>
-            <div class="item range range-assertive">
-                <span class="input-label" style="min-width: 170px;">Préparation ( &lt; {{search.time | number:0}} min)</span>
+        </div>
+        <hr>
+        <div>
+            <h3>Préparation ( &lt; {{search.time | number:0}} min) :</h3>
+            <div class="range range-assertive">
                 <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
-                <input type="range" name="volume" min="10" max="60" ng-model="search.time">
+                <input type="range" name="time" min="10" max="60" ng-model="search.time">
                 <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
                 <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
                 <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
