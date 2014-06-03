@@ -138,7 +138,17 @@
 
 
 
-
+.recipe-search {
+    .search-item {
+        h4 {
+            margin-bottom: 0px;
+        }
+        i {
+            min-width: 18px;
+            font-size: 18px;
+        }
+    }
+}
 
 .recipe .meta {
     background: #eee;

@@ -28,6 +28,7 @@
     "ionic": "1.0.0-beta.4",
     "moment": "~2.6.0",
     "ngstorage": "~0.3.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "font-awesome": "~4.1.0"
   }
 }

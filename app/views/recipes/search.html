@@ -5,22 +5,26 @@
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </ion-nav-buttons>
-    <ion-content class="padding">
-        <div>
-            <h3>Prix ( &lt; {{search.price | number:0}} €/personne) :</h3>
+    <ion-content class="padding recipe-search">
+        <div class="search-item">
+            <h4>Prix ( &lt; {{search.price | number:0}} € / personne) :</h4>
             <div class="range range-assertive">
-                € <input type="range" name="price" min="4" max="20" ng-model="search.price"> € € €
+                <i class="fa fa-eur"></i>
+                <input type="range" name="price" min="1" max="20" ng-model="search.price">
+                <i class="fa fa-eur"></i>
+                <i class="fa fa-eur"></i>
+                <i class="fa fa-eur"></i>
             </div>
         </div>
         <hr>
-        <div>
-            <h3>Préparation ( &lt; {{search.time | number:0}} min) :</h3>
+        <div class="search-item">
+            <h4>Préparation ( &lt; {{search.time | number:0}} min) :</h4>
             <div class="range range-assertive">
-                <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
+                <i class="fa fa-clock-o"></i>
                 <input type="range" name="time" min="10" max="60" ng-model="search.time">
-                <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
-                <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
-                <i class="icon ion-clock" style="font-size: 16px; min-width: 16px;"></i>
+                <i class="fa fa-clock-o"></i>
+                <i class="fa fa-clock-o"></i>
+                <i class="fa fa-clock-o"></i>
             </div>
         </div>
         <button class="button button-block button-balanced" ui-sref="sidemenu.recipes.results">
