@@ -1,0 +1,36 @@
+{
+  "name": "ionic-boilerplate",
+  "version": "0.0.1",
+  "homepage": "https://github.com/loicknuchel/ionic-boilerplate",
+  "authors": [
+    "Loïc Knuchel <loicknuchel@gmail.com>"
+  ],
+  "description": "Start a new ionic project in seconds !",
+  "main": "www/index.html",
+  "keywords": [
+    "ionic",
+    "phonegap",
+    "cordova",
+    "html5",
+    "mobile",
+    "hybrid",
+    "angularjs"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.17",
+    "angular-sanitize": "~1.2.17",
+    "angular-animate": "~1.2.17",
+    "angular-touch": "~1.2.17",
+    "angular-ui-router": "~0.2.10",
+    "ionic": "~1.0.0-beta.6",
+    "ng-cordova": "~0.0.3"
+  }
+}
