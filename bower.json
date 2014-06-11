@@ -1,11 +1,11 @@
 {
-  "name": "ionic-boilerplate",
+  "name": "retail-scan",
   "version": "0.0.1",
-  "homepage": "https://github.com/loicknuchel/ionic-boilerplate",
+  "homepage": "",
   "authors": [
     "Loïc Knuchel <loicknuchel@gmail.com>"
   ],
-  "description": "Start a new ionic project in seconds !",
+  "description": "Always get your recipe ready",
   "main": "www/index.html",
   "keywords": [
     "ionic",
