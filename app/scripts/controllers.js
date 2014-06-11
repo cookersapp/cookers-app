@@ -1,4 +1,4 @@
-angular.module('ionicApp.controllers')
+angular.module('ionicApp.controllers', [])
 
 .controller('AppCtrl', function($scope) {
   'use strict';
