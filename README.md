@@ -32,15 +32,15 @@ Inspirationnal apps :
 
 ## Data
 
-- planning (planning) : list of menus (for a week for example)
-    - meal (repas) : a complete and ordered list of course for the meal
-        - course (plat) : a single course
-            - recipe (recette) : how to cook the course
-            - ingredient (ingrédient) : food with quantity in a course
-                - food (aliment) : basic food element
-- shoppinglist (liste de courses) : list of elements to buy
-    - item (article) : food with quantity in a shoppinglist
-        - food (aliment) : basic food element
-        - product (produit) : specific product to buy (identified with barcode)
-            - barcode (code barre)
+- __planning__ (planning) : list of menus (for a week for example)
+    - __meal__ (repas) : a complete and ordered list of course for the meal
+        - __course__ (plat) : a single course
+            - __recipe__ (recette) : how to cook the course
+            - __ingredient__ (ingrédient) : food with quantity in a course
+                - __food__ (aliment) : basic food element
+- __shoppinglist__ (liste de courses) : list of elements to buy
+    - __item__ (article) : food with quantity in a shoppinglist
+        - __food__ (aliment) : basic food element
+        - __product__ (produit) : specific product to buy (identified with barcode)
+            - __barcode__ (code barre)
 
