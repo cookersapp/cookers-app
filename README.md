@@ -24,6 +24,7 @@ Your app is now running to your computer. To run it to your android device :
 ## Design
 
 Inspirationnal apps :
+
 - Airbnb : https://play.google.com/store/apps/details?id=com.airbnb.android
 - Secret : https://play.google.com/store/apps/details?id=ly.secret.android
 - Jelly : https://play.google.com/store/apps/details?id=com.jellyhq.starfish
