@@ -28,6 +28,15 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
         controller: 'HomeCtrl'
       }
     }
+  })
+  .state('app.recipes', {
+    url: '/recipes',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/recipes.html',
+        controller: 'RecipesCtrl'
+      }
+    }
   });
 });
 

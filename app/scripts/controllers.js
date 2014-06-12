@@ -8,4 +8,9 @@ angular.module('ionicApp.controllers', [])
 .controller('HomeCtrl', function($scope) {
   'use strict';
 
+})
+
+.controller('RecipesCtrl', function($scope) {
+  'use strict';
+
 });
