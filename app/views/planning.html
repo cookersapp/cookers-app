@@ -1,0 +1,36 @@
+<ion-view>
+  <ion-header-bar class="bar-positive">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title">Planning</h1>
+      <button class="button button-icon ion-shuffle" ui-sref="app.planning2"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content class="planning">
+    <div class="list">
+      <div ng-repeat="day in planning">
+        <div class="item item-divider">{{day.name}}</div>
+        <div class="item item-menu">
+          <div class="row">
+            <div class="col col-50">
+              <meal-slider meals="meals" 
+                           slider-id="slider-{{day.name}}-lunch" 
+                           index="day.lunch.index" 
+                           title="Midi" 
+                           on-slide-changed="changeMeal(day.lunch, index)">
+              </meal-slider>
+            </div>
+            <div class="col col-50">
+              <meal-slider meals="meals" 
+                           slider-id="slider-{{day.name}}-dinner" 
+                           index="day.dinner.index" 
+                           title="Soir" 
+                           on-slide-changed="changeMeal(day.dinner, index)">
+              </meal-slider>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -29,6 +29,10 @@ Inspirationnal apps :
 - Secret : https://play.google.com/store/apps/details?id=ly.secret.android
 - Jelly : https://play.google.com/store/apps/details?id=com.jellyhq.starfish
 
+## Tools 
+
+Crop images : http://www.croppola.com/
+
 # Business
 
 ## Data

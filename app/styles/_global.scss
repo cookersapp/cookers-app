@@ -1,0 +1,26 @@
+@mixin symbol($left:none, $right:none, $content:"-", $color:#ccc) {
+  position: absolute;
+  top: 50%;
+  left: $left;
+  right: $right;
+  display: block;
+  margin-top: -8px;
+  font-family: 'Ionicons';
+  font-size: 16px;
+  line-height: 1;
+  content: $content;
+  color: $color;
+  text-transform: none;
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  speak: none;
+}
+@mixin arrow-left($color:#ccc) {
+  @include symbol(11px, none, "\f124", $color);
+}
+@mixin arrow-right($color:#ccc) {
+  @include symbol(none, 11px, "\f125", $color);
+}

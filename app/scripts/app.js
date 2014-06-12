@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ionicApp.controllers'])
+angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   'use strict';
@@ -29,12 +29,21 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
       }
     }
   })
-  .state('app.recipes', {
-    url: '/recipes',
+  .state('app.planning', {
+    url: '/planning',
     views: {
       'menuContent' :{
-        templateUrl: 'views/recipes.html',
-        controller: 'RecipesCtrl'
+        templateUrl: 'views/planning.html',
+        controller: 'PlanningCtrl'
+      }
+    }
+  })
+  .state('app.planning2', {
+    url: '/planning2',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/planning2.html',
+        controller: 'PlanningCtrl'
       }
     }
   });
