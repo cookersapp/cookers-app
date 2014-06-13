@@ -1,0 +1,49 @@
+<ion-view>
+  <ion-header-bar class="bar-positive">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title">{{meal.name}}</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="meal">
+    <img ng-src="images/courses/16-9/400/{{meal.image}}">
+    <h1>{{meal.name}}</h1>
+    <div class="starter" ng-if="meal.starter && meal.starter.name">
+      <hr>
+      <h2>Entrée</h2>
+      <div class="row">
+        <div class="col col-50">
+          <img ng-src="images/courses/16-9/200/{{meal.starter.image}}">
+        </div>
+        <div class="col col-50">
+          {{meal.starter.name}}
+        </div>
+      </div>
+    </div>
+    <div class="mainCourse" ng-if="meal.mainCourse && meal.mainCourse.name">
+      <hr>
+      <h2>Plat</h2>
+      <div class="row">
+        <div class="col col-50">
+          <img ng-src="images/courses/16-9/200/{{meal.mainCourse.image}}">
+        </div>
+        <div class="col col-50">
+          {{meal.mainCourse.name}}
+        </div>
+      </div>
+    </div>
+    <div class="desert" ng-if="meal.desert && meal.desert.name">
+      <hr>
+      <h2>Dessert</h2>
+      <div class="row">
+        <div class="col col-50">
+          <img ng-src="images/courses/16-9/200/{{meal.desert.image}}">
+        </div>
+        <div class="col col-50">
+          {{meal.desert.name}}
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

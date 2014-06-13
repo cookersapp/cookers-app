@@ -20,4 +20,27 @@ angular.module('ionicApp')
   $scope.changeMeal = function(meal, index){
     console.log('controller.changeMeal('+index+') for ', meal);
   };
+})
+
+.controller('MealCtrl', function($scope, $stateParams, MealService) {
+  'use strict';
+  var mealId = $stateParams.mealId;
+  $scope.meal = {
+    id: mealId,
+    loading: true
+  };
+  MealService.getMeal(mealId).then(function(meal){
+    $scope.meal = meal;
+  });
+})
+
+.controller('SettingsCtrl', function($scope, $localStorage) {
+  'use strict';
+  $scope.resetApp = function(){
+    if(confirm('Reset app ?')){
+      $localStorage.$reset({
+        plannings: []
+      });
+    }
+  };
 });

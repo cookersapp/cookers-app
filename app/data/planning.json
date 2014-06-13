@@ -13,16 +13,16 @@
     {
       "id": "meal1",
       "name": "Burger poulet bacon avocats",
-      "image": "images/courses/16-9/burger.jpg",
+      "image": "burger.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Burger poulet bacon avocat",
-        "image": "images/courses/16-9/burger.jpg",
+        "image": "burger.jpg",
         "source": "http://www.cotemaison.fr/recettes-de-cuisine/burger-poulet-bacon-avocat_14501.html"
       },
       "desert": {
         "name": "Crumble fraise",
-        "image": "images/courses/16-9/crumble-fraise.jpg",
+        "image": "crumble-fraise.jpg",
         "source": "http://www.pinterest.com/pin/293578469432883031/"
       },
       "wine": {}
@@ -30,11 +30,11 @@
     {
       "id": "meal2",
       "name": "Tartare saumon",
-      "image": "images/courses/16-9/tartare-saumon.jpg",
+      "image": "tartare-saumon.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Tartare saumon",
-        "image": "images/courses/16-9/tartare-saumon.jpg",
+        "image": "tartare-saumon.jpg",
         "source": "http://www.epicurious.com/recipes/food/views/Salmon-Tartare-365150"
       },
       "desert": {},
@@ -43,11 +43,11 @@
     {
       "id": "meal3",
       "name": "Buffalo Chicken Pizza",
-      "image": "images/courses/16-9/buffalo-chicken-pizza.jpg",
+      "image": "buffalo-chicken-pizza.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Buffalo Chicken Pizza",
-        "image": "images/courses/16-9/buffalo-chicken-pizza.jpg",
+        "image": "buffalo-chicken-pizza.jpg",
         "source": "http://www.afamilyfeast.com/buffalo-chicken-pizza/"
       },
       "desert": {},
@@ -56,11 +56,11 @@
     {
       "id": "meal4",
       "name": "Garlic Bread Margherita Pizza",
-      "image": "images/courses/16-9/Garlic-Bread-Margherita-Pizza.jpg",
+      "image": "Garlic-Bread-Margherita-Pizza.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Garlic Bread Margherita Pizza",
-        "image": "images/courses/16-9/Garlic-Bread-Margherita-Pizza.jpg",
+        "image": "Garlic-Bread-Margherita-Pizza.jpg",
         "source": "http://amandakbythebay.blogspot.fr/2014/01/garlic-bread-margherita-pizza.html"
       },
       "desert": {},
@@ -69,11 +69,11 @@
     {
       "id": "meal5",
       "name": "Lasagne de crêpes ricotta et épinards",
-      "image": "images/courses/16-9/lasagne-de-crepes-ricotta-et-epinards.jpg",
+      "image": "lasagne-de-crepes-ricotta-et-epinards.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Lasagne de crêpes ricotta et épinards",
-        "image": "images/courses/16-9/lasagne-de-crepes-ricotta-et-epinards.jpg",
+        "image": "lasagne-de-crepes-ricotta-et-epinards.jpg",
         "source": "http://www.undejeunerdesoleil.com/2012/02/lasagne-de-crepes-ricotta-et-epinards.html"
       },
       "desert": {},
@@ -82,11 +82,11 @@
     {
       "id": "meal6",
       "name": "Tomato, Cucumber and Red Onion Salad",
-      "image": "images/courses/16-9/Tomato-Cucumber-and-Red-Onion-Salad.jpg",
+      "image": "Tomato-Cucumber-and-Red-Onion-Salad.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Tomato, Cucumber and Red Onion Salad",
-        "image": "images/courses/16-9/Tomato-Cucumber-and-Red-Onion-Salad.jpg",
+        "image": "Tomato-Cucumber-and-Red-Onion-Salad.jpg",
         "source": "http://valsocal.blogspot.fr/2014/05/tomato-and-cucumber-with-red-onion-salad.html"
       },
       "desert": {},
@@ -95,11 +95,11 @@
     {
       "id": "meal7",
       "name": "Poulet grillé à la citronnelle et à la coriandre",
-      "image": "images/courses/16-9/poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
+      "image": "poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
       "starter": {},
       "mainCourse": {
         "name": "Poulet grillé à la citronnelle et à la coriandre",
-        "image": "images/courses/16-9/poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
+        "image": "poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
         "source": "http://www.thehappycookingfriends.com/poulet-grille-a-la-citronnelle-et-a-la-coriandre/"
       },
       "desert": {},

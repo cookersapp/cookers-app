@@ -46,6 +46,24 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
         controller: 'PlanningCtrl'
       }
     }
+  })
+  .state('app.meal', {
+    url: '/meal/:mealId',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/meal.html',
+        controller: 'MealCtrl'
+      }
+    }
+  })
+  .state('app.settings', {
+    url: '/settings',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/settings.html',
+        controller: 'SettingsCtrl'
+      }
+    }
   });
 });
 

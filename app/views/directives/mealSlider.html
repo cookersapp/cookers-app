@@ -1,12 +1,12 @@
 <div ng-if="!meal.data">
   <ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
     <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
-      <img ng-src="{{meal.image}}" class="desaturate">
+      <img ng-src="images/courses/16-9/400/{{meal.image}}" class="desaturate">
       <div class="ribbon">
         <a href="#">{{title}}</a>
       </div>
       <div class="actions">
-        <button class="button button-small"><i class="fa fa-eye"></i></button>
+        <button class="button button-small" ui-sref="app.meal({mealId: meal.id})"><i class="fa fa-eye"></i></button>
         <button class="button button-small button-balanced" ng-click="selectMeal(meal)"><i class="fa fa-plus"></i></button>
       </div>
       <div class="name">
@@ -19,13 +19,13 @@
 </div>
 <div ng-if="meal.data">
   <div class="meal-slide">
-    <img ng-src="{{meal.data.image}}">
+    <img ng-src="images/courses/16-9/400/{{meal.data.image}}">
     <div class="ribbon">
       <a href="#">{{title}}</a>
     </div>
     <div class="actions">
       <div>
-        <button class="button button-small"><i class="fa fa-eye"></i></button>
+        <button class="button button-small" ui-sref="app.meal({mealId: meal.data.id})"><i class="fa fa-eye"></i></button>
         <button class="button button-small button-assertive" ng-click="unselectMeal(meal)"><i class="fa fa-minus"></i></button>
       </div>
       <div style="margin-top: 3px;">

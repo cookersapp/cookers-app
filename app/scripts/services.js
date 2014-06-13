@@ -25,4 +25,19 @@ angular.module('ionicApp')
   }
 
   return service;
+})
+
+.factory('MealService', function(PlanningService){
+  'use strict';
+  var service = {
+    getMeal: getMeal
+  };
+
+  function getMeal(mealId){
+    return PlanningService.getCurrentPlanning().then(function(planning){
+      return _.find(planning.meals, {id: mealId});
+    });
+  }
+
+  return service;
 });
