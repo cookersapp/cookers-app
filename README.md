@@ -32,6 +32,7 @@ Inspirationnal apps :
 ## Tools 
 
 Crop images : http://www.croppola.com/
+Android remote debug : chrome://inspect/#devices (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 
 # Business
 

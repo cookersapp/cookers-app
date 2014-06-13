@@ -1,11 +1,17 @@
 <ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
   <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
-    <img ng-src="{{meal.image}}">
-    <div class="favorite"><i class="fa fa-star-o"></i></div>
-    <div class="when"><span>{{title}}</span></div>
-    <div class="actions">
-      <button class="button button-small button-balanced"><i class="fa fa-shopping-cart"></i></button>
+    <img ng-src="{{meal.image}}" class="desaturate">
+    <div class="ribbon">
+      <a href="#">{{title}}</a>
     </div>
-    <div class="name">{{meal.name}}</div>
+    <div class="actions">
+      <button class="button button-small"><i class="fa fa-eye"></i></button>
+      <button class="button button-small button-balanced"><i class="fa fa-plus"></i></button>
+    </div>
+    <div class="name">
+      <div class="starter" ng-if="meal.starter && meal.starter.name"><span>Entrée</span> : {{meal.starter.name}}</div>
+      <div class="mainCourse" ng-if="meal.mainCourse && meal.mainCourse.name"><span>Plat</span> : {{meal.mainCourse.name}}</div>
+      <div class="desert" ng-if="meal.desert && meal.desert.name"><span>Dessert</span> : {{meal.desert.name}}</div>
+    </div>
   </ion-slide>
 </ion-slide-box>
