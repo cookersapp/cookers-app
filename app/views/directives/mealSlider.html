@@ -1,17 +1,36 @@
-<ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
-  <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
-    <img ng-src="{{meal.image}}" class="desaturate">
+<div ng-if="!meal.data">
+  <ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
+    <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
+      <img ng-src="{{meal.image}}" class="desaturate">
+      <div class="ribbon">
+        <a href="#">{{title}}</a>
+      </div>
+      <div class="actions">
+        <button class="button button-small"><i class="fa fa-eye"></i></button>
+        <button class="button button-small button-balanced" ng-click="selectMeal(meal)"><i class="fa fa-plus"></i></button>
+      </div>
+      <div class="name">
+        <div class="starter" ng-if="meal.starter && meal.starter.name"><span>Entrée</span> : {{meal.starter.name}}</div>
+        <div class="mainCourse" ng-if="meal.mainCourse && meal.mainCourse.name"><span>Plat</span> : {{meal.mainCourse.name}}</div>
+        <div class="desert" ng-if="meal.desert && meal.desert.name"><span>Dessert</span> : {{meal.desert.name}}</div>
+      </div>
+    </ion-slide>
+  </ion-slide-box>
+</div>
+<div ng-if="meal.data">
+  <div class="meal-slide">
+    <img ng-src="{{meal.data.image}}">
     <div class="ribbon">
       <a href="#">{{title}}</a>
     </div>
     <div class="actions">
       <button class="button button-small"><i class="fa fa-eye"></i></button>
-      <button class="button button-small button-balanced"><i class="fa fa-plus"></i></button>
+      <button class="button button-small button-assertive" ng-click="unselectMeal(meal)"><i class="fa fa-minus"></i></button>
     </div>
     <div class="name">
-      <div class="starter" ng-if="meal.starter && meal.starter.name"><span>Entrée</span> : {{meal.starter.name}}</div>
-      <div class="mainCourse" ng-if="meal.mainCourse && meal.mainCourse.name"><span>Plat</span> : {{meal.mainCourse.name}}</div>
-      <div class="desert" ng-if="meal.desert && meal.desert.name"><span>Dessert</span> : {{meal.desert.name}}</div>
+      <div class="starter" ng-if="meal.data.starter && meal.data.starter.name"><span>Entrée</span> : {{meal.data.starter.name}}</div>
+      <div class="mainCourse" ng-if="meal.data.mainCourse && meal.data.mainCourse.name"><span>Plat</span> : {{meal.data.mainCourse.name}}</div>
+      <div class="desert" ng-if="meal.data.desert && meal.data.desert.name"><span>Dessert</span> : {{meal.data.desert.name}}</div>
     </div>
-  </ion-slide>
-</ion-slide-box>
+  </div>
+</div>
