@@ -1,13 +1,13 @@
 {
   "week": 24,
   "days": [
-    {"name": "Lundi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
-    {"name": "Mardi", "lunch": {"recommended": 1}, "dinner": {"recommended": 1}},
-    {"name": "Mercredi", "lunch": {"recommended": 1}, "dinner": {"recommended": 0}},
-    {"name": "Jeudi", "lunch": {"recommended": 0}, "dinner": {"recommended": 0}},
-    {"name": "Vendredi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
-    {"name": "Samedi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
-    {"name": "Dimanche", "lunch": {"recommended": 1}, "dinner": {"recommended": 1}}
+    {"name": "Lundi", "lunch": {"recommended": 0}, "dinner": {"recommended": 4}},
+    {"name": "Mardi", "lunch": {"recommended": 1}, "dinner": {"recommended": 5}},
+    {"name": "Mercredi", "lunch": {"recommended": 2}, "dinner": {"recommended": 6}},
+    {"name": "Jeudi", "lunch": {"recommended": 3}, "dinner": {"recommended": 0}},
+    {"name": "Vendredi", "lunch": {"recommended": 4}, "dinner": {"recommended": 1}},
+    {"name": "Samedi", "lunch": {"recommended": 5}, "dinner": {"recommended": 2}},
+    {"name": "Dimanche", "lunch": {"recommended": 6}, "dinner": {"recommended": 3}}
   ],
   "meals": [
     {
@@ -36,6 +36,71 @@
         "name": "Tartare saumon",
         "image": "images/courses/16-9/tartare-saumon.jpg",
         "source": "http://www.epicurious.com/recipes/food/views/Salmon-Tartare-365150"
+      },
+      "desert": {},
+      "wine": {}
+    },
+    {
+      "id": "meal3",
+      "name": "Buffalo Chicken Pizza",
+      "image": "images/courses/16-9/buffalo-chicken-pizza.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Buffalo Chicken Pizza",
+        "image": "images/courses/16-9/buffalo-chicken-pizza.jpg",
+        "source": "http://www.afamilyfeast.com/buffalo-chicken-pizza/"
+      },
+      "desert": {},
+      "wine": {}
+    },
+    {
+      "id": "meal4",
+      "name": "Garlic Bread Margherita Pizza",
+      "image": "images/courses/16-9/Garlic-Bread-Margherita-Pizza.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Garlic Bread Margherita Pizza",
+        "image": "images/courses/16-9/Garlic-Bread-Margherita-Pizza.jpg",
+        "source": "http://amandakbythebay.blogspot.fr/2014/01/garlic-bread-margherita-pizza.html"
+      },
+      "desert": {},
+      "wine": {}
+    },
+    {
+      "id": "meal5",
+      "name": "Lasagne de crêpes ricotta et épinards",
+      "image": "images/courses/16-9/lasagne-de-crepes-ricotta-et-epinards.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Lasagne de crêpes ricotta et épinards",
+        "image": "images/courses/16-9/lasagne-de-crepes-ricotta-et-epinards.jpg",
+        "source": "http://www.undejeunerdesoleil.com/2012/02/lasagne-de-crepes-ricotta-et-epinards.html"
+      },
+      "desert": {},
+      "wine": {}
+    },
+    {
+      "id": "meal6",
+      "name": "Tomato, Cucumber and Red Onion Salad",
+      "image": "images/courses/16-9/Tomato-Cucumber-and-Red-Onion-Salad.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Tomato, Cucumber and Red Onion Salad",
+        "image": "images/courses/16-9/Tomato-Cucumber-and-Red-Onion-Salad.jpg",
+        "source": "http://valsocal.blogspot.fr/2014/05/tomato-and-cucumber-with-red-onion-salad.html"
+      },
+      "desert": {},
+      "wine": {}
+    },
+    {
+      "id": "meal7",
+      "name": "Poulet grillé à la citronnelle et à la coriandre",
+      "image": "images/courses/16-9/poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Poulet grillé à la citronnelle et à la coriandre",
+        "image": "images/courses/16-9/poulet-grille-a-la-citronnelle-et-a-la-coriandre.jpg",
+        "source": "http://www.thehappycookingfriends.com/poulet-grille-a-la-citronnelle-et-a-la-coriandre/"
       },
       "desert": {},
       "wine": {}
