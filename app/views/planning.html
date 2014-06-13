@@ -15,7 +15,7 @@
             <div class="col col-50">
               <meal-slider meals="planning.meals" 
                            slider-id="slider-{{day.name}}-lunch" 
-                           index="{{day.lunch.index}}" 
+                           index="{{day.lunch.recommended}}" 
                            title="Midi" 
                            on-slide-changed="changeMeal(day.lunch, index)">
               </meal-slider>
@@ -23,7 +23,7 @@
             <div class="col col-50">
               <meal-slider meals="planning.meals" 
                            slider-id="slider-{{day.name}}-dinner" 
-                           index="{{day.dinner.index}}" 
+                           index="{{day.dinner.recommended}}"
                            title="Soir" 
                            on-slide-changed="changeMeal(day.dinner, index)">
               </meal-slider>

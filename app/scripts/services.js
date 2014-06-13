@@ -1,14 +1,28 @@
 angular.module('ionicApp')
 
-.factory('PlanningService', function($http){
+.factory('PlanningService', function($http, $q, $localStorage){
   'use strict';
+  if(!$localStorage.plannings){$localStorage.plannings = [];}
   var service = {
-    getPlanning: function(){
-      return $http.get('data/planning.json').then(function(result){
-        return result.data;
-      });
-    }
+    getCurrentPlanning: function(){ return getPlanning(moment().week()); },
+    getPlanning: getPlanning
   };
-  
+
+  function getPlanning(week){
+    var planning = _.find($localStorage.plannings, {week: week});
+    if(planning){
+      return $q.when(planning);
+    } else {
+      return downloadPlanning(week);
+    }
+  }
+
+  function downloadPlanning(week){
+    return $http.get('data/planning.json').then(function(result){
+      $localStorage.plannings.push(result.data);
+      return result.data;
+    });
+  }
+
   return service;
 });

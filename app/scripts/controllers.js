@@ -13,12 +13,11 @@ angular.module('ionicApp')
 .controller('PlanningCtrl', function($scope, PlanningService) {
   'use strict';
   $scope.planning = {};
-  PlanningService.getPlanning().then(function(planning){
+  PlanningService.getCurrentPlanning().then(function(planning){
     $scope.planning = planning;
   });
 
   $scope.changeMeal = function(meal, index){
     console.log('controller.changeMeal('+index+') for ', meal);
-    meal.index = index;
   };
 });

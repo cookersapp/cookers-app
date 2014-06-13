@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova'])
+angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage'])
 
 .run(function($ionicPlatform) {
   'use strict';

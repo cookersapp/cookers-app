@@ -1,6 +1,7 @@
 angular.module('ionicApp')
 
 .directive('mealSlider', function($timeout, $ionicSlideBoxDelegate){
+  'use strict';
   return {
     restrict: 'EA',
     templateUrl: 'views/directives/mealSlider.html',

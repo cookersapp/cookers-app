@@ -1,15 +1,17 @@
 {
+  "week": 24,
   "days": [
-    {"name": "Lundi", "lunch": {"index": 0}, "dinner": {"index": 1}},
-    {"name": "Mardi", "lunch": {"index": 1}, "dinner": {"index": 1}},
-    {"name": "Mercredi", "lunch": {"index": 1}, "dinner": {"index": 0}},
-    {"name": "Jeudi", "lunch": {"index": 0}, "dinner": {"index": 0}},
-    {"name": "Vendredi", "lunch": {"index": 0}, "dinner": {"index": 1}},
-    {"name": "Samedi", "lunch": {"index": 0}, "dinner": {"index": 1}},
-    {"name": "Dimanche", "lunch": {"index": 1}, "dinner": {"index": 1}}
+    {"name": "Lundi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
+    {"name": "Mardi", "lunch": {"recommended": 1}, "dinner": {"recommended": 1}},
+    {"name": "Mercredi", "lunch": {"recommended": 1}, "dinner": {"recommended": 0}},
+    {"name": "Jeudi", "lunch": {"recommended": 0}, "dinner": {"recommended": 0}},
+    {"name": "Vendredi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
+    {"name": "Samedi", "lunch": {"recommended": 0}, "dinner": {"recommended": 1}},
+    {"name": "Dimanche", "lunch": {"recommended": 1}, "dinner": {"recommended": 1}}
   ],
   "meals": [
     {
+      "id": "meal1",
       "name": "Burger poulet bacon avocats",
       "image": "images/courses/16-9/burger.jpg",
       "starter": {},
@@ -26,6 +28,7 @@
       "wine": {}
     },
     {
+      "id": "meal2",
       "name": "Tartare saumon",
       "image": "images/courses/16-9/tartare-saumon.jpg",
       "starter": {},

@@ -32,6 +32,9 @@
     "angular-ui-router": "~0.2.10",
     "ionic": "1.0.0-beta.7",
     "ngCordova": "~0.1.2-alpha",
-    "font-awesome": "~4.1.0"
+    "font-awesome": "~4.1.0",
+    "ngstorage": "~0.3.0",
+    "moment": "~2.7.0",
+    "lodash": "~2.4.1"
   }
 }
