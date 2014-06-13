@@ -1,0 +1,41 @@
+{
+  "days": [
+    {"name": "Lundi", "lunch": {"index": 0}, "dinner": {"index": 1}},
+    {"name": "Mardi", "lunch": {"index": 1}, "dinner": {"index": 1}},
+    {"name": "Mercredi", "lunch": {"index": 1}, "dinner": {"index": 0}},
+    {"name": "Jeudi", "lunch": {"index": 0}, "dinner": {"index": 0}},
+    {"name": "Vendredi", "lunch": {"index": 0}, "dinner": {"index": 1}},
+    {"name": "Samedi", "lunch": {"index": 0}, "dinner": {"index": 1}},
+    {"name": "Dimanche", "lunch": {"index": 1}, "dinner": {"index": 1}}
+  ],
+  "meals": [
+    {
+      "name": "Burger poulet bacon avocats",
+      "image": "images/courses/16-9/burger.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Burger poulet bacon avocat",
+        "image": "images/courses/16-9/burger.jpg",
+        "source": "http://www.cotemaison.fr/recettes-de-cuisine/burger-poulet-bacon-avocat_14501.html"
+      },
+      "desert": {
+        "name": "Crumble fraise",
+        "image": "images/courses/16-9/crumble-fraise.jpg",
+        "source": "http://www.pinterest.com/pin/293578469432883031/"
+      },
+      "wine": {}
+    },
+    {
+      "name": "Tartare saumon",
+      "image": "images/courses/16-9/tartare-saumon.jpg",
+      "starter": {},
+      "mainCourse": {
+        "name": "Tartare saumon",
+        "image": "images/courses/16-9/tartare-saumon.jpg",
+        "source": "http://www.epicurious.com/recipes/food/views/Salmon-Tartare-365150"
+      },
+      "desert": {},
+      "wine": {}
+    }
+  ]
+}

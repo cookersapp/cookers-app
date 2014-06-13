@@ -8,22 +8,22 @@
   </ion-header-bar>
   <ion-content class="planning">
     <div class="list">
-      <div ng-repeat="day in planning">
+      <div ng-repeat="day in planning.days">
         <div class="item item-divider">{{day.name}}</div>
         <div class="item item-menu">
           <div class="row">
             <div class="col col-50">
-              <meal-slider meals="meals" 
+              <meal-slider meals="planning.meals" 
                            slider-id="slider-{{day.name}}-lunch" 
-                           index="day.lunch.index" 
+                           index="{{day.lunch.index}}" 
                            title="Midi" 
                            on-slide-changed="changeMeal(day.lunch, index)">
               </meal-slider>
             </div>
             <div class="col col-50">
-              <meal-slider meals="meals" 
+              <meal-slider meals="planning.meals" 
                            slider-id="slider-{{day.name}}-dinner" 
-                           index="day.dinner.index" 
+                           index="{{day.dinner.index}}" 
                            title="Soir" 
                            on-slide-changed="changeMeal(day.dinner, index)">
               </meal-slider>

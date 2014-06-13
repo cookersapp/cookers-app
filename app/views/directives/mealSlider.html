@@ -1,5 +1,5 @@
 <ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
-  <ion-slide ng-repeat="meal in meals" class="meal-slide">
+  <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
     <img ng-src="{{meal.image}}">
     <div class="favorite"><i class="fa fa-star-o"></i></div>
     <div class="when"><span>{{title}}</span></div>
