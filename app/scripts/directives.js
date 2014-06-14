@@ -9,8 +9,7 @@ angular.module('ionicApp')
       meals: '=',
       meal: '=',
       sliderId: '@',
-      title: '@',
-      onSlideChanged: '&'
+      title: '@'
     },
     link: function(scope, elem, attrs){
       // update meals to have the recommended one in first place
@@ -19,10 +18,6 @@ angular.module('ionicApp')
         var meal = scope.newMeals.shift();
         scope.newMeals.push(meal);
       }
-
-      scope.slideHasChanged = function(index){
-        scope.onSlideChanged({index:index});
-      };
 
       scope.selectMeal = function(meal){
         var index = _.findIndex(scope.meals, {id: meal.id});

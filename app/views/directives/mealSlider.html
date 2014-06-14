@@ -1,6 +1,6 @@
 <div ng-if="!meal.data">
-  <ion-slide-box delegate-handle="{{sliderId}}" on-slide-changed="slideHasChanged(index)" show-pager="false">
-    <ion-slide ng-repeat="meal in newMeals" class="meal-slide">
+  <ion-slide-box delegate-handle="{{sliderId}}" show-pager="false">
+    <ion-slide ng-repeat="meal in newMeals | limitTo:3" class="meal-slide">
       <img ng-src="images/courses/16-9/400/{{meal.image}}" class="desaturate">
       <div class="ribbon">
         <a href="#">{{title}}</a>

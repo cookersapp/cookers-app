@@ -16,10 +16,6 @@ angular.module('ionicApp')
   PlanningService.getCurrentPlanning().then(function(planning){
     $scope.planning = planning;
   });
-
-  $scope.changeMeal = function(meal, index){
-    console.log('controller.changeMeal('+index+') for ', meal);
-  };
 })
 
 .controller('MealCtrl', function($scope, $stateParams, MealService) {
