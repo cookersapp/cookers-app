@@ -25,14 +25,15 @@ Your app is now running to your computer. To run it to your android device :
 
 Inspirationnal apps :
 
-- Airbnb : https://play.google.com/store/apps/details?id=com.airbnb.android
-- Secret : https://play.google.com/store/apps/details?id=ly.secret.android
-- Jelly : https://play.google.com/store/apps/details?id=com.jellyhq.starfish
+- [Airbnb](https://play.google.com/store/apps/details?id=com.airbnb.android)
+- [Secret](https://play.google.com/store/apps/details?id=ly.secret.android)
+- [Jelly](https://play.google.com/store/apps/details?id=com.jellyhq.starfish)
 
 ## Tools 
 
-Crop images : http://www.croppola.com/
-Android remote debug : chrome://inspect/#devices (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
+- Crop images : [croppola](http://www.croppola.com/)
+- Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
+- Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
 
 # Business
 

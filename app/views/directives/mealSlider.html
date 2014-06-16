@@ -6,7 +6,7 @@
         <a href="#">{{title}}</a>
       </div>
       <div class="actions">
-        <button class="button button-small" ui-sref="app.meal({mealId: meal.id})"><i class="fa fa-eye"></i></button>
+        <button class="button button-small" ng-click="showMealDetails(meal)"><i class="fa fa-eye"></i></button>
         <button class="button button-small button-balanced" ng-click="selectMeal(meal)"><i class="fa fa-plus"></i></button>
       </div>
       <div class="name">
@@ -25,7 +25,7 @@
     </div>
     <div class="actions">
       <div>
-        <button class="button button-small" ui-sref="app.meal({mealId: meal.data.id})"><i class="fa fa-eye"></i></button>
+        <button class="button button-small" ng-click="showMealDetails(meal.data)"><i class="fa fa-eye"></i></button>
         <button class="button button-small button-assertive" ng-click="unselectMeal(meal)"><i class="fa fa-minus"></i></button>
       </div>
       <div style="margin-top: 3px;">

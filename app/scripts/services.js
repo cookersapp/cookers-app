@@ -40,4 +40,22 @@ angular.module('ionicApp')
   }
 
   return service;
+})
+
+.factory('ModalService', function($ionicModal){
+  'use strict';
+  var service = {
+    meal: {
+      details: function(scope, callback){ createModal('views/modal/meal.html', scope, callback); }
+    }
+  };
+
+  function createModal(url, scope, callback){
+    $ionicModal.fromTemplateUrl(url, callback, {
+      scope: scope,
+      animation: 'slide-in-up'
+    });
+  }
+
+  return service;
 });

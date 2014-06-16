@@ -1,6 +1,6 @@
 angular.module('ionicApp')
 
-.directive('mealSlider', function($timeout, $ionicSlideBoxDelegate){
+.directive('mealSlider', function($timeout, $ionicSlideBoxDelegate, ModalService){
   'use strict';
   return {
     restrict: 'EA',
@@ -30,6 +30,18 @@ angular.module('ionicApp')
         delete meal.selected;
         delete meal.data;
       };
+
+      scope.mealDetails = {};
+      ModalService.meal.details(scope, function(modal) {
+        scope.mealDetails.modal = modal;
+      });
+      scope.showMealDetails = function(meal){
+        scope.mealDetails.meal = meal;
+        scope.mealDetails.modal.show();
+      };
+      scope.hideMealDetails = function(){
+        scope.mealDetails.modal.hide();
+      }
     }
   };
 });
