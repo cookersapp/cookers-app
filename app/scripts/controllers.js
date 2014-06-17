@@ -53,8 +53,18 @@ angular.module('ionicApp')
   };
   
   $scope.buyItem = function(item){
-    console.log('buyItem', item);
     ShoppinglistService.buyListItem(item);
+    for(var i in $scope.itemsByCategory){
+      var category = $scope.itemsByCategory[i];
+      var index = _.findIndex(category.items, {food: {name: item.food.name}});
+      if(index > -1){
+        category.items.splice(index, 1);
+        if(category.items.length === 0){
+          $scope.itemsByCategory.splice(i, 1);
+        }
+        break;
+      }
+    }
   };
 })
 

@@ -110,29 +110,19 @@ angular.module('ionicApp')
     }
   }
   function buyListItem(item){
-    // TODO
+    foreachIngredientInList(getList(), function(ingredient){
+      if(ingredient.food.name === item.food.name){
+        ingredient.bought = true;
+      }
+    });
   }
   function getListItemsByCategory(){
-    var list = getList();
     var categories = [];
-    if(list && list.meals){
-      for(var i in list.meals){
-        var meal = list.meals[i].data;
-        addCourseIngredientsToCategories(meal.starter, categories);
-        addCourseIngredientsToCategories(meal.mainCourse, categories);
-        addCourseIngredientsToCategories(meal.desert, categories);
-        addCourseIngredientsToCategories(meal.wine, categories);
-      }
-    }
-    return categories;
-  }
-  function addCourseIngredientsToCategories(course, categories){
-    if(course && course.ingredients){
-      for(var i in course.ingredients){
-        var ingredient = course.ingredients[i];
+    foreachIngredientInList(getList(), function(ingredient){
+      if(!ingredient.bought){
         var category = _.find(categories, {name: ingredient.food.category});
         if(category){
-          var item = _.find(category.items, {name: ingredient.food.name});
+          var item = _.find(category.items, {food: {name: ingredient.food.name}});
           if(item){
             addQuantityToListItem(ingredient.quantity, item);
           } else {
@@ -145,7 +135,13 @@ angular.module('ionicApp')
           });
         }
       }
-    }
+    });
+    categories.sort(function(a, b){
+      if(a.name > b.name){return 1;}
+      else if(a.name < b.name){return -1;}
+      else {return 0;}
+    });
+    return categories;
   }
   function addQuantityToListItem(quantity, item){
     if(quantity.unit === item.quantity.unit){
@@ -156,11 +152,27 @@ angular.module('ionicApp')
     }
   }
 
+  function foreachIngredientInList(list, callback){
+    if(list && list.meals){
+      for(var i in list.meals){
+        var meal = list.meals[i].data;
+        foreachIngredientInCourse(meal.starter, callback);
+        foreachIngredientInCourse(meal.mainCourse, callback);
+        foreachIngredientInCourse(meal.desert, callback);
+        foreachIngredientInCourse(meal.wine, callback);
+      }
+    }
+  }
+  function foreachIngredientInCourse(course, callback){
+    if(course && course.ingredients){
+      for(var i in course.ingredients){
+        callback(course.ingredients[i]);
+      }
+    }
+  }
+
   function buildListItem(ingredient){
-    return {
-      quantity: ingredient.quantity,
-      food: ingredient.food
-    };
+    return ingredient;
   }
   function buildMealList(meal){
     return {
