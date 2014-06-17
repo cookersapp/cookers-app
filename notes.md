@@ -1,0 +1,209 @@
+# Notes
+
+## Food categories
+
+### Leclerc Drive
+
+#### Niveau 1
+
+- Promotions
+- Nouveautés
+- Viandes & Poissons
+- Fruits & Légumes
+- Pains & Pâtisseries
+- Frais
+- Surgelés
+- Epicerie salée
+- Epicerie sucrée
+- Boissons
+- Bébé
+- Bio
+- Hygiène & Beauté
+- Entretien & Nettoyage
+- Animalerie
+- Bazar & Textile
+
+#### Niveau 2
+
+
+- Promotions
+- Nouveautés
+- Viandes & Poissons
+    - Boucherie
+    - Volailles & Gibiers
+    - Poissonnerie
+    - Traiteur de la mer
+- Fruits & Légumes
+    - Légumes
+    - Fruits
+    - Jus de fruits et légumes frais
+- Pains & Pâtisseries
+    - Pains & Pâtisseries
+    - Pains de mie & Pains grillés
+    - Pâtisseries moelleuses
+- Frais
+    - Laits & Oeufs
+    - Beurres & Crèmes
+    - Fromages
+    - Charcuteries
+    - Traiteur
+    - Yaourts & Fromages blanc
+    - Desserts
+- Surgelés
+    - Apéritifs, Entrées & Snacks
+    - Plats cuisinés, Pizzas & Tartes
+    - Viandes & Poissons
+    - Légumes & Frites
+    - Glaces & Desserts glacés
+- Epicerie salée
+    - Pâtes, Riz & Féculents
+    - Conserves & Bocaux
+    - Plats cuisinés
+    - Apéritifs
+    - Condiments & Sauces
+    - Soupes & Potages
+- Epicerie sucrée
+    - Boissons du matin ou du soir
+    - Petits déjeuners
+    - Biscuits
+    - Pâtisseries moelleuses
+    - Chocolats & Confiseries
+    - Desserts, Sucres & Farines
+- Boissons
+    - Vins, Champagnes & Cidres
+    - Alcools & Apéritifs
+    - Eaux
+    - Jus de fruits et légumes
+    - Colas & Boissons gazeuses
+    - Sirops & Boissons aux fruits
+- Bébé
+- Bio
+    - Le marché Bio
+    - Frais & Surgelés Bio
+    - Epicerie salée Bio
+    - Epicerie sucrée Bio
+    - Boissons Bio
+    - Bébé Bio
+    - Hygiène & Beauté Bio
+- Hygiène & Beauté
+- Entretien & Nettoyage
+- Animalerie
+- Bazar & Textile
+
+#### Niveau 3
+
+- Promotions
+- Nouveautés
+- Viandes & Poissons
+    - Boucherie
+        - > Viande bovine
+        - > Veau
+        - > Agneau
+        - > Porc
+        - > Viande hachée & Farce
+        - > Saucisses & Grillades
+        - > Sauces
+    - Volailles & Gibiers
+        - > Poulets
+        - > Dindes
+        - > Canards & Cailles
+        - > Lapins & Autres volailles
+        - > Panés, Nuggets & Grignottes
+        - > Foies & Gésiers
+    - Poissonnerie
+        - > Filets, Pavés, Dos & Lamelles
+        - > Coquillages & Crustacés
+        - > Panés & Steacks de poissons
+    - Traiteur de la mer
+        - > Saumons & Truites fumés
+        - > Anchois & Harengs, Rollmops
+        - > Surimis
+        - > Tartinables, Blinis, Terrines
+        - > Soupes de poissons
+- Fruits & Légumes
+    - Légumes
+        - > Légumes
+        - > Salades en sachets & Herbes
+    - Fruits
+        - > Fruits frais
+        - > Fruits secs
+    - Jus de fruits et légumes frais
+        - > Jus de fruits frais
+        - > Jus de légumes & Gazpacho
+        - > Boissons lactées
+        - > Smoothies
+- Pains & Pâtisseries
+    - Pains & Pâtisseries
+        - > Pain frais
+        - > Viennoiseries
+    - Pains de mie & Pains grillés
+        - > Pains de mie
+        - > Canapés & Toasts
+        - > Pains précuits, Hamburger
+        - > Biscottes & Pains grillés
+    - Pâtisseries moelleuses
+        - > Brioches
+        - > Viennoiseries
+        - > Madeleines & Quatre quart
+        - > Cake & Pains d'épices
+        - > Gâteaux & Marbrés
+        - > Crêpes & Galettes
+- Frais
+    - Laits & Oeufs
+        - > Oeufs
+        - > Laits demi-écrémés
+        - > Laits entiers
+        - > Laits écrémés
+        - > Laits infantiles
+        - > laits spéciaux et arômatisés
+    - Beurres & Crèmes
+        - > Beurres
+        - > Margarines & Matières grasses
+        - > Crèmes fraiches & Chantilly
+        - > Crèmes & Sauces
+    - Fromages
+        - > ...
+    - Charcuteries
+    - Traiteur
+    - Yaourts & Fromages blanc
+    - Desserts
+- Surgelés
+    - Apéritifs, Entrées & Snacks
+    - Plats cuisinés, Pizzas & Tartes
+    - Viandes & Poissons
+    - Légumes & Frites
+    - Glaces & Desserts glacés
+- Epicerie salée
+    - Pâtes, Riz & Féculents
+    - Conserves & Bocaux
+    - Plats cuisinés
+    - Apéritifs
+    - Condiments & Sauces
+    - Soupes & Potages
+- Epicerie sucrée
+    - Boissons du matin ou du soir
+    - Petits déjeuners
+    - Biscuits
+    - Pâtisseries moelleuses
+    - Chocolats & Confiseries
+    - Desserts, Sucres & Farines
+- Boissons
+    - Vins, Champagnes & Cidres
+    - Alcools & Apéritifs
+    - Eaux
+    - Jus de fruits et légumes
+    - Colas & Boissons gazeuses
+    - Sirops & Boissons aux fruits
+- Bébé
+- Bio
+    - Le marché Bio
+    - Frais & Surgelés Bio
+    - Epicerie salée Bio
+    - Epicerie sucrée Bio
+    - Boissons Bio
+    - Bébé Bio
+    - Hygiène & Beauté Bio
+- Hygiène & Beauté
+- Entretien & Nettoyage
+- Animalerie
+- Bazar & Textile

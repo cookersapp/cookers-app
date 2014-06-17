@@ -18,6 +18,41 @@
       "mainCourse": {
         "name": "Burger poulet bacon avocat",
         "image": "burger.jpg",
+        "category": "Plat principal",
+        "price": {"value": 3, "unit": "€/personne"},
+        "servings": {"value": 1, "unit": "personne"},
+        "difficulty": 3.4,
+        "rating": 7,
+        "time": {
+          "preparation": 20,
+          "cooking": 10,
+          "eat": 30,
+          "unit": "minutes"
+        },
+        "ingredients": [
+          {"quantity": {"value": 1, "unit": "piece"}, "pre": "", "food": {"id": "", "name": "pain hamburger", "category": "Pains & Pâtisseries"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 0.5, "unit": "piece"}, "pre": "", "food": {"id": "", "name": "avocat", "category": "Fruits & Légumes"}, "post": " bien mûr", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "cuil. à soupe"}, "pre": "de ", "food": {"id": "", "name": "jus de citron", "category": "Epicerie salée"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "tranche"}, "pre": "de ", "food": {"id": "", "name": "bacon", "category": "Frais"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "feuille"}, "pre": "de ", "food": {"id": "", "name": "laitue", "category": "Fruits & Légumes"}, "post": " grande", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "filet"}, "pre": "de ", "food": {"id": "", "name": "poulet", "category": "Viandes & Poissons"}, "post": " petit", "role": "primary"},
+          {"quantity": {"value": 10, "unit": "g"}, "pre": "de ", "food": {"id": "", "name": "chapelure", "category": "Epicerie salée"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": ""}, "pre": "petit ", "food": {"id": "", "name": "oignons", "category": "Fruits & Légumes"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "branche"}, "pre": "de ", "food": {"id": "", "name": "persil", "category": "Epicerie salée"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "filet"}, "pre": "d'", "food": {"id": "", "name": "anchois", "category": "Viandes & Poissons"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "cuil. à café"}, "pre": "de ", "food": {"id": "", "name": "lait", "category": "Frais"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "pincée"}, "pre": "de ", "food": {"id": "", "name": "piment d'espelette", "category": "Epicerie salée"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 3, "unit": "cuil. à café"}, "pre": "de ", "food": {"id": "", "name": "mayonnaise", "category": "Epicerie salée"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "cuil. à café"}, "pre": "de ", "food": {"id": "", "name": "crème de raifort", "category": "Frais"}, "post": "", "role": "primary"},
+          {"quantity": {"value": 1, "unit": "pincée"}, "pre": "d'", "food": {"id": "", "name": "ail semoule", "category": "Epicerie salée"}, "post": "", "role": "primary"}
+        ],
+        "instructions": [
+          "Effeuillez le persil plat avant de mixer dans un robot tous les ingrédients du steak. Formez une boule avec la farce obtenue et aplatissez-la légèrement à la taille du pain burger.",
+          "Coupez le pain en 2. Pelez le 1/2 avocat et détaillez-le en fines tranches, que vous citronnerez aussitôt. Rincez et essorez la laitue.",
+          "Faites griller dans une poêle bien chaude la tranche de bacon. Retirez-la puis faites cuire le steak de poulet avec la matière grasse du bacon pendant 3 min de chaque côté.",
+          "Préparez la sauce en mélangeant tous les ingrédients. Badigeonnez-en la moitié sur la base du pain puis déposez successivement par-dessus la feuille de laitue, le steak de poulet, le bacon grillé et les tranches d'avocat. Répartissez le reste de sauce sur l'autre moitié du pain, avant de refermer le burger.",
+          "Dégustez sans tarder, avec éventuellement d'autres feuilles de laitue assaisonnées."
+        ],
         "source": "http://www.cotemaison.fr/recettes-de-cuisine/burger-poulet-bacon-avocat_14501.html"
       },
       "desert": {
