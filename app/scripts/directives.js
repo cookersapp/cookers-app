@@ -1,9 +1,9 @@
 angular.module('ionicApp')
 
-.directive('mealSlider', function($timeout, $ionicSlideBoxDelegate, ModalService){
+.directive('mealSlider', function($timeout, $ionicSlideBoxDelegate, ShoppinglistService, ModalService){
   'use strict';
   return {
-    restrict: 'EA',
+    restrict: 'E',
     templateUrl: 'views/directives/mealSlider.html',
     scope: {
       meals: '=',
@@ -21,14 +21,27 @@ angular.module('ionicApp')
 
       scope.selectMeal = function(meal){
         var index = _.findIndex(scope.meals, {id: meal.id});
-        if(index >= 0){
+        if(index > -1){
           scope.meal.selected = index;
+          scope.meal.bought = false;
           scope.meal.data = meal;
         }
       };
       scope.unselectMeal = function(meal){
         delete meal.selected;
+        delete meal.bought;
         delete meal.data;
+      };
+      scope.addMealToList = function(meal){
+        if(!ShoppinglistService.hasLists()){
+          ShoppinglistService.addList(ShoppinglistService.createList());
+        }
+        ShoppinglistService.addMealToList(meal);
+        scope.meal.bought = true;
+      };
+      scope.removeMealFromList = function(meal){
+        ShoppinglistService.removeMealFromList(meal);
+        scope.meal.bought = false;
       };
 
       scope.mealDetails = {};
@@ -42,6 +55,25 @@ angular.module('ionicApp')
       scope.hideMealDetails = function(){
         scope.mealDetails.modal.hide();
       }
+    }
+  };
+})
+
+.directive('iconProgress', function(){
+  'use strict';
+  return {
+    restrict: 'E',
+    templateUrl: 'views/directives/iconProgress.html',
+    scope: {
+      icon: '@',
+      color: '@',
+      background: '@',
+      progress: '='
+    },
+    compile: function(element, attrs){
+      if(!attrs.icon){ attrs.icon = 'fa-info'; }
+      if(!attrs.color){ attrs.color = 'red'; }
+      if(!attrs.background){ attrs.background = '#ddd'; }
     }
   };
 });

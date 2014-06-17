@@ -12,7 +12,7 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
 .config(function($stateProvider, $urlRouterProvider) {
   'use strict';
   $urlRouterProvider.otherwise('/app/home');
-  
+
   $stateProvider
   .state('app', {
     url: '/app',
@@ -56,6 +56,15 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
       }
     }
   })
+  .state('app.shoppinglist', {
+    url: '/shoppinglist',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/shoppinglist.html',
+        controller: 'ShoppinglistCtrl'
+      }
+    }
+  })
   .state('app.settings', {
     url: '/settings',
     views: {
@@ -65,5 +74,18 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
       }
     }
   });
-});
+})
 
+.constant('APP_VERSION','0.0.1')
+.value('localStorageDefault', {
+  plannings: [],
+  shoppinglists: {
+    current: null,
+    lists: []
+  }
+})
+
+.run(function($localStorage, localStorageDefault){
+  if(!$localStorage.plannings){$localStorage.plannings = localStorageDefault.plannings;}
+  if(!$localStorage.shoppinglists){$localStorage.shoppinglists = localStorageDefault.shoppinglists;}
+});

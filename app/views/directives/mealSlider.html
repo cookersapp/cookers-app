@@ -1,4 +1,4 @@
-<div ng-if="!meal.data">
+<div ng-show="meal.selected === undefined">
   <ion-slide-box delegate-handle="{{sliderId}}" show-pager="false">
     <ion-slide ng-repeat="meal in newMeals | limitTo:3" class="meal-slide">
       <img ng-src="images/courses/16-9/400/{{meal.image}}" class="desaturate">
@@ -17,7 +17,7 @@
     </ion-slide>
   </ion-slide-box>
 </div>
-<div ng-if="meal.data">
+<div ng-show="meal.selected !== undefined">
   <div class="meal-slide">
     <img ng-src="images/courses/16-9/400/{{meal.data.image}}">
     <div class="ribbon">
@@ -29,7 +29,8 @@
         <button class="button button-small button-assertive" ng-click="unselectMeal(meal)"><i class="fa fa-minus"></i></button>
       </div>
       <div style="margin-top: 3px;">
-        <button class="button button-small button-balanced pull-right"><i class="fa fa-shopping-cart"></i></button>
+        <button class="button button-small button-balanced pull-right" ng-if="!meal.bought" ng-click="addMealToList(meal.data)"><i class="fa fa-shopping-cart"></i></button>
+        <button class="button button-small button-assertive pull-right" ng-if="meal.bought" ng-click="removeMealFromList(meal.data)"><i class="fa fa-shopping-cart"></i></button>
       </div>
     </div>
     <div class="name">
