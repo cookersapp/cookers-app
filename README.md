@@ -31,9 +31,10 @@ Inspirationnal apps :
 
 ## Tools 
 
-- Crop images : [croppola](http://www.croppola.com/)
+- Crop images : [croppola](http://www.croppola.com/) ([fixpicture](http://www.fixpicture.org/) to resize)
 - Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
+- newsletter : [customer.io](http://customer.io/)
 
 # Business
 
@@ -41,8 +42,7 @@ Inspirationnal apps :
 
 - __planning__ (planning) : list of menus (for a week for example)
     - __meal__ (repas) : a complete and ordered list of course for the meal
-        - __course__ (plat) : a single course
-            - __recipe__ (recette) : how to cook the course
+        - __recipe__ (plat) : a single course
             - __ingredient__ (ingrédient) : food with quantity in a course
                 - __food__ (aliment) : basic food element
 - __shoppinglist__ (liste de courses) : list of elements to buy
