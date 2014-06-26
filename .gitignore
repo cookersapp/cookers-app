@@ -1,6 +1,5 @@
 app/bower_components/
 app/fonts/
-app/images/
 .sass-cache/
 .tmp/
 coverage/
@@ -10,5 +9,6 @@ node_modules/
 platforms/
 plugins/
 www/
+.DS_Store
 
 *~
