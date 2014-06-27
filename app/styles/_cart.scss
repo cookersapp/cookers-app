@@ -1,0 +1,57 @@
+.item-cart-ingredient {
+  position: relative;
+  padding: 0;
+  margin: 10px;
+  border: none;
+  font-size: 18px;
+  line-height: 22px;
+  &.activated {
+    border: none;
+    background: none;
+  }
+  .text {
+    border-left: 3px solid black;
+    padding: 3px 5px;
+  }
+  .actions {
+    position: absolute;
+    right: 0px;
+    & > div {
+      display: inline-block;
+    }
+    .quantity {
+      color: #666;
+    }
+    .check {
+      width: 30px;
+      border-left: 1px solid #ccc;
+      padding: 0px;
+      margin: 0px;
+      padding-left: 10px;
+      margin-left: 5px;
+      text-align: right;
+      input[type=checkbox] {
+        width: 20px;
+        height: 20px;
+        padding: 0px;
+        margin: 0px;
+      }
+    }
+  }
+  .details {
+    font-size: 15px;
+    line-height: 18px;
+    .text {
+      border-left: 1px dashed #666;
+      margin-left: 10px;
+    }
+    .actions {
+      .check {
+        input[type=checkbox] {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+  }
+}

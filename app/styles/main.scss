@@ -1,0 +1,24 @@
+@import "_colors";
+@import "_ionic_override";
+@import "_ionic_new_color";
+@import "_global";
+@import "_recipe";
+@import "_cart";
+
+.title:first-letter {
+  text-transform: uppercase;
+}
+
+.button-icon {
+  font-size: 30px;
+  &.light {color: $ionic-light-bg; &:hover {color: $ionic-light-border;} }
+  &.stable {color: $ionic-stable-bg; &:hover {color: $ionic-stable-border;} }
+  &.positive {color: $ionic-positive-bg; &:hover {color: $ionic-positive-border;} }
+  &.calm {color: $ionic-calm-bg; &:hover {color: $ionic-calm-border;} }
+  &.balanced {color: $ionic-balanced-bg; &:hover {color: $ionic-balanced-border;} }
+  &.energized {color: $ionic-energized-bg; &:hover {color: $ionic-energized-border;} }
+  &.assertive {color: $ionic-assertive-bg; &:hover {color: $ionic-assertive-border;} }
+  &.royal {color: $ionic-royal-bg; &:hover {color: $ionic-royal-border;} }
+  &.dark {color: $ionic-dark-bg; &:hover {color: $ionic-dark-border;} }
+  &.custom {color: $custom-bg; &:hover {color: $custom-border;} }
+}

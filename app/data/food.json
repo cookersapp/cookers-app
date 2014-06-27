@@ -1,0 +1,50 @@
+[
+  {"id": "", "name": "pain hamburger", "category": "Pains & Pâtisseries", "prices": [
+    {"date": "17/06/2014", "value": 4, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE46987226"},
+    {"date": "17/06/2014", "value": 0.5, "unit": "€/piece", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE46987226"}
+  ]},
+  {"id": "", "name": "avocat", "category": "Fruits & Légumes", "prices": [
+    {"date": "17/06/2014", "value": 1, "unit": "€/piece", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47314373"}
+  ]},
+  {"id": "", "name": "jus de citron", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 5, "unit": "€/litre", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47410222"}
+  ]},
+  {"id": "", "name": "bacon", "category": "Frais", "prices": [
+    {"date": "17/06/2014", "value": 14, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47501796"},
+    {"date": "17/06/2014", "value": 0.90, "unit": "€/tranche", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47501796"}
+  ]},
+  {"id": "", "name": "laitue", "category": "Fruits & Légumes", "prices": [
+    {"date": "17/06/2014", "value": 1.10, "unit": "€/piece", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47653213"},
+    {"date": "17/06/2014", "value": 3.70, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47653213"}
+  ]},
+  {"id": "", "name": "poulet", "category": "Viandes & Poissons", "prices": [
+    {"date": "17/06/2014", "value": 11, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47773679"},
+    {"date": "17/06/2014", "value": 1.20, "unit": "€/filet", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47773679"}
+  ]},
+  {"id": "", "name": "chapelure", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 2.12, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47913535"}
+  ]},
+  {"id": "", "name": "oignons", "category": "Fruits & Légumes", "prices": [
+    {"date": "17/06/2014", "value": 2, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE47979914"}
+  ]},
+  {"id": "", "name": "persil", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 94, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48057837"}
+  ]},
+  {"id": "", "name": "anchois", "category": "Viandes & Poissons", "prices": [
+    {"date": "17/06/2014", "value": 16, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48137601"}
+  ]},
+  {"id": "", "name": "lait", "category": "Frais", "prices": [
+    {"date": "17/06/2014", "value": 0.80, "unit": "€/litre", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48269735"}
+  ]},
+  {"id": "", "name": "piment d'espelette", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 162, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48391759"}
+  ]},
+  {"id": "", "name": "mayonnaise", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 5, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48488481"}
+  ]},
+  {"id": "", "name": "crème de raifort", "category": "Frais", "prices": [
+  ]},
+  {"id": "", "name": "ail semoule", "category": "Epicerie salée", "prices": [
+    {"date": "17/06/2014", "value": 22, "unit": "€/kg", "source": "http://fd2-www.leclercdrive.fr/117701/courses/pgeWMEL009_Courses.aspx#RE48691595"}
+  ]}
+]

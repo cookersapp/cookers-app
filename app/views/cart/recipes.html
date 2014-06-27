@@ -1,0 +1,16 @@
+<div class="list">
+  <div ng-if="!list || !list.recipes || list.recipes.length === 0" class="padding">
+    Aucune recette ajoutée pour le moment.
+  </div>
+  <div class="item item-thumbnail-left" ng-repeat="recipe in list.recipes">
+    <img ng-src="{{recipe.data.images.thumbnail}}">
+    <h2 class="pull-right">{{recipe.data.price.value*recipe.servings.value | number:2}} {{recipe.data.price.currency}}</h2>
+    <h2>{{recipe.data.name}}</h2>
+    <p>
+      {{recipe.servings.value}} {{recipe.servings.unit}},
+      {{recipe.data.time.eat}} {{recipe.data.time.unit}},
+      {{recipe.data.ingredients.length}} ingrédients
+    </p>
+    <div class="range"><input type="range" name="volume" min="0" max="20" ng-model="recipe.servings.value"></div>
+  </div>
+</div>

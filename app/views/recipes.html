@@ -1,0 +1,32 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title">Recettes de la semaine</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="list">
+      <div class="item item-recipe-img-full" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
+        <img ng-src="{{recipe.images.portrait}}" ui-sref="app.recipe({recipeId: recipe.id})">
+        <div class="actions">
+          <button ng-show="!listHasRecipe(recipe)" class="button button-icon balanced pull-right" ng-click="addRecipeToCart(recipe)">
+            <i class="fa fa-plus-square"></i>
+          </button>
+          <button ng-show="listHasRecipe(recipe)" class="button button-icon assertive pull-right" ng-click="removeRecipeFromCart(recipe)">
+            <i class="fa fa-minus-square"></i>
+          </button>
+        </div>
+        <div class="legend">
+          <div class="price line pull-right">
+            <div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>
+            <div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>
+          </div>
+          <div class="title line">{{recipe.name}}</div>
+          <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
