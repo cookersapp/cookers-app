@@ -1,70 +1,72 @@
-.item-cart-recipe {
-  .thumbnail {
-    max-width: 80px;
-    img {
+.cart {
+  background: #333;
+
+  .cart-chooser {
+    background: #fff;
+  }
+
+  .item-cart-recipe {
+    .thumbnail {
       max-width: 80px;
-      max-height: 80px;
+      img {
+        max-width: 80px;
+        max-height: 80px;
+      }
+    }
+    .content {
+      margin-left: 90px;
     }
   }
-  .content {
-    margin-left: 90px;
-  }
-}
 
-.item-cart-ingredient {
-  position: relative;
-  padding: 0;
-  margin: 10px;
-  border: none;
-  font-size: 18px;
-  line-height: 22px;
-  &.activated {
+  .item-cart-ingredient {
+    padding: 5px 10px;
     border: none;
-    background: none;
-  }
-  .text {
-    border-left: 3px solid black;
-    padding: 3px 5px;
-  }
-  .actions {
-    position: absolute;
-    right: 0px;
-    & > div {
-      display: inline-block;
+    .text {
+      border-left: 3px solid black;
+      padding: 3px 5px;
     }
     .quantity {
-      color: #666;
+      padding: 3px 5px;
     }
     .check {
-      width: 30px;
       border-left: 1px solid #ccc;
-      padding: 0px;
-      margin: 0px;
-      padding-left: 10px;
       margin-left: 5px;
-      text-align: right;
+      padding-left: 10px;
       input[type=checkbox] {
         width: 20px;
         height: 20px;
-        padding: 0px;
-        margin: 0px;
       }
     }
-  }
-  .details {
-    font-size: 15px;
-    line-height: 18px;
-    .text {
-      border-left: 1px dashed #666;
-      margin-left: 10px;
-    }
-    .actions {
+    .details {
+      font-size: .8em;
+      .text {
+        border-left: 1px dashed #666;
+        margin-left: 10px;
+        padding: 1px 5px;
+      }
+      .quantity {
+        padding: 1px 5px;
+      }
       .check {
+        padding-left: 15px;
+        padding-top: 4px;
         input[type=checkbox] {
           width: 15px;
           height: 15px;
         }
       }
+    }
+  }
+
+  .item-cart-ingredient.bought {
+    text-decoration: line-through;
+    background: transparent;
+    color: #666;
+    .text {
+      border-color: transparent;
+    }
+    .check {
+      border-color: #444;
     }
   }
 }

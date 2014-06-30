@@ -77,9 +77,11 @@ angular.module('ionicApp')
     listHasRecipe: function(recipe){return listHasRecipe(getList(), recipe);},
     addRecipeToList: function(recipe){addRecipeToList(getList(), recipe);},
     removeRecipeFromList: function(recipe){removeRecipeFromList(getList(), recipe);},
-    buyListItem: function(item){buyListItem(item);},
-    buyListItemSource: function(source, item){buyListItemSource(source, item);},
-    getListItems: function(){return getListItems();}
+    buyListItem: function(item){buyListItem(item, getList(), true);},
+    buyListItemSource: function(source, item){buyListItemSource(source, item, getList(), true);},
+    unbuyListItem: function(item){buyListItem(item, getList(), false);},
+    getListItems: function(){return getListItems(false);},
+    getListBoughtItems: function(){return getListItems(true);}
   };
 
   function hasLists(){
@@ -127,25 +129,29 @@ angular.module('ionicApp')
       }
     }
   }
-  function buyListItem(item){
+  function buyListItem(item, list, bought){
     for(var i in item.sources){
-      item.sources[i].bought = true;
+      buyListItemSource(item.sources[i], item, list, bought);
     }
-    item.quantity = null;
   }
-  function buyListItemSource(source, item){
-    source.bought = true;
-    item.quantity = computeListItemQuantity(item);
+  function buyListItemSource(source, item, list, bought){
+    var recipe = _.find(list.recipes, {id: source.recipe.id});
+    if(recipe){
+      var ingredient = _.find(recipe.data.ingredients, {food: {id: source.ingredient.food.id}});
+      if(ingredient){
+        ingredient.bought = bought;
+      }
+    }
   }
-  function getListItems(){
+  function getListItems(bought){
     var items = [];
     foreachIngredientInList(getList(), function(ingredient, recipeItem){
-      if(!ingredient.bought){
+      if(bought === !!ingredient.bought){
         var item = _.find(items, {food: {id: ingredient.food.id}});
         if(item){
-          addQuantityToListItem(ingredient, recipeItem, item);
+          addQuantityToListItem(ingredient, recipeItem, item, bought);
         } else {
-          items.push(buildListItem(ingredient, recipeItem));
+          items.push(buildListItem(ingredient, recipeItem, bought));
         }
       }
     });
@@ -158,8 +164,8 @@ angular.module('ionicApp')
     });
     return items;
   }
-  function addQuantityToListItem(ingredient, recipeItem, item){
-    item.sources.push(buildListItemSource(ingredient, recipeItem));
+  function addQuantityToListItem(ingredient, recipeItem, item, bought){
+    item.sources.push(buildListItemSource(ingredient, recipeItem, bought));
     item.quantity = computeListItemQuantity(item);
   }
   function computeListItemQuantity(item){
@@ -203,19 +209,20 @@ angular.module('ionicApp')
     }
   }
 
-  function buildListItemSource(ingredient, recipeItem){
+  function buildListItemSource(ingredient, recipeItem, bought){
     return {
-      bought: false,
+      bought: bought,
       quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
       ingredient: ingredient,
       recipe: recipeItem
     };
   }
-  function buildListItem(ingredient, recipeItem){
+  function buildListItem(ingredient, recipeItem, bought){
     return {
       quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
       food: ingredient.food,
-      sources: [buildListItemSource(ingredient, recipeItem)]
+      bought: bought,
+      sources: [buildListItemSource(ingredient, recipeItem, bought)]
     };
   }
   function buildListRecipe(recipe){

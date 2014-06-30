@@ -1,30 +1,46 @@
-<div class="list">
+<div>
   <div ng-if="!items || items.length === 0" class="padding">
     Aucun ingrédient à acheter !!!
   </div>
-  <div class="item item-cart-ingredient" ng-repeat="item in items"
-       ng-if="!item.bought && item.quantity && item.quantity.value > 0"
-       ng-click="item.selected=!item.selected">
-    <div class="actions">
-      <div class="quantity">{{item.quantity | quantity}}</div>
-      <div class="check">
+
+  <div class="list">
+    <div class="item item-cart-ingredient" ng-repeat="item in items">
+      <div class="check pull-right">
         <input type="checkbox" ng-change="buyItem(item)" ng-model="item.bought">
       </div>
-    </div>
-    <div class="text">
-      {{item.food.name}}
-    </div>
-    <div class="details" ng-if="item.selected">
-      <div class="source" ng-repeat="source in item.sources" ng-if="!source.bought && source.quantity && source.quantity.value > 0">
-        <div class="actions">
-          <div class="quantity">{{source.quantity | quantity}}</div>
-          <div class="check">
+      <div class="quantity pull-right">
+        {{item.quantity | quantity}}
+      </div>
+      <div class="text" ng-click="item.selected=!item.selected">
+        {{item.food.name}}
+      </div>
+
+      <div class="details" ng-if="item.selected">
+        <div class="source" ng-repeat="source in item.sources">
+          <div class="check pull-right">
             <input type="checkbox" ng-change="buySource(source, item)" ng-model="source.bought">
           </div>
+          <div class="quantity pull-right">
+            {{source.quantity | quantity}}
+          </div>
+          <div class="text">
+            {{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})
+          </div>
         </div>
-        <div class="text">
-          {{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})
-        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="list">
+    <div class="item item-cart-ingredient bought" ng-repeat="item in boughtItems">
+      <div class="check pull-right">
+        <input type="checkbox" ng-change="unbuyItem(item)" ng-model="item.bought">
+      </div>
+      <div class="quantity pull-right">
+        {{item.quantity | quantity}}
+      </div>
+      <div class="text">
+        {{item.food.name}}
       </div>
     </div>
   </div>

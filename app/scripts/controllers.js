@@ -16,7 +16,7 @@ angular.module('ionicApp')
   WeekrecipeService.get(27).then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes;
   });
-  
+
   $scope.listHasRecipe = CartService.listHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
@@ -49,7 +49,7 @@ angular.module('ionicApp')
 .controller('CartRecipesCtrl', function($scope, CartService){
   'use strict';
   $scope.list = CartService.getList();
-  
+
   $scope.removeRecipeFromCart = function(recipe){
     if(CartService.hasLists()){
       CartService.removeRecipeFromList(recipe);
@@ -61,12 +61,22 @@ angular.module('ionicApp')
 .controller('CartIngredientsCtrl', function($scope, CartService){
   'use strict';
   $scope.items = CartService.getListItems();
+  $scope.boughtItems = CartService.getListBoughtItems();
 
   $scope.buyItem = function(item){
     CartService.buyListItem(item);
+    $scope.items = CartService.getListItems();
+    $scope.boughtItems = CartService.getListBoughtItems();
   };
   $scope.buySource = function(source, item){
     CartService.buyListItemSource(source, item);
+    $scope.items = CartService.getListItems();
+    $scope.boughtItems = CartService.getListBoughtItems();
+  };
+  $scope.unbuyItem = function(item){
+    CartService.unbuyListItem(item);
+    $scope.items = CartService.getListItems();
+    $scope.boughtItems = CartService.getListBoughtItems();
   };
 })
 
