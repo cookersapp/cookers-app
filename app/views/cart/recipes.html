@@ -1,16 +1,60 @@
-<div class="list">
+<div>
   <div ng-if="!list || !list.recipes || list.recipes.length === 0" class="padding">
     Aucune recette ajoutée pour le moment.
   </div>
-  <div class="item item-thumbnail-left" ng-repeat="recipe in list.recipes">
-    <img ng-src="{{recipe.data.images.thumbnail}}">
-    <h2 class="pull-right">{{recipe.data.price.value*recipe.servings.value | number:2}} {{recipe.data.price.currency}}</h2>
-    <h2>{{recipe.data.name}}</h2>
-    <p>
-      {{recipe.servings.value}} {{recipe.servings.unit}},
-      {{recipe.data.time.eat}} {{recipe.data.time.unit}},
-      {{recipe.data.ingredients.length}} ingrédients
-    </p>
-    <div class="range"><input type="range" name="volume" min="0" max="20" ng-model="recipe.servings.value"></div>
-  </div>
+
+
+  <!--<ion-list ng-init="items = [{ id: 0 },{ id: 1 }]">
+    <ion-item ng-repeat="item in items" item="item">
+      Item {{ item.id }}
+      <ion-option-button class="button-assertive" ng-click="edit(item)">Edit</ion-option-button>
+      <ion-option-button class="button-calm" ng-click="share(item)">Share</ion-option-button>
+    </ion-item>
+  </ion-list>-->
+
+
+  <ion-list>
+    <ion-item class="item-cart-recipe" ng-repeat="recipe in list.recipes" ng-click="recipe.selected=!recipe.selected">
+      <div>
+        <div class="thumbnail pull-left">
+          <img ng-src="{{recipe.data.images.thumbnail}}">
+        </div>
+        <div class="content">
+          <!--<h2 class="pull-right">{{recipe.data.price.value*recipe.servings.value | number:2}} {{recipe.data.price.currency}}</h2>-->
+          <h2>{{recipe.data.name}}</h2>
+          <p>
+            {{recipe.servings.value}} {{recipe.servings.unit}},
+            {{recipe.data.time.eat}} {{recipe.data.time.unit}},
+            {{recipe.data.ingredients.length}} ingrédients
+          </p>
+        </div>
+      </div>
+      <div ng-if="recipe.selected">
+        <div class="range range-thin"><input type="range" name="volume" min="1" max="10" ng-model="recipe.servings.value"></div>
+      </div>
+      <ion-option-button class="button-assertive" ng-click="removeRecipeFromCart(recipe)">Supprimer</ion-option-button>
+    </ion-item>
+  </ion-list>
+
+
+  <!--<div class="list">
+    <div class="item item-cart-recipe" ng-repeat="recipe in list.recipes" ng-click="recipe.selected=!recipe.selected">
+      <div>
+        <div class="thumbnail pull-left">
+          <img ng-src="{{recipe.data.images.thumbnail}}">
+        </div>
+        <div class="content">
+          <h2>{{recipe.data.name}}</h2>
+          <p>
+            {{recipe.servings.value}} {{recipe.servings.unit}},
+            {{recipe.data.time.eat}} {{recipe.data.time.unit}},
+            {{recipe.data.ingredients.length}} ingrédients
+          </p>
+        </div>
+      </div>
+      <div ng-if="recipe.selected">
+        <div class="range range-thin"><input type="range" name="volume" min="1" max="10" ng-model="recipe.servings.value"></div>
+      </div>
+    </div>
+  </div>-->
 </div>

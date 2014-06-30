@@ -1,3 +1,16 @@
+.item-cart-recipe {
+  .thumbnail {
+    max-width: 80px;
+    img {
+      max-width: 80px;
+      max-height: 80px;
+    }
+  }
+  .content {
+    margin-left: 90px;
+  }
+}
+
 .item-cart-ingredient {
   position: relative;
   padding: 0;

@@ -4,3 +4,10 @@
 img {
   margin-bottom: -5px;
 }
+.range-thin {
+  padding: 0px 4px;
+  input[type="range"] {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+}

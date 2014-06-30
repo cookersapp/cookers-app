@@ -49,6 +49,13 @@ angular.module('ionicApp')
 .controller('CartRecipesCtrl', function($scope, CartService){
   'use strict';
   $scope.list = CartService.getList();
+  
+  $scope.removeRecipeFromCart = function(recipe){
+    if(CartService.hasLists()){
+      CartService.removeRecipeFromList(recipe);
+    }
+    // TODO add toast
+  };
 })
 
 .controller('CartIngredientsCtrl', function($scope, CartService){
