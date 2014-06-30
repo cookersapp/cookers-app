@@ -67,19 +67,19 @@ angular.module('ionicApp')
 .factory('CartService', function($localStorage){
   'use strict';
   var service = {
-    hasLists: hasLists,
+    hasLists: function(){return hasLists();},
     getAllLists: function(){return $localStorage.carts.lists;},
-    getList: getList,
+    getList: function(){return getList();},
     createList: function(){return buildCart();},
-    addList: addList,
-    changeList: changeList,
-    removeList: removeList,
-    listHasRecipe: listHasRecipe,
-    addRecipeToList: addRecipeToList,
-    removeRecipeFromList: removeRecipeFromList,
-    buyListItem: buyListItem,
-    buyListItemSource: buyListItemSource,
-    getListItems: getListItems
+    addList: function(list){return addList(list);},
+    changeList: function(index){return changeList(index);},
+    removeList: function(){return removeList($localStorage.carts.current);},
+    listHasRecipe: function(recipe){return listHasRecipe(getList(), recipe);},
+    addRecipeToList: function(recipe){addRecipeToList(getList(), recipe);},
+    removeRecipeFromList: function(recipe){removeRecipeFromList(getList(), recipe);},
+    buyListItem: function(item){buyListItem(item);},
+    buyListItemSource: function(source, item){buyListItemSource(source, item);},
+    getListItems: function(){return getListItems();}
   };
 
   function hasLists(){
@@ -94,35 +94,32 @@ angular.module('ionicApp')
     return getList();
   }
   function changeList(index){
-    if(typeof index === 'number' && -1 < index && index < $localStorage.carts.lists.length){
+    if(hasLists() && typeof index === 'number' && -1 < index && index < $localStorage.carts.lists.length){
       $localStorage.carts.current = index;
     }
     return getList();
   }
-  function removeList(){
-    if(hasLists()){
-      $localStorage.carts.lists.splice($localStorage.carts.current, 1);
-      if($localStorage.carts.lists.length > 0){
-        $localStorage.carts.current = 0;
-      } else {
+  function removeList(index){
+    if(hasLists() && typeof index === 'number' && -1 < index && index < $localStorage.carts.lists.length){
+      $localStorage.carts.lists.splice(index, 1);
+      if($localStorage.carts.lists.length === 0){
         $localStorage.carts.current = null;
+      } else if($localStorage.carts.current === index){
+        $localStorage.carts.current = 0;
       }
     }
     return getList();
   }
 
-  function listHasRecipe(recipe){
-    var list = getList();
+  function listHasRecipe(list, recipe){
     return list && list.recipes && recipe && recipe.id && _.findIndex(list.recipes, {id: recipe.id}) > -1;
   }
-  function addRecipeToList(recipe){
-    var list = getList();
+  function addRecipeToList(list, recipe){
     if(list){
       list.recipes.push(buildListRecipe(recipe));
     }
   }
-  function removeRecipeFromList(recipe){
-    var list = getList();
+  function removeRecipeFromList(list, recipe){
     if(list){
       var index = _.findIndex(list.recipes, {id: recipe.id});
       if(index > -1){
