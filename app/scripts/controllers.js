@@ -11,9 +11,11 @@ angular.module('ionicApp')
   }
 })
 
-.controller('HomeCtrl', function($scope){
+.controller('HomeCtrl', function($scope, $localStorage, CartService){
   'use strict';
-
+  $scope.cart = CartService.getCurrentCart();
+  $scope.items = CartService.getCurrentCartItems();
+  $scope.selectedRecipes = $localStorage.selectedRecipes;
 })
 
 .controller('RecipesCtrl', function($scope, WeekrecipeService, CartService){

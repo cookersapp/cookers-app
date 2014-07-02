@@ -133,14 +133,19 @@ angular.module('ionicApp')
   function addRecipeToCart(cart, recipe){
     if(cart){
       cart.recipes.push(buildCartRecipe(recipe));
+      $localStorage.selectedRecipes.unshift(recipe);
     }
   }
   function removeRecipeFromCart(cart, recipe){
     if(cart){
-      var index = _.findIndex(cart.recipes, {id: recipe.id});
-      if(index > -1){
-        cart.recipes.splice(index, 1);
-      }
+      _removeFromArrayWithId(cart.recipes, recipe.id);
+      _removeFromArrayWithId($localStorage.selectedRecipes, recipe.id);
+    }
+  }
+  function _removeFromArrayWithId(array, id){
+    var index = _.findIndex(array, {id: id});
+    if(index > -1){
+      array.splice(index, 1);
     }
   }
   function buyCartItem(item, cart, bought){

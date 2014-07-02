@@ -77,6 +77,7 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
   user: {},
   weekrecipes: [],
   recipes: [],
+  selectedRecipes: [],
   carts: {
     current: null,
     contents: []
@@ -88,6 +89,7 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
+  if(!$localStorage.selectedRecipes){$localStorage.selectedRecipes = localStorageDefault.selectedRecipes;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
 
   /*$ionicPlatform.ready(function(){

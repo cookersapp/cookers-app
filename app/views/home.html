@@ -6,9 +6,31 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="padding">
-    Aucune recette à cuisiner pour le moment.
-    <button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
-    <div>User:<pre>{{user | json}}</pre></div>
+  <ion-content class="home">
+    <div class="cart-infos" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
+      <div class="heading">Panier</div>
+      <div class="row">
+        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes dans le panier</span></div>
+        <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients à acheter</span></div>
+      </div>
+    </div>
+
+    <div class="padding" ng-if="!selectedRecipes || selectedRecipes.length === 0">
+      <p>Aucune recette sélectionnée pour le moment.</p>
+      <button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
+    </div>
+    <div class="recipes" ng-if="selectedRecipes && selectedRecipes.length > 0">
+      <div class="list">
+        <div class="item item-divider">Dernières recettes sélectionnées</div>
+        <div class="item item-recipe-img-full" ng-repeat="recipe in selectedRecipes | limitTo:5" ui-sref="app.recipe({recipeId: recipe.id})">
+          <img ng-src="{{recipe.images.landing}}">
+          <div class="legend">
+            <div class="title line">{{recipe.name}}</div>
+            <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+          </div>
+        </div>
+        <a class="item" ui-sref="app.recipes"><i class="fa fa-cutlery"></i> Voir les recettes de la semaine</a>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
