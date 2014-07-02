@@ -1,0 +1,37 @@
+<ion-view class="tutorial">
+  <ion-header-bar>
+    <div class="buttons">
+      <button class="button button-clear start-app" ng-click="startApp()"> <i class="fa fa-chevron-left"></i> <img src="images/logo_36.png"></button>
+    </div>
+  </ion-header-bar>
+
+  <ion-slide-box>
+    <ion-slide class="slide-logo">
+      <h1>Cookers</h1>
+      <p>
+        Les recettes de tous les jours,<br>
+        sélectionnées et testées<br>
+        spécialement pour vous.
+      </p>
+    </ion-slide>
+    
+    <ion-slide class="slide-login">
+      <h3>Faisons connaissance</h3>
+      <div class="section">
+        Vous cuisinez habituellement pour {{defaultServings}} personnes
+        <div class="range range-calm">
+          <input type="range" name="servings" min="1" max="10" ng-model="defaultServings">
+        </div>
+      </div>
+      <div class="section">
+        Connectez vous et restons en contact
+        <div class="list">
+          <label class="item item-input">
+            <input type="text" placeholder="Mail" ng-model="mail">
+          </label>
+        </div>
+        <button class="button button-stable pull-right" ng-click="submitUserInfos()">Démarrer</button>
+      </div>
+    </ion-slide>
+  </ion-slide-box>
+</ion-view>

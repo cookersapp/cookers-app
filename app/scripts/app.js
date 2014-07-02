@@ -5,6 +5,11 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
   $urlRouterProvider.otherwise('/app/home');
 
   $stateProvider
+  .state('intro', {
+    url: '/intro',
+    templateUrl: 'views/intro.html',
+    controller: 'IntroCtrl'
+  })
   .state('app', {
     url: '/app',
     abstract: true,
@@ -103,9 +108,9 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
     return regex.test($location.path());
   };
 
-  $rootScope.showTutorial = false;
+  $rootScope.showIntro = false;
   if(UserService.isFirstLaunch()){
-    $rootScope.showTutorial = true;
+    $rootScope.showIntro = true;
     UserService.firstLaunch();
   } else {
     UserService.launch();

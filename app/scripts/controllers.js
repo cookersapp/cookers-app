@@ -1,13 +1,31 @@
 angular.module('ionicApp')
 
-.controller('AppCtrl', function($rootScope, $scope, UserService){
+.controller('IntroCtrl', function($scope, $state, UserService){
+  'use strict';
+  $scope.defaultServings = 2;
+  $scope.mail = '';
+  
+  $scope.startApp = function(){
+    $state.go('app.home');
+  };
+  $scope.submitUserInfos = function(){
+    var user = UserService.get();
+    if(!user.profile){user.profile = {};}
+    // TODO : problems, data are not updated !!! (mail & defaultServings) :(
+    user.profile.mail = $scope.mail;
+    user.profile.defaultServings = $scope.defaultServings;
+    $state.go('app.home');
+  };
+})
+
+.controller('AppCtrl', function($rootScope, $scope, $state, UserService){
   'use strict';
   $scope.user = UserService.get();
   $scope.ionic = ionic;
 
-  if($rootScope.showTutorial){
-    $rootScope.showTutorial = false;
-    // TODO go to tutorial
+  if($rootScope.showIntro){
+    $rootScope.showIntro = false;
+    $state.go('intro');
   }
 })
 

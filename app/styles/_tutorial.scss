@@ -1,0 +1,109 @@
+.tutorial {
+
+  .bar-header {
+    background: transparent;
+    border: none;
+    .start-app {
+      img {
+        height: 26px;
+      }
+      i {
+        color: #ccc;
+      }
+    }
+  }
+  .slider {
+    height: 100%;
+  }
+  .slide-logo {
+    h1 {
+      text-align: center;
+      padding-top: 90px;
+      color: #fff;
+      font-size: 60px;
+      line-height: 60px;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+    }
+    p {
+      text-align: center;
+      vertical-align: middle;
+      padding-top: 80px;
+      color: #fff;
+      font-size: 23px;
+      line-height: 27px;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+    }
+    background: url(../images/intro/raspberries.jpg) no-repeat center fixed; 
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+    background-size: cover; /* version standardisée */
+  }
+  .slide-login {
+    padding: 20px;
+    padding-top: 80px;
+    color: #fff;
+    font-size: 23px;
+    line-height: 27px;
+    font-weight: bold;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+    h3 {
+      text-align: center;
+      color: #fff;
+      font-size: 30px;
+      line-height: 30px;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+    }
+    .section {
+      margin-top: 40px;
+      text-align: center;
+      .item-input {
+        margin-top: 10px;
+      }
+    }
+    background: url(../images/intro/oignon.jpg) no-repeat center fixed; 
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+    background-size: cover; /* version standardisée */
+  }
+
+
+
+
+
+
+  .init-slide {
+    padding-top: 80px;
+    color: #000;
+    text-align: center;
+
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+    background: url(../images/intro/raspberries.jpg) no-repeat center fixed; 
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+    background-size: cover; /* version standardisée */
+    #logo {
+      margin: 30px 0px;
+    }
+
+    #list {
+      width: 170px;
+      margin: 30px auto;
+      font-size: 20px;
+    }
+    #list ol {
+      margin-top: 30px;
+    }
+    #list ol li {
+      text-align: left;
+      list-style: decimal;
+      margin: 10px 0px;
+    }
+  }
+}
