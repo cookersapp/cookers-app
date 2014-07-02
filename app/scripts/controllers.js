@@ -1,8 +1,14 @@
 angular.module('ionicApp')
 
-.controller('AppCtrl', function($scope){
+.controller('AppCtrl', function($rootScope, $scope, UserService){
   'use strict';
+  $scope.user = UserService.get();
+  $scope.ionic = ionic;
 
+  if($rootScope.showTutorial){
+    $rootScope.showTutorial = false;
+    // TODO go to tutorial
+  }
 })
 
 .controller('HomeCtrl', function($scope){
@@ -101,7 +107,11 @@ angular.module('ionicApp')
   $scope.resetApp = function(){
     if(window.confirm('Reset app ?')){
       $localStorage.$reset(localStorageDefault);
-      ionic.Platform.exitApp();
+      if(navigator.app){
+        navigator.app.exitApp();
+      } else if(navigator.device){
+        navigator.device.exitApp();
+      }
     }
   };
 });

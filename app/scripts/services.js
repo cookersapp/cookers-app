@@ -257,4 +257,45 @@ angular.module('ionicApp')
   }
 
   return service;
+})
+
+.factory('UserService', function($localStorage, $ionicPlatform){
+  'use strict';
+  var service = {
+    get: function(){return $localStorage.user;},
+    isFirstLaunch: function(){return !$localStorage.user.launchs;},
+    firstLaunch: firstLaunch,
+    launch: launch
+  };
+
+  function firstLaunch(){
+    var user = $localStorage.user;
+    user.profile = {};
+    user.device = actualDevice();
+    user.launchs = [Date.now()];
+  }
+
+  function launch(){
+    var user = $localStorage.user;
+    user.launchs.unshift(Date.now());
+  }
+
+  function actualDevice(){
+    var device = angular.copy(ionic.Platform.device());
+    device.environment = getEnvironment();
+    device.grade = ionic.Platform.grade;
+    device.platforms = ionic.Platform.platforms;
+    return device;
+  }
+
+  function getEnvironment(){
+    if(ionic.Platform.isWebView()){return 'WebView';}
+    else if(ionic.Platform.isIPad()){return 'IPad';}
+    else if(ionic.Platform.isIOS()){return 'IOS';}
+    else if(ionic.Platform.isAndroid()){return 'Android';}
+    else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
+    else {return 'Unknown';}
+  }
+
+  return service;
 });

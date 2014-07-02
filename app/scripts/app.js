@@ -74,6 +74,7 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 
 .value('localStorageDefault', {
+  user: {},
   weekrecipes: [],
   recipes: [],
   carts: {
@@ -82,20 +83,29 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserService){
   'use strict';
+  if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
 
-  $ionicPlatform.ready(function() {
+  /*$ionicPlatform.ready(function(){
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-  });
+  });*/
 
   $rootScope.isActive = function(viewLocation){
     var regex = new RegExp('^'+viewLocation+'$', 'g');
     return regex.test($location.path());
   };
+
+  $rootScope.showTutorial = false;
+  if(UserService.isFirstLaunch()){
+    $rootScope.showTutorial = true;
+    UserService.firstLaunch();
+  } else {
+    UserService.launch();
+  }
 });
