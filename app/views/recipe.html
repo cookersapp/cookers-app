@@ -8,8 +8,29 @@
     </div>
   </ion-header-bar>
 
-  <ion-content>
+  <ion-content class="recipe">
     <img ng-src="{{recipe.images.landing}}" style="width: 100%">
-    {{recipe.name}}
+    <div class="row recipe-meta">
+      <div class="col"><i class="fa fa-tag"></i> {{recipe.category}}</div>
+      <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time.eat}} {{recipe.time.unit}}</div>
+      <div class="col"><i class="fa fa-users"></i> {{recipe.servings.value}} {{recipe.servings.unit}}</div>
+    </div>
+    <div class="ingredients">
+      <h2 class="title">Ingrédients ({{recipe.ingredients.length}})</h2>
+      <div class="padding">
+        <div ng-repeat="ingredient in recipe.ingredients" class="ingredient">
+          {{ingredient.quantity | quantity}} {{ingredient.food.name}}
+        </div>
+      </div>
+    </div>
+    <div class="instructions">
+      <h2 class="title">Préparation ({{recipe.instructions.length}} étapes)</h2>
+      <div class="padding">
+        <div ng-repeat="instruction in recipe.instructions" class="instruction">
+          <h3 class="title">étape {{$index+1}}</h3>
+          <div class="content">{{instruction.content}}</div>
+        </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
