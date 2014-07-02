@@ -128,7 +128,7 @@ angular.module('ionicApp')
   }
 
   function cartHasRecipe(cart, recipe){
-    return cart && cart.recipes && recipe && recipe.id && _.findIndex(cart.recipes, {id: recipe.id}) > -1;
+    return cart && !cart.archived && cart.recipes && recipe && recipe.id && _.findIndex(cart.recipes, {id: recipe.id}) > -1;
   }
   function addRecipeToCart(cart, recipe){
     if(cart){

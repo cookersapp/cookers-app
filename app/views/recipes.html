@@ -6,8 +6,15 @@
     </div>
   </ion-header-bar>
 
-  <ion-content>
-    <div class="list">
+  <ion-content class="recipes">
+    <div ng-if="loading" class="recipes-empty">
+      LOADING ...
+    </div>
+    <div ng-if="!loading && (!weekrecipes || !weekrecipes.recipes || weekrecipes.recipes.length === 0)" class="recipes-empty">
+      Aucune recette planifiée cette semaine :(<br>
+      Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
+    </div>
+    <div ng-if="!loading" class="list">
       <div class="item item-recipe-img-full" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
         <img ng-src="{{recipe.images.portrait}}">
         <div class="legend">

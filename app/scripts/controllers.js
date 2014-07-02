@@ -12,9 +12,11 @@ angular.module('ionicApp')
 
 .controller('RecipesCtrl', function($scope, WeekrecipeService, CartService){
   'use strict';
+  $scope.loading = true;
   $scope.weekrecipes = [];
-  WeekrecipeService.get(27).then(function(weekrecipes){
+  WeekrecipeService.getCurrent().then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes;
+    $scope.loading = false;
   });
 
   $scope.cartHasRecipe = CartService.cartHasRecipe;
@@ -52,7 +54,7 @@ angular.module('ionicApp')
   'use strict';
   $scope.cart = CartService.getCurrentCart();
   $scope.archiveCart = function(){
-    if(confirm('Archiver cette liste ?')){
+    if(window.confirm('Archiver cette liste ?')){
       CartService.archiveCart();
     }
   };

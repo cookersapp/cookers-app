@@ -1,55 +1,64 @@
-.item-recipe-img-full {
-  position: relative;
-  padding: 0px;
-  border: none;
-  & > img {
-    width: 100%;
+.recipes {
+  .recipes-empty {
+    background: #fff;
+    padding: 30px 10px;
+    min-height: 150px;
+    text-align: center;
   }
-  .legend {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
-    padding: 5px;
-    padding-top: 15px;
-    color: #fff;
-    font-size: 16px;
-    line-height: 18px;
-    font-weight: bold;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.9);
-    background-color: transparent;
-    background-image: -webkit-linear-gradient(transparent, rgba(0,0,0,0.9));
-    background-image: linear-gradient(transparent, rgba(0,0,0,0.9));
-    .line {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+
+  .item-recipe-img-full {
+    position: relative;
+    padding: 0px;
+    border: none;
+    & > img {
+      width: 100%;
     }
-    .title {
-      font-size: 24px;
-      line-height: 28px;
-      padding: 2px 0px;
-    }
-    .subtitle {
-      color: #ddd;
-    }
-    .price {
-      text-align: right;
-      .number {
-        font-size: 30px;
-        line-height: 30px;
+    .legend {
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      padding: 5px;
+      padding-top: 15px;
+      color: #fff;
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+      background-color: transparent;
+      background-image: -webkit-linear-gradient(transparent, rgba(0,0,0,0.9));
+      background-image: linear-gradient(transparent, rgba(0,0,0,0.9));
+      .line {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-      .detail {
-        font-size: 14px;
-        line-height: 16px;
+      .title {
+        font-size: 24px;
+        line-height: 28px;
+        padding: 2px 0px;
+      }
+      .subtitle {
+        color: #ddd;
+      }
+      .price {
+        text-align: right;
+        .number {
+          font-size: 30px;
+          line-height: 30px;
+        }
+        .detail {
+          font-size: 14px;
+          line-height: 16px;
+        }
       }
     }
-  }
-  .actions {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    padding: 5px;
+    .actions {
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      top: 0px;
+      padding: 5px;
+    }
   }
 }
