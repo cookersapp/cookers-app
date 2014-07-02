@@ -67,91 +67,105 @@ angular.module('ionicApp')
 .factory('CartService', function($localStorage){
   'use strict';
   var service = {
-    hasLists: function(){return hasLists();},
-    getAllLists: function(){return $localStorage.carts.lists;},
-    getList: function(){return getList();},
-    createList: function(){return buildCart();},
-    addList: function(list){return addList(list);},
-    changeList: function(index){return changeList(index);},
-    removeList: function(){return removeList($localStorage.carts.current);},
-    listHasRecipe: function(recipe){return listHasRecipe(getList(), recipe);},
-    addRecipeToList: function(recipe){addRecipeToList(getList(), recipe);},
-    removeRecipeFromList: function(recipe){removeRecipeFromList(getList(), recipe);},
-    buyListItem: function(item){buyListItem(item, getList(), true);},
-    buyListItemSource: function(source, item){buyListItemSource(source, item, getList(), true);},
-    unbuyListItem: function(item){buyListItem(item, getList(), false);},
-    getListItems: function(){return getListItems(false);},
-    getListBoughtItems: function(){return getListItems(true);}
+    hasCarts: function(){return hasCarts();},
+    getAllCarts: function(){return $localStorage.carts.contents;},
+    getCurrentCart: function(){return getCurrentCart();},
+    createCart: function(){return createCart();},
+    changeCart: function(index){return changeCart(index);},
+    removeCart: function(){return removeCart($localStorage.carts.current);},
+    cartHasRecipe: function(recipe){return cartHasRecipe(getCurrentCart(), recipe);},
+    addRecipeToCart: function(recipe){addRecipeToCart(getActiveCart(), recipe);},
+    removeRecipeFromCart: function(recipe){removeRecipeFromCart(getCurrentCart(), recipe);},
+    buyCartItem: function(item){buyCartItem(item, getCurrentCart(), true);},
+    buyCartItemSource: function(source, item){buyCartItemSource(source, item, getCurrentCart(), true);},
+    unbuyCartItem: function(item){buyCartItem(item, getCurrentCart(), false);},
+    getCurrentCartItems: function(){return getCurrentCartItems(false);},
+    getCurrentCartBoughtItems: function(){return getCurrentCartItems(true);},
+    archiveCart: function(){return archiveCart(getCurrentCart());}
   };
 
-  function hasLists(){
-    return $localStorage.carts.current !== null;
+  function hasCarts(){
+    return $localStorage.carts && $localStorage.carts.contents && $localStorage.carts.contents.length > 0;
   }
-  function getList(){
-    return hasLists() ? $localStorage.carts.lists[$localStorage.carts.current] : null;
+  function getCurrentCart(){
+    return hasCarts() ? $localStorage.carts.contents[$localStorage.carts.current] : null;
   }
-  function addList(list){
-    $localStorage.carts.lists.unshift(list);
+  function getActiveCart(){
+    var cart = getCurrentCart();
+    if(cart === null || cart.archived){
+      return createCart();
+    } else {
+      return cart;
+    }
+  }
+  function createCart(){
+    var cart = buildCart();
+    $localStorage.carts.contents.unshift(cart);
     $localStorage.carts.current = 0;
-    return getList();
+    return getCurrentCart();
   }
-  function changeList(index){
-    if(hasLists() && typeof index === 'number' && -1 < index && index < $localStorage.carts.lists.length){
+  function archiveCart(cart){
+    if(cart){
+      cart.archived = Date.now();
+    }
+  }
+  function changeCart(index){
+    if(hasCarts() && typeof index === 'number' && -1 < index && index < $localStorage.carts.contents.length){
       $localStorage.carts.current = index;
     }
-    return getList();
+    return getCurrentCart();
   }
-  function removeList(index){
-    if(hasLists() && typeof index === 'number' && -1 < index && index < $localStorage.carts.lists.length){
-      $localStorage.carts.lists.splice(index, 1);
-      if($localStorage.carts.lists.length === 0){
+  function removeCart(index){
+    if(hasCarts() && typeof index === 'number' && -1 < index && index < $localStorage.carts.contents.length){
+      $localStorage.carts.contents.splice(index, 1);
+      if($localStorage.carts.contents.length === 0){
         $localStorage.carts.current = null;
       } else if($localStorage.carts.current === index){
         $localStorage.carts.current = 0;
       }
     }
-    return getList();
+    return getCurrentCart();
   }
 
-  function listHasRecipe(list, recipe){
-    return list && list.recipes && recipe && recipe.id && _.findIndex(list.recipes, {id: recipe.id}) > -1;
+  function cartHasRecipe(cart, recipe){
+    return cart && cart.recipes && recipe && recipe.id && _.findIndex(cart.recipes, {id: recipe.id}) > -1;
   }
-  function addRecipeToList(list, recipe){
-    if(list){
-      list.recipes.push(buildListRecipe(recipe));
+  function addRecipeToCart(cart, recipe){
+    if(cart){
+      cart.recipes.push(buildCartRecipe(recipe));
     }
   }
-  function removeRecipeFromList(list, recipe){
-    if(list){
-      var index = _.findIndex(list.recipes, {id: recipe.id});
+  function removeRecipeFromCart(cart, recipe){
+    if(cart){
+      var index = _.findIndex(cart.recipes, {id: recipe.id});
       if(index > -1){
-        list.recipes.splice(index, 1);
+        cart.recipes.splice(index, 1);
       }
     }
   }
-  function buyListItem(item, list, bought){
+  function buyCartItem(item, cart, bought){
     for(var i in item.sources){
-      buyListItemSource(item.sources[i], item, list, bought);
+      buyCartItemSource(item.sources[i], item, cart, bought);
     }
   }
-  function buyListItemSource(source, item, list, bought){
-    var recipe = _.find(list.recipes, {id: source.recipe.id});
+  function buyCartItemSource(source, item, cart, bought){
+    var recipe = _.find(cart.recipes, {id: source.recipe.id});
     if(recipe){
       var ingredient = _.find(recipe.data.ingredients, {food: {id: source.ingredient.food.id}});
       if(ingredient){
-        ingredient.bought = bought;
+        ingredient.bought = bought ? Date.now() : false;
       }
     }
   }
-  function getListItems(bought){
+  function getCurrentCartItems(bought){
     var items = [];
-    foreachIngredientInList(getList(), function(ingredient, recipeItem){
+    foreachIngredientInCart(getCurrentCart(), function(ingredient, recipeItem){
       if(bought === !!ingredient.bought){
         var item = _.find(items, {food: {id: ingredient.food.id}});
         if(item){
-          addQuantityToListItem(ingredient, recipeItem, item, bought);
+          addQuantityToCartItem(ingredient, recipeItem, item, bought);
         } else {
-          items.push(buildListItem(ingredient, recipeItem, bought));
+          items.push(buildCartItem(ingredient, recipeItem, bought));
         }
       }
     });
@@ -164,11 +178,11 @@ angular.module('ionicApp')
     });
     return items;
   }
-  function addQuantityToListItem(ingredient, recipeItem, item, bought){
-    item.sources.push(buildListItemSource(ingredient, recipeItem, bought));
-    item.quantity = computeListItemQuantity(item);
+  function addQuantityToCartItem(ingredient, recipeItem, item, bought){
+    item.sources.push(buildCartItemSource(ingredient, recipeItem, bought));
+    item.quantity = computeCartItemQuantity(item);
   }
-  function computeListItemQuantity(item){
+  function computeCartItemQuantity(item){
     var quantity = null;
     for(var i in item.sources){
       var source = item.sources[i];
@@ -198,18 +212,18 @@ angular.module('ionicApp')
     return q;
   }
 
-  function foreachIngredientInList(list, callback){
-    if(list && list.recipes){
-      for(var i in list.recipes){
-        var recipeItem = list.recipes[i];
+  function foreachIngredientInCart(cart, callback){
+    if(cart && cart.recipes){
+      for(var i in cart.recipes){
+        var recipeItem = cart.recipes[i];
         for(var j in recipeItem.data.ingredients){
-          callback(recipeItem.data.ingredients[j], recipeItem, list);
+          callback(recipeItem.data.ingredients[j], recipeItem, cart);
         }
       }
     }
   }
 
-  function buildListItemSource(ingredient, recipeItem, bought){
+  function buildCartItemSource(ingredient, recipeItem, bought){
     return {
       bought: bought,
       quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
@@ -217,15 +231,15 @@ angular.module('ionicApp')
       recipe: recipeItem
     };
   }
-  function buildListItem(ingredient, recipeItem, bought){
+  function buildCartItem(ingredient, recipeItem, bought){
     return {
       quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
       food: ingredient.food,
       bought: bought,
-      sources: [buildListItemSource(ingredient, recipeItem, bought)]
+      sources: [buildCartItemSource(ingredient, recipeItem, bought)]
     };
   }
-  function buildListRecipe(recipe){
+  function buildCartRecipe(recipe){
     return {
       added: Date.now(),
       id: recipe.id,
@@ -236,6 +250,7 @@ angular.module('ionicApp')
   function buildCart(){
     return {
       created: Date.now(),
+      archived: false,
       name: 'Liste du '+moment().format('LL'),
       recipes: []
     };

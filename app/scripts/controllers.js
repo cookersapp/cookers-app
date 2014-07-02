@@ -17,42 +17,54 @@ angular.module('ionicApp')
     $scope.weekrecipes = weekrecipes;
   });
 
-  $scope.listHasRecipe = CartService.listHasRecipe;
+  $scope.cartHasRecipe = CartService.cartHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
-    if(!CartService.hasLists()){
-      CartService.addList(CartService.createList());
-    }
-    CartService.addRecipeToList(recipe);
+    CartService.addRecipeToCart(recipe);
     // TODO add toast
   };
   $scope.removeRecipeFromCart = function(recipe){
-    if(CartService.hasLists()){
-      CartService.removeRecipeFromList(recipe);
-    }
+    CartService.removeRecipeFromCart(recipe);
     // TODO add toast
   };
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeService){
+.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, CartService){
   'use strict';
   $scope.recipe = {};
   RecipeService.get($stateParams.recipeId).then(function(recipe){
     $scope.recipe = recipe;
   });
+
+  $scope.cartHasRecipe = CartService.cartHasRecipe;
+
+  $scope.addRecipeToCart = function(recipe){
+    CartService.addRecipeToCart(recipe);
+    // TODO add toast
+  };
+  $scope.removeRecipeFromCart = function(recipe){
+    CartService.removeRecipeFromCart(recipe);
+    // TODO add toast
+  };
 })
 
-.controller('CartCtrl', function($scope){
+.controller('CartCtrl', function($scope, CartService){
   'use strict';
+  $scope.cart = CartService.getCurrentCart();
+  $scope.archiveCart = function(){
+    if(confirm('Archiver cette liste ?')){
+      CartService.archiveCart();
+    }
+  };
 })
 
 .controller('CartRecipesCtrl', function($scope, CartService){
   'use strict';
-  $scope.list = CartService.getList();
+  $scope.cart = CartService.getCurrentCart();
 
   $scope.removeRecipeFromCart = function(recipe){
-    if(CartService.hasLists()){
-      CartService.removeRecipeFromList(recipe);
+    if(CartService.hasCarts()){
+      CartService.removeRecipeFromCart(recipe);
     }
     // TODO add toast
   };
@@ -60,24 +72,26 @@ angular.module('ionicApp')
 
 .controller('CartIngredientsCtrl', function($scope, CartService){
   'use strict';
-  $scope.items = CartService.getListItems();
-  $scope.boughtItems = CartService.getListBoughtItems();
+  $scope.items = CartService.getCurrentCartItems();
+  $scope.boughtItems = CartService.getCurrentCartBoughtItems();
 
   $scope.buyItem = function(item){
-    CartService.buyListItem(item);
-    $scope.items = CartService.getListItems();
-    $scope.boughtItems = CartService.getListBoughtItems();
+    CartService.buyCartItem(item);
+    updateCart();
   };
   $scope.buySource = function(source, item){
-    CartService.buyListItemSource(source, item);
-    $scope.items = CartService.getListItems();
-    $scope.boughtItems = CartService.getListBoughtItems();
+    CartService.buyCartItemSource(source, item);
+    updateCart();
   };
   $scope.unbuyItem = function(item){
-    CartService.unbuyListItem(item);
-    $scope.items = CartService.getListItems();
-    $scope.boughtItems = CartService.getListBoughtItems();
+    CartService.unbuyCartItem(item);
+    updateCart();
   };
+
+  function updateCart(){
+    $scope.items = CartService.getCurrentCartItems();
+    $scope.boughtItems = CartService.getCurrentCartBoughtItems();
+  }
 })
 
 .controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){

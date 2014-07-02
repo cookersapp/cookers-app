@@ -1,5 +1,5 @@
 <div>
-  <div ng-if="!list || !list.recipes || list.recipes.length === 0" class="padding">
+  <div ng-if="!cart || !cart.recipes || cart.recipes.length === 0" class="cart-empty">
     Aucune recette ajoutée pour le moment.
   </div>
 
@@ -14,7 +14,7 @@
 
 
   <ion-list>
-    <ion-item class="item-cart-recipe" ng-repeat="recipe in list.recipes" ng-click="recipe.selected=!recipe.selected">
+    <ion-item class="item-cart-recipe" ng-repeat="recipe in cart.recipes" ng-click="recipe.selected=!recipe.selected">
       <div>
         <div class="thumbnail pull-left">
           <img ng-src="{{recipe.data.images.thumbnail}}">
@@ -38,7 +38,7 @@
 
 
   <!--<div class="list">
-    <div class="item item-cart-recipe" ng-repeat="recipe in list.recipes" ng-click="recipe.selected=!recipe.selected">
+    <div class="item item-cart-recipe" ng-repeat="recipe in cart.recipes" ng-click="recipe.selected=!recipe.selected">
       <div>
         <div class="thumbnail pull-left">
           <img ng-src="{{recipe.data.images.thumbnail}}">

@@ -78,7 +78,7 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
   recipes: [],
   carts: {
     current: null,
-    lists: []
+    contents: []
   }
 })
 

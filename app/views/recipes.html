@@ -16,11 +16,11 @@
               <i class="fa fa-circle-thin fa-stack-2x"></i>
               <i class="fa fa-info fa-stack-1x"></i>
             </span>
-            <span ng-show="!listHasRecipe(recipe)" class="fa-stack fa-lg balanced" ng-click="addRecipeToCart(recipe)">
+            <span ng-show="!cartHasRecipe(recipe)" class="fa-stack fa-lg balanced" ng-click="addRecipeToCart(recipe)">
               <i class="fa fa-circle-thin fa-stack-2x"></i>
               <i class="fa fa-plus fa-stack-1x"></i>
             </span>
-            <span ng-show="listHasRecipe(recipe)" class="fa-stack fa-lg assertive" ng-click="removeRecipeFromCart(recipe)">
+            <span ng-show="cartHasRecipe(recipe)" class="fa-stack fa-lg assertive" ng-click="removeRecipeFromCart(recipe)">
               <i class="fa fa-circle-thin fa-stack-2x"></i>
               <i class="fa fa-minus fa-stack-1x"></i>
             </span>

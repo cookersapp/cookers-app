@@ -2,7 +2,9 @@
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
-      <h1 class="title">Liste de courses</h1>
+      <h1 class="title">{{cart.name ? cart.name : 'Liste de courses'}}</h1>
+      <button class="button button-icon ion-archive" ng-if="cart && !cart.archived" ng-click="archiveCart()"></button>
+      <button class="button button-icon ion-checkmark" ng-if="cart && cart.archived"></button>
     </div>
   </ion-header-bar>
   <ion-content class="cart">
