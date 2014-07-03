@@ -51,11 +51,11 @@ angular.module('ionicApp')
 
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
-    window.plugins.toast.show('✓ recette ajoutée au panier');
+    window.plugins.toast.show('✔ recette ajoutée au panier');
   };
   $scope.removeRecipeFromCart = function(recipe){
     CartService.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✓ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée du panier');
   };
 })
 
@@ -70,11 +70,11 @@ angular.module('ionicApp')
 
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
-    window.plugins.toast.show('✓ recette ajoutée au panier');
+    window.plugins.toast.show('✔ recette ajoutée au panier');
   };
   $scope.removeRecipeFromCart = function(recipe){
     CartService.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✓ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée du panier');
   };
 })
 
@@ -96,7 +96,7 @@ angular.module('ionicApp')
     if(CartService.hasCarts()){
       CartService.removeRecipeFromCart(recipe);
     }
-    window.plugins.toast.show('✓ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée du panier');
   };
 })
 
