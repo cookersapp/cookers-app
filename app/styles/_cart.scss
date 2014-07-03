@@ -4,7 +4,7 @@
   .cart-chooser {
     background: #fff;
   }
-  
+
   .cart-empty {
     background: #fff;
     padding: 30px 10px;
@@ -13,15 +13,31 @@
   }
 
   .item-cart-recipe {
-    .thumbnail {
-      max-width: 80px;
-      img {
-        max-width: 80px;
-        max-height: 80px;
+    // inspiration : https://twitter.com/GeoffreyDorne/status/477837215578722305
+    &:nth-child(2) {
+      .item .item-content, .addon {
+        background: #f4f4f4;
       }
     }
-    .content {
-      margin-left: 90px;
+    .item {
+      border: none;
+      .item-content {
+        padding: 0px; // 15px 45px 15px 15px;
+        .thumbnail {
+          max-width: 100px;
+          img {
+            max-width: 100px;
+            max-height: 100px;
+          }
+        }
+        .content {
+          margin-left: 100px;
+          padding: 10px;
+        }
+      }
+    }
+    .addon {
+      background: #fff;
     }
   }
 
