@@ -12,7 +12,7 @@ Your app is now running to your computer. To run it to your android device :
 
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands
@@ -35,6 +35,7 @@ Inspirationnal apps :
 - Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
 - newsletter : [customer.io](http://customer.io/)
+- cordova plugins : http://plugreg.com/plugins
 
 # Business
 
