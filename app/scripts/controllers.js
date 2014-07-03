@@ -65,7 +65,7 @@ angular.module('ionicApp')
   $scope.weekrecipes = [];
   $scope.recipes = [];
   $scope.loading = true;
-  
+
   WeekrecipeService.getCurrent().then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes.recipes;
     recipesToAdd = _.filter(weekrecipes.recipes, function(recipe){
@@ -81,7 +81,7 @@ angular.module('ionicApp')
         recipesToAdd.push(recipe);
       }
     }
-    
+
     if(recipesToAdd.length > 0){
       var newRecipe = recipesToAdd.splice(0, 1)[0];
       $scope.recipes.push(angular.copy(newRecipe));
@@ -95,7 +95,7 @@ angular.module('ionicApp')
     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
     card.swipe();
   };
-  
+
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée au panier');
@@ -170,6 +170,8 @@ angular.module('ionicApp')
 
 .controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){
   'use strict';
+  $scope.$storage = $localStorage;
+
   $scope.resetApp = function(){
     if(window.confirm('Reset app ?')){
       $localStorage.$reset(localStorageDefault);

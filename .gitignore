@@ -10,5 +10,6 @@ platforms/
 plugins/
 www/
 .DS_Store
+npm-debug.log
 
 *~

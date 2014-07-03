@@ -8,5 +8,9 @@
 
   <ion-content class="padding">
     <button class="button button-assertive" ng-click="resetApp()">Reset app</button>
+    <div>
+      Local storage :
+      <pre>{{$storage | json}}</pre>
+    </div>
   </ion-content>
 </ion-view>

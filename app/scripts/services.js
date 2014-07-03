@@ -264,7 +264,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserService', function($localStorage, $ionicPlatform){
+.factory('UserService', function($localStorage, $ionicPlatform, firebaseUrl){
   'use strict';
   var service = {
     get: function(){return $localStorage.user;},
@@ -274,15 +274,32 @@ angular.module('ionicApp')
   };
 
   function firstLaunch(){
-    var user = $localStorage.user;
-    user.profile = {};
-    user.device = actualDevice();
-    user.launchs = [Date.now()];
+    $ionicPlatform.ready(function(){
+      var user = $localStorage.user;
+      user.profile = {};
+      user.device = actualDevice();
+      user.launchs = [];
+      launch();
+    });
   }
 
   function launch(){
     var user = $localStorage.user;
-    user.launchs.unshift(Date.now());
+    var addLaunch = function(user, launch){
+      user.launchs.unshift(launch);
+      var firebaseRef = new Firebase(firebaseUrl+'/connected');
+      var userRef = firebaseRef.push(user);
+      userRef.onDisconnect().remove();
+    };
+    var onSuccess = function(position){
+      addLaunch(user, position);
+    };
+    var onError = function(error){
+      error.timestamp = Date.now();
+      addLaunch(user, error);
+    };
+    
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
   }
 
   function actualDevice(){
