@@ -2,19 +2,21 @@ angular.module('ionicApp')
 
 .controller('IntroCtrl', function($scope, $state, UserService){
   'use strict';
-  $scope.defaultServings = 2;
-  $scope.mail = '';
+  var user = UserService.get();
+  if(!user.profile){user.profile = {};}
   
+  $scope.profile = {
+    defaultServings: user.profile.defaultServings ? user.profile.defaultServings : 2,
+    mail: user.profile.mail ? user.profile.mail : ''
+  }
+
   $scope.startApp = function(){
     $state.go('app.home');
   };
   $scope.submitUserInfos = function(){
-    var user = UserService.get();
-    if(!user.profile){user.profile = {};}
-    // TODO : problems, data are not updated !!! (mail & defaultServings) :(
-    user.profile.mail = $scope.mail;
-    user.profile.defaultServings = $scope.defaultServings;
-    $state.go('app.home');
+    user.profile.mail = $scope.profile.mail;
+    user.profile.defaultServings = $scope.profile.defaultServings;
+    $scope.startApp();
   };
 })
 
