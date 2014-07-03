@@ -26,6 +26,14 @@ $ionic-dark-bg: #444;
 $ionic-dark-border: #111;
 $ionic-dark-text: #fff;
 
-$custom-bg: #f62;
-$custom-border: darken($custom-bg, 15%); // #d44100;
+$custom-bg: #f62; // bootstrap: #563d7c
+$custom-border: darken($custom-bg, 15%); // #d44100; (bootstrap: #563d7c)
 $custom-text: #fff;
+
+/*
+ * bootstrap purple :
+ * text-light : #cdbfe3
+ * text-dark : #563d7c
+ * background: #6f5499
+ * border: #563d7c
+ */

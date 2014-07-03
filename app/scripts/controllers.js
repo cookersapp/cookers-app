@@ -135,6 +135,22 @@ angular.module('ionicApp')
 .controller('CartRecipesCtrl', function($scope, CartService){
   'use strict';
   $scope.cart = CartService.getCurrentCart();
+  console.log($scope.cart);
+
+  $scope.ingredientBoughtPc = function(recipe){
+    // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
+    if(recipe && recipe.data && recipe.data.ingredients && recipe.data.ingredients.length > 0){
+      var ingredientBought = 0;
+      for(var i in recipe.data.ingredients){
+        if(recipe.data.ingredients[i].bought){
+          ingredientBought++;
+        }
+      }
+      return 100 * ingredientBought / recipe.data.ingredients.length;
+    } else {
+      return 100;
+    }
+  };
 
   $scope.removeRecipeFromCart = function(recipe){
     if(CartService.hasCarts()){

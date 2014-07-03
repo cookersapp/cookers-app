@@ -14,9 +14,9 @@
 
   .item-cart-recipe {
     // inspiration : https://twitter.com/GeoffreyDorne/status/477837215578722305
-    &:nth-child(2) {
+    &:nth-child(2n+1) {
       .item .item-content, .addon {
-        background: #f4f4f4;
+        background: #f8f8f8;
       }
     }
     .item {
@@ -33,11 +33,16 @@
         .content {
           margin-left: 100px;
           padding: 10px;
+          .progress {
+            margin-top: 10px;
+            margin-bottom: 0px;
+          }
         }
       }
     }
     .addon {
       background: #fff;
+      padding: 0px 20px;
     }
   }
 
