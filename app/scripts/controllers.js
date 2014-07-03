@@ -4,11 +4,11 @@ angular.module('ionicApp')
   'use strict';
   var user = UserService.get();
   if(!user.profile){user.profile = {};}
-  
+
   $scope.profile = {
     defaultServings: user.profile.defaultServings ? user.profile.defaultServings : 2,
     mail: user.profile.mail ? user.profile.mail : ''
-  }
+  };
 
   $scope.startApp = function(){
     $state.go('app.home');
@@ -56,6 +56,50 @@ angular.module('ionicApp')
   $scope.removeRecipeFromCart = function(recipe){
     CartService.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée du panier');
+  };
+})
+
+.controller('Recipes2Ctrl', function($scope, WeekrecipeService, CartService){
+  'use strict';
+  var recipesToAdd = [];
+  $scope.weekrecipes = [];
+  $scope.recipes = [];
+  $scope.loading = true;
+  
+  WeekrecipeService.getCurrent().then(function(weekrecipes){
+    $scope.weekrecipes = weekrecipes.recipes;
+    recipesToAdd = _.filter(weekrecipes.recipes, function(recipe){
+      return !CartService.cartHasRecipe(recipe);
+    });
+    $scope.cardSwiped();
+    $scope.loading = false;
+  });
+
+  $scope.cardSwiped = function(recipe){
+    if(recipe){
+      if(!CartService.cartHasRecipe(recipe)){
+        recipesToAdd.push(recipe);
+      }
+    }
+    
+    if(recipesToAdd.length > 0){
+      var newRecipe = recipesToAdd.splice(0, 1)[0];
+      $scope.recipes.push(angular.copy(newRecipe));
+    }
+  };
+})
+
+.controller('RecipeCardCtrl', function($scope, $ionicSwipeCardDelegate, CartService){
+  'use strict';
+  $scope.goAway = function(){
+    var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+    card.swipe();
+  };
+  
+  $scope.addRecipeToCart = function(recipe){
+    CartService.addRecipeToCart(recipe);
+    window.plugins.toast.show('✔ recette ajoutée au panier');
+    $scope.goAway();
   };
 })
 

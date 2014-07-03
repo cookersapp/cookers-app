@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage'])
+angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   'use strict';
@@ -31,6 +31,15 @@ angular.module('ionicApp', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCo
       'menuContent' :{
         templateUrl: 'views/recipes.html',
         controller: 'RecipesCtrl'
+      }
+    }
+  })
+  .state('app.recipes2', {
+    url: '/recipes2',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/recipes2.html',
+        controller: 'Recipes2Ctrl'
       }
     }
   })

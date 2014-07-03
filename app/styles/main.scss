@@ -24,3 +24,16 @@
   &.dark {color: $ionic-dark-bg; &:hover {color: $ionic-dark-border;} }
   &.custom {color: $custom-bg; &:hover {color: $custom-border;} }
 }
+
+@-webkit-keyframes bounceIn {
+  0% {
+    -webkit-transform: scale(0,0);
+  }
+  70% {
+    -webkit-transform: scale(1.2,1.2);
+  }
+  100% {
+    -webkit-transform: scale(1,1);
+  }
+}
+

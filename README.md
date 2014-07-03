@@ -21,6 +21,12 @@ Your app is now running to your computer. To run it to your android device :
 - `grunt ripple` is an alternative to `grunt serve`. It will open your project in adobe ripple editor with live realod.
 - `grunt build` builds your sources and put them in www/ folder to deploy on your device.
 
+
+## TODO
+
+- bugs
+    - recipe of week (with full screen images) don't scroll, sometimes... :(
+
 ## Design
 
 Inspirationnal apps :
