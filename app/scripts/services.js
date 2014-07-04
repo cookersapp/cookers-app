@@ -28,7 +28,7 @@ angular.module('ionicApp')
   }
 
   function storeRecipesOfWeek(weekrecipe){
-    //$localStorage.weekrecipes.push(weekrecipe);
+    $localStorage.weekrecipes.push(weekrecipe);
   }
 
   return service;
@@ -58,13 +58,13 @@ angular.module('ionicApp')
   }
 
   function storeRecipe(recipe){
-    //$localStorage.recipes.push(recipe);
+    $localStorage.recipes.push(recipe);
   }
 
   return service;
 })
 
-.factory('CartService', function($localStorage){
+.factory('CartService', function($localStorage, LogService){
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
@@ -158,7 +158,18 @@ angular.module('ionicApp')
     if(recipe){
       var ingredient = _.find(recipe.data.ingredients, {food: {id: source.ingredient.food.id}});
       if(ingredient){
-        ingredient.bought = bought ? Date.now() : false;
+        if(bought) {
+          ingredient.bought = true;
+          LogService.buyIngredient(ingredient, recipe);
+          navigator.geolocation.getCurrentPosition(function(position){
+            ingredient.bought = position;
+          }, function(error){
+            error.timestamp = Date.now();
+            ingredient.bought = error;
+          });
+        } else {
+          ingredient.bought = false;
+        }
       }
     }
   }
@@ -298,7 +309,7 @@ angular.module('ionicApp')
       error.timestamp = Date.now();
       addLaunch(user, error);
     };
-    
+
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
   }
 
@@ -317,6 +328,32 @@ angular.module('ionicApp')
     else if(ionic.Platform.isAndroid()){return 'Android';}
     else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
     else {return 'Unknown';}
+  }
+
+  return service;
+})
+
+.factory('LogService', function(UserService, firebaseUrl){
+  var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
+  var service = {
+    buyIngredient: buyIngredient
+  };
+
+  function buyIngredient(ingredient, recipe){
+    var user = UserService.get();
+    var data = {};
+    if(recipe && recipe.id){data.recipe = recipe.id;}
+    if(ingredient && ingredient.food && ingredient.food.id){data.ingredient = ingredient.food.id;}
+    if(user && user.device && user.device.uuid){data.device = user.device.uuid;}
+    
+    navigator.geolocation.getCurrentPosition(function(position){
+      data.position = position;
+      buyLogsRef.push(data);
+    }, function(error){
+      error.timestamp = Date.now();
+      data.position = error;
+      buyLogsRef.push(data);
+    });
   }
 
   return service;

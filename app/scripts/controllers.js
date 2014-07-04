@@ -48,7 +48,7 @@ angular.module('ionicApp')
     } else {
       $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
     }
-  }, 5000);
+  }, 10000);
 })
 
 .controller('HomeCtrl', function($scope, $localStorage, CartService){
@@ -155,7 +155,6 @@ angular.module('ionicApp')
 .controller('CartRecipesCtrl', function($scope, CartService){
   'use strict';
   $scope.cart = CartService.getCurrentCart();
-  console.log($scope.cart);
 
   $scope.ingredientBoughtPc = function(recipe){
     // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
