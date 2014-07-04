@@ -20,15 +20,35 @@ angular.module('ionicApp')
   };
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $state, UserService){
+.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval){
   'use strict';
-  $scope.user = UserService.get();
-  $scope.ionic = ionic;
-
   if($rootScope.showIntro){
     $rootScope.showIntro = false;
     $state.go('intro');
   }
+
+  $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
+  $scope.imageCover = $scope.defaultCovers[0];
+  $scope.userAvatar = 'images/user.jpg'; // TODO : set user avatar (if connected with facebook...)
+  $scope.userName = 'Anonymous'; // TODO : ask username
+  $scope.selectedRecipes = $localStorage.selectedRecipes;
+  $scope.selectedRecipesGoal = 10;
+
+  $scope.role = function(selectedRecipes){
+    if(!selectedRecipes || selectedRecipes.length === 0){return '<i class="fa fa-eye"></i> Explorateur';}
+    else if(selectedRecipes.length < 3){return '<i class="fa fa-thumbs-o-up"></i> Testeur';}
+    else if(selectedRecipes.length < 5){return '<i class="fa fa-graduation-cap"></i> Cuisinier';}
+    else if(selectedRecipes.length < 10){return '<i class="fa fa-university"></i> Chef';}
+    else {return '<i class="fa fa-trophy"></i> Grand chef';}
+  };
+
+  $interval(function(){
+    if($localStorage.selectedRecipes && $localStorage.selectedRecipes.length > 0 && Math.random() > ($localStorage.selectedRecipes.length/$scope.defaultCovers.length)){
+      $scope.imageCover = $localStorage.selectedRecipes[Math.floor(Math.random() * $localStorage.selectedRecipes.length)].images.landing;
+    } else {
+      $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
+    }
+  }, 5000);
 })
 
 .controller('HomeCtrl', function($scope, $localStorage, CartService){

@@ -5,9 +5,24 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="left">
-    <ion-content>
+    <ion-content class="sidemenu">
+      <div class="profile">
+        <div class="cover" style="background-image: url({{imageCover}});"></div>
+        <div class="avatar" style="background-image: url({{userAvatar}});"></div>
+        <div class="username">{{userName}}</div>
+        <div class="role" ng-bind-html="role(selectedRecipes)"></div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="stats">
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{selectedRecipes.length}}" aria-valuemin="0" aria-valuemax="{{selectedRecipesGoal}}" style="width: {{100 * selectedRecipes.length / selectedRecipesGoal}}%;">
+          </div>
+        </div>
+        <span ng-if="selectedRecipes.length === 0">Aucune recette sélectionnée</span>
+        <span ng-if="selectedRecipes.length === 1">1 recette sélectionnée</span>
+        <span ng-if="selectedRecipes.length > 1">{{selectedRecipes.length}} recettes sélectionnées</span>
+      </div>
       <div class="list">
-        <div class="item item-divider">Application</div>
         <a class="item item-icon-left" menu-close ui-sref="app.home"><i class="icon ion-home"></i> Accueil</a>
         <a class="item item-icon-left" menu-close ui-sref="app.recipes"><i class="icon fa fa-glass"></i> Recettes</a>
         <a class="item item-icon-left" menu-close ui-sref="app.recipes2"><i class="icon fa fa-glass"></i> Recettes 2</a>

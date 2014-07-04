@@ -23,6 +23,7 @@
     "angular": false,
     "ionic": false,
     "StatusBar": false,
+    "Firebase": false,
     "moment": false,
     "_": false
   }

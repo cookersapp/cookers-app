@@ -1,0 +1,50 @@
+$avatar-size: 80px;
+.sidemenu {
+  background: #6f5499;
+  color: #fff;
+  .profile {
+    .cover {
+      width: 100%;
+      height: 130px;
+      background-size: cover;
+    }
+    .avatar {
+      width: $avatar-size;
+      height: $avatar-size;
+      margin: -30px 10px 0px 10px;
+      border-radius: 100%;
+      border: 2px solid #563d7c;
+      background-size: cover;
+      float: left;
+    }
+    .username {
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .role {
+      color: #eee;
+      font-size: 13px;
+      font-weight: bold;
+    }
+  }
+  .stats {
+    margin: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    .progress {
+      margin-bottom: 0px;
+      height: 10px;
+      .progress-bar {
+        font-size: 10px;
+        line-height: 10px;
+      }
+    }
+  }
+  .list {
+    .item {
+      background: transparent;
+      border-color: #563d7c;
+    }
+  }
+}
