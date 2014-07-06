@@ -8,21 +8,21 @@
 
   <ion-content class="home">
     <div class="cart-infos" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
-      <div class="heading">Panier</div>
+      <div class="heading">Liste de courses</div>
       <div class="row">
-        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes dans le panier</span></div>
+        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes</span></div>
         <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients à acheter</span></div>
       </div>
     </div>
 
-    <div class="padding" ng-if="!selectedRecipes || selectedRecipes.length === 0">
+    <div class="padding" ng-if="!recipesHistory || recipesHistory.length === 0">
       <p>Aucune recette sélectionnée pour le moment.</p>
       <button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
     </div>
-    <div class="recipes" ng-if="selectedRecipes && selectedRecipes.length > 0">
+    <div class="recipes" ng-if="recipesHistory && recipesHistory.length > 0">
       <div class="list">
-        <div class="item item-divider">Dernières recettes sélectionnées</div>
-        <div class="item item-recipe-img-full" ng-repeat="recipe in selectedRecipes | limitTo:5" ui-sref="app.recipe({recipeId: recipe.id})">
+        <div class="item item-divider">Historique des recettes vues</div>
+        <div class="item item-recipe-img-full" ng-repeat="recipe in recipesHistory | limitTo:10" ui-sref="app.recipe({recipeId: recipe.id})">
           <img ng-src="{{recipe.images.landing}}">
           <div class="legend">
             <div class="title line">{{recipe.name}}</div>

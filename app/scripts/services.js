@@ -133,13 +133,11 @@ angular.module('ionicApp')
   function addRecipeToCart(cart, recipe){
     if(cart){
       cart.recipes.push(buildCartRecipe(recipe));
-      $localStorage.selectedRecipes.unshift(recipe);
     }
   }
   function removeRecipeFromCart(cart, recipe){
     if(cart){
       _removeFromArrayWithId(cart.recipes, recipe.id);
-      _removeFromArrayWithId($localStorage.selectedRecipes, recipe.id);
     }
   }
   function _removeFromArrayWithId(array, id){
@@ -334,6 +332,7 @@ angular.module('ionicApp')
 })
 
 .factory('LogService', function(UserService, firebaseUrl){
+  'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var service = {
     buyIngredient: buyIngredient

@@ -80,6 +80,15 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         controller: 'SettingsCtrl'
       }
     }
+  })
+  .state('app.debug', {
+    url: '/debug',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/debug.html',
+        controller: 'DebugCtrl'
+      }
+    }
   });
 })
 
@@ -91,7 +100,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   user: {},
   weekrecipes: [],
   recipes: [],
-  selectedRecipes: [],
+  recipesHistory: [],
   carts: {
     current: null,
     contents: []
@@ -103,7 +112,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
-  if(!$localStorage.selectedRecipes){$localStorage.selectedRecipes = localStorageDefault.selectedRecipes;}
+  if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
 
   /*$ionicPlatform.ready(function(){

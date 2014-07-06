@@ -31,20 +31,20 @@ angular.module('ionicApp')
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.userAvatar = 'images/user.jpg'; // TODO : set user avatar (if connected with facebook...)
   $scope.userName = 'Anonymous'; // TODO : ask username
-  $scope.selectedRecipes = $localStorage.selectedRecipes;
-  $scope.selectedRecipesGoal = 10;
+  $scope.recipesHistory = $localStorage.recipesHistory;
+  $scope.recipesHistoryGoal = 10;
 
-  $scope.role = function(selectedRecipes){
-    if(!selectedRecipes || selectedRecipes.length === 0){return '<i class="fa fa-eye"></i> Explorateur';}
-    else if(selectedRecipes.length < 3){return '<i class="fa fa-thumbs-o-up"></i> Testeur';}
-    else if(selectedRecipes.length < 5){return '<i class="fa fa-graduation-cap"></i> Cuisinier';}
-    else if(selectedRecipes.length < 10){return '<i class="fa fa-university"></i> Chef';}
+  $scope.role = function(recipesHistory){
+    if(!recipesHistory || recipesHistory.length === 0){return '<i class="fa fa-eye"></i> Explorateur';}
+    else if(recipesHistory.length < 3){return '<i class="fa fa-thumbs-o-up"></i> Testeur';}
+    else if(recipesHistory.length < 5){return '<i class="fa fa-graduation-cap"></i> Cuisinier';}
+    else if(recipesHistory.length < 10){return '<i class="fa fa-university"></i> Chef';}
     else {return '<i class="fa fa-trophy"></i> Grand chef';}
   };
 
   $interval(function(){
-    if($localStorage.selectedRecipes && $localStorage.selectedRecipes.length > 0 && Math.random() > ($localStorage.selectedRecipes.length/$scope.defaultCovers.length)){
-      $scope.imageCover = $localStorage.selectedRecipes[Math.floor(Math.random() * $localStorage.selectedRecipes.length)].images.landing;
+    if($localStorage.recipesHistory && $localStorage.recipesHistory.length > 0 && Math.random() > ($localStorage.recipesHistory.length/$scope.defaultCovers.length)){
+      $scope.imageCover = $localStorage.recipesHistory[Math.floor(Math.random() * $localStorage.recipesHistory.length)].images.landing;
     } else {
       $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
     }
@@ -55,7 +55,7 @@ angular.module('ionicApp')
   'use strict';
   $scope.cart = CartService.getCurrentCart();
   $scope.items = CartService.getCurrentCartItems();
-  $scope.selectedRecipes = $localStorage.selectedRecipes;
+  $scope.recipesHistory = $localStorage.recipesHistory;
 })
 
 .controller('RecipesCtrl', function($scope, WeekrecipeService, CartService){
@@ -71,11 +71,11 @@ angular.module('ionicApp')
 
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée au panier');
+    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
     CartService.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✔ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
@@ -118,15 +118,17 @@ angular.module('ionicApp')
 
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée au panier');
+    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
     $scope.goAway();
   };
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeService, CartService){
+.controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeService, CartService){
   'use strict';
   $scope.recipe = {};
   RecipeService.get($stateParams.recipeId).then(function(recipe){
+    _.remove($localStorage.recipesHistory, {id: recipe.id});
+    $localStorage.recipesHistory.unshift(recipe);
     $scope.recipe = recipe;
   });
 
@@ -134,11 +136,11 @@ angular.module('ionicApp')
 
   $scope.addRecipeToCart = function(recipe){
     CartService.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée au panier');
+    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
     CartService.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✔ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
@@ -175,7 +177,7 @@ angular.module('ionicApp')
     if(CartService.hasCarts()){
       CartService.removeRecipeFromCart(recipe);
     }
-    window.plugins.toast.show('✔ recette supprimée du panier');
+    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
@@ -205,8 +207,6 @@ angular.module('ionicApp')
 
 .controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){
   'use strict';
-  $scope.$storage = $localStorage;
-
   $scope.resetApp = function(){
     if(window.confirm('Reset app ?')){
       $localStorage.$reset(localStorageDefault);
@@ -217,4 +217,9 @@ angular.module('ionicApp')
       }
     }
   };
+})
+
+.controller('DebugCtrl', function($scope, $localStorage){
+  'use strict';
+  $scope.$storage = $localStorage;
 });

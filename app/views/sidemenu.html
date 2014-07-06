@@ -10,25 +10,25 @@
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
         <div class="avatar" ng-style="{'background-image': 'url('+userAvatar+')'}"></div>
         <div class="username">{{userName}}</div>
-        <div class="role" ng-bind-html="role(selectedRecipes)"></div>
+        <div class="role" ng-bind-html="role(recipesHistory)"></div>
         <div class="clearfix"></div>
       </div>
       <div class="stats">
         <div class="progress">
-          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{selectedRecipes.length}}" aria-valuemin="0" aria-valuemax="{{selectedRecipesGoal}}" style="width: {{100 * selectedRecipes.length / selectedRecipesGoal}}%;">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{recipesHistory.length}}" aria-valuemin="0" aria-valuemax="{{recipesHistoryGoal}}" style="width: {{100 * recipesHistory.length / recipesHistoryGoal}}%;">
           </div>
         </div>
-        <span ng-if="selectedRecipes.length === 0">Aucune recette sélectionnée</span>
-        <span ng-if="selectedRecipes.length === 1">1 recette sélectionnée</span>
-        <span ng-if="selectedRecipes.length > 1">{{selectedRecipes.length}} recettes sélectionnées</span>
+        <span ng-if="recipesHistory.length === 0">Aucune recette sélectionnée</span>
+        <span ng-if="recipesHistory.length === 1">1 recette sélectionnée</span>
+        <span ng-if="recipesHistory.length > 1">{{recipesHistory.length}} recettes sélectionnées</span>
       </div>
       <div class="list">
         <a class="item item-icon-left" menu-close ui-sref="app.home"><i class="icon ion-home"></i> Accueil</a>
         <a class="item item-icon-left" menu-close ui-sref="app.recipes"><i class="icon fa fa-glass"></i> Recettes</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.recipes2"><i class="icon fa fa-glass"></i> Recettes 2</a>
         <a class="item item-icon-left" menu-close ui-sref="app.cart.recipes"><i class="icon fa fa-th-list"></i> Liste de courses</a>
         <a class="item item-icon-left" menu-close ui-sref="intro"><i class="icon ion-log-in"></i> Introduction</a>
         <a class="item item-icon-left" menu-close ui-sref="app.settings"><i class="icon ion-gear-b"></i> Paramètres</a>
+        <a class="item item-icon-left" menu-close ui-sref="app.debug"><i class="icon ion-code-working"></i> debug</a>
       </div>
     </ion-content>
   </ion-side-menu>

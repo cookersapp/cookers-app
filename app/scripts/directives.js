@@ -1,5 +1,5 @@
 angular.module('ionicApp')
-
+/*
 .directive('noScroll', function($document){
   'use strict';
   return {
@@ -10,4 +10,4 @@ angular.module('ionicApp')
       });
     }
   };
-});
+})*/;
