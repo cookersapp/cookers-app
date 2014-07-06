@@ -273,10 +273,14 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserService', function($localStorage, $ionicPlatform, firebaseUrl){
+.factory('UserService', function($localStorage, $ionicPlatform, $http, firebaseUrl, md5){
   'use strict';
+  var currentUser = $localStorage.user;
   var service = {
     get: function(){return $localStorage.user;},
+    getProfile: getProfile,
+    setMail: setMail,
+    setDefaultServings: setDefaultServings,
     isFirstLaunch: function(){return !$localStorage.user.launchs;},
     firstLaunch: firstLaunch,
     launch: launch
@@ -284,16 +288,19 @@ angular.module('ionicApp')
 
   function firstLaunch(){
     $ionicPlatform.ready(function(){
-      var user = $localStorage.user;
-      user.profile = {};
-      user.device = actualDevice();
-      user.launchs = [];
+      currentUser.profile = {
+        name: 'Anonymous',
+        avatar: 'images/user.jpg',
+        mail: '',
+        defaultServings: 2
+      };
+      currentUser.device = actualDevice();
+      currentUser.launchs = [];
       launch();
     });
   }
 
   function launch(){
-    var user = $localStorage.user;
     var addLaunch = function(user, launch){
       user.launchs.unshift(launch);
       var firebaseRef = new Firebase(firebaseUrl+'/connected');
@@ -301,14 +308,39 @@ angular.module('ionicApp')
       userRef.onDisconnect().remove();
     };
     var onSuccess = function(position){
-      addLaunch(user, position);
+      addLaunch(currentUser, position);
     };
     var onError = function(error){
       error.timestamp = Date.now();
-      addLaunch(user, error);
+      addLaunch(currentUser, error);
     };
 
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
+  }
+
+  function getProfile(){
+    return currentUser.profile;
+  }
+
+  function setMail(mail){
+    currentUser.profile.mail = mail;
+    currentUser.profile.avatar = 'http://www.gravatar.com/avatar/'+md5.createHash(mail)
+    if(mail){
+      $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
+        currentUser.gravatar = result.data;
+        if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
+          if(currentUser.gravatar.entry[0].thumbnailUrl){
+            currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl;
+          }
+          if(currentUser.gravatar.entry[0].displayName){
+            currentUser.profile.name = currentUser.gravatar.entry[0].displayName;
+          }
+        }
+      });
+    }
+  }
+  function setDefaultServings(defaultServings){
+    currentUser.profile.defaultServings = defaultServings;
   }
 
   function actualDevice(){
@@ -344,7 +376,7 @@ angular.module('ionicApp')
     if(recipe && recipe.id){data.recipe = recipe.id;}
     if(ingredient && ingredient.food && ingredient.food.id){data.ingredient = ingredient.food.id;}
     if(user && user.device && user.device.uuid){data.device = user.device.uuid;}
-    
+
     navigator.geolocation.getCurrentPosition(function(position){
       data.position = position;
       buyLogsRef.push(data);

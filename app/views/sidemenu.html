@@ -8,8 +8,8 @@
     <ion-content class="sidemenu">
       <div class="profile">
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
-        <div class="avatar" ng-style="{'background-image': 'url('+userAvatar+')'}"></div>
-        <div class="username">{{userName}}</div>
+        <div class="avatar" ng-style="{'background-image': 'url('+userProfile.avatar+')'}"></div>
+        <div class="username">{{userProfile.name}}</div>
         <div class="role" ng-bind-html="role(recipesHistory)"></div>
         <div class="clearfix"></div>
       </div>

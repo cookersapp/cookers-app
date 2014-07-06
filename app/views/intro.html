@@ -14,24 +14,26 @@
         spécialement pour vous.
       </p>
     </ion-slide>
-    
+
     <ion-slide class="slide-login">
       <h3>Faisons connaissance</h3>
-      <div class="section">
-        Vous cuisinez habituellement pour {{profile.defaultServings}} personnes
-        <div class="range range-calm">
-          <input type="range" name="servings" min="1" max="10" ng-model="profile.defaultServings">
+      <form ng-submit="submitUserInfos()">
+        <div class="section">
+          Vous cuisinez habituellement pour {{profile.defaultServings}} personnes
+          <div class="range range-calm">
+            <input type="range" name="servings" min="1" max="10" ng-model="profile.defaultServings">
+          </div>
         </div>
-      </div>
-      <div class="section">
-        Connectez vous et restons en contact
-        <div class="list">
-          <label class="item item-input">
-            <input type="email" placeholder="Mail" ng-model="profile.mail">
-          </label>
+        <div class="section">
+          Connectez vous et restons en contact
+          <div class="list">
+            <label class="item item-input">
+              <input type="email" placeholder="Mail" ng-model="profile.mail">
+            </label>
+          </div>
+          <button type="submit" class="button button-stable pull-right">Démarrer</button>
         </div>
-        <button class="button button-stable pull-right" ng-click="submitUserInfos()">Démarrer</button>
-      </div>
+      </form>
     </ion-slide>
   </ion-slide-box>
 </ion-view>

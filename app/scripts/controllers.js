@@ -2,25 +2,19 @@ angular.module('ionicApp')
 
 .controller('IntroCtrl', function($scope, $state, UserService){
   'use strict';
-  var user = UserService.get();
-  if(!user.profile){user.profile = {};}
-
-  $scope.profile = {
-    defaultServings: user.profile.defaultServings ? user.profile.defaultServings : 2,
-    mail: user.profile.mail ? user.profile.mail : ''
-  };
+  $scope.profile = angular.copy(UserService.getProfile());
 
   $scope.startApp = function(){
     $state.go('app.home');
   };
   $scope.submitUserInfos = function(){
-    user.profile.mail = $scope.profile.mail;
-    user.profile.defaultServings = $scope.profile.defaultServings;
+    UserService.setMail($scope.profile.mail);
+    UserService.setDefaultServings($scope.profile.defaultServings);
     $scope.startApp();
   };
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval){
+.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserService){
   'use strict';
   if($rootScope.showIntro){
     $rootScope.showIntro = false;
@@ -29,8 +23,7 @@ angular.module('ionicApp')
 
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
-  $scope.userAvatar = 'images/user.jpg'; // TODO : set user avatar (if connected with facebook...)
-  $scope.userName = 'Anonymous'; // TODO : ask username
+  $scope.userProfile = UserService.getProfile();
   $scope.recipesHistory = $localStorage.recipesHistory;
   $scope.recipesHistoryGoal = 10;
 
