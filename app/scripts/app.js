@@ -72,6 +72,15 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     templateUrl: 'views/cart/ingredients.html',
     controller: 'CartIngredientsCtrl'
   })
+  .state('app.feedback', {
+    url: '/feedback',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/feedback.html',
+        controller: 'FeedbackCtrl'
+      }
+    }
+  })
   .state('app.settings', {
     url: '/settings',
     views: {

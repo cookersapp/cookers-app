@@ -205,6 +205,20 @@ angular.module('ionicApp')
   }
 })
 
+.controller('FeedbackCtrl', function($scope, UserService){
+  'use strict';
+  var user = UserService.get();
+  $scope.feedback = {
+    mail: user.profile.mail,
+    content: '',
+    sent: false
+  };
+  $scope.sendFeedback = function(){
+    // TODO really send feedback !!!
+    $scope.feedback.sent = true;
+  };
+})
+
 .controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){
   'use strict';
   $scope.resetApp = function(){

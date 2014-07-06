@@ -1,0 +1,41 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title">Remarques</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="row">
+      <div class="col col-33">
+        <img src="images/team.jpg" style="width: 100%;">
+      </div>
+      <div class="col col-67">
+        Merci d'utiliser notre application.<br>
+        Nous sommes toujours très intéressé par échanger avec les utilisateurs et nous sommes preneurs de toute remarque, avis, problème ou encouragement !
+      </div>
+    </div>
+    <form ng-submit="sendFeedback()">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input type="email" name="mail" placeholder="Mail" ng-model="feedback.mail" ng-disabled="feedback.sent" required>
+        </label>
+        <label class="item item-input">
+          <textarea name="content" rows="5" placeholder="Votre remarque" ng-model="feedback.content" ng-disabled="feedback.sent" required></textarea>
+        </label>
+      </div>
+      <div class="padding" ng-class="{hide: feedback.sent}">
+        <button type="submit" class="button button-block button-positive">Envoyer</button>
+      </div>
+      <div class="padding" ng-class="{fadeInUp: feedback.sent, hide: !feedback.sent}">
+        <div class="alert alert-success"  style="margin-bottom: 5px;">
+          Merci de votre retour !
+        </div>
+      </div>
+    </form>
+    <div class="padding">
+      Si vous avez un peu de temps et que vous êtes sur Paris, nous serions très heureux de vous offrir un café et d'échanger avec vous au sujet de l'application.
+    </div>
+  </ion-content>
+</ion-view>
