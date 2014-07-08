@@ -64,7 +64,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('CartService', function($localStorage, LogService){
+.factory('CartService', function($localStorage, UserService, LogService){
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
@@ -257,7 +257,10 @@ angular.module('ionicApp')
     return {
       added: Date.now(),
       id: recipe.id,
-      servings: angular.copy(recipe.servings),
+      servings: {
+        value: UserService.getProfile().defaultServings,
+        unit: recipe.servings.unit
+      },
       data: recipe
     };
   }
