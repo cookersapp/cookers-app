@@ -7,18 +7,32 @@
   </ion-header-bar>
 
   <ion-content class="home">
-    <div class="cart-infos" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
-      <div class="heading">Liste de courses</div>
-      <div class="row">
-        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes</span></div>
-        <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients à acheter</span></div>
+    <!-- contextual message -->
+    <div class="padding message" ng-if="message">
+      <div class="alert alert-{{message.type}}">
+        <button type="button" class="close" ng-click="hideMessage()">&times;</button>
+        <span ng-bind-html="message.content"></span>
       </div>
     </div>
 
-    <div class="padding" ng-if="!recipesHistory || recipesHistory.length === 0">
-      <p>Aucune recette sélectionnée pour le moment.</p>
-      <button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
+    <!-- cart dashboard -->
+    <div class="cart-infos">
+      <div class="heading">Liste de courses</div>
+      <div class="row" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
+        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes</span></div>
+        <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients à acheter</span></div>
+      </div>
+      <div class="row" ng-if="!(cart && !cart.archived && cart.recipes && cart.recipes.length > 0)">
+        <div class="col">
+          <span>
+            Votre liste actuelle est vide.<br>
+            <button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
+          </span>
+        </div>
+      </div>
     </div>
+
+    <!-- seen recipes history -->
     <div class="recipes" ng-if="recipesHistory && recipesHistory.length > 0">
       <div class="list">
         <div class="item item-divider">Historique des recettes vues</div>

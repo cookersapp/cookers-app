@@ -1,6 +1,6 @@
 angular.module('ionicApp')
 
-.controller('IntroCtrl', function($scope, $state, UserService){
+.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserService){
   'use strict';
   $scope.profile = angular.copy(UserService.getProfile());
 
@@ -44,11 +44,23 @@ angular.module('ionicApp')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $localStorage, CartService){
+.controller('HomeCtrl', function($scope, $localStorage, UserInfoService, CartService){
   'use strict';
+  $scope.message = null;
   $scope.cart = CartService.getCurrentCart();
   $scope.items = CartService.getCurrentCartItems();
   $scope.recipesHistory = $localStorage.recipesHistory;
+
+  UserInfoService.messageToDisplay().then(function(message){
+    $scope.message = message;
+  });
+  $scope.hideMessage = function(){
+    $scope.message.hide = true;
+    $scope.message = null;
+    UserInfoService.messageToDisplay().then(function(message){
+      $scope.message = message;
+    });
+  };
 })
 
 .controller('RecipesCtrl', function($scope, WeekrecipeService, CartService){

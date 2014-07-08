@@ -113,6 +113,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   carts: {
     current: null,
     contents: []
+  },
+  userinfo: {
+    lastCall: null,
+    messages: []
   }
 })
 
@@ -123,6 +127,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
+  if(!$localStorage.userinfo){$localStorage.userinfo = localStorageDefault.userinfo;}
 
   /*$ionicPlatform.ready(function(){
     if(window.StatusBar) {

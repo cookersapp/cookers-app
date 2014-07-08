@@ -9,7 +9,7 @@ angular.module('ionicApp')
   };
 
   function getRecipesOfWeek(week){
-    var weekrecipe = _.find($localStorage.weekrecipes, {id: week});
+    var weekrecipe = _.find($localStorage.weekrecipes, {id: week.toString()});
     if(weekrecipe){
       return $q.when(weekrecipe);
     } else {
@@ -287,35 +287,33 @@ angular.module('ionicApp')
   };
 
   function firstLaunch(){
+    currentUser.profile = {
+      name: 'Anonymous',
+      avatar: 'images/user.jpg',
+      mail: '',
+      defaultServings: 2
+    };
+    currentUser.launchs = [];
     $ionicPlatform.ready(function(){
-      currentUser.profile = {
-        name: 'Anonymous',
-        avatar: 'images/user.jpg',
-        mail: '',
-        defaultServings: 2
-      };
       currentUser.device = actualDevice();
-      currentUser.launchs = [];
       launch();
     });
   }
 
   function launch(){
-    var addLaunch = function(user, launch){
+    function addLaunch(user, launch){
       user.launchs.unshift(launch);
       var firebaseRef = new Firebase(firebaseUrl+'/connected');
       var userRef = firebaseRef.push(user);
       userRef.onDisconnect().remove();
-    };
-    var onSuccess = function(position){
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position){
       addLaunch(currentUser, position);
-    };
-    var onError = function(error){
+    }, function(error){
       error.timestamp = Date.now();
       addLaunch(currentUser, error);
-    };
-
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    });
   }
 
   function getProfile(){
@@ -324,7 +322,8 @@ angular.module('ionicApp')
 
   function setMail(mail){
     currentUser.profile.mail = mail;
-    currentUser.profile.avatar = 'http://www.gravatar.com/avatar/'+md5.createHash(mail)
+    currentUser.profile.name = 'Anonymous';
+    currentUser.profile.avatar = 'images/user.jpg';
     if(mail){
       $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
         currentUser.gravatar = result.data;
@@ -345,6 +344,7 @@ angular.module('ionicApp')
 
   function actualDevice(){
     var device = angular.copy(ionic.Platform.device());
+    delete device.getInfo;
     device.environment = getEnvironment();
     device.grade = ionic.Platform.grade;
     device.platforms = ionic.Platform.platforms;
@@ -358,6 +358,51 @@ angular.module('ionicApp')
     else if(ionic.Platform.isAndroid()){return 'Android';}
     else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
     else {return 'Unknown';}
+  }
+
+  return service;
+})
+
+.factory('UserInfoService', function($q, $http, $localStorage, firebaseUrl){
+  'use strict';
+  var userinfo = $localStorage.userinfo;
+  var service = {
+    messageToDisplay: messageToDisplay
+  };
+
+  function messageToDisplay(){
+    var message = messageQueued();
+    if(message){
+      fetchMessages();
+      return $q.when(message);
+    } else {
+      return fetchMessages().then(function(){
+        return messageQueued();
+      });
+    }
+  }
+
+  function messageQueued(){
+    return _.find(userinfo.messages, function(msg){
+      return !msg.hide;
+    });
+  }
+
+  function fetchMessages(){
+    return $http.get(firebaseUrl+'/userinfos.json').then(function(result){
+      var messages = _.filter(result.data, function(msg){
+        return msg && msg.isProd && !isMessageQueued(msg);
+      });
+      userinfo.messages = userinfo.messages.concat(messages);
+      // sort chronogically
+      userinfo.messages.sort(function(a,b){
+        return a.added - b.added;
+      });
+    });
+  }
+  
+  function isMessageQueued(message){
+    return message && message.added && _.findIndex(userinfo.messages, {added: message.added}) > -1;
   }
 
   return service;
