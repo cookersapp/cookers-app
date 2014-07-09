@@ -14,13 +14,14 @@ angular.module('ionicApp')
   };
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserService){
+.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserService, debug){
   'use strict';
   if($rootScope.showIntro){
     $rootScope.showIntro = false;
     $state.go('intro');
   }
 
+  $scope.debug = debug;
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.userProfile = UserService.getProfile();

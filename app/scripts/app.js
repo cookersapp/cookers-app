@@ -101,12 +101,13 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   });
 })
 
-.constant('APP_VERSION','0.0.1')
+.constant('APP_VERSION', '0.0.1')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
 .constant('supportTeamMail', 'loicknuchel@gmail.com')
 
+.value('debug', false)
 .value('localStorageDefault', {
   user: {},
   weekrecipes: [],
