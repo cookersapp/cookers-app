@@ -294,7 +294,8 @@ angular.module('ionicApp')
       name: 'Anonymous',
       avatar: 'images/user.jpg',
       mail: '',
-      defaultServings: 2
+      defaultServings: 2,
+      firstLaunch: Date.now()
     };
     currentUser.launchs = [];
     $ionicPlatform.ready(function(){

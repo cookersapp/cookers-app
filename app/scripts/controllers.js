@@ -231,7 +231,25 @@ angular.module('ionicApp')
         alert('Echec de l\'envoi du mail. Réessayez !');
       }
     });
+    if(!user.profile.mail){
+      UserService.setMail($scope.feedback.mail);
+    }
   };
+
+  // UserVoice widget
+  UserVoice.push(['set', {
+    accent_color: '#e2753a',
+    trigger_color: 'white',
+    trigger_background_color: '#e2753a'
+  }]);
+  var identity = {};
+  if(user && user.profile && user.profile.mail){identity.email = user.profile.mail;}
+  if(user && user.profile && user.profile.name){identity.name = user.profile.name;}
+  if(user && user.profile && user.profile.firstLaunch){identity.created_at = user.profile.firstLaunch/1000;}
+  if(user && user.device && user.device.uuid){identity.id = user.device.uuid;}
+  UserVoice.push(['identify', identity]);
+  UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
+  UserVoice.push(['autoprompt', {}]);
 })
 
 .controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){
