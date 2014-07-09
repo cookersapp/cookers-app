@@ -152,7 +152,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('CartCtrl', function($scope, CartService){
+.controller('CartCtrl', function($scope, CartService, FoodService, dataList){
   'use strict';
   $scope.cart = CartService.getCurrentCart();
   $scope.archiveCart = function(){
@@ -160,6 +160,65 @@ angular.module('ionicApp')
       CartService.archiveCart();
     }
   };
+
+  $scope.ingredientSearch = {};
+  $scope.foods = [];
+  $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  $scope.units = dataList.quantityUnits;
+  FoodService.getAll().then(function(foods){
+    $scope.foods = foods;
+  });
+
+  $scope.selectedProduct = null;
+  $scope.quantityMult = 1;
+  $scope.quantityRound = 0;
+  $scope.selectProduct = function(product){
+    if(typeof product === 'string'){
+      product = {
+        id: getSlug(product),
+        name: product,
+        category: 'Inconnue'
+      };
+    }
+    $scope.selectedProduct = {
+      product: product
+    };
+  };
+  $scope.unselectProduct = function(){
+    $scope.selectedProduct = null;
+    $scope.quantityMult = 1;
+    $scope.quantityRound = 0;
+  };
+  $scope.increaseQuantityMult = function(){
+    $scope.quantityMult = $scope.quantityMult * 10;
+    $scope.quantityRound--;
+  };
+  $scope.decreaseQuantityMult = function(){
+    $scope.quantityMult = $scope.quantityMult / 10;
+    $scope.quantityRound++;
+  };
+  $scope.selectQuantity = function(quantity){
+    $scope.selectedProduct.quantity = quantity;
+  };
+  $scope.selectUnit = function(unit){
+    $scope.selectedProduct.unit = unit;
+  };
+  $scope.addSelectedProductToCart = function(){
+
+    // TODO add product to cart
+    $scope.selectedProduct = null
+    $scope.quantityMult = 1;
+    $scope.quantityRound = 0;
+    $scope.ingredientSearch = {};
+  };
+
+  window.addEventListener('native.keyboardshow', function(e){
+    //window.plugins.toast.show('SHOW keyboard');
+  });
+  window.addEventListener('native.keyboardhide', function(e){
+    //window.plugins.toast.show('HIDE keyboard');
+    $scope.ingredientSearch = {};
+  });
 })
 
 .controller('CartRecipesCtrl', function($scope, CartService){
@@ -194,8 +253,8 @@ angular.module('ionicApp')
   $scope.items = CartService.getCurrentCartItems();
   $scope.boughtItems = CartService.getCurrentCartBoughtItems();
 
-  $scope.categoryId = function(item){
-    return getSlug(item.food.category);
+  $scope.categoryId = function(food){
+    return getSlug(food.category);
   };
   $scope.buyItem = function(item){
     CartService.buyCartItem(item);
@@ -232,7 +291,7 @@ angular.module('ionicApp')
       if(sent){
         $scope.feedback.sent = true;
       } else {
-        alert('Echec de l\'envoi du mail. Réessayez !');
+        window.alert('Echec de l\'envoi du mail. Réessayez !');
       }
     });
     if(!user.profile.mail){

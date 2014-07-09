@@ -24,6 +24,7 @@
     "ionic": false,
     "StatusBar": false,
     "Firebase": false,
+    "UserVoice": false,
     "moment": false,
     "getSlug": false,
     "_": false

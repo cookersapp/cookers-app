@@ -64,6 +64,44 @@ angular.module('ionicApp')
   return service;
 })
 
+.factory('FoodService', function($http, $q, $localStorage, firebaseUrl){
+  'use strict';
+  var foods = $localStorage.foods;
+  var service = {
+    getAll: getAll
+  };
+
+  function getAll(){
+    if(!foods || foods.length === 0){
+      return downloadFoods();
+    } else {
+      downloadFoods();
+      return $q.when(foods);
+    }
+  }
+
+  function downloadFoods(){
+    return $http.get(firebaseUrl+'/foods.json').then(function(result){
+      // problem : don't remove deleted food...
+      for(var i in result.data){
+        storeFood(result.data[i]);
+      }
+      return foods;
+    });
+  }
+  
+  function storeFood(food){
+    var index = _.findIndex(foods, {id: food.id});
+    if(index > -1){
+      angular.copy(food, foods[index]);
+    } else {
+      foods.push(food);
+    }
+  }
+
+  return service;
+})
+
 .factory('CartService', function($localStorage, UserService, LogService){
   'use strict';
   var service = {
@@ -413,7 +451,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('MailService', function($http, $q, mandrillUrl, supportTeamMail){
+.factory('MailService', function($http, $q, mandrillUrl, mandrillKey, supportTeamMail){
   'use strict';
   var service = {
     sendFeedback: sendFeedback
@@ -421,24 +459,24 @@ angular.module('ionicApp')
 
   function sendFeedback(mail, feedback){
     return $http.post(mandrillUrl+'/messages/send.json', {
-      "key": "__YzrUYwZGkqqSM2pe9XFg",
-      "message": {
-        "subject": "[Cookers] Feedback from app",
-        "text": feedback,
-        //"html": "<p>"+feedback+"</p>",
-        "from_email": mail,
-        "to": [
-          {"email": supportTeamMail, "name": "Cookers team"}
+      'key': mandrillKey,
+      'message': {
+        'subject': '[Cookers] Feedback from app',
+        'text': feedback,
+        //'html': '<p>'+feedback+'</p>',
+        'from_email': mail,
+        'to': [
+          {'email': supportTeamMail, 'name': 'Cookers team'}
         ],
-        "important": false,
-        "track_opens": true,
-        "track_clicks": null,
-        "preserve_recipients": null,
-        "tags": [
-          "app", "feedback"
+        'important': false,
+        'track_opens': true,
+        'track_clicks': null,
+        'preserve_recipients': null,
+        'tags': [
+          'app', 'feedback'
         ]
       },
-      "async": false
+      'async': false
     }).then(function(result){
       var sent = true;
       for(var i in result.data){

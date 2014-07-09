@@ -8,7 +8,7 @@
     </div>
   </ion-header-bar>
   <ion-content class="cart">
-    <div class="cart-chooser padding">
+    <div class="cart-chooser padding hide-on-keyboard-open">
       <div class="button-bar bar-light">
         <a class="button" ng-class="{active: isActive('.*recipes')}" ui-sref="app.cart.recipes">Recettes</a>
         <a class="button" ng-class="{active: isActive('.*ingredients')}" ui-sref="app.cart.ingredients">Ingrédients</a>
@@ -16,4 +16,11 @@
     </div>
     <ui-view></ui-view>
   </ion-content>
+  <!--<ion-footer-bar class="bar-dark item-input-inset">
+    <label class="item-input-wrapper">
+      <i class="icon ion-ios7-search placeholder-icon"></i>
+      <input type="search" ng-model="ingredientSearch" placeholder="Ajouter un ingrédient ...">
+    </label>
+    <button class="button button-clear" ng-click="selectProduct(ingredientSearch)">Ajouter</button>
+  </ion-footer-bar>-->
 </ion-view>

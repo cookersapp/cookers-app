@@ -1,5 +1,13 @@
 angular.module('ionicApp')
 
+.filter('mynumber', function($filter){
+  'use strict';
+  return function(number, round){
+    var mul = Math.pow(10, round ? round : 0);
+    return $filter('number')(Math.round(number*mul)/mul);
+  };
+})
+
 .filter('unit', function(){
   'use strict';
   return function(unit){

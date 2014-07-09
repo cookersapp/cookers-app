@@ -105,13 +105,37 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
+.constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
 .constant('supportTeamMail', 'loicknuchel@gmail.com')
 
-.value('debug', false)
+.constant('dataList', {
+  foodCategories:   ['Viandes & Poissons', 'Fruits & Légumes', 'Pains & Pâtisseries', 'Frais', 'Surgelés', 'Épicerie salée', 'Épicerie sucrée', 'Boissons', 'Bébé', 'Bio', 'Hygiène & Beauté', 'Entretien & Nettoyage', 'Animalerie', 'Bazar & Textile'],
+  recipeCategories: ['Plat principal', 'Entrée', 'Dessert', 'Vin'],
+  currencies:       ['€'],
+  servingUnits:     ['personnes'],
+  timeUnits:        ['minutes', 'secondes'],
+  quantityUnits:    ['g', 'kg', 'cl', 'litre', 'pièce'],
+  foodRoles:        ['essentiel', 'secondaire', 'accompagnement', 'facultatif'],
+  days:             ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+})
+
+.constant('unitConversion', [
+  {ref: 'g', convert: [
+    {unit: 'g', factor: 1},
+    {unit: 'kg', factor: 1000}
+  ]},
+  {ref: 'ml', convert: [
+    {unit: 'cl', factor: 10},
+    {unit: 'litre', factor: 1000}
+  ]}
+])
+
+.value('debug', true)
 .value('localStorageDefault', {
   user: {},
-  weekrecipes: [],
+  foods: [],
   recipes: [],
+  weekrecipes: [],
   recipesHistory: [],
   carts: {
     current: null,
@@ -126,8 +150,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 .run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserService){
   'use strict';
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
-  if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
+  if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
+  if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
   if(!$localStorage.userinfo){$localStorage.userinfo = localStorageDefault.userinfo;}
