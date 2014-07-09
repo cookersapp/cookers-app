@@ -30,10 +30,23 @@ $custom-bg: #f62; // bootstrap: #563d7c
 $custom-border: darken($custom-bg, 15%); // #d44100; (bootstrap: #563d7c)
 $custom-text: #fff;
 
-/*
- * bootstrap purple :
- * text-light : #cdbfe3
- * text-dark : #563d7c
- * background: #6f5499
- * border: #563d7c
- */
+// see http://leaf.kortes.se/colors
+$material-red: #e51c23;
+$material-pink: #e91e63;
+$material-purple: #9c27b0;
+$material-deep-purple: #673ab7;
+$material-indigo: #3f51b5;
+$material-blue: #5677fc;
+$material-light-blue: #03a9f4;
+$material-cyan: #00bcd4;
+$material-teal: #009688;
+$material-green: #259b24;
+$material-light-green: #8bc34a;
+$material-lime: #cddc39;
+$material-yellow: #ffeb3b;
+$material-amber: #ffc107;
+$material-orange: #ff9800;
+$material-deep-orange: #ff5722;
+$material-brown: #795548;
+$material-grey: #9e9e9e;
+$material-blue-grey: #607d8b;

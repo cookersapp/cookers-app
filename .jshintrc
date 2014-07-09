@@ -25,6 +25,7 @@
     "StatusBar": false,
     "Firebase": false,
     "moment": false,
+    "getSlug": false,
     "_": false
   }
 }

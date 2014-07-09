@@ -9,7 +9,7 @@
   </div>
 
   <div class="list">
-    <div class="item item-cart-ingredient" ng-repeat="item in items">
+    <div class="item item-cart-ingredient {{categoryId(item)}}" ng-repeat="item in items">
       <div class="check pull-right">
         <input type="checkbox" ng-change="buyItem(item)" ng-model="item.bought">
       </div>

@@ -193,6 +193,9 @@ angular.module('ionicApp')
   $scope.items = CartService.getCurrentCartItems();
   $scope.boughtItems = CartService.getCurrentCartBoughtItems();
 
+  $scope.categoryId = function(item){
+    return getSlug(item.food.category);
+  };
   $scope.buyItem = function(item){
     CartService.buyCartItem(item);
     updateCart();

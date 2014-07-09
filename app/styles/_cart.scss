@@ -1,3 +1,5 @@
+@import "_colors";
+
 .cart {
   background: #333;
 
@@ -49,8 +51,14 @@
   .item-cart-ingredient {
     padding: 5px 10px;
     border: none;
+    &.fruits-and-legumes .text {border-color: $material-green;}
+    &.viandes-and-poissons .text {border-color: $material-red;}
+    &.frais .text {border-color: $material-blue;}
+    &.pains-and-patisseries .text {border-color: $material-brown;}
+    &.epicerie-salee .text {border-color: $material-blue-grey;}
+    &.epicerie-sucree .text {border-color: $material-orange;}
     .text {
-      border-left: 3px solid black;
+      border-left: 4px solid black;
       padding: 3px 5px;
       &:first-letter {
         text-transform: uppercase;

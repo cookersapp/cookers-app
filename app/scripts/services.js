@@ -290,6 +290,7 @@ angular.module('ionicApp')
   };
 
   function firstLaunch(){
+    if(!currentUser){currentUser = $localStorage.user;}
     currentUser.profile = {
       name: 'Anonymous',
       avatar: 'images/user.jpg',
