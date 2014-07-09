@@ -8,7 +8,7 @@
   .cart-empty {
     background: #fff;
     padding: 30px 10px;
-    min-height: 150px;
+    min-height: 50px;
     text-align: center;
   }
 
@@ -52,6 +52,9 @@
     .text {
       border-left: 3px solid black;
       padding: 3px 5px;
+      &:first-letter {
+        text-transform: uppercase;
+      }
     }
     .quantity {
       padding: 3px 5px;
@@ -71,6 +74,12 @@
         border-left: 1px dashed #666;
         margin-left: 10px;
         padding: 1px 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &:first-letter {
+          text-transform: uppercase;
+        }
       }
       .quantity {
         padding: 1px 5px;

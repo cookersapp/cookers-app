@@ -14,7 +14,7 @@ angular.module('ionicApp')
 .filter('quantity', function($filter){
   'use strict';
   return function(quantity){
-    return quantity && quantity.value > 0 ? quantity.value+' '+$filter('unit')(quantity.unit) : '';
+    return quantity && quantity.value > 0 ? $filter('number')(Math.round(quantity.value*100)/100)+' '+$filter('unit')(quantity.unit) : '';
   };
 })
 

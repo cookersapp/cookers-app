@@ -19,14 +19,17 @@
     <form ng-submit="sendFeedback()">
       <div class="list list-inset">
         <label class="item item-input">
-          <input type="email" name="mail" placeholder="Mail" ng-model="feedback.mail" ng-disabled="feedback.sent" required>
+          <input type="email" name="mail" placeholder="Mail" ng-model="feedback.mail" ng-disabled="feedback.sending || feedback.sent" required>
         </label>
         <label class="item item-input">
-          <textarea name="content" rows="5" placeholder="Votre remarque" ng-model="feedback.content" ng-disabled="feedback.sent" required></textarea>
+          <textarea name="content" rows="5" placeholder="Votre remarque" ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" required></textarea>
         </label>
       </div>
       <div class="padding" ng-class="{hide: feedback.sent}">
-        <button type="submit" class="button button-block button-positive">Envoyer</button>
+        <button type="submit" class="button button-block button-positive" ng-disabled="feedback.sending">
+          <span ng-if="!feedback.sending">Envoyer</span>
+          <span ng-if="feedback.sending"><i class="fa fa-spinner fa-spin"></i> Envoi...</span>
+        </button>
       </div>
       <div class="padding" ng-class="{fadeInUp: feedback.sent, hide: !feedback.sent}">
         <div class="alert alert-success"  style="margin-bottom: 5px;">

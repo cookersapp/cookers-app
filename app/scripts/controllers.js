@@ -24,6 +24,8 @@ angular.module('ionicApp')
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.userProfile = UserService.getProfile();
+
+  // TODO : do it with boughtRecipes or CartCreated !
   $scope.recipesHistory = $localStorage.recipesHistory;
   $scope.recipesHistoryGoal = 10;
 
@@ -210,17 +212,25 @@ angular.module('ionicApp')
   }
 })
 
-.controller('FeedbackCtrl', function($scope, UserService){
+.controller('FeedbackCtrl', function($scope, UserService, MailService){
   'use strict';
   var user = UserService.get();
   $scope.feedback = {
     mail: user.profile.mail,
     content: '',
+    sending: false,
     sent: false
   };
   $scope.sendFeedback = function(){
-    // TODO really send feedback !!!
-    $scope.feedback.sent = true;
+    $scope.feedback.sending = true;
+    MailService.sendFeedback($scope.feedback.mail, $scope.feedback.content).then(function(sent){
+      $scope.feedback.sending = false;
+      if(sent){
+        $scope.feedback.sent = true;
+      } else {
+        alert('Echec de l\'envoi du mail. Réessayez !');
+      }
+    });
   };
 })
 

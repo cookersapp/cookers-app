@@ -43,8 +43,14 @@ $avatar-size: 80px;
   }
   .list {
     .item {
+      color: #fff;
       background: transparent;
       border-color: #563d7c;
+    }
+    .item-divider {
+      border: none;
+      //border-bottom: 4px solid #563d7c;
+      padding-left: 30px;
     }
   }
 }

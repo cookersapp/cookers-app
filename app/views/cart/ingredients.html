@@ -1,6 +1,11 @@
 <div>
-  <div ng-if="!items || items.length === 0" class="cart-empty">
+  <div ng-if="(!items || items.length === 0) && boughtItems.length === 0" class="cart-empty">
     Aucun ingrédient à acheter !!!
+  </div>
+  <div ng-if="(!items || items.length === 0) && boughtItems.length > 0" class="cart-empty">
+    Bravo ! Vous avez tout acheté !!!<br>
+    <br>
+    <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
   </div>
 
   <div class="list">

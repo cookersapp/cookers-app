@@ -403,9 +403,49 @@ angular.module('ionicApp')
       });
     });
   }
-  
+
   function isMessageQueued(message){
     return message && message.added && _.findIndex(userinfo.messages, {added: message.added}) > -1;
+  }
+
+  return service;
+})
+
+.factory('MailService', function($http, $q, mandrillUrl, supportTeamMail){
+  'use strict';
+  var service = {
+    sendFeedback: sendFeedback
+  };
+
+  function sendFeedback(mail, feedback){
+    return $http.post(mandrillUrl+'/messages/send.json', {
+      "key": "__YzrUYwZGkqqSM2pe9XFg",
+      "message": {
+        "subject": "[Cookers] Feedback from app",
+        "text": feedback,
+        //"html": "<p>"+feedback+"</p>",
+        "from_email": mail,
+        "to": [
+          {"email": supportTeamMail, "name": "Cookers team"}
+        ],
+        "important": false,
+        "track_opens": true,
+        "track_clicks": null,
+        "preserve_recipients": null,
+        "tags": [
+          "app", "feedback"
+        ]
+      },
+      "async": false
+    }).then(function(result){
+      var sent = true;
+      for(var i in result.data){
+        if(result.data[i].reject_reason){
+          sent = false;
+        }
+      }
+      return sent;
+    });
   }
 
   return service;
