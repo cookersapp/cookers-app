@@ -104,50 +104,6 @@ angular.module('ionicApp')
   };
 })
 
-.controller('Recipes2Ctrl', function($scope, WeekrecipeSrv, CartSrv){
-  'use strict';
-  var recipesToAdd = [];
-  $scope.weekrecipes = [];
-  $scope.recipes = [];
-  $scope.loading = true;
-
-  WeekrecipeSrv.getCurrent().then(function(weekrecipes){
-    $scope.weekrecipes = weekrecipes.recipes;
-    recipesToAdd = _.filter(weekrecipes.recipes, function(recipe){
-      return !CartSrv.cartHasRecipe(recipe);
-    });
-    $scope.cardSwiped();
-    $scope.loading = false;
-  });
-
-  $scope.cardSwiped = function(recipe){
-    if(recipe){
-      if(!CartSrv.cartHasRecipe(recipe)){
-        recipesToAdd.push(recipe);
-      }
-    }
-
-    if(recipesToAdd.length > 0){
-      var newRecipe = recipesToAdd.splice(0, 1)[0];
-      $scope.recipes.push(angular.copy(newRecipe));
-    }
-  };
-})
-
-.controller('RecipeCardCtrl', function($scope, $ionicSwipeCardDelegate, CartSrv){
-  'use strict';
-  $scope.goAway = function(){
-    var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
-    card.swipe();
-  };
-
-  $scope.addRecipeToCart = function(recipe){
-    CartSrv.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
-    $scope.goAway();
-  };
-})
-
 .controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.recipe = {};

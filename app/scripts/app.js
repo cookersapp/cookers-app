@@ -34,15 +34,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
       }
     }
   })
-  .state('app.recipes2', {
-    url: '/recipes2',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/recipes2.html',
-        controller: 'Recipes2Ctrl'
-      }
-    }
-  })
   .state('app.recipe', {
     url: '/recipe/:recipeId',
     views: {
