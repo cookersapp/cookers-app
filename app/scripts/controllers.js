@@ -1,7 +1,8 @@
 angular.module('ionicApp')
 
-.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserSrv){
+.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserSrv, LogSrv){
   'use strict';
+  var currentSlide = 0;
   $scope.profile = angular.copy(UserSrv.getProfile());
 
   $scope.startApp = function(){
@@ -12,16 +13,19 @@ angular.module('ionicApp')
     UserSrv.setDefaultServings($scope.profile.defaultServings);
     $scope.startApp();
   };
+  $scope.slideChanged = function(index){
+    LogSrv.trackIntroChangeSlide(currentSlide, index);
+    currentSlide = index;
+  };
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserSrv, debug){
+.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, $ionicSideMenuDelegate, UserSrv, LogSrv){
   'use strict';
   if($rootScope.showIntro){
     $rootScope.showIntro = false;
     $state.go('intro');
   }
 
-  $scope.debug = debug;
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.userProfile = UserSrv.getProfile();
@@ -45,9 +49,19 @@ angular.module('ionicApp')
       $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
     }
   }, 10000);
+
+  $scope.$watch($ionicSideMenuDelegate.getOpenRatio, function(newValue, oldValue){
+    if(newValue !== oldValue){
+      if(newValue === 0){
+        LogSrv.trackToggleMenu('close');
+      } else if(newValue === 1){
+        LogSrv.trackToggleMenu('open');
+      }
+    }
+  });
 })
 
-.controller('HomeCtrl', function($scope, $localStorage, UserInfoSrv, CartSrv){
+.controller('HomeCtrl', function($scope, $localStorage, UserInfoSrv, CartSrv, LogSrv){
   'use strict';
   $scope.message = null;
   $scope.cart = CartSrv.getCurrentCart();
@@ -58,6 +72,7 @@ angular.module('ionicApp')
     $scope.message = message;
   });
   $scope.hideMessage = function(){
+    LogSrv.trackCloseMessageInfo($scope.message.id);
     $scope.message.hide = true;
     $scope.message = null;
     UserInfoSrv.messageToDisplay().then(function(message){
@@ -66,7 +81,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipesCtrl', function($scope, WeekrecipeSrv, CartSrv){
+.controller('RecipesCtrl', function($scope, WeekrecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.weekrecipes = [];
@@ -77,11 +92,13 @@ angular.module('ionicApp')
 
   $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
-  $scope.addRecipeToCart = function(recipe){
+  $scope.addRecipeToCart = function(recipe, index){
+    LogSrv.trackAddRecipeToCart(recipe.id, index, 'weekrecipes');
     CartSrv.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
-  $scope.removeRecipeFromCart = function(recipe){
+  $scope.removeRecipeFromCart = function(recipe, index){
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
     CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
@@ -131,7 +148,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeSrv, CartSrv){
+.controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.recipe = {};
   RecipeSrv.get($stateParams.recipeId).then(function(recipe){
@@ -143,26 +160,29 @@ angular.module('ionicApp')
   $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
+    LogSrv.trackAddRecipeToCart(recipe.id, null, 'recipedetail');
     CartSrv.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipedetail');
     CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('CartCtrl', function($scope, CartSrv){
+.controller('CartCtrl', function($scope, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.getCurrentCart();
   $scope.archiveCart = function(){
     if(window.confirm('Archiver cette liste ?')){
+      LogSrv.trackArchiveCart();
       CartSrv.archiveCart();
     }
   };
 })
 
-.controller('CartRecipesCtrl', function($scope, CartSrv){
+.controller('CartRecipesCtrl', function($scope, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.getCurrentCart();
 
@@ -181,15 +201,18 @@ angular.module('ionicApp')
     }
   };
 
+  $scope.toggleRecipe = function(recipe){
+    LogSrv.trackCartRecipeDetails(recipe.id, recipe.selected ? 'hide' : 'show');
+    recipe.selected=!recipe.selected;
+  };
   $scope.removeRecipeFromCart = function(recipe){
-    if(CartSrv.hasCarts()){
-      CartSrv.removeRecipeFromCart(recipe);
-    }
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
+    CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList, LogSrv){
   'use strict';
   $scope.openedItems = [];
   $scope.items = CartSrv.getCurrentCartItems();
@@ -203,18 +226,22 @@ angular.module('ionicApp')
   };
   $scope.toggleItem = function(item){
     var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
+    LogSrv.trackCartItemDetails(item.food.id, index > -1 ? 'hide' : 'show');
     if(index > -1){$scope.openedItems.splice(index, 1);}
     else {$scope.openedItems.push(item);}
   };
   $scope.buyItem = function(item){
+    LogSrv.trackBuyItem(item.food.id);
     CartSrv.buyCartItem(item);
     updateCart();
   };
   $scope.buySource = function(source, item){
+    LogSrv.trackBuyItemSource(item.food.id, source.recipe ? source.recipe.id : null);
     CartSrv.buyCartItemSource(source, item);
     updateCart();
   };
   $scope.unbuyItem = function(item){
+    LogSrv.trackUnbuyItem(item.food.id);
     CartSrv.unbuyCartItem(item);
     updateCart();
   };
@@ -264,12 +291,15 @@ angular.module('ionicApp')
     $scope.selectedProduct.unit = unit;
   };
   $scope.addSelectedProductToCart = function(){
-    CartSrv.addCustomItemToCart($scope.selectedProduct);
+    var item = $scope.selectedProduct;
+    LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch.name);
+    CartSrv.addCustomItemToCart(item);
     updateCart();
     window.plugins.toast.show('✔ ingrédient ajouté à la liste de courses');
     resetAddIngredient();
   };
-  $scope.removeCartItem = function(item){
+  $scope.removeCartItemSource = function(item){
+    LogSrv.trackRemoveItemFromCart(item.ingredient.id);
     CartSrv.removeCustomItemFromCart(item);
     updateCart();
     window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
@@ -280,7 +310,7 @@ angular.module('ionicApp')
   });
 
   function resetProduct(){
-    $scope.selectedProduct = null
+    $scope.selectedProduct = null;
     $scope.quantityMult = 1;
     $scope.quantityRound = 0;
   }
@@ -296,7 +326,7 @@ angular.module('ionicApp')
   }
 })
 
-.controller('FeedbackCtrl', function($scope, UserSrv, MailSrv){
+.controller('FeedbackCtrl', function($scope, UserSrv, MailSrv, LogSrv){
   'use strict';
   var user = UserSrv.get();
   $scope.feedback = {
@@ -305,8 +335,10 @@ angular.module('ionicApp')
     sending: false,
     sent: false
   };
+  
   $scope.sendFeedback = function(){
     $scope.feedback.sending = true;
+    LogSrv.trackSendFeedback($scope.feedback.mail);
     MailSrv.sendFeedback($scope.feedback.mail, $scope.feedback.content).then(function(sent){
       $scope.feedback.sending = false;
       if(sent){
@@ -315,9 +347,12 @@ angular.module('ionicApp')
         window.alert('Echec de l\'envoi du mail. Réessayez !');
       }
     });
-    if(!user.profile.mail){
+    if(user.profile.mail !== $scope.feedback.mail){
       UserSrv.setMail($scope.feedback.mail);
     }
+  };
+  $scope.openUservoice = function(){
+    LogSrv.trackOpenUservoice();
   };
 
   // UserVoice widget

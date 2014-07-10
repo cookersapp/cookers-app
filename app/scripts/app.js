@@ -1,6 +1,6 @@
 angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5'])
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider){
   'use strict';
   $urlRouterProvider.otherwise('/app/home');
 
@@ -147,7 +147,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug){
   'use strict';
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
@@ -156,7 +156,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
   if(!$localStorage.userinfo){$localStorage.userinfo = localStorageDefault.userinfo;}
+  
+  LogSrv.trackStates();
 
+  $rootScope.debug = debug;
   /*$ionicPlatform.ready(function(){
     if(window.StatusBar) {
       StatusBar.styleDefault();

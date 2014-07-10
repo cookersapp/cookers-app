@@ -19,7 +19,7 @@
     <div class="padding">
       Consultez aussi <span>http://cookers.uservoice.com/</span> pour suggérer et voter pour les nouvelles fonctionnalités !
     </div>
-    <form ng-submit="sendFeedback()">
+    <form ng-submit="sendFeedback()" class="feedback-form">
       <div class="list list-inset">
         <label class="item item-input">
           <input type="email" name="mail" placeholder="Mail" ng-model="feedback.mail" ng-disabled="feedback.sending || feedback.sent" required>
@@ -45,7 +45,7 @@
     </div>
     
     <!-- UserVoice widget -->
-    <div id="uservoice" data-html2canvas-ignore="true" class="uv-icon uv-bottom-right">
+    <div id="uservoice" data-html2canvas-ignore="true" class="uv-icon uv-bottom-right" ng-click="openUservoice()">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="39px" height="39px" viewBox="0 0 39 39" enable-background="new 0 0 39 39" xml:space="preserve">
         <g><path class="uv-bubble-background" fill="rgba(46, 49, 51, 0.6)" d="M31.425,34.514c-0.432-0.944-0.579-2.007-0.591-2.999c4.264-3.133,7.008-7.969,7.008-13.409
           C37.842,8.658,29.594,1,19.421,1S1,8.658,1,18.105c0,9.446,7.932,16.79,18.105,16.79c1.845,0,3.94,0.057,5.62-0.412

@@ -102,7 +102,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('CartSrv', function($localStorage, UserSrv, LogSrv){
+.factory('CartSrv', function($localStorage, UserSrv){
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
@@ -209,15 +209,14 @@ angular.module('ionicApp')
         buyIngredient(ingredient, recipe, bought);
       }
     } else if(source && source.ingredient && source.ingredient.food && source.ingredient.food.id){
-      var item = _.find(cart.items, {id: source.ingredient.id, added: source.ingredient.added});
-      buyIngredient(item, null, bought);
+      var cartItem = _.find(cart.items, {id: source.ingredient.id, added: source.ingredient.added});
+      buyIngredient(cartItem, null, bought);
     }
   }
   function buyIngredient(ingredient, recipe, bought){
     if(ingredient){
       if(bought) {
         ingredient.bought = true;
-        LogSrv.buyIngredient(ingredient, recipe);
         navigator.geolocation.getCurrentPosition(function(position){
           ingredient.bought = position;
         }, function(error){
@@ -363,12 +362,12 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserSrv', function($localStorage, $ionicPlatform, $http, firebaseUrl, md5){
+.factory('UserSrv', function($localStorage, $ionicPlatform, $http, LogSrv, firebaseUrl, md5){
   'use strict';
   var currentUser = $localStorage.user;
   var service = {
     get: function(){return $localStorage.user;},
-    getProfile: getProfile,
+    getProfile: function(){return $localStorage.user.profile;},
     setMail: setMail,
     setDefaultServings: setDefaultServings,
     isFirstLaunch: function(){return !$localStorage.user.launchs;},
@@ -393,6 +392,7 @@ angular.module('ionicApp')
   }
 
   function launch(){
+    LogSrv.identify(currentUser.device.uuid);
     function addLaunch(user, launch){
       user.launchs.unshift(launch);
       var firebaseRef = new Firebase(firebaseUrl+'/connected');
@@ -408,26 +408,33 @@ angular.module('ionicApp')
     });
   }
 
-  function getProfile(){
-    return currentUser.profile;
-  }
-
   function setMail(mail){
     currentUser.profile.mail = mail;
     currentUser.profile.name = 'Anonymous';
     currentUser.profile.avatar = 'images/user.jpg';
     if(mail){
+      var mixpanelUser = {
+        $created: currentUser.profile.firstLaunch,
+        $email: mail
+      };
       $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
         currentUser.gravatar = result.data;
         if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
-          if(currentUser.gravatar.entry[0].thumbnailUrl){
-            currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl;
-          }
-          if(currentUser.gravatar.entry[0].displayName){
-            currentUser.profile.name = currentUser.gravatar.entry[0].displayName;
+          if(currentUser.gravatar.entry[0].thumbnailUrl){ currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl; }
+          if(currentUser.gravatar.entry[0].displayName) { currentUser.profile.name = currentUser.gravatar.entry[0].displayName; }
+          if(currentUser.gravatar.entry[0].hash)            { mixpanelUser.gravatar = currentUser.gravatar.entry[0].hash; }
+          if(currentUser.gravatar.entry[0].aboutMe)         { mixpanelUser.about = currentUser.gravatar.entry[0].aboutMe; }
+          if(currentUser.gravatar.entry[0].currentLocation) { mixpanelUser.location = currentUser.gravatar.entry[0].currentLocation; }
+          if(currentUser.gravatar.entry[0].name){
+            if(currentUser.gravatar.entry[0].name.givenName) { mixpanelUser.$first_name = currentUser.gravatar.entry[0].name.givenName; }
+            if(currentUser.gravatar.entry[0].name.familyName){ mixpanelUser.$last_name = currentUser.gravatar.entry[0].name.familyName; }
           }
         }
+        mixpanelUser.fullName = currentUser.profile.name;
+        mixpanelUser.avatar = currentUser.profile.avatar;
+        LogSrv.register(mixpanelUser);
       });
+      LogSrv.trackSetMail(mail);
     }
   }
   function setDefaultServings(defaultServings){
@@ -440,6 +447,9 @@ angular.module('ionicApp')
     device.environment = getEnvironment();
     device.grade = ionic.Platform.grade;
     device.platforms = ionic.Platform.platforms;
+    if(!device.uuid){
+      device.uuid = createUuid();
+    }
     return device;
   }
 
@@ -450,6 +460,11 @@ angular.module('ionicApp')
     else if(ionic.Platform.isAndroid()){return 'Android';}
     else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
     else {return 'Unknown';}
+  }
+
+  function createUuid(){
+    function S4(){ return (((1+Math.random())*0x10000)|0).toString(16).substring(1); }
+    return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0,3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
   }
 
   return service;
@@ -547,32 +562,127 @@ angular.module('ionicApp')
       new Firebase(firebaseUrl+endpoint).push(data);
     }
   };
-  
+
   return service;
 })
 
-.factory('LogSrv', function(UserSrv, firebaseUrl){
+.factory('LogSrv', function($rootScope, $localStorage, $state, firebaseUrl, APP_VERSION, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
+  var currentUser = $localStorage.user;
   var service = {
-    buyIngredient: buyIngredient
+    identify: identify,
+    register: register,
+    trackLaunch: function(user){track('launch', {user: user});},
+    trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
+    trackState: function(params){track('state', params);},
+    trackStateError: function(params){track('state-error', params);},
+    trackStateNotFound: function(params){track('state-not-found', params);},
+    trackSetMail: function(mail){track('set-mail', {mail: mail});},
+    trackToggleMenu: function(action){track('toggle-menu', {action: action});},
+    trackCloseMessageInfo: function(message){track('close-message-info', {message: message});},
+    // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ???
+    trackAddRecipeToCart: function(recipe, index, from){track('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
+    trackRemoveRecipeFromCart: function(recipe, index, from){track('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
+    trackAddItemToCart: function(item, quantity, unit, missing, search){track('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
+    trackRemoveItemFromCart: function(item){track('remove-item-from-cart', {item: item});},
+    trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
+    trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},
+    trackBuyItem: function(item){trackWithPosition('buy-item', {item: item});},
+    trackBuyItemSource: function(item, recipe){trackWithPosition('buy-item-source', {item: item, recipe: recipe});},
+    trackUnbuyItem: function(item){track('unbuy-item', {item: item});},
+    trackArchiveCart: function(){track('archive-cart');},
+    trackSendFeedback: function(mail){track('send-feedback', {mail: mail});},
+    trackOpenUservoice: function(){track('open-uservoice');},
+    trackStates: trackStates,
   };
 
-  function buyIngredient(ingredient, recipe){
-    var user = UserSrv.get();
-    var data = {};
-    if(recipe && recipe.id){data.recipe = recipe.id;}
-    if(ingredient && ingredient.food && ingredient.food.id){data.ingredient = ingredient.food.id;}
-    if(user && user.device && user.device.uuid){data.device = user.device.uuid;}
-
-    navigator.geolocation.getCurrentPosition(function(position){
-      data.position = position;
-      buyLogsRef.push(data);
-    }, function(error){
-      error.timestamp = Date.now();
-      data.position = error;
-      buyLogsRef.push(data);
+  function trackStates(){
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+      var params = {};
+      if(fromState && fromState.name)                       {params.fromUrl = $state.href(fromState.name, fromParams);}
+      if(fromState && fromState.name)                       {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
+      if(toState && toState.name)                           {params.toUrl = $state.href(toState.name, toParams);}
+      if(toState && toState.name)                           {params.to = toState.name;}
+      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
+      service.trackState(params);
     });
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
+      var params = {};
+      if(fromState && fromState.name)                       {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
+      if(toState && toState.name)                           {params.to = toState.name;}
+      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
+      if(error && !isEmpty(error))                          {params.error = error;}
+      service.trackStateError(params);
+    });
+    $rootScope.$on('$stateNotFound', function(event, unfoundState, fromState, fromParams){
+      var params = {};
+      if(fromState && fromState.name)                                               {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                                        {params.fromParams = fromParams;}
+      if(unfoundState && unfoundState.to)                                           {params.to = unfoundState.to;}
+      if(unfoundState && unfoundState.toParams && !isEmpty(unfoundState.toParams))  {params.toParams = unfoundState.toParams;}
+      service.trackStateNotFound(params);
+    });
+  }
+  
+  function trackWithPosition(event, params){
+    navigator.geolocation.getCurrentPosition(function(position){
+      event.position = position.coords;
+      event.position.timestamp = position.timestamp;
+      if(event === 'buy-item' || event === 'buy-item-source'){buyLogsRef.push(params);}
+      track(event, params);
+    }, function(error){
+      event.position = error;
+      event.position.timestamp = Date.now();
+      track(event, params);
+    });
+  }
+
+  function track(event, params){
+    if(!params){params = {};}
+    params.time = Date.now();
+    params.appVersion = APP_VERSION;
+    if(!params.url && window && window.location && window.location.hash) {params.url = window.location.hash;}
+    if(!params.mail && currentUser && currentUser.profile && currentUser.profile.mail){params.mail = currentUser.profile.mail;}
+    if(currentUser && currentUser.device){
+      if(!params.uuid && currentUser.device.uuid){params.uuid = currentUser.device.uuid;}
+      if(!params.device && currentUser.device.model && currentUser.device.platform && currentUser.device.version){
+        params.device = {
+          model: currentUser.device.model,
+          platform: currentUser.device.platform,
+          version: currentUser.device.version
+        };
+      }
+    }
+
+    if(debug){
+      console.log('track '+event, params);
+    } else {
+      mixpanel.track(event, params);
+    }
+  }
+
+  function identify(id){
+    if(debug){
+      console.log('identify', id);
+    } else {
+      mixpanel.identify(id);
+    }
+    service.trackLaunch(id);
+  }
+
+  function register(user){
+    if(debug){
+      console.log('register', user);
+    } else {
+      mixpanel.people.set(user);
+    }
+  }
+
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
   }
 
   return service;

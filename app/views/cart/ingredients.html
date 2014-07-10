@@ -80,7 +80,7 @@
             {{source.quantity | quantity}}
           </div>
           <div class="text" ng-if="source.recipe">{{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})</div>
-          <div class="text" ng-if="!source.recipe"><button class="button button-xs button-assertive" ng-click="removeCartItem(source)">&times;</button> Ajouté manuellement</div>
+          <div class="text" ng-if="!source.recipe"><button class="button button-xs button-assertive" ng-click="removeCartItemSource(source)">&times;</button> Ajouté manuellement</div>
         </div>
       </div>
     </div>

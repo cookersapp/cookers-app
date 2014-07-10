@@ -24,10 +24,18 @@ Your app is now running to your computer. To run it to your android device :
 - `grunt build` builds your sources and put them in www/ folder to deploy on your device.
 
 
-## TODO
+## Cordova plugin description
 
-- bugs
-    - recipe of week (with full screen images) don't scroll, sometimes... :(
+- org.apache.cordova.device : allow to get phone data (uuid, phone model, android version...)
+- org.apache.cordova.console : not really sure of benefits but it's recommended (to have a better console.log)
+- https://github.com/driftyco/ionic-plugins-keyboard : allow to listen and interract with keyboard
+- org.apache.cordova.geolocation : allow to get precise user position
+- https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
+
+## Useful infos
+
+- open external links : http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/
+- android push notifications : http://intown.biz/2014/04/11/android-notifications/
 
 ## Design
 
