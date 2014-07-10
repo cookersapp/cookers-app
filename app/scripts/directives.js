@@ -1,6 +1,6 @@
 angular.module('ionicApp')
 
-.directive('focusOnKeyboardOpen', function($timeout, $rootScope){
+.directive('focusOnKeyboardOpen', function(){
   'use strict';
   return {
     restrict: 'A',

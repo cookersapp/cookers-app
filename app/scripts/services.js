@@ -1,6 +1,6 @@
 angular.module('ionicApp')
 
-.factory('WeekrecipeService', function($http, $q, $localStorage, firebaseUrl, RecipeService){
+.factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv){
   'use strict';
   var service = {
     getCurrent: function(){ return getRecipesOfWeek(moment().week()); },
@@ -21,7 +21,7 @@ angular.module('ionicApp')
     return $http.get(firebaseUrl+'/weekrecipes/'+week+'.json').then(function(result){
       storeRecipesOfWeek(result.data);
       for(var i in result.data.recipes){
-        RecipeService.store(result.data.recipes[i]);
+        RecipeSrv.store(result.data.recipes[i]);
       }
       return result.data;
     });
@@ -34,7 +34,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('RecipeService', function($http, $q, $localStorage, firebaseUrl){
+.factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
   var service = {
     get: getRecipe,
@@ -64,7 +64,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('FoodService', function($http, $q, $localStorage, firebaseUrl){
+.factory('FoodSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
   var foods = $localStorage.foods;
   var service = {
@@ -102,7 +102,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('CartService', function($localStorage, UserService, LogService){
+.factory('CartSrv', function($localStorage, UserSrv, LogSrv){
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
@@ -217,7 +217,7 @@ angular.module('ionicApp')
     if(ingredient){
       if(bought) {
         ingredient.bought = true;
-        LogService.buyIngredient(ingredient, recipe);
+        LogSrv.buyIngredient(ingredient, recipe);
         navigator.geolocation.getCurrentPosition(function(position){
           ingredient.bought = position;
         }, function(error){
@@ -344,7 +344,7 @@ angular.module('ionicApp')
       added: Date.now(),
       id: recipe.id,
       servings: {
-        value: UserService.getProfile().defaultServings,
+        value: UserSrv.getProfile().defaultServings,
         unit: recipe.servings.unit
       },
       data: recipe
@@ -363,7 +363,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserService', function($localStorage, $ionicPlatform, $http, firebaseUrl, md5){
+.factory('UserSrv', function($localStorage, $ionicPlatform, $http, firebaseUrl, md5){
   'use strict';
   var currentUser = $localStorage.user;
   var service = {
@@ -455,7 +455,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserInfoService', function($q, $http, $localStorage, firebaseUrl){
+.factory('UserInfoSrv', function($q, $http, $localStorage, firebaseUrl){
   'use strict';
   var userinfo = $localStorage.userinfo;
   var service = {
@@ -500,7 +500,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('MailService', function($http, $q, mandrillUrl, mandrillKey, supportTeamMail){
+.factory('MailSrv', function($http, $q, mandrillUrl, mandrillKey, supportTeamMail){
   'use strict';
   var service = {
     sendFeedback: sendFeedback
@@ -540,7 +540,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('FirebaseService', function(firebaseUrl){
+.factory('FirebaseSrv', function(firebaseUrl){
   'use strict';
   var service = {
     push: function(endpoint, data){
@@ -551,7 +551,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LogService', function(UserService, firebaseUrl){
+.factory('LogSrv', function(UserSrv, firebaseUrl){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var service = {
@@ -559,7 +559,7 @@ angular.module('ionicApp')
   };
 
   function buyIngredient(ingredient, recipe){
-    var user = UserService.get();
+    var user = UserSrv.get();
     var data = {};
     if(recipe && recipe.id){data.recipe = recipe.id;}
     if(ingredient && ingredient.food && ingredient.food.id){data.ingredient = ingredient.food.id;}

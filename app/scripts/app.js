@@ -147,7 +147,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserService){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv){
   'use strict';
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
@@ -169,10 +169,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   };
 
   $rootScope.showIntro = false;
-  if(UserService.isFirstLaunch()){
+  if(UserSrv.isFirstLaunch()){
     $rootScope.showIntro = true;
-    UserService.firstLaunch();
+    UserSrv.firstLaunch();
   } else {
-    UserService.launch();
+    UserSrv.launch();
   }
 });

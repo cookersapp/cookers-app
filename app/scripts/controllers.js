@@ -1,20 +1,20 @@
 angular.module('ionicApp')
 
-.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserService){
+.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserSrv){
   'use strict';
-  $scope.profile = angular.copy(UserService.getProfile());
+  $scope.profile = angular.copy(UserSrv.getProfile());
 
   $scope.startApp = function(){
     $state.go('app.home');
   };
   $scope.submitUserInfos = function(){
-    UserService.setMail($scope.profile.mail);
-    UserService.setDefaultServings($scope.profile.defaultServings);
+    UserSrv.setMail($scope.profile.mail);
+    UserSrv.setDefaultServings($scope.profile.defaultServings);
     $scope.startApp();
   };
 })
 
-.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserService, debug){
+.controller('AppCtrl', function($rootScope, $scope, $state, $localStorage, $interval, UserSrv, debug){
   'use strict';
   if($rootScope.showIntro){
     $rootScope.showIntro = false;
@@ -24,7 +24,7 @@ angular.module('ionicApp')
   $scope.debug = debug;
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
-  $scope.userProfile = UserService.getProfile();
+  $scope.userProfile = UserSrv.getProfile();
 
   // TODO : do it with boughtRecipes or CartCreated !
   $scope.recipesHistory = $localStorage.recipesHistory;
@@ -47,57 +47,57 @@ angular.module('ionicApp')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $localStorage, UserInfoService, CartService){
+.controller('HomeCtrl', function($scope, $localStorage, UserInfoSrv, CartSrv){
   'use strict';
   $scope.message = null;
-  $scope.cart = CartService.getCurrentCart();
-  $scope.items = CartService.getCurrentCartItems();
+  $scope.cart = CartSrv.getCurrentCart();
+  $scope.items = CartSrv.getCurrentCartItems();
   $scope.recipesHistory = $localStorage.recipesHistory;
 
-  UserInfoService.messageToDisplay().then(function(message){
+  UserInfoSrv.messageToDisplay().then(function(message){
     $scope.message = message;
   });
   $scope.hideMessage = function(){
     $scope.message.hide = true;
     $scope.message = null;
-    UserInfoService.messageToDisplay().then(function(message){
+    UserInfoSrv.messageToDisplay().then(function(message){
       $scope.message = message;
     });
   };
 })
 
-.controller('RecipesCtrl', function($scope, WeekrecipeService, CartService){
+.controller('RecipesCtrl', function($scope, WeekrecipeSrv, CartSrv){
   'use strict';
   $scope.loading = true;
   $scope.weekrecipes = [];
-  WeekrecipeService.getCurrent().then(function(weekrecipes){
+  WeekrecipeSrv.getCurrent().then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes;
     $scope.loading = false;
   });
 
-  $scope.cartHasRecipe = CartService.cartHasRecipe;
+  $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
-    CartService.addRecipeToCart(recipe);
+    CartSrv.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
-    CartService.removeRecipeFromCart(recipe);
+    CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('Recipes2Ctrl', function($scope, WeekrecipeService, CartService){
+.controller('Recipes2Ctrl', function($scope, WeekrecipeSrv, CartSrv){
   'use strict';
   var recipesToAdd = [];
   $scope.weekrecipes = [];
   $scope.recipes = [];
   $scope.loading = true;
 
-  WeekrecipeService.getCurrent().then(function(weekrecipes){
+  WeekrecipeSrv.getCurrent().then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes.recipes;
     recipesToAdd = _.filter(weekrecipes.recipes, function(recipe){
-      return !CartService.cartHasRecipe(recipe);
+      return !CartSrv.cartHasRecipe(recipe);
     });
     $scope.cardSwiped();
     $scope.loading = false;
@@ -105,7 +105,7 @@ angular.module('ionicApp')
 
   $scope.cardSwiped = function(recipe){
     if(recipe){
-      if(!CartService.cartHasRecipe(recipe)){
+      if(!CartSrv.cartHasRecipe(recipe)){
         recipesToAdd.push(recipe);
       }
     }
@@ -117,7 +117,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipeCardCtrl', function($scope, $ionicSwipeCardDelegate, CartService){
+.controller('RecipeCardCtrl', function($scope, $ionicSwipeCardDelegate, CartSrv){
   'use strict';
   $scope.goAway = function(){
     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
@@ -125,46 +125,46 @@ angular.module('ionicApp')
   };
 
   $scope.addRecipeToCart = function(recipe){
-    CartService.addRecipeToCart(recipe);
+    CartSrv.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
     $scope.goAway();
   };
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeService, CartService){
+.controller('RecipeCtrl', function($scope, $stateParams, $localStorage, RecipeSrv, CartSrv){
   'use strict';
   $scope.recipe = {};
-  RecipeService.get($stateParams.recipeId).then(function(recipe){
+  RecipeSrv.get($stateParams.recipeId).then(function(recipe){
     _.remove($localStorage.recipesHistory, {id: recipe.id});
     $localStorage.recipesHistory.unshift(recipe);
     $scope.recipe = recipe;
   });
 
-  $scope.cartHasRecipe = CartService.cartHasRecipe;
+  $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
-    CartService.addRecipeToCart(recipe);
+    CartSrv.addRecipeToCart(recipe);
     window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
-    CartService.removeRecipeFromCart(recipe);
+    CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('CartCtrl', function($scope, CartService){
+.controller('CartCtrl', function($scope, CartSrv){
   'use strict';
-  $scope.cart = CartService.getCurrentCart();
+  $scope.cart = CartSrv.getCurrentCart();
   $scope.archiveCart = function(){
     if(window.confirm('Archiver cette liste ?')){
-      CartService.archiveCart();
+      CartSrv.archiveCart();
     }
   };
 })
 
-.controller('CartRecipesCtrl', function($scope, CartService){
+.controller('CartRecipesCtrl', function($scope, CartSrv){
   'use strict';
-  $scope.cart = CartService.getCurrentCart();
+  $scope.cart = CartSrv.getCurrentCart();
 
   $scope.ingredientBoughtPc = function(recipe){
     // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
@@ -182,18 +182,18 @@ angular.module('ionicApp')
   };
 
   $scope.removeRecipeFromCart = function(recipe){
-    if(CartService.hasCarts()){
-      CartService.removeRecipeFromCart(recipe);
+    if(CartSrv.hasCarts()){
+      CartSrv.removeRecipeFromCart(recipe);
     }
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartService, FoodService, FirebaseService, dataList){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList){
   'use strict';
   $scope.openedItems = [];
-  $scope.items = CartService.getCurrentCartItems();
-  $scope.boughtItems = CartService.getCurrentCartBoughtItems();
+  $scope.items = CartSrv.getCurrentCartItems();
+  $scope.boughtItems = CartSrv.getCurrentCartBoughtItems();
 
   $scope.categoryId = function(food){
     return getSlug(food.category);
@@ -207,15 +207,15 @@ angular.module('ionicApp')
     else {$scope.openedItems.push(item);}
   };
   $scope.buyItem = function(item){
-    CartService.buyCartItem(item);
+    CartSrv.buyCartItem(item);
     updateCart();
   };
   $scope.buySource = function(source, item){
-    CartService.buyCartItemSource(source, item);
+    CartSrv.buyCartItemSource(source, item);
     updateCart();
   };
   $scope.unbuyItem = function(item){
-    CartService.unbuyCartItem(item);
+    CartSrv.unbuyCartItem(item);
     updateCart();
   };
 
@@ -229,7 +229,7 @@ angular.module('ionicApp')
   $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   $scope.units = dataList.quantityUnits;
 
-  FoodService.getAll().then(function(foods){
+  FoodSrv.getAll().then(function(foods){
     $scope.foods = foods;
   });
 
@@ -240,7 +240,7 @@ angular.module('ionicApp')
         name: product,
         category: 'Inconnue'
       };
-      FirebaseService.push('/missing/food', product);
+      FirebaseSrv.push('/missing/food', product);
     }
     $scope.selectedProduct = {
       product: product
@@ -264,13 +264,13 @@ angular.module('ionicApp')
     $scope.selectedProduct.unit = unit;
   };
   $scope.addSelectedProductToCart = function(){
-    CartService.addCustomItemToCart($scope.selectedProduct);
+    CartSrv.addCustomItemToCart($scope.selectedProduct);
     updateCart();
     window.plugins.toast.show('✔ ingrédient ajouté à la liste de courses');
     resetAddIngredient();
   };
   $scope.removeCartItem = function(item){
-    CartService.removeCustomItemFromCart(item);
+    CartSrv.removeCustomItemFromCart(item);
     updateCart();
     window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
   };
@@ -291,14 +291,14 @@ angular.module('ionicApp')
 
   function updateCart(){
     // TODO : don't create new lists, update them
-    $scope.items = CartService.getCurrentCartItems();
-    $scope.boughtItems = CartService.getCurrentCartBoughtItems();
+    $scope.items = CartSrv.getCurrentCartItems();
+    $scope.boughtItems = CartSrv.getCurrentCartBoughtItems();
   }
 })
 
-.controller('FeedbackCtrl', function($scope, UserService, MailService){
+.controller('FeedbackCtrl', function($scope, UserSrv, MailSrv){
   'use strict';
-  var user = UserService.get();
+  var user = UserSrv.get();
   $scope.feedback = {
     mail: user.profile.mail,
     content: '',
@@ -307,7 +307,7 @@ angular.module('ionicApp')
   };
   $scope.sendFeedback = function(){
     $scope.feedback.sending = true;
-    MailService.sendFeedback($scope.feedback.mail, $scope.feedback.content).then(function(sent){
+    MailSrv.sendFeedback($scope.feedback.mail, $scope.feedback.content).then(function(sent){
       $scope.feedback.sending = false;
       if(sent){
         $scope.feedback.sent = true;
@@ -316,7 +316,7 @@ angular.module('ionicApp')
       }
     });
     if(!user.profile.mail){
-      UserService.setMail($scope.feedback.mail);
+      UserSrv.setMail($scope.feedback.mail);
     }
   };
 
