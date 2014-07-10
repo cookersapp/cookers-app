@@ -30,6 +30,15 @@
           </div>
         </label>
       </div>
+      <div class="item item-toggle">
+        Grandes images de recette
+        <label class="toggle toggle-custom">
+          <input type="checkbox" ng-model="settings.bigImages">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </div>
       <div class="item">Version de l'application <span class="badge badge-positive">{{appVersion}}</span></div>
       <div class="item item-icon-right" ng-click="about()">A propos <i class="icon ion-chevron-right icon-accessory"></i></div>
       <div class="item item-icon-right" ng-if="debug" ui-sref="app.debug">

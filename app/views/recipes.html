@@ -17,7 +17,8 @@
     <div ng-if="!loading">
       <div class="list">
         <div class="item item-recipe-img-full" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
-          <img ng-src="{{recipe.images.portrait}}">
+          <img ng-if="settings.bigImages" ng-src="{{recipe.images.portrait}}">
+          <img ng-if="!settings.bigImages" ng-src="{{recipe.images.landing}}">
           <div class="legend">
             <div class="price line pull-right">
               <span class="fa-stack fa-lg calm" ui-sref="app.recipe({recipeId: recipe.id})">

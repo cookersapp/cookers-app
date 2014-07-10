@@ -92,6 +92,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   });
 })
 
+.constant('debug', true)
 .constant('APP_VERSION', '0.0.1')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
@@ -109,7 +110,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   foodRoles:        ['essentiel', 'secondaire', 'accompagnement', 'facultatif'],
   days:             ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
 })
-
 .constant('unitConversion', [
   {ref: 'g', convert: [
     {unit: 'g', factor: 1},
@@ -121,11 +121,11 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   ]}
 ])
 
-.value('debug', true)
 .value('localStorageDefault', {
   user: {
     settings: {
-      showPrices: false
+      showPrices: false,
+      bigImages: true
     }
   },
   foods: [],
@@ -157,16 +157,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
   $rootScope.appVersion = APP_VERSION;
-  /*$ionicPlatform.ready(function(){
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-  });*/
-
-  $rootScope.isActive = function(viewLocation){
-    var regex = new RegExp('^'+viewLocation+'$', 'g');
-    return regex.test($location.path());
-  };
 
   $rootScope.showIntro = false;
   if(UserSrv.isFirstLaunch()){
@@ -175,4 +165,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   } else {
     UserSrv.launch();
   }
+
+  $rootScope.isActive = function(viewLocation){
+    var regex = new RegExp('^'+viewLocation+'$', 'g');
+    return regex.test($location.path());
+  };
 });

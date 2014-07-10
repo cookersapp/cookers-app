@@ -318,6 +318,11 @@ angular.module('ionicApp')
       LogSrv.trackChangeSetting('showPrices', newValue);
     }
   });
+  $scope.$watch('settings.bigImages', function(newValue, oldValue){
+    if(newValue !== oldValue){
+      LogSrv.trackChangeSetting('bigImages', newValue);
+    }
+  });
 })
 
 .controller('FeedbackCtrl', function($scope, UserSrv, MailSrv, LogSrv){

@@ -23,7 +23,6 @@ Your app is now running to your computer. To run it to your android device :
 - `grunt ripple` is an alternative to `grunt serve`. It will open your project in adobe ripple editor with live realod.
 - `grunt build` builds your sources and put them in www/ folder to deploy on your device.
 
-
 ## Cordova plugin description
 
 - org.apache.cordova.device : allow to get phone data (uuid, phone model, android version...)
@@ -31,6 +30,14 @@ Your app is now running to your computer. To run it to your android device :
 - https://github.com/driftyco/ionic-plugins-keyboard : allow to listen and interract with keyboard
 - org.apache.cordova.geolocation : allow to get precise user position
 - https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
+
+
+## Release process
+
+- change package in `config.xml` : `com.cookers.android.dev` => `com.cookers.android`
+- increment version number and check that `debug` option is false : `app/scripts/app.js`
+- build app : `grunt build`
+- Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
 
 ## Useful infos
 
