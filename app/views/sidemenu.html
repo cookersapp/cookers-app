@@ -8,10 +8,12 @@
     <ion-content class="sidemenu">
       <div class="profile">
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
-        <div class="avatar" ng-style="{'background-image': 'url('+userProfile.avatar+')'}"></div>
-        <div class="username">{{userProfile.name}}</div>
-        <div class="role" ng-bind-html="role(recipesHistory)"></div>
-        <div class="clearfix"></div>
+        <div menu-close ui-sref="app.profile">
+          <div class="avatar" ng-style="{'background-image': 'url('+userProfile.avatar+')'}"></div>
+          <div class="username">{{userProfile.name}}</div>
+          <div class="role" ng-bind-html="userLevel(recipesHistory)"></div>
+          <div class="clearfix"></div>
+        </div>
       </div>
       <div class="stats">
         <div class="progress">
@@ -32,8 +34,6 @@
         <div class="item item-divider">Outils</div>
         <a class="item item-icon-left" menu-close ui-sref="app.feedback"><i class="icon ion-android-forums"></i> Remarques</a>
         <a class="item item-icon-left" menu-close ui-sref="intro"><i class="icon ion-log-in"></i> Introduction</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.settings"><i class="icon ion-gear-b"></i> Paramètres</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.debug" ng-if="debug"><i class="icon ion-code-working"></i> debug</a>
       </div>
     </ion-content>
   </ion-side-menu>

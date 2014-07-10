@@ -594,6 +594,7 @@ angular.module('ionicApp')
     trackArchiveCart: function(){track('archive-cart');},
     trackSendFeedback: function(mail){track('send-feedback', {mail: mail});},
     trackOpenUservoice: function(){track('open-uservoice');},
+    trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
     trackStates: trackStates,
   };
 

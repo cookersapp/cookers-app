@@ -12,7 +12,9 @@
             <img ng-src="{{recipe.data.images.thumbnail}}">
           </div>
           <div class="content">
-            <!--<h2 class="pull-right">{{recipe.data.price.value*recipe.servings.value | number:2}} {{recipe.data.price.currency}}</h2>-->
+            <h2 class="pull-right" ng-if="settings.showPrices">
+              {{recipe.data.price.value*recipe.servings.value | mynumber}} {{recipe.data.price.currency}}
+            </h2>
             <h2 class="title">{{recipe.data.name}}</h2>
             <div>
               {{recipe.servings.value}} {{recipe.servings.unit}},

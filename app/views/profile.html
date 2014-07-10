@@ -1,0 +1,47 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title">Mon profil</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="profile-screen">
+    <div class="list card">
+      <div class="item item-avatar">
+        <img ng-src="{{userProfile.avatar}}">
+        <h2>{{userProfile.name}}</h2>
+        <p ng-bind-html="userLevel(recipesHistory)"></p>
+      </div>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">Paramètres</div>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Email</span>
+        <input type="email" ng-model="mail" blur-on-keyboard-out ng-blur="saveMail(mail)" placeholder="Email (permet de charger votre profil gravatar.com)">
+      </label>
+      <div class="item item-toggle">
+        Afficher le prix des recettes
+        <label class="toggle toggle-custom">
+          <input type="checkbox" ng-model="settings.showPrices">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </div>
+      <div class="item">Version de l'application <span class="badge badge-positive">{{appVersion}}</span></div>
+      <div class="item item-icon-right" ng-click="about()">A propos <i class="icon ion-chevron-right icon-accessory"></i></div>
+      <div class="item item-icon-right" ng-if="debug" ui-sref="app.debug">
+        Debug mode
+        <span class="badge badge-assertive">On</span>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </div>
+      <div class="item item-icon-right" ng-click="clearCache()">Vider le cache <i class="icon ion-chevron-right icon-accessory"></i></div>
+      <div class="item item-icon-right assertive" ng-click="resetApp()">
+        Supprimer les données de l'application
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -63,21 +63,21 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     templateUrl: 'views/cart/ingredients.html',
     controller: 'CartIngredientsCtrl'
   })
+  .state('app.profile', {
+    url: '/profile',
+    views: {
+      'menuContent' :{
+        templateUrl: 'views/profile.html',
+        controller: 'ProfileCtrl'
+      }
+    }
+  })
   .state('app.feedback', {
     url: '/feedback',
     views: {
       'menuContent' :{
         templateUrl: 'views/feedback.html',
         controller: 'FeedbackCtrl'
-      }
-    }
-  })
-  .state('app.settings', {
-    url: '/settings',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/settings.html',
-        controller: 'SettingsCtrl'
       }
     }
   })
@@ -123,7 +123,11 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
 .value('debug', true)
 .value('localStorageDefault', {
-  user: {},
+  user: {
+    settings: {
+      showPrices: false
+    }
+  },
   foods: [],
   recipes: [],
   weekrecipes: [],
@@ -138,7 +142,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug, APP_VERSION){
   'use strict';
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
@@ -150,7 +154,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   
   LogSrv.trackStates();
 
+  $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
+  $rootScope.appVersion = APP_VERSION;
   /*$ionicPlatform.ready(function(){
     if(window.StatusBar) {
       StatusBar.styleDefault();

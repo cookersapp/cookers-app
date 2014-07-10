@@ -34,7 +34,7 @@ angular.module('ionicApp')
   $scope.recipesHistory = $localStorage.recipesHistory;
   $scope.recipesHistoryGoal = 10;
 
-  $scope.role = function(recipesHistory){
+  $scope.userLevel = function(recipesHistory){
     if(!recipesHistory || recipesHistory.length === 0){return '<i class="fa fa-eye"></i> Explorateur';}
     else if(recipesHistory.length < 3){return '<i class="fa fa-thumbs-o-up"></i> Testeur';}
     else if(recipesHistory.length < 5){return '<i class="fa fa-graduation-cap"></i> Cuisinier';}
@@ -282,6 +282,44 @@ angular.module('ionicApp')
   }
 })
 
+.controller('ProfileCtrl', function($scope, $localStorage, localStorageDefault, UserSrv, LogSrv){
+  'use strict';
+  var user = UserSrv.get();
+  $scope.mail = angular.copy(user.profile.mail);
+
+  $scope.saveMail = function(mail){
+    console.log('saveMail', mail);
+    UserSrv.setMail(mail);
+  };
+  $scope.about = function(){
+    window.alert('Not implemented yet :(');
+  };
+
+  $scope.clearCache = function(){
+    if(window.confirm('Vider le cache ?')){
+      $localStorage.foods = localStorageDefault.foods;
+      $localStorage.recipes = localStorageDefault.recipes;
+      $localStorage.weekrecipes = localStorageDefault.weekrecipes;
+    }
+  };
+  $scope.resetApp = function(){
+    if(window.confirm('Réinitialiser complètement l\'application ?')){
+      $localStorage.$reset(localStorageDefault);
+      if(navigator.app){
+        navigator.app.exitApp();
+      } else if(navigator.device){
+        navigator.device.exitApp();
+      }
+    }
+  };
+
+  $scope.$watch('settings.showPrices', function(newValue, oldValue){
+    if(newValue !== oldValue){
+      LogSrv.trackChangeSetting('showPrices', newValue);
+    }
+  });
+})
+
 .controller('FeedbackCtrl', function($scope, UserSrv, MailSrv, LogSrv){
   'use strict';
   var user = UserSrv.get();
@@ -291,7 +329,7 @@ angular.module('ionicApp')
     sending: false,
     sent: false
   };
-  
+
   $scope.sendFeedback = function(){
     $scope.feedback.sending = true;
     LogSrv.trackSendFeedback($scope.feedback.mail);
@@ -325,20 +363,6 @@ angular.module('ionicApp')
   UserVoice.push(['identify', identity]);
   UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
   UserVoice.push(['autoprompt', {}]);
-})
-
-.controller('SettingsCtrl', function($scope, $localStorage, localStorageDefault){
-  'use strict';
-  $scope.resetApp = function(){
-    if(window.confirm('Reset app ?')){
-      $localStorage.$reset(localStorageDefault);
-      if(navigator.app){
-        navigator.app.exitApp();
-      } else if(navigator.device){
-        navigator.device.exitApp();
-      }
-    }
-  };
 })
 
 .controller('DebugCtrl', function($scope, $localStorage){

@@ -22,4 +22,16 @@ angular.module('ionicApp')
       }, true);
     }
   };
+})
+
+.directive('blurOnKeyboardOut', function(){
+  'use strict';
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs){
+      window.addEventListener('native.keyboardhide', function(e){
+        element[0].blur();
+      });
+    }
+  };
 });
