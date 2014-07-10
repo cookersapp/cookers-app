@@ -189,7 +189,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartService, FoodService, dataList){
+.controller('CartIngredientsCtrl', function($scope, CartService, FoodService, FirebaseService, dataList){
   'use strict';
   $scope.openedItems = [];
   $scope.items = CartService.getCurrentCartItems();
@@ -240,7 +240,7 @@ angular.module('ionicApp')
         name: product,
         category: 'Inconnue'
       };
-      // TODO push to firebase to know missing product
+      FirebaseService.push('/missing/food', product);
     }
     $scope.selectedProduct = {
       product: product

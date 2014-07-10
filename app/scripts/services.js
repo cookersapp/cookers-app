@@ -540,6 +540,17 @@ angular.module('ionicApp')
   return service;
 })
 
+.factory('FirebaseService', function(firebaseUrl){
+  'use strict';
+  var service = {
+    push: function(endpoint, data){
+      new Firebase(firebaseUrl+endpoint).push(data);
+    }
+  };
+  
+  return service;
+})
+
 .factory('LogService', function(UserService, firebaseUrl){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
