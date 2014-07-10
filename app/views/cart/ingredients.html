@@ -67,11 +67,11 @@
       <div class="quantity pull-right">
         {{item.quantity | quantity}}
       </div>
-      <div class="text" ng-click="item.selected=!item.selected">
+      <div class="text" ng-click="toggleItem(item)">
         {{item.food.name}}
       </div>
 
-      <div class="details" ng-if="item.selected">
+      <div class="details" ng-if="isOpened(item)">
         <div class="source" ng-repeat="source in item.sources">
           <div class="check pull-right">
             <input type="checkbox" ng-change="buySource(source, item)" ng-model="source.bought">
@@ -79,9 +79,8 @@
           <div class="quantity pull-right">
             {{source.quantity | quantity}}
           </div>
-          <div class="text">
-            {{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})
-          </div>
+          <div class="text" ng-if="source.recipe">{{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})</div>
+          <div class="text" ng-if="!source.recipe"><button class="button button-xs button-assertive" ng-click="removeCartItem(source)">&times;</button> Ajouté manuellement</div>
         </div>
       </div>
     </div>

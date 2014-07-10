@@ -152,7 +152,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('CartCtrl', function($scope, CartService, FoodService, dataList){
+.controller('CartCtrl', function($scope, CartService){
   'use strict';
   $scope.cart = CartService.getCurrentCart();
   $scope.archiveCart = function(){
@@ -160,65 +160,6 @@ angular.module('ionicApp')
       CartService.archiveCart();
     }
   };
-
-  $scope.ingredientSearch = {};
-  $scope.foods = [];
-  $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  $scope.units = dataList.quantityUnits;
-  FoodService.getAll().then(function(foods){
-    $scope.foods = foods;
-  });
-
-  $scope.selectedProduct = null;
-  $scope.quantityMult = 1;
-  $scope.quantityRound = 0;
-  $scope.selectProduct = function(product){
-    if(typeof product === 'string'){
-      product = {
-        id: getSlug(product),
-        name: product,
-        category: 'Inconnue'
-      };
-    }
-    $scope.selectedProduct = {
-      product: product
-    };
-  };
-  $scope.unselectProduct = function(){
-    $scope.selectedProduct = null;
-    $scope.quantityMult = 1;
-    $scope.quantityRound = 0;
-  };
-  $scope.increaseQuantityMult = function(){
-    $scope.quantityMult = $scope.quantityMult * 10;
-    $scope.quantityRound--;
-  };
-  $scope.decreaseQuantityMult = function(){
-    $scope.quantityMult = $scope.quantityMult / 10;
-    $scope.quantityRound++;
-  };
-  $scope.selectQuantity = function(quantity){
-    $scope.selectedProduct.quantity = quantity;
-  };
-  $scope.selectUnit = function(unit){
-    $scope.selectedProduct.unit = unit;
-  };
-  $scope.addSelectedProductToCart = function(){
-
-    // TODO add product to cart
-    $scope.selectedProduct = null
-    $scope.quantityMult = 1;
-    $scope.quantityRound = 0;
-    $scope.ingredientSearch = {};
-  };
-
-  window.addEventListener('native.keyboardshow', function(e){
-    //window.plugins.toast.show('SHOW keyboard');
-  });
-  window.addEventListener('native.keyboardhide', function(e){
-    //window.plugins.toast.show('HIDE keyboard');
-    $scope.ingredientSearch = {};
-  });
 })
 
 .controller('CartRecipesCtrl', function($scope, CartService){
@@ -248,13 +189,22 @@ angular.module('ionicApp')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartService){
+.controller('CartIngredientsCtrl', function($scope, CartService, FoodService, dataList){
   'use strict';
+  $scope.openedItems = [];
   $scope.items = CartService.getCurrentCartItems();
   $scope.boughtItems = CartService.getCurrentCartBoughtItems();
 
   $scope.categoryId = function(food){
     return getSlug(food.category);
+  };
+  $scope.isOpened = function(item){
+    return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
+  };
+  $scope.toggleItem = function(item){
+    var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
+    if(index > -1){$scope.openedItems.splice(index, 1);}
+    else {$scope.openedItems.push(item);}
   };
   $scope.buyItem = function(item){
     CartService.buyCartItem(item);
@@ -269,7 +219,78 @@ angular.module('ionicApp')
     updateCart();
   };
 
+  // add product
+  $scope.ingredientSearch = {};
+  $scope.selectedProduct = null;
+  $scope.quantityMult = 1;
+  $scope.quantityRound = 0;
+
+  $scope.foods = [];
+  $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  $scope.units = dataList.quantityUnits;
+
+  FoodService.getAll().then(function(foods){
+    $scope.foods = foods;
+  });
+
+  $scope.selectProduct = function(product){
+    if(typeof product === 'string'){
+      product = {
+        id: getSlug(product),
+        name: product,
+        category: 'Inconnue'
+      };
+      // TODO push to firebase to know missing product
+    }
+    $scope.selectedProduct = {
+      product: product
+    };
+  };
+  $scope.unselectProduct = function(){
+    resetProduct();
+  };
+  $scope.increaseQuantityMult = function(){
+    $scope.quantityMult = $scope.quantityMult * 10;
+    $scope.quantityRound--;
+  };
+  $scope.decreaseQuantityMult = function(){
+    $scope.quantityMult = $scope.quantityMult / 10;
+    $scope.quantityRound++;
+  };
+  $scope.selectQuantity = function(quantity){
+    $scope.selectedProduct.quantity = quantity;
+  };
+  $scope.selectUnit = function(unit){
+    $scope.selectedProduct.unit = unit;
+  };
+  $scope.addSelectedProductToCart = function(){
+    CartService.addCustomItemToCart($scope.selectedProduct);
+    updateCart();
+    window.plugins.toast.show('✔ ingrédient ajouté à la liste de courses');
+    resetAddIngredient();
+  };
+  $scope.removeCartItem = function(item){
+    CartService.removeCustomItemFromCart(item);
+    updateCart();
+    window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
+  };
+
+  window.addEventListener('native.keyboardhide', function(e){
+    resetAddIngredient();
+  });
+
+  function resetProduct(){
+    $scope.selectedProduct = null
+    $scope.quantityMult = 1;
+    $scope.quantityRound = 0;
+  }
+  function resetAddIngredient(){
+    resetProduct();
+    $scope.ingredientSearch = {};
+  }
+
   function updateCart(){
+    // TODO : don't create new lists, update them
     $scope.items = CartService.getCurrentCartItems();
     $scope.boughtItems = CartService.getCurrentCartBoughtItems();
   }

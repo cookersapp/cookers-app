@@ -89,7 +89,7 @@ angular.module('ionicApp')
       return foods;
     });
   }
-  
+
   function storeFood(food){
     var index = _.findIndex(foods, {id: food.id});
     if(index > -1){
@@ -114,6 +114,8 @@ angular.module('ionicApp')
     cartHasRecipe: function(recipe){return cartHasRecipe(getCurrentCart(), recipe);},
     addRecipeToCart: function(recipe){addRecipeToCart(getActiveCart(), recipe);},
     removeRecipeFromCart: function(recipe){removeRecipeFromCart(getCurrentCart(), recipe);},
+    addCustomItemToCart: function(item){addCustomItemToCart(getActiveCart(), item);},
+    removeCustomItemFromCart: function(item){removeCustomItemFromCart(getCurrentCart(), item);},
     buyCartItem: function(item){buyCartItem(item, getCurrentCart(), true);},
     buyCartItemSource: function(source, item){buyCartItemSource(source, item, getCurrentCart(), true);},
     unbuyCartItem: function(item){buyCartItem(item, getCurrentCart(), false);},
@@ -175,11 +177,21 @@ angular.module('ionicApp')
   }
   function removeRecipeFromCart(cart, recipe){
     if(cart){
-      _removeFromArrayWithId(cart.recipes, recipe.id);
+      _removeFromArrayWithFinder(cart.recipes, {id: recipe.id});
     }
   }
-  function _removeFromArrayWithId(array, id){
-    var index = _.findIndex(array, {id: id});
+  function addCustomItemToCart(cart, item){
+    if(cart){
+      cart.items.push(buildCartCustomItem(item));
+    }
+  }
+  function removeCustomItemFromCart(cart, item){
+    if(cart){
+      _removeFromArrayWithFinder(cart.items, {id: item.ingredient.id, added: item.ingredient.added});
+    }
+  }
+  function _removeFromArrayWithFinder(array, finder){
+    var index = _.findIndex(array, finder);
     if(index > -1){
       array.splice(index, 1);
     }
@@ -190,22 +202,30 @@ angular.module('ionicApp')
     }
   }
   function buyCartItemSource(source, item, cart, bought){
-    var recipe = _.find(cart.recipes, {id: source.recipe.id});
-    if(recipe){
-      var ingredient = _.find(recipe.data.ingredients, {food: {id: source.ingredient.food.id}});
-      if(ingredient){
-        if(bought) {
-          ingredient.bought = true;
-          LogService.buyIngredient(ingredient, recipe);
-          navigator.geolocation.getCurrentPosition(function(position){
-            ingredient.bought = position;
-          }, function(error){
-            error.timestamp = Date.now();
-            ingredient.bought = error;
-          });
-        } else {
-          ingredient.bought = false;
-        }
+    if(source && source.recipe && source.recipe.id){
+      var recipe = _.find(cart.recipes, {id: source.recipe.id});
+      if(recipe){
+        var ingredient = _.find(recipe.data.ingredients, {food: {id: source.ingredient.food.id}});
+        buyIngredient(ingredient, recipe, bought);
+      }
+    } else if(source && source.ingredient && source.ingredient.food && source.ingredient.food.id){
+      var item = _.find(cart.items, {id: source.ingredient.id, added: source.ingredient.added});
+      buyIngredient(item, null, bought);
+    }
+  }
+  function buyIngredient(ingredient, recipe, bought){
+    if(ingredient){
+      if(bought) {
+        ingredient.bought = true;
+        LogService.buyIngredient(ingredient, recipe);
+        navigator.geolocation.getCurrentPosition(function(position){
+          ingredient.bought = position;
+        }, function(error){
+          error.timestamp = Date.now();
+          ingredient.bought = error;
+        });
+      } else {
+        ingredient.bought = false;
       }
     }
   }
@@ -215,7 +235,8 @@ angular.module('ionicApp')
       if(bought === !!ingredient.bought){
         var item = _.find(items, {food: {id: ingredient.food.id}});
         if(item){
-          addQuantityToCartItem(ingredient, recipeItem, item, bought);
+          item.sources.push(buildCartItemSource(ingredient, recipeItem, bought));
+          item.quantity = computeCartItemQuantity(item);
         } else {
           items.push(buildCartItem(ingredient, recipeItem, bought));
         }
@@ -230,33 +251,27 @@ angular.module('ionicApp')
     });
     return items;
   }
-  function addQuantityToCartItem(ingredient, recipeItem, item, bought){
-    item.sources.push(buildCartItemSource(ingredient, recipeItem, bought));
-    item.quantity = computeCartItemQuantity(item);
-  }
   function computeCartItemQuantity(item){
     var quantity = null;
     for(var i in item.sources){
       var source = item.sources[i];
-      if(!source.bought){
-        if(quantity === null){
-          quantity = source.quantity;
-        } else {
-          quantity = addQuantities(quantity, source.quantity);
-        }
+      if(quantity === null){
+        quantity = source.quantity;
+      } else {
+        quantity = addQuantities(quantity, source.quantity);
       }
     }
     return quantity;
   }
   function addQuantities(q1, q2){
+    var q = angular.copy(q1);
     if(q1.unit === q2.unit){
-      var q = angular.copy(q1);
       q.value += q2.value;
-      return q;
     } else {
       // TODO
       window.alert('Should convert <'+q2.unit+'> to <'+q1.unit+'> !!!');
     }
+    return q;
   }
   function getQuantityForServings(quantity, initialServings, finalServings){
     var q = angular.copy(quantity);
@@ -273,22 +288,55 @@ angular.module('ionicApp')
         }
       }
     }
+    if(cart && cart.items){
+      for(var k in cart.items){
+        callback(cart.items[k], null, cart);
+      }
+    }
   }
 
   function buildCartItemSource(ingredient, recipeItem, bought){
-    return {
-      bought: bought,
-      quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
-      ingredient: ingredient,
-      recipe: recipeItem
-    };
+    if(recipeItem){
+      return {
+        bought: bought,
+        quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
+        ingredient: ingredient,
+        recipe: recipeItem
+      };
+    } else {
+      return {
+        bought: bought,
+        quantity: angular.copy(ingredient.quantity),
+        ingredient: ingredient
+      };
+    }
   }
   function buildCartItem(ingredient, recipeItem, bought){
+    if(recipeItem){
+      return {
+        quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
+        food: ingredient.food,
+        bought: bought,
+        sources: [buildCartItemSource(ingredient, recipeItem, bought)]
+      };
+    } else {
+      return {
+        quantity: ingredient.quantity,
+        food: ingredient.food,
+        bought: bought,
+        sources: [buildCartItemSource(ingredient, recipeItem, bought)]
+      };
+    }
+  }
+  function buildCartCustomItem(item){
     return {
-      quantity: getQuantityForServings(ingredient.quantity, recipeItem.data.servings, recipeItem.servings),
-      food: ingredient.food,
-      bought: bought,
-      sources: [buildCartItemSource(ingredient, recipeItem, bought)]
+      added: Date.now(),
+      id: item.product.id,
+      quantity: {
+        value: item.quantity,
+        unit: item.unit
+      },
+      food: angular.copy(item.product)
     };
   }
   function buildCartRecipe(recipe){
@@ -307,7 +355,8 @@ angular.module('ionicApp')
       created: Date.now(),
       archived: false,
       name: 'Liste du '+moment().format('LL'),
-      recipes: []
+      recipes: [],
+      items: []
     };
   }
 
