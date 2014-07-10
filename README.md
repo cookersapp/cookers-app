@@ -1,4 +1,4 @@
-# Retail-scan app
+# Cookers app
 
 # Technical
 
