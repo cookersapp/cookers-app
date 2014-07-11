@@ -362,7 +362,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, md5){
+.factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, localStorageDefault, md5){
   'use strict';
   var currentUser = $localStorage.user;
   var service = {
@@ -403,14 +403,20 @@ angular.module('ionicApp')
 
   function setMail(mail, callback){
     currentUser.profile.mail = mail;
-    currentUser.profile.name = 'Anonymous';
-    currentUser.profile.avatar = 'images/user.jpg';
+    currentUser.profile.name = localStorageDefault.user.profile.name;
+    currentUser.profile.avatar = localStorageDefault.user.profile.avatar;
+    currentUser.profile.background = localStorageDefault.user.profile.background;
+    currentUser.profile.backgroundCover = localStorageDefault.user.profile.backgroundCover;
     if(mail){
       $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
         currentUser.gravatar = result.data;
         if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
           if(currentUser.gravatar.entry[0].thumbnailUrl){ currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl; }
           if(currentUser.gravatar.entry[0].displayName) { currentUser.profile.name = currentUser.gravatar.entry[0].displayName; }
+          if(currentUser.gravatar.entry[0].profileBackground) {
+            if(currentUser.gravatar.entry[0].profileBackground.color) { currentUser.profile.background = currentUser.gravatar.entry[0].profileBackground.color; }
+            if(currentUser.gravatar.entry[0].profileBackground.url) { currentUser.profile.backgroundCover = currentUser.gravatar.entry[0].profileBackground.url; }
+          }
         }
         if(callback){callback();}
       });
@@ -580,7 +586,7 @@ angular.module('ionicApp')
       _addScore(2, event, params);
     }
   }
-  
+
   function _addScore(value, event, params){
     userScore.events.push({
       time: Date.now(),
@@ -592,7 +598,7 @@ angular.module('ionicApp')
       _setUserLevel();
     }
   }
-  
+
   function _setUserLevel(){
     var index = _getLevelIndex(userScore.value);
     userScore.level = index;
@@ -727,7 +733,8 @@ angular.module('ionicApp')
       $created: moment(currentUser.profile.firstLaunch).format('LLLL'),
       $email: currentUser.profile.mail,
       fullName: currentUser.profile.name,
-      avatar: currentUser.profile.avatar
+      avatar: currentUser.profile.avatar,
+      backgroundCover: currentUser.profile.backgroundCover
     };
     if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
       if(currentUser.gravatar.entry[0].hash)            { mixpanelUser.gravatar = currentUser.gravatar.entry[0].hash; }

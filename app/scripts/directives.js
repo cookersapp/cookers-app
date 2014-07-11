@@ -50,7 +50,7 @@ angular.module('ionicApp')
     link: function(scope, element, attrs){
       scope.$watch('html', function(newVal){
         element.html('');
-        element.append($compile('<span>'+scope.html+'</span>')(scope)); 
+        element.append($compile('<span>'+scope.html+'</span>')(scope));
       });
     }
   };

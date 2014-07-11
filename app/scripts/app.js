@@ -93,7 +93,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 })
 
 .constant('debug', true)
-.constant('appVersion', '0.0.1')
+.constant('appVersion', '0.1.0')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
@@ -126,6 +126,8 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     profile: {
       name: 'Anonymous',
       avatar: 'images/user.jpg',
+      background: '#6f5499',
+      backgroundCover: 'images/profile-covers/cover01.jpg',
       mail: '',
       defaultServings: 2,
       firstLaunch: Date.now(),
@@ -160,7 +162,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
   if(!$localStorage.userinfo){$localStorage.userinfo = localStorageDefault.userinfo;}
-  
+
   LogSrv.trackStates();
 
   $rootScope.settings = $localStorage.user.settings;

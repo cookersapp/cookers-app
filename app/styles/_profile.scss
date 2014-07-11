@@ -1,4 +1,94 @@
 .profile-screen {
   // from http://subtlepatterns.com/patterns/paper.png
   background-image: url(../images/profile_bg.png);
+  .profile {
+    padding-bottom: 10px;
+    .avatar {
+      background-size: cover;
+      margin-bottom: 40px;
+      // from http://csshexagon.com/
+      .hexagon {
+        position: relative;
+        width: 100px;
+        height: 57.74px;
+        margin: 20px auto;
+        background-size: auto 103.9230px;
+        background-position: center;
+        box-shadow: 0 0 20px rgba(62,45,92,0.7);
+        border-left: solid 5px #3e2d5c;
+        border-right: solid 5px #3e2d5c;
+      }
+      .hexTop, .hexBottom {
+        position: absolute;
+        z-index: 1;
+        width: 70.71px;
+        height: 70.71px;
+        overflow: hidden;
+        -webkit-transform: scaleY(0.5774) rotate(-45deg);
+        -ms-transform: scaleY(0.5774) rotate(-45deg);
+        transform: scaleY(0.5774) rotate(-45deg);
+        background: inherit;
+        left: 9.64px;
+        box-shadow: 0 0 20px rgba(62,45,92,0.7);
+      }
+      /*counter transform the bg image on the caps*/
+      .hexTop:after, .hexBottom:after {
+        content: "";
+        position: absolute;
+        width: 90.0000px;
+        height: 51.96152422706633px;
+        -webkit-transform:  rotate(45deg) scaleY(1.7321) translateY(-25.9808px);
+        -ms-transform:      rotate(45deg) scaleY(1.7321) translateY(-25.9808px);
+        transform:          rotate(45deg) scaleY(1.7321) translateY(-25.9808px);
+        -webkit-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+        transform-origin: 0 0;
+        background: inherit;
+      }
+      .hexTop {
+        top: -35.3553px;
+        border-top: solid 7.0711px #3e2d5c;
+        border-right: solid 7.0711px #3e2d5c;
+      }
+      .hexTop:after {
+        background-position: center top;
+      }
+      .hexBottom {
+        bottom: -35.3553px;
+        border-bottom: solid 7.0711px #3e2d5c;
+        border-left: solid 7.0711px #3e2d5c;
+      }
+      .hexBottom:after {
+        background-position: center bottom;
+      }
+      .hexagon:after {
+        content: "";
+        position: absolute;
+        top: 2.8868px;
+        left: 0;
+        width: 90.0000px;
+        height: 51.9615px;
+        z-index: 2;
+        background: inherit;
+      }
+    }
+    .name, .level {
+      padding-bottom: 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+    }
+    .name {
+      font-size: 26px;
+    }
+    .level {
+      color: #eee;
+    }
+  }
+  .settings {
+
+  }
 }
