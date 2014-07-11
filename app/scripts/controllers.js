@@ -32,18 +32,7 @@ angular.module('ionicApp')
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.userProfile = UserSrv.getProfile();
-
-  // TODO : do it with boughtRecipes or CartCreated !
   $scope.recipesHistory = $localStorage.recipesHistory;
-  $scope.recipesHistoryGoal = 10;
-
-  $scope.userLevel = function(recipesHistory){
-    if(!recipesHistory || recipesHistory.length === 0){return '<i class="fa fa-eye"></i> Explorateur';}
-    else if(recipesHistory.length < 3){return '<i class="fa fa-thumbs-o-up"></i> Testeur';}
-    else if(recipesHistory.length < 5){return '<i class="fa fa-graduation-cap"></i> Cuisinier';}
-    else if(recipesHistory.length < 10){return '<i class="fa fa-university"></i> Chef';}
-    else {return '<i class="fa fa-trophy"></i> Grand chef';}
-  };
 
   $interval(function(){
     if($localStorage.recipesHistory && $localStorage.recipesHistory.length > 0 && Math.random() > ($localStorage.recipesHistory.length/$scope.defaultCovers.length)){
@@ -66,7 +55,7 @@ angular.module('ionicApp')
   });
 })
 
-.controller('HomeCtrl', function($scope, $localStorage, UserInfoSrv, CartSrv, LogSrv){
+.controller('HomeCtrl', function($scope, $timeout, $localStorage, UserInfoSrv, CartSrv, LogSrv){
   'use strict';
   $scope.message = null;
   $scope.cart = CartSrv.getCurrentCart();
@@ -80,9 +69,12 @@ angular.module('ionicApp')
     LogSrv.trackCloseMessageInfo($scope.message.id);
     $scope.message.hide = true;
     $scope.message = null;
-    UserInfoSrv.messageToDisplay().then(function(message){
-      $scope.message = message;
-    });
+    // wait 3 sec before show new message
+    $timeout(function(){
+      UserInfoSrv.messageToDisplay().then(function(message){
+        $scope.message = message;
+      });
+    }, 3000);
   };
 })
 

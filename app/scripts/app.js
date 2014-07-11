@@ -123,10 +123,19 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
 .value('localStorageDefault', {
   user: {
+    profile: {
+      name: 'Anonymous',
+      avatar: 'images/user.jpg',
+      mail: '',
+      defaultServings: 2,
+      firstLaunch: Date.now(),
+      score: {}
+    },
     settings: {
       showPrices: false,
       bigImages: true
-    }
+    },
+    launchs: []
   },
   foods: [],
   recipes: [],

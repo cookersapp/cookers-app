@@ -362,7 +362,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserSrv', function($localStorage, $ionicPlatform, $http, LogSrv, firebaseUrl, md5){
+.factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, md5){
   'use strict';
   var currentUser = $localStorage.user;
   var service = {
@@ -370,21 +370,14 @@ angular.module('ionicApp')
     getProfile: function(){return $localStorage.user.profile;},
     setMail: setMail,
     setDefaultServings: setDefaultServings,
-    isFirstLaunch: function(){return !$localStorage.user.launchs;},
+    isFirstLaunch: function(){return !(currentUser.device && currentUser.device.uuid);},
     firstLaunch: firstLaunch,
     launch: launch
   };
 
   function firstLaunch(){
     if(!currentUser){currentUser = $localStorage.user;}
-    currentUser.profile = {
-      name: 'Anonymous',
-      avatar: 'images/user.jpg',
-      mail: '',
-      defaultServings: 2,
-      firstLaunch: Date.now()
-    };
-    currentUser.launchs = [];
+    GamificationSrv.initScore();
     $ionicPlatform.ready(function(){
       currentUser.device = actualDevice();
       launch();
@@ -423,7 +416,7 @@ angular.module('ionicApp')
       });
     }
   }
-  
+
   function setDefaultServings(defaultServings){
     currentUser.profile.defaultServings = defaultServings;
   }
@@ -457,6 +450,7 @@ angular.module('ionicApp')
   return service;
 })
 
+// TODO : rename this service more explicitly (and localstorage value and mixpanel event and firebase endpoint...)
 .factory('UserInfoSrv', function($q, $http, $localStorage, firebaseUrl, debug){
   'use strict';
   var userinfo = $localStorage.userinfo;
@@ -553,7 +547,72 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LogSrv', function($rootScope, $localStorage, $state, firebaseUrl, appVersion, debug){
+.factory('GamificationSrv', function($localStorage){
+  'use strict';
+  var userScore = $localStorage.user.profile.score;
+  var service = {
+    initScore: initScore,
+    sendEvent: sendEvent
+  };
+
+  var levels = [
+    {score: 0, html: '<i class="fa fa-eye"></i> Explorateur'},
+    {score: 10, html: '<i class="fa fa-thumbs-o-up"></i> Testeur'},
+    {score: 30, html: '<i class="fa fa-graduation-cap"></i> Cuisinier'},
+    {score: 80, html: '<i class="fa fa-university"></i> Chef'},
+    {score: 150, html: '<i class="fa fa-trophy"></i> Grand chef'}
+  ];
+
+  function initScore(){
+    if(!userScore){userScore = $localStorage.user.profile.score;}
+    userScore.value = 0;
+    userScore.events = [];
+    _setUserLevel();
+  }
+
+  function sendEvent(event, params){
+    if(event === 'add-recipe-to-cart'){       _addScore(1, event, params);  }
+    if(event === 'remove-recipe-from-cart'){  _addScore(-1, event, params); }
+    if(event === 'add-item-to-cart'){         _addScore(1, event, params);  }
+    if(event === 'remove-item-from-cart'){    _addScore(-1, event, params); }
+    if(event === 'archive-cart'){             _addScore(3, event, params);  }
+    if(event === 'state' && params.to === 'app.feedback' && _.find(userScore.events, {event:event, params:{to:params.to}}) === undefined){
+      _addScore(2, event, params);
+    }
+  }
+  
+  function _addScore(value, event, params){
+    userScore.events.push({
+      time: Date.now(),
+      event: event,
+      params: params
+    });
+    userScore.value += value;
+    if(userScore.value > userScore.nextLevel){
+      _setUserLevel();
+    }
+  }
+  
+  function _setUserLevel(){
+    var index = _getLevelIndex(userScore.value);
+    userScore.level = index;
+    userScore.levelScore = levels[index].score;
+    userScore.levelHtml = levels[index].html;
+    userScore.nextLevel = index < levels.length-1 ? levels[index+1].score : levels[index].score;
+  }
+
+  function _getLevelIndex(score){
+    var i = 0;
+    while(levels[i].score < score && i < levels.length){
+      i++;
+    }
+    return i > 0 ? i-1 : 0;
+  }
+
+  return service;
+})
+
+.factory('LogSrv', function($rootScope, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var currentUser = $localStorage.user;
@@ -651,6 +710,7 @@ angular.module('ionicApp')
     } else {
       mixpanel.track(event, params);
     }
+    GamificationSrv.sendEvent(event, params);
   }
 
   function identify(id){

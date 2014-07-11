@@ -11,18 +11,20 @@
         <div menu-close ui-sref="app.profile">
           <div class="avatar" ng-style="{'background-image': 'url('+userProfile.avatar+')'}"></div>
           <div class="username">{{userProfile.name}}</div>
-          <div class="role" ng-bind-html="userLevel(recipesHistory)"></div>
+          <div class="role" ng-bind-html="userProfile.score.levelHtml"></div>
           <div class="clearfix"></div>
         </div>
       </div>
       <div class="stats">
         <div class="progress">
-          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{recipesHistory.length}}" aria-valuemin="0" aria-valuemax="{{recipesHistoryGoal}}" style="width: {{100 * recipesHistory.length / recipesHistoryGoal}}%;">
+          <div class="progress-bar" ng-class="{'progress-bar-info': userProfile.score.value !== userProfile.score.nextLevel, 'progress-bar-success': userProfile.score.value === userProfile.score.nextLevel}" role="progressbar" aria-valuenow="{{userProfile.score.value}}" aria-valuemin="0" aria-valuemax="{{userProfile.score.nextLevel}}" style="width: {{100 * userProfile.score.value / userProfile.score.nextLevel}}%;">
           </div>
         </div>
-        <span ng-if="recipesHistory.length === 0">Aucune recette vue</span>
+        <!-- TODO : put an explanation of the progressbar -->
+        <!--<span ngif="userProfile.score.value === 0">Utilisez l'application pour gagner des points</span>-->
+        <!--<span ng-if="recipesHistory.length === 0">Aucune recette vue</span>
         <span ng-if="recipesHistory.length === 1">1 recette vue</span>
-        <span ng-if="recipesHistory.length > 1">{{recipesHistory.length}} recettes vues</span>
+        <span ng-if="recipesHistory.length > 1">{{recipesHistory.length}} recettes vues</span>-->
       </div>
       <div class="list">
         <div class="item item-divider">Cookers</div>
