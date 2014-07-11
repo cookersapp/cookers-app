@@ -2,6 +2,11 @@ $avatar-size: 80px;
 .sidemenu {
   background: #6f5499;
   color: #fff;
+  .scroll {
+    // from http://www.transparenttextures.com/patterns/navy.png
+    background-image: url(../images/menu_bg.png);
+    height: 100%;
+  }
   .profile {
     .cover {
       width: 100%;
@@ -13,7 +18,7 @@ $avatar-size: 80px;
       height: $avatar-size;
       margin: -30px 10px 0px 10px;
       border-radius: 100%;
-      border: 2px solid #563d7c;
+      border: 2px solid #3e2d5c;
       background-size: cover;
       float: left;
     }
@@ -45,12 +50,12 @@ $avatar-size: 80px;
     .item {
       color: #fff;
       background: transparent;
-      border-color: #563d7c;
+      border-color: #3e2d5c;
     }
     .item-divider {
       border: none;
-      //border-bottom: 4px solid #563d7c;
-      padding-left: 30px;
+      padding: 4px 30px 5px;
+      min-height: 25px;
     }
   }
 }
