@@ -59,6 +59,8 @@ angular.module('ionicApp')
         LogSrv.trackToggleMenu('close');
       } else if(newValue === 1){
         LogSrv.trackToggleMenu('open');
+      } else {
+        // opening ...
       }
     }
   });

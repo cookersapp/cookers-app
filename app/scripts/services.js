@@ -553,7 +553,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LogSrv', function($rootScope, $localStorage, $state, firebaseUrl, APP_VERSION, debug){
+.factory('LogSrv', function($rootScope, $localStorage, $state, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var currentUser = $localStorage.user;
@@ -568,11 +568,12 @@ angular.module('ionicApp')
     trackSetMail: function(mail){track('set-mail', {mail: mail});},
     trackToggleMenu: function(action){track('toggle-menu', {action: action});},
     trackCloseMessageInfo: function(message){track('close-message-info', {message: message});},
-    // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ???
+    // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
     trackAddRecipeToCart: function(recipe, index, from){track('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
     trackRemoveRecipeFromCart: function(recipe, index, from){track('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
     trackAddItemToCart: function(item, quantity, unit, missing, search){track('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
     trackRemoveItemFromCart: function(item){track('remove-item-from-cart', {item: item});},
+    // ??? merge trackCartRecipeDetails with trackCartItemDetails ???
     trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
     trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},
     trackBuyItem: function(item){trackWithPosition('buy-item', {item: item});},
@@ -630,8 +631,8 @@ angular.module('ionicApp')
 
   function track(event, params){
     if(!params){params = {};}
-    params.time = Date.now();
-    params.appVersion = APP_VERSION;
+    params.localtime = Date.now();
+    params.appVersion = appVersion;
     if(!params.url && window && window.location && window.location.hash) {params.url = window.location.hash;}
     if(!params.mail && currentUser && currentUser.profile && currentUser.profile.mail){params.mail = currentUser.profile.mail;}
     if(currentUser && currentUser.device){

@@ -93,7 +93,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 })
 
 .constant('debug', true)
-.constant('APP_VERSION', '0.0.1')
+.constant('appVersion', '0.0.1')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
@@ -142,7 +142,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug, APP_VERSION){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug, appVersion){
   'use strict';
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
@@ -156,7 +156,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
   $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
-  $rootScope.appVersion = APP_VERSION;
+  $rootScope.appVersion = appVersion;
 
   $rootScope.showIntro = false;
   if(UserSrv.isFirstLaunch()){
