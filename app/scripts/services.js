@@ -457,7 +457,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('UserInfoSrv', function($q, $http, $localStorage, firebaseUrl){
+.factory('UserInfoSrv', function($q, $http, $localStorage, firebaseUrl, debug){
   'use strict';
   var userinfo = $localStorage.userinfo;
   var service = {
@@ -485,7 +485,7 @@ angular.module('ionicApp')
   function fetchMessages(){
     return $http.get(firebaseUrl+'/userinfos.json').then(function(result){
       var messages = _.filter(result.data, function(msg){
-        return msg && msg.isProd && !isMessageQueued(msg);
+        return msg && (msg.isProd || debug) && !isMessageQueued(msg);
       });
       userinfo.messages = userinfo.messages.concat(messages);
       // sort chronogically

@@ -14,7 +14,7 @@ Your app is now running to your computer. To run it to your android device :
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` (and `platforms/android/ant-build/res` if needed) ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands
@@ -30,6 +30,7 @@ Your app is now running to your computer. To run it to your android device :
 - https://github.com/driftyco/ionic-plugins-keyboard : allow to listen and interract with keyboard
 - org.apache.cordova.geolocation : allow to get precise user position
 - https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
+- org.apache.cordova.inappbrowser : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
 
 ## Release process
 
@@ -43,7 +44,6 @@ Your app is now running to your computer. To run it to your android device :
 
 ## Useful infos
 
-- open external links : http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/
 - android push notifications : http://intown.biz/2014/04/11/android-notifications/
 
 ## Design
