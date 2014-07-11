@@ -13,6 +13,27 @@
     & > img {
       width: 100%;
     }
+    .legend-top {
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      top: 0px;
+      .price {
+        text-align: right;
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+        padding: 3px 10px;
+        .number {
+          font-size: 30px;
+          line-height: 30px;
+        }
+        .detail {
+          font-size: 14px;
+          line-height: 16px;
+        }
+      }
+    }
     .legend {
       position: absolute;
       left: 0px;
@@ -40,17 +61,6 @@
       }
       .subtitle {
         color: #ddd;
-      }
-      .price {
-        text-align: right;
-        .number {
-          font-size: 30px;
-          line-height: 30px;
-        }
-        .detail {
-          font-size: 14px;
-          line-height: 16px;
-        }
       }
     }
     .actions {

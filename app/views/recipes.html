@@ -17,10 +17,16 @@
     <div ng-if="!loading">
       <div class="list">
         <div class="item item-recipe-img-full" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
-          <img ng-if="settings.bigImages" ng-src="{{recipe.images.portrait}}">
-          <img ng-if="!settings.bigImages" ng-src="{{recipe.images.landing}}">
+          <img ng-if="settings.bigImages" ng-src="{{recipe.images.portrait}}" ui-sref="app.recipe({recipeId: recipe.id})">
+          <img ng-if="!settings.bigImages" ng-src="{{recipe.images.landing}}" ui-sref="app.recipe({recipeId: recipe.id})">
+          <div class="legend-top">
+            <div class="price" ng-if="settings.showPrices">
+              <div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>
+              <div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>
+            </div>
+          </div>
           <div class="legend">
-            <div class="price line pull-right">
+            <div class="pull-right">
               <span class="fa-stack fa-lg calm" ui-sref="app.recipe({recipeId: recipe.id})">
                 <i class="fa fa-circle-thin fa-stack-2x"></i>
                 <i class="fa fa-info fa-stack-1x"></i>
@@ -33,11 +39,11 @@
                 <i class="fa fa-circle-thin fa-stack-2x"></i>
                 <i class="fa fa-minus fa-stack-1x"></i>
               </span>
-              <!--<div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>
-<div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>-->
             </div>
-            <div class="title line">{{recipe.name}}</div>
-            <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+            <div ui-sref="app.recipe({recipeId: recipe.id})">
+              <div class="title line">{{recipe.name}}</div>
+              <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+            </div>
           </div>
         </div>
       </div>
