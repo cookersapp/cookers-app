@@ -40,6 +40,7 @@ Your app is now running to your computer. To run it to your android device :
 - increment version number and check that `debug` option is false : `app/scripts/app.js`
 - build app : `grunt build && cordova run android`
 - Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
+- Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number
 - Then, rollback your changes ;) (sampe process)
 
 ## Useful infos

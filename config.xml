@@ -2,9 +2,9 @@
 <widget id="com.cookers.android.dev" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>dev-Cookers</name>
     <description>
-        Always get your recipe ready.
+        Les meilleures recettes sont dans votre poche !
     </description>
-    <author email="loicknuchel@gmail.com" href="http://loic.knuchel.org/blog/">
+    <author email="loicknuchel@gmail.com" href="http://cookers.strikingly.com/">
         Loïc Knuchel
     </author>
     <content src="index.html" />

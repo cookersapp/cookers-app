@@ -370,7 +370,7 @@ angular.module('ionicApp')
     getProfile: function(){return $localStorage.user.profile;},
     setMail: setMail,
     setDefaultServings: setDefaultServings,
-    isFirstLaunch: function(){return !(currentUser.device && currentUser.device.uuid);},
+    isFirstLaunch: function(){return !(currentUser && currentUser.device && currentUser.device.uuid);},
     firstLaunch: firstLaunch,
     launch: launch
   };
@@ -549,7 +549,7 @@ angular.module('ionicApp')
 
 .factory('GamificationSrv', function($localStorage){
   'use strict';
-  var userScore = $localStorage.user.profile.score;
+  var userScore = $localStorage.user ? $localStorage.user.profile.score : null;
   var service = {
     initScore: initScore,
     sendEvent: sendEvent

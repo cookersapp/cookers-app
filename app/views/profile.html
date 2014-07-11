@@ -11,7 +11,7 @@
       <div class="item item-avatar">
         <img ng-src="{{userProfile.avatar}}">
         <h2>{{userProfile.name}}</h2>
-        <p ng-bind-html="userLevel(recipesHistory)"></p>
+        <p ng-bind-html="userProfile.score.levelHtml"></p>
       </div>
     </div>
 
