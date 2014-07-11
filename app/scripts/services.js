@@ -408,35 +408,22 @@ angular.module('ionicApp')
     });
   }
 
-  function setMail(mail){
+  function setMail(mail, callback){
     currentUser.profile.mail = mail;
     currentUser.profile.name = 'Anonymous';
     currentUser.profile.avatar = 'images/user.jpg';
     if(mail){
-      var mixpanelUser = {
-        $created: currentUser.profile.firstLaunch,
-        $email: mail
-      };
       $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
         currentUser.gravatar = result.data;
         if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
           if(currentUser.gravatar.entry[0].thumbnailUrl){ currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl; }
           if(currentUser.gravatar.entry[0].displayName) { currentUser.profile.name = currentUser.gravatar.entry[0].displayName; }
-          if(currentUser.gravatar.entry[0].hash)            { mixpanelUser.gravatar = currentUser.gravatar.entry[0].hash; }
-          if(currentUser.gravatar.entry[0].aboutMe)         { mixpanelUser.about = currentUser.gravatar.entry[0].aboutMe; }
-          if(currentUser.gravatar.entry[0].currentLocation) { mixpanelUser.location = currentUser.gravatar.entry[0].currentLocation; }
-          if(currentUser.gravatar.entry[0].name){
-            if(currentUser.gravatar.entry[0].name.givenName) { mixpanelUser.$first_name = currentUser.gravatar.entry[0].name.givenName; }
-            if(currentUser.gravatar.entry[0].name.familyName){ mixpanelUser.$last_name = currentUser.gravatar.entry[0].name.familyName; }
-          }
         }
-        mixpanelUser.fullName = currentUser.profile.name;
-        mixpanelUser.avatar = currentUser.profile.avatar;
-        LogSrv.register(mixpanelUser);
+        if(callback){callback();}
       });
-      LogSrv.trackSetMail(mail);
     }
   }
+  
   function setDefaultServings(defaultServings){
     currentUser.profile.defaultServings = defaultServings;
   }
@@ -572,7 +559,7 @@ angular.module('ionicApp')
   var currentUser = $localStorage.user;
   var service = {
     identify: identify,
-    register: register,
+    registerUser: registerUser,
     trackLaunch: function(user){track('launch', {user: user});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
     trackState: function(params){track('state', params);},
@@ -627,7 +614,7 @@ angular.module('ionicApp')
       service.trackStateNotFound(params);
     });
   }
-  
+
   function trackWithPosition(event, params){
     navigator.geolocation.getCurrentPosition(function(position){
       event.position = position.coords;
@@ -674,11 +661,31 @@ angular.module('ionicApp')
     service.trackLaunch(id);
   }
 
-  function register(user){
+  function registerUser(){
+    var mixpanelUser = {
+      $created: moment(currentUser.profile.firstLaunch).format('LLLL'),
+      $email: currentUser.profile.mail,
+      fullName: currentUser.profile.name,
+      avatar: currentUser.profile.avatar
+    };
+    if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
+      if(currentUser.gravatar.entry[0].hash)            { mixpanelUser.gravatar = currentUser.gravatar.entry[0].hash; }
+      if(currentUser.gravatar.entry[0].aboutMe)         { mixpanelUser.about = currentUser.gravatar.entry[0].aboutMe; }
+      if(currentUser.gravatar.entry[0].currentLocation) { mixpanelUser.location = currentUser.gravatar.entry[0].currentLocation; }
+      if(currentUser.gravatar.entry[0].name){
+        if(currentUser.gravatar.entry[0].name.givenName) { mixpanelUser.$first_name = currentUser.gravatar.entry[0].name.givenName; }
+        if(currentUser.gravatar.entry[0].name.familyName){ mixpanelUser.$last_name = currentUser.gravatar.entry[0].name.familyName; }
+      }
+    }
+    for(var i in currentUser.settings){
+      mixpanelUser['setting.'+i] = currentUser.settings[i];
+    }
+
     if(debug){
-      console.log('register', user);
+      console.log('register', mixpanelUser);
     } else {
-      mixpanel.people.set(user);
+      console.log('register', mixpanelUser);
+      mixpanel.people.set(mixpanelUser);
     }
   }
 

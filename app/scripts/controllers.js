@@ -9,7 +9,10 @@ angular.module('ionicApp')
     $state.go('app.home');
   };
   $scope.submitUserInfos = function(){
-    UserSrv.setMail($scope.profile.mail);
+    LogSrv.trackSetMail($scope.profile.mail);
+    UserSrv.setMail($scope.profile.mail, function(){
+      LogSrv.registerUser();
+    });
     UserSrv.setDefaultServings($scope.profile.defaultServings);
     $scope.startApp();
   };
@@ -288,8 +291,10 @@ angular.module('ionicApp')
   $scope.mail = angular.copy(user.profile.mail);
 
   $scope.saveMail = function(mail){
-    console.log('saveMail', mail);
-    UserSrv.setMail(mail);
+    LogSrv.trackSetMail(mail);
+    UserSrv.setMail(mail, function(){
+      LogSrv.registerUser();
+    });
   };
   $scope.about = function(){
     window.alert('Not implemented yet :(');
@@ -316,11 +321,13 @@ angular.module('ionicApp')
   $scope.$watch('settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
       LogSrv.trackChangeSetting('showPrices', newValue);
+      LogSrv.registerUser();
     }
   });
   $scope.$watch('settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
       LogSrv.trackChangeSetting('bigImages', newValue);
+      LogSrv.registerUser();
     }
   });
 })
@@ -347,7 +354,10 @@ angular.module('ionicApp')
       }
     });
     if(user.profile.mail !== $scope.feedback.mail){
-      UserSrv.setMail($scope.feedback.mail);
+      LogSrv.trackSetMail($scope.feedback.mail);
+      UserSrv.setMail($scope.feedback.mail, function(){
+        LogSrv.registerUser();
+      });
     }
   };
   $scope.openUservoice = function(){
