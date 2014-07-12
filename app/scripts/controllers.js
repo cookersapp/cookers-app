@@ -89,6 +89,10 @@ angular.module('ionicApp')
 
   $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
+  $scope.toggleIngredients = function(recipe){
+    console.log('toggleIngredients');
+    recipe.showIngredients = !recipe.showIngredients;
+  };
   $scope.addRecipeToCart = function(recipe, index){
     LogSrv.trackAddRecipeToCart(recipe.id, index, 'weekrecipes');
     CartSrv.addRecipeToCart(recipe);

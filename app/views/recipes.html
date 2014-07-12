@@ -16,13 +16,21 @@
     </div>
     <div ng-if="!loading">
       <div class="list">
-        <div class="item item-recipe-img-full" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
-          <img ng-if="settings.bigImages" ng-src="{{recipe.images.portrait}}" ui-sref="app.recipe({recipeId: recipe.id})">
-          <img ng-if="!settings.bigImages" ng-src="{{recipe.images.landing}}" ui-sref="app.recipe({recipeId: recipe.id})">
+        <div class="item item-recipe-img-full" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': settings.bigImages}" ng-repeat="recipe in weekrecipes.recipes" ng-cloak>
+          <img class="portrait" ng-src="{{recipe.images.portrait}}" ng-click="toggleIngredients(recipe)">
+          <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">
             <div class="price" ng-if="settings.showPrices">
               <div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>
               <div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>
+            </div>
+          </div>
+          <div class="ingredients-overlay" ng-click="toggleIngredients(recipe)">
+            <div class="list">
+              <div class="item item-divider">Ingrédients ({{recipe.ingredients.length}})</div>
+              <div ng-repeat="ingredient in recipe.ingredients" class="item ingredient">
+                {{ingredient.quantity | quantity}} {{ingredient.food.name}}
+              </div>
             </div>
           </div>
           <div class="legend">
@@ -40,7 +48,7 @@
                 <i class="fa fa-minus fa-stack-1x"></i>
               </span>
             </div>
-            <div ui-sref="app.recipe({recipeId: recipe.id})">
+            <div ng-click="toggleIngredients(recipe)" style="display: inline;">
               <div class="title line">{{recipe.name}}</div>
               <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
             </div>

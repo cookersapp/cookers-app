@@ -12,6 +12,14 @@
     border: none;
     & > img {
       width: 100%;
+      &.portrait { display: none; }
+      &.landing { display: block; }
+    }
+    &.big-image {
+      & > img {
+        &.portrait { display: block; }
+        &.landing { display: none; }
+      }
     }
     .legend-top {
       position: absolute;
@@ -33,6 +41,35 @@
           line-height: 16px;
         }
       }
+    }
+    .ingredients-overlay {
+      display: none;
+      overflow: hidden;
+      position: absolute;
+      top: 0px;
+      bottom: 55px;
+      width: 100%;
+      margin: auto;
+      .list {
+        background: #fff;
+        margin: auto;
+        width: 75%;
+        .item.item-divider {
+          min-height: 25px;
+          padding: 4px 8px;
+          line-height: 16px;
+          font-size: 16px;
+        }
+        .item.ingredient {
+          padding: 3px;
+          line-height: 14px;
+          font-size: 14px;
+          // height: 32px;
+        }
+      }
+    }
+    &.show-ingredients .ingredients-overlay {
+      display: block;
     }
     .legend {
       position: absolute;
@@ -62,13 +99,6 @@
       .subtitle {
         color: #ddd;
       }
-    }
-    .actions {
-      position: absolute;
-      left: 0px;
-      right: 0px;
-      top: 0px;
-      padding: 5px;
     }
   }
 }
