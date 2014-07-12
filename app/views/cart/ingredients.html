@@ -1,12 +1,14 @@
 <div>
   <div class="list add-product">
-    <div class="item item-input-inset">
-      <label class="item-input-wrapper">
-        <i class="icon ion-ios7-search placeholder-icon"></i>
-        <input type="search" ng-model="ingredientSearch.name" focus-on-keyboard-open placeholder="Ajouter un ingrédient ...">
-      </label>
-      <button class="button button-clear" ng-click="selectProduct(ingredientSearch.name)">Ajouter</button>
-    </div>
+    <form ng-submit="selectProduct(ingredientSearch.name)">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <i class="icon ion-ios7-search placeholder-icon"></i>
+          <input type="search" ng-model="ingredientSearch.name" focus-on-keyboard-open placeholder="Ajouter un ingrédient ...">
+        </label>
+        <button type="submit" class="button button-clear" ng-click="selectProduct(ingredientSearch.name)">Ajouter</button>
+      </div>
+    </form>
     <div class="item-results hide-on-keyboard-close" ng-if="ingredientSearch.name.length">
       <div ng-show="!selectedProduct">
         <div class="result {{categoryId(food)}}" ng-repeat="food in foods | filter:ingredientSearch" ng-click="selectProduct(food)">
