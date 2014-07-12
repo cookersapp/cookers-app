@@ -8,10 +8,15 @@
 
   <ion-content class="home">
     <!-- contextual message -->
-    <div class="padding message" ng-if="message">
-      <div class="alert alert-{{message.type}}">
-        <button type="button" class="close" ng-click="hideMessage()">&times;</button>
-        <span external-content="message.content"></span>
+    <div class="padding message" ng-repeat="msg in stickyMessages">
+      <div class="alert alert-{{msg.type}}">
+        <span external-content="msg.content"></span>
+      </div>
+    </div>
+    <div class="padding message" ng-if="standardMessage">
+      <div class="alert alert-{{standardMessage.type}}">
+        <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
+        <span external-content="standardMessage.content"></span>
       </div>
     </div>
 

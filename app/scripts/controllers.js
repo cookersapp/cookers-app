@@ -56,24 +56,30 @@ angular.module('ionicApp')
   });
 })
 
-.controller('HomeCtrl', function($scope, $timeout, $localStorage, UserInfoSrv, CartSrv, RecipeSrv, LogSrv){
+.controller('HomeCtrl', function($scope, $timeout, $localStorage, GlobalMessageSrv, CartSrv, RecipeSrv, LogSrv){
   'use strict';
-  $scope.message = null;
   $scope.cart = CartSrv.getCurrentCart();
   $scope.items = CartSrv.getCurrentCartItems();
   $scope.recipesHistory = RecipeSrv.getHistory();
+  $scope.standardMessage = null;
+  $scope.stickyMessages = [];
 
-  UserInfoSrv.messageToDisplay().then(function(message){
-    $scope.message = message;
+  GlobalMessageSrv.getStandardMessageToDisplay().then(function(message){
+    $scope.standardMessage = message;
   });
-  $scope.hideMessage = function(){
-    LogSrv.trackCloseMessageInfo($scope.message.id);
-    $scope.message.hide = true;
-    $scope.message = null;
+  GlobalMessageSrv.getStickyMessages().then(function(messages){
+    $scope.stickyMessages = messages;
+  });
+  GlobalMessageSrv.execMessages();
+  
+  $scope.hideStandardMessage = function(){
+    LogSrv.trackHideMessage($scope.standardMessage.id);
+    $scope.standardMessage.hide = true;
+    $scope.standardMessage = null;
     // wait 3 sec before show new message
     $timeout(function(){
-      UserInfoSrv.messageToDisplay().then(function(message){
-        $scope.message = message;
+      GlobalMessageSrv.getStandardMessageToDisplay().then(function(message){
+        $scope.standardMessage = message;
       });
     }, 3000);
   };

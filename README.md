@@ -2,6 +2,7 @@
 
 # TODO
 
+- Télécharger en local les scripts UserVoice et Mixpanel (et initialiser mixpanel dans la fonction run)
 - Mettre une option sur les messages pour qu'ils soient persistents
 - Demander une autorisation android pour récupérer le mail de l'utilisateur
 - Ajouter dans les options un choix d'écran de lancement (home, recipes or cart)

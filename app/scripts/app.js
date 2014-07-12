@@ -147,7 +147,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     current: null,
     contents: []
   },
-  userinfo: {
+  globalmessages: {
     lastCall: null,
     messages: []
   }
@@ -161,7 +161,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
-  if(!$localStorage.userinfo){$localStorage.userinfo = localStorageDefault.userinfo;}
+  if(!$localStorage.globalmessages){$localStorage.globalmessages = localStorageDefault.globalmessages;}
 
   LogSrv.trackStates();
 
