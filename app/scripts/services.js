@@ -38,6 +38,8 @@ angular.module('ionicApp')
   'use strict';
   var service = {
     get: getRecipe,
+    addToHistory: addToHistory,
+    getHistory: function(){return $localStorage.recipesHistory;},
     store: storeRecipe
   };
 
@@ -48,6 +50,11 @@ angular.module('ionicApp')
     } else {
       return downloadRecipe(recipeId);
     }
+  }
+  
+  function addToHistory(recipe){
+    _.remove($localStorage.recipesHistory, {id: recipe.id});
+    $localStorage.recipesHistory.unshift(recipe);
   }
 
   function downloadRecipe(recipeId){

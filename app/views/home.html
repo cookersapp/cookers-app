@@ -35,7 +35,7 @@
     <!-- seen recipes history -->
     <div class="recipes" ng-if="recipesHistory && recipesHistory.length > 0">
       <div class="list">
-        <div class="item item-divider">Historique des recettes vues</div>
+        <div class="item item-divider">Historique des recettes</div>
         <div class="item item-recipe-img-full" ng-repeat="recipe in recipesHistory | limitTo:10" ui-sref="app.recipe({recipeId: recipe.id})">
           <img ng-src="{{recipe.images.landing}}">
           <div class="legend">
@@ -43,7 +43,7 @@
             <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
           </div>
         </div>
-        <a class="item" ui-sref="app.recipes"><i class="fa fa-cutlery"></i> Voir les recettes de la semaine</a>
+        <a class="button button-block button-balanced" ui-sref="app.recipes"><i class="fa fa-cutlery"></i> Voir les recettes de la semaine</a>
       </div>
     </div>
   </ion-content>
