@@ -2,15 +2,11 @@
 
 # TODO
 
-- Track : first install, reset app
 - Mettre une option sur les messages pour qu'ils soient persistents
-- Ajouter un message sur l'écran profil pour dire qu'il est possible de configurer son profil sur gravatar
 - Demander une autorisation android pour récupérer le mail de l'utilisateur
-- Ajouter dans les otpions un choix d'écran de lancement (home, recipes or cart)
+- Ajouter dans les options un choix d'écran de lancement (home, recipes or cart)
 - redesigner les checkbox de la liste de course : agrandir la surface cliquable, mettre en foncé la checkbox des éléments achetés
 - espacer un peu les recettes dans les recettes de la semaine (cards ?)
-- mettre plus en valeur le bouton "voir les recettes de la semaine à la fin de l'historique"
-- ajouter à l'historique les recettes achetées
 - sur la home, le titre "liste de course" donne envie de cliquer dessus (on a l'impression que c'est un bouton)
 - redesign la l'écran recettes : 
     - l'image de la recette reste fixe

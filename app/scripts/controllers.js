@@ -343,6 +343,7 @@ angular.module('ionicApp')
   };
   $scope.resetApp = function(){
     if(window.confirm('Réinitialiser complètement l\'application ?')){
+      LogSrv.trackClearApp(user.device.uuid);
       $localStorage.$reset(localStorageDefault);
       if(navigator.app){
         navigator.app.exitApp();

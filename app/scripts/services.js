@@ -51,7 +51,7 @@ angular.module('ionicApp')
       return downloadRecipe(recipeId);
     }
   }
-  
+
   function addToHistory(recipe){
     _.remove($localStorage.recipesHistory, {id: recipe.id});
     $localStorage.recipesHistory.unshift(recipe);
@@ -387,12 +387,15 @@ angular.module('ionicApp')
     GamificationSrv.initScore();
     $ionicPlatform.ready(function(){
       currentUser.device = actualDevice();
+      LogSrv.identify(currentUser.device.uuid);
+      LogSrv.trackInstall(currentUser.device.uuid);
       launch();
     });
   }
 
   function launch(){
     LogSrv.identify(currentUser.device.uuid);
+    LogSrv.trackLaunch(currentUser.device.uuid);
     function addLaunch(user, launch){
       user.launchs.unshift(launch);
       var firebaseRef = new Firebase(firebaseUrl+'/connected');
@@ -632,6 +635,7 @@ angular.module('ionicApp')
   var service = {
     identify: identify,
     registerUser: registerUser,
+    trackInstall: function(user){track('install', {user: user});},
     trackLaunch: function(user){track('launch', {user: user});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
     trackState: function(params){track('state', params);},
@@ -655,7 +659,8 @@ angular.module('ionicApp')
     trackSendFeedback: function(mail){track('send-feedback', {mail: mail});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
-    trackStates: trackStates,
+    trackClearApp: function(user){track('clear-app', {user: user});},
+    trackStates: trackStates
   };
 
   function trackStates(){
@@ -732,7 +737,6 @@ angular.module('ionicApp')
     } else {
       mixpanel.identify(id);
     }
-    service.trackLaunch(id);
   }
 
   function registerUser(){
