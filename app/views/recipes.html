@@ -8,7 +8,7 @@
 
   <ion-content class="recipes">
     <div ng-if="loading" class="recipes-empty">
-      LOADING ...
+      CHARGEMENT ...
     </div>
     <div ng-if="!loading && (!weekrecipes || !weekrecipes.recipes || weekrecipes.recipes.length === 0)" class="recipes-empty">
       Aucune recette planifiée cette semaine :(<br>
@@ -58,12 +58,12 @@
 
       <div class="list card" ui-sref="app.feedback" style="margin-bottom: 20px;">
         <div class="item item-text-wrap">
-          Vous avez parcouru toutes les recettes.<br>
-          Comment avez vous trouvé notre sélection ?
+          C'est la fin des recettes de cette semaine !<br>
+          Comment as-tu trouvé notre sélection ?
         </div>
         <a href="#" class="item item-icon-right">
           <i class="icon ion-arrow-right-c"></i>
-          Faites nous un retour sur vos attentes !
+          Fais-nous un retour sur tes attentes !
         </a>
       </div>
     </div>

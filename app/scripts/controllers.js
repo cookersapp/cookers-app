@@ -258,7 +258,7 @@ angular.module('ionicApp')
     LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch.name);
     CartSrv.addCustomItemToCart(item);
     updateCart();
-    window.plugins.toast.show('✔ ingrédient ajouté à la liste de courses');
+    window.plugins.toast.showShortTop('✔ ingrédient ajouté à la liste de courses');
     resetAddIngredient();
   };
   $scope.removeCartItemSource = function(item){

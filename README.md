@@ -2,6 +2,10 @@
 
 # TODO
 
+- Petits problèmes à régler :
+    - 1ère ouverture : on voit la transition
+    - champ mail dans l'intro
+    - "loading..."
 - Remplacer added par created (ionic & firebase)
 - Télécharger en local les scripts UserVoice et Mixpanel (et initialiser mixpanel dans la fonction run)
 - Demander une autorisation android pour récupérer le mail de l'utilisateur

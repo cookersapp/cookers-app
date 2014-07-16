@@ -109,7 +109,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('CartSrv', function($localStorage, UserSrv){
+.factory('CartSrv', function($localStorage, UserSrv, debug){
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
@@ -261,21 +261,28 @@ angular.module('ionicApp')
     var quantity = null;
     for(var i in item.sources){
       var source = item.sources[i];
-      if(quantity === null){
-        quantity = source.quantity;
-      } else {
-        quantity = addQuantities(quantity, source.quantity);
+      if(source.quantity && source.quantity.value && source.quantity.value > 0){
+        if(quantity === null){
+          quantity = source.quantity;
+        } else {
+          quantity = addQuantities(quantity, source.quantity, item);
+        }
       }
     }
     return quantity;
   }
-  function addQuantities(q1, q2){
+  function addQuantities(q1, q2, item){
     var q = angular.copy(q1);
     if(q1.unit === q2.unit){
       q.value += q2.value;
     } else {
       // TODO
-      window.alert('Should convert <'+q2.unit+'> to <'+q1.unit+'> !!!');
+      if(debug){
+        window.alert('Should convert <'+q2.unit+'> to <'+q1.unit+'> on <'+item.food.name+'> !!!');
+        console.log('item', item);
+        console.log('quantitiy 1', q1);
+        console.log('quantitiy 2', q2);
+      }
     }
     return q;
   }
