@@ -46,9 +46,9 @@ angular.module('ionicApp')
   $scope.$watch($ionicSideMenuDelegate.getOpenRatio, function(newValue, oldValue){
     if(newValue !== oldValue){
       if(newValue === 0){
-        LogSrv.trackToggleMenu('close');
+        // close
       } else if(newValue === 1){
-        LogSrv.trackToggleMenu('open');
+        // open
       } else {
         // opening ...
       }
@@ -97,7 +97,6 @@ angular.module('ionicApp')
   $scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
   $scope.toggleIngredients = function(recipe){
-    console.log('toggleIngredients');
     recipe.showIngredients = !recipe.showIngredients;
   };
   $scope.addRecipeToCart = function(recipe, index){

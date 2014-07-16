@@ -9,12 +9,12 @@
   <ion-content class="home">
     <!-- contextual message -->
     <div class="padding message" ng-repeat="msg in stickyMessages">
-      <div class="alert alert-{{msg.type}}">
+      <div class="alert alert-{{msg.display}}">
         <span external-content="msg.content"></span>
       </div>
     </div>
     <div class="padding message" ng-if="standardMessage">
-      <div class="alert alert-{{standardMessage.type}}">
+      <div class="alert alert-{{standardMessage.display}}">
         <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
         <span external-content="standardMessage.content"></span>
       </div>

@@ -1,9 +1,9 @@
 angular.module('ionicApp')
 
-.factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv){
+.factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
   var service = {
-    getCurrent: function(){ return getRecipesOfWeek(moment().week()); },
+    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };
@@ -468,13 +468,6 @@ angular.module('ionicApp')
 
 .factory('GlobalMessageSrv', function($q, $http, $localStorage, firebaseUrl, debug, appVersion){
   'use strict';
-  /*
-   * TODO : add properties to message :
-   *  - type: String, values: standard, sticky, exec
-   *  - toDisplay(message, user): bool
-   *  - toExec(message, user)
-   *  - targets: Array(String), versions de l'application ciblées
-   */
   var globalmessages = $localStorage.globalmessages;
   var service = {
     getStandardMessageToDisplay: getStandardMessageToDisplay,
@@ -501,13 +494,15 @@ angular.module('ionicApp')
       return findMessages(type);
     });
   }
-  
+
   function execMessages(){
     var type = 'exec';
     return fetchMessages().then(function(){
       var messages = findMessages(type);
       for(var i in messages){
-        // eval(messages[i].toExec, msg, user);
+        if(messages[i].exec){
+          execMessage(messages[i].exec, messages[i]);
+        }
         messages[i].hide = true;
       }
       return messages;
@@ -516,22 +511,21 @@ angular.module('ionicApp')
 
   function findMessages(type){
     return _.filter(globalmessages.messages, function(msg){
-      return msg.type === type && !msg.hide;// && eval(msg.toDisplay, msg, user);
+      return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function findMessage(type){
     return _.find(globalmessages.messages, function(msg){
-      return msg.type === type && !msg.hide;// && eval(msg.toDisplay, msg, user);
+      return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function fetchMessages(){
     globalmessages.lastCall = Date.now();
-    // TODO : rename firebase endpoint to globalmessages
-    return $http.get(firebaseUrl+'/userinfos.json').then(function(result){
+    return $http.get(firebaseUrl+'/globalmessages.json').then(function(result){
       var messages = _.filter(result.data, function(msg){
-        return msg && (msg.isProd || debug) && msg.targets && msg.targets.contains(appVersion) > -1 && !messageExists(msg);
+        return msg && (msg.isProd || debug) && msg.targets && msg.targets.indexOf(appVersion) > -1 && !messageExists(msg);
       });
       globalmessages.messages = globalmessages.messages.concat(messages);
       // sort chronogically
@@ -539,6 +533,11 @@ angular.module('ionicApp')
         return a.added - b.added;
       });
     });
+  }
+
+  function execMessage(fn, message){
+    var user = $localStorage.user;
+    return eval(fn);
   }
 
   function messageExists(message){
@@ -678,7 +677,6 @@ angular.module('ionicApp')
     trackStateError: function(params){track('state-error', params);},
     trackStateNotFound: function(params){track('state-not-found', params);},
     trackSetMail: function(mail){track('set-mail', {mail: mail});},
-    trackToggleMenu: function(action){track('toggle-menu', {action: action});},
     trackHideMessage: function(message){track('hide-message', {message: message});},
     // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
     trackAddRecipeToCart: function(recipe, index, from){track('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
