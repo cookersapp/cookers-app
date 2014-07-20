@@ -395,6 +395,7 @@ angular.module('ionicApp')
     $ionicPlatform.ready(function(){
       currentUser.device = actualDevice();
       LogSrv.identify(currentUser.device.uuid);
+      LogSrv.registerUser();
       LogSrv.trackInstall(currentUser.device.uuid);
       launch();
     });
@@ -787,7 +788,7 @@ angular.module('ionicApp')
 
   function registerUser(){
     var mixpanelUser = {
-      $created: moment(currentUser.profile.firstLaunch).format('LLLL'),
+      $created: moment(currentUser.profile.firstLaunch).format('lll'),
       $email: currentUser.profile.mail,
       fullName: currentUser.profile.name,
       avatar: currentUser.profile.avatar,

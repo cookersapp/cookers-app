@@ -171,7 +171,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
   $rootScope.showIntro = false;
   if(UserSrv.isFirstLaunch()){
-    LogSrv.registerUser();
     $rootScope.showIntro = true;
     UserSrv.firstLaunch();
   } else {
