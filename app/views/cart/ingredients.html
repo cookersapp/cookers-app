@@ -4,7 +4,7 @@
       <div class="item item-input-inset">
         <label class="item-input-wrapper">
           <i class="icon ion-ios7-search placeholder-icon"></i>
-          <input type="search" ng-model="ingredientSearch.name" focus-on-keyboard-open placeholder="Ajouter un ingrédient ...">
+          <input type="search" ng-model="ingredientSearch.name" focus-on-keyboard-open placeholder="Penser à acheter ...">
         </label>
         <button type="submit" class="button button-clear" ng-click="selectProduct(ingredientSearch.name)">Ajouter</button>
       </div>
@@ -53,7 +53,8 @@
 
 
   <div ng-if="(!items || items.length === 0) && boughtItems.length === 0" class="cart-empty">
-    Aucun ingrédient à acheter !!!
+    Aucun ingrédient à acheter :(
+    <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute une recette !</button>
   </div>
   <div ng-if="(!items || items.length === 0) && boughtItems.length > 0" class="cart-empty">
     Bravo ! Vous avez tout acheté !!!<br>

@@ -22,7 +22,7 @@
 
     <!-- cart dashboard -->
     <div class="cart-infos">
-      <div class="heading">Liste de courses</div>
+      <div class="heading" ui-sref="app.cart.ingredients">Liste de courses</div>
       <div class="row" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
         <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes</span></div>
         <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients à acheter</span></div>
