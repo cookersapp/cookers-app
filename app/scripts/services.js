@@ -788,7 +788,7 @@ angular.module('ionicApp')
 
   function registerUser(){
     var mixpanelUser = {
-      $created: moment(currentUser.profile.firstLaunch).format('lll'),
+      $created: moment(currentUser.profile.firstLaunch).format('llll'),
       $email: currentUser.profile.mail,
       fullName: currentUser.profile.name,
       avatar: currentUser.profile.avatar,
