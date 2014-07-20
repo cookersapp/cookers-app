@@ -6,6 +6,7 @@ angular.module('ionicApp')
   $scope.profile = angular.copy(UserSrv.getProfile());
 
   $scope.startApp = function(){
+    LogSrv.registerUser();
     $state.go('app.home');
   };
   $scope.submitUserInfos = function(){

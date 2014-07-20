@@ -804,7 +804,6 @@ angular.module('ionicApp')
     if(debug){
       console.log('register', mixpanelUser);
     } else {
-      console.log('register', mixpanelUser);
       mixpanel.people.set(mixpanelUser);
     }
   }
