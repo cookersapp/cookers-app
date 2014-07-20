@@ -405,6 +405,7 @@ angular.module('ionicApp')
     LogSrv.trackLaunch(currentUser.device.uuid);
     function addLaunch(user, launch){
       user.launchs.unshift(launch);
+      // manage user presence in firebase
       var firebaseRef = new Firebase(firebaseUrl+'/connected');
       var userRef = firebaseRef.push(user);
       userRef.onDisconnect().remove();
@@ -740,13 +741,13 @@ angular.module('ionicApp')
 
   function trackWithPosition(event, params){
     navigator.geolocation.getCurrentPosition(function(position){
-      event.position = position.coords;
-      event.position.timestamp = position.timestamp;
+      params.position = position.coords;
+      params.position.timestamp = position.timestamp;
       if(event === 'buy-item' || event === 'buy-item-source'){buyLogsRef.push(params);}
       track(event, params);
     }, function(error){
-      event.position = error;
-      event.position.timestamp = Date.now();
+      params.position = error;
+      params.position.timestamp = Date.now();
       track(event, params);
     });
   }
