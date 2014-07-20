@@ -430,9 +430,13 @@ angular.module('ionicApp')
         if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
           if(currentUser.gravatar.entry[0].thumbnailUrl){ currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl; }
           if(currentUser.gravatar.entry[0].displayName) { currentUser.profile.name = currentUser.gravatar.entry[0].displayName; }
-          if(currentUser.gravatar.entry[0].profileBackground) {
+          if(currentUser.gravatar.entry[0].name && currentUser.gravatar.entry[0].name.formatted){
+            // override displayName
+            currentUser.profile.name = currentUser.gravatar.entry[0].name.formatted;
+          }
+          if(currentUser.gravatar.entry[0].profileBackground){
             if(currentUser.gravatar.entry[0].profileBackground.color) { currentUser.profile.background = currentUser.gravatar.entry[0].profileBackground.color; }
-            if(currentUser.gravatar.entry[0].profileBackground.url) { currentUser.profile.backgroundCover = currentUser.gravatar.entry[0].profileBackground.url; }
+            if(currentUser.gravatar.entry[0].profileBackground.url)   { currentUser.profile.backgroundCover = currentUser.gravatar.entry[0].profileBackground.url; }
           }
         }
         if(callback){callback();}
