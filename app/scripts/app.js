@@ -93,7 +93,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 })
 
 .constant('debug', true)
-.constant('appVersion', '0.1.0')
+.constant('appVersion', '~0.1.0')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')

@@ -686,10 +686,10 @@ angular.module('ionicApp')
     trackSetMail: function(mail){track('set-mail', {mail: mail});},
     trackHideMessage: function(message){track('hide-message', {message: message});},
     // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
-    trackAddRecipeToCart: function(recipe, index, from){track('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
-    trackRemoveRecipeFromCart: function(recipe, index, from){track('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
-    trackAddItemToCart: function(item, quantity, unit, missing, search){track('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
-    trackRemoveItemFromCart: function(item){track('remove-item-from-cart', {item: item});},
+    trackAddRecipeToCart: function(recipe, index, from){trackWithPosition('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
+    trackRemoveRecipeFromCart: function(recipe, index, from){trackWithPosition('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
+    trackAddItemToCart: function(item, quantity, unit, missing, search){trackWithPosition('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
+    trackRemoveItemFromCart: function(item){trackWithPosition('remove-item-from-cart', {item: item});},
     // ??? merge trackCartRecipeDetails with trackCartItemDetails ???
     trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
     trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},

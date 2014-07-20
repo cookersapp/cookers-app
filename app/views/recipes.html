@@ -27,7 +27,7 @@
           </div>
           <div class="ingredients-overlay" ng-click="toggleIngredients(recipe)">
             <div class="list">
-              <div class="item item-divider">Ingrédients ({{recipe.ingredients.length}})</div>
+              <div class="item item-divider">Ingrédients pour {{recipe.servings.value}} {{recipe.servings.unit}}</div>
               <div ng-repeat="ingredient in recipe.ingredients" class="item ingredient">
                 {{ingredient.quantity | quantity}} {{ingredient.food.name}}
               </div>
