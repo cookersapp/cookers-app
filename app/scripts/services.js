@@ -3,7 +3,8 @@ angular.module('ionicApp')
 .factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
   var service = {
-    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
+    // TODO set 1 if debug !
+    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 0 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };
@@ -135,7 +136,7 @@ angular.module('ionicApp')
     return $localStorage.carts && $localStorage.carts.contents && $localStorage.carts.contents.length > 0;
   }
   function getCurrentCart(){
-    return hasCarts() ? $localStorage.carts.contents[$localStorage.carts.current] : null;
+    return hasCarts() ? $localStorage.carts.contents[$localStorage.carts.current] : createCart();
   }
   function getActiveCart(){
     var cart = getCurrentCart();
@@ -149,7 +150,7 @@ angular.module('ionicApp')
     var cart = buildCart();
     $localStorage.carts.contents.unshift(cart);
     $localStorage.carts.current = 0;
-    return getCurrentCart();
+    return cart;
   }
   function archiveCart(cart){
     if(cart){
@@ -369,7 +370,8 @@ angular.module('ionicApp')
       archived: false,
       name: 'Liste du '+moment().format('LL'),
       recipes: [],
-      items: []
+      items: [],
+      customItems: ''
     };
   }
 

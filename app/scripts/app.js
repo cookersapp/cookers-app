@@ -1,4 +1,4 @@
-angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5'])
+angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
@@ -92,7 +92,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   });
 
 
-  $provide.decorator('$exceptionHandler', function($delegate){
+  $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
     return function(exception, cause){
       $delegate(exception, cause);
       
@@ -103,7 +103,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         localtime: Date.now()
       });
     };
-  });
+  }]);
 })
 
 .constant('debug', true)

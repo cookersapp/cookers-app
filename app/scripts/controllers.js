@@ -178,6 +178,7 @@ angular.module('ionicApp')
 .controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList, LogSrv){
   'use strict';
   $scope.openedItems = [];
+  $scope.cart = CartSrv.getCurrentCart();
   $scope.items = CartSrv.getCurrentCartItems();
   $scope.boughtItems = CartSrv.getCurrentCartBoughtItems();
 
