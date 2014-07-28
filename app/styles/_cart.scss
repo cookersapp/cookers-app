@@ -50,6 +50,17 @@
 
   .add-product {
     margin-bottom: 0px;
+    .item {
+      padding: 0px;
+      textarea {
+        padding: 10px;
+        background: #eee;
+      }
+    }
+  }
+
+  .add-product-strict {
+    margin-bottom: 0px;
     .item-input-inset {
       padding-top: 0px;
       padding-bottom: 0px;
@@ -112,17 +123,6 @@
         .submit {
           padding-top: 5px;
         }
-      }
-    }
-  }
-
-  .add-product-2 {
-    margin-bottom: 0px;
-    .item {
-      padding: 0px;
-      textarea {
-        padding: 10px;
-        background: #eee;
       }
     }
   }

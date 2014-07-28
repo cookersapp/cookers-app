@@ -89,6 +89,7 @@ Inspirationnal apps :
 
 ## Tools 
 
+- screenshots : https://developer.android.com/distribute/tools/promote/device-art.html
 - Crop images : [croppola](http://www.croppola.com/) ([fixpicture](http://www.fixpicture.org/) to resize)
 - Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)

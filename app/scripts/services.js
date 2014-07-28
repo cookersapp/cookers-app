@@ -698,6 +698,7 @@ angular.module('ionicApp')
     trackRemoveRecipeFromCart: function(recipe, index, from){trackWithPosition('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
     trackAddItemToCart: function(item, quantity, unit, missing, search){trackWithPosition('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
     trackRemoveItemFromCart: function(item){trackWithPosition('remove-item-from-cart', {item: item});},
+    trackEditCartCustomItems: function(customItems){trackWithPosition('edit-cart-custom-items', {customItems: customItems});},
     // ??? merge trackCartRecipeDetails with trackCartItemDetails ???
     trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
     trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},

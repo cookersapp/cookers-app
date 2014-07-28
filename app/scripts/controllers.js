@@ -223,6 +223,10 @@ angular.module('ionicApp')
   FoodSrv.getAll().then(function(foods){
     $scope.foods = foods;
   });
+  
+  $scope.customItemsEdited = function(customItems){
+    LogSrv.trackEditCartCustomItems(customItems);
+  };
 
   $scope.selectProduct = function(product){
     if(typeof product === 'string'){
@@ -368,6 +372,12 @@ angular.module('ionicApp')
   $scope.$watch('settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
       LogSrv.trackChangeSetting('bigImages', newValue);
+      LogSrv.registerUser();
+    }
+  });
+  $scope.$watch('settings.strictIngredients', function(newValue, oldValue){
+    if(newValue !== oldValue){
+      LogSrv.trackChangeSetting('strictIngredients', newValue);
       LogSrv.registerUser();
     }
   });

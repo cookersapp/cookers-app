@@ -1,57 +1,61 @@
 <div>
-  <!--<div class="list add-product">
-<form ng-submit="selectProduct(ingredientSearch)">
-<div class="item item-input-inset">
-<label class="item-input-wrapper">
-<i class="icon ion-ios7-search placeholder-icon"></i>
-<input type="search" ng-model="ingredientSearch" focus-on-keyboard-open placeholder="Penser à acheter ...">
-</label>
-<button type="submit" class="button button-clear" ng-click="selectProduct(ingredientSearch)">Ajouter</button>
-</div>
-</form>
-<div class="item-results hide-on-keyboard-close" ng-if="ingredientSearch.length">
-<div ng-show="!selectedProduct">
-<div class="result {{categoryId(food)}}" ng-repeat="food in foods | ingredientFilter:ingredientSearch" ng-click="selectProduct(food)">
-<span class="text">{{food.name}}</span>
-</div>
-</div>
-<div class="selectedProduct" ng-if="selectedProduct">
-<div class="product">
-<button class="button button-small button-stable pull-right" ng-click="unselectProduct()">&times;</button>
-<div class="result {{categoryId(selectedProduct.product)}}">
-<span class="text">{{selectedProduct.product.name}}</span>
-</div>
-<div class="clearfix"></div>
-</div>
-<div class="quantity">
-<div class="row">
-<div class="col"><i class="fa fa-arrow-circle-left" ng-click="decreaseQuantityMult()"></i></div>
-<div class="col result" ng-class="{selected: selectedProduct.quantity === quantity*quantityMult}" ng-repeat="quantity in quantities" ng-click="selectQuantity(quantity*quantityMult)">
-<span class="text small">{{quantity*quantityMult | mynumber:quantityRound}}</span>
-</div>
-<div class="col"><i class="fa fa-arrow-circle-right" ng-click="increaseQuantityMult()"></i></div>
-</div>
-</div>
-<div class="unit">
-<div class="row">
-<div class="col">
-<div class="result" ng-class="{selected: selectedProduct.unit === unit}" ng-repeat="unit in units" ng-click="selectUnit(unit)">
-<span class="text small">{{unit}}</span>
-</div>
-<div class="clearfix"></div>
-</div>
-</div>
-</div>
-<div class="submit">
-<button class="button button-small button-positive" ng-click="addSelectedProductToCart()" ng-show="selectedProduct && selectedProduct.product && selectedProduct.quantity && selectedProduct.unit">Valider</button>
-</div>
-</div>
-<div class="clearfix"></div>
-</div>
-</div>-->
-  <div class="list add-product-2">
+  <div class="list add-product" ng-if="!settings.strictIngredients">
     <div class="item">
-      <textarea msd-elastic ng-model="cart.customItems" rows="1" placeholder="Penser à acheter ..."></textarea>
+      <textarea msd-elastic
+                blur-on-keyboard-out="customItemsEdited(cart.customItems)"
+                ng-model="cart.customItems"
+                rows="1"
+                placeholder="Penser à acheter ..."></textarea>
+    </div>
+  </div>
+  <div class="list add-product-strict" ng-if="settings.strictIngredients">
+    <form ng-submit="selectProduct(ingredientSearch)">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <i class="icon ion-ios7-search placeholder-icon"></i>
+          <input type="search" ng-model="ingredientSearch" focus-on-keyboard-open placeholder="Penser à acheter ...">
+        </label>
+        <button type="submit" class="button button-clear" ng-click="selectProduct(ingredientSearch)">Ajouter</button>
+      </div>
+    </form>
+    <div class="item-results hide-on-keyboard-close" ng-if="ingredientSearch.length">
+      <div ng-show="!selectedProduct">
+        <div class="result {{categoryId(food)}}" ng-repeat="food in foods | ingredientFilter:ingredientSearch" ng-click="selectProduct(food)">
+          <span class="text">{{food.name}}</span>
+        </div>
+      </div>
+      <div class="selectedProduct" ng-if="selectedProduct">
+        <div class="product">
+          <button class="button button-small button-stable pull-right" ng-click="unselectProduct()">&times;</button>
+          <div class="result {{categoryId(selectedProduct.product)}}">
+            <span class="text">{{selectedProduct.product.name}}</span>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="quantity">
+          <div class="row">
+            <div class="col"><i class="fa fa-arrow-circle-left" ng-click="decreaseQuantityMult()"></i></div>
+            <div class="col result" ng-class="{selected: selectedProduct.quantity === quantity*quantityMult}" ng-repeat="quantity in quantities" ng-click="selectQuantity(quantity*quantityMult)">
+              <span class="text small">{{quantity*quantityMult | mynumber:quantityRound}}</span>
+            </div>
+            <div class="col"><i class="fa fa-arrow-circle-right" ng-click="increaseQuantityMult()"></i></div>
+          </div>
+        </div>
+        <div class="unit">
+          <div class="row">
+            <div class="col">
+              <div class="result" ng-class="{selected: selectedProduct.unit === unit}" ng-repeat="unit in units" ng-click="selectUnit(unit)">
+                <span class="text small">{{unit}}</span>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <div class="submit">
+          <button class="button button-small button-positive" ng-click="addSelectedProductToCart()" ng-show="selectedProduct && selectedProduct.product && selectedProduct.quantity && selectedProduct.unit">Valider</button>
+        </div>
+      </div>
+      <div class="clearfix"></div>
     </div>
   </div>
 

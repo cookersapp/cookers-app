@@ -1,6 +1,6 @@
 angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
-.config(function($stateProvider, $urlRouterProvider, $provide){
+.config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
   $urlRouterProvider.otherwise('/app/home');
 
@@ -96,12 +96,17 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     return function(exception, cause){
       $delegate(exception, cause);
       
-      mixpanel.track('error', {
-        exception: exception,
-        cause: cause,
-        url: window.location.hash,
-        localtime: Date.now()
-      });
+      if(debug){
+        console.log('error', exception);
+        alert('Error '+cause);
+      } else {
+        mixpanel.track('error', {
+          exception: exception,
+          cause: cause,
+          url: window.location.hash,
+          localtime: Date.now()
+        });
+      }
     };
   }]);
 })
@@ -149,7 +154,8 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     },
     settings: {
       showPrices: false,
-      bigImages: true
+      bigImages: true,
+      strictIngredients: false
     },
     launchs: []
   },
@@ -194,5 +200,16 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   $rootScope.isActive = function(viewLocation){
     var regex = new RegExp('^'+viewLocation+'$', 'g');
     return regex.test($location.path());
+  };
+
+  $rootScope.safeApply = function(fn){
+    var phase = this.$root ? this.$root.$$phase : this.$$phase;
+    if(phase === '$apply' || phase === '$digest') {
+      if(fn && (typeof(fn) === 'function')) {
+        fn();
+      }
+    } else {
+      this.$apply(fn);
+    }
   };
 });
