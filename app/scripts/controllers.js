@@ -210,7 +210,7 @@ angular.module('ionicApp')
   };
 
   // add product
-  $scope.ingredientSearch = {};
+  $scope.ingredientSearch = '';
   $scope.selectedProduct = null;
   $scope.quantityMult = 1;
   $scope.quantityRound = 0;
@@ -255,7 +255,7 @@ angular.module('ionicApp')
   };
   $scope.addSelectedProductToCart = function(){
     var item = $scope.selectedProduct;
-    LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch.name);
+    LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch);
     CartSrv.addCustomItemToCart(item);
     updateCart();
     window.plugins.toast.showShortTop('✔ ingrédient ajouté à la liste de courses');
@@ -279,7 +279,7 @@ angular.module('ionicApp')
   }
   function resetAddIngredient(){
     resetProduct();
-    $scope.ingredientSearch = {};
+    $scope.ingredientSearch = '';
   }
 
   function updateCart(){

@@ -38,4 +38,41 @@ angular.module('ionicApp')
   return function(price){
     return price ? $filter('number')(price.value, 2)+' '+price.currency+(price.unit ? '/' + price.unit : '') : '';
   };
+})
+
+.filter('ingredientFilter', function(){
+  'use strict';
+  function startsWith(str, sub){
+    return str.indexOf(sub) === 0;
+  }
+  function priority(ingredient, querySlug){
+    var words = getSlug(ingredient.name).split('-');
+    for(var i=0; i<words.length; i++){
+      if(startsWith(words[i], querySlug)){
+        return i;
+      }
+    }
+    return 100;
+  }
+
+  return function(ingredients, query){
+    var filtered = [];
+    if(query && query.length > 0){
+      var querySlug = getSlug(query);
+      angular.forEach(ingredients, function(ingredient){
+        if(ingredient && ingredient.name){
+          if(getSlug(ingredient.name).indexOf(querySlug) > -1){
+            filtered.push(ingredient);
+          }
+        }
+      });
+      filtered.sort(function(a, b){
+        return getSlug(a.value) > getSlug(b.value) ? 1 : -1;
+      });
+      filtered.sort(function(a, b){
+        return priority(a, querySlug) - priority(b, querySlug);
+      });
+    }
+    return filtered;
+  };
 });

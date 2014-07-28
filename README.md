@@ -1,5 +1,10 @@
 # Cookers app
 
+# BUGS
+
+- liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
+- quand on archive une liste et qu'on en crée une nouvelle. Certains ingrédients sont déjà achetés :(
+
 # TODO
 
 - Petits problèmes à régler :
@@ -48,6 +53,10 @@ Your app is now running to your computer. To run it to your android device :
 - org.apache.cordova.geolocation : allow to get precise user position
 - https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
 - org.apache.cordova.inappbrowser : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
+
+See :
+
+- https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin
 
 ## Release process
 
