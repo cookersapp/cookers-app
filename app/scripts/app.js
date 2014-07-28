@@ -1,6 +1,6 @@
 angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5'])
 
-.config(function($stateProvider, $urlRouterProvider){
+.config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
   $urlRouterProvider.otherwise('/app/home');
 
@@ -89,6 +89,20 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         controller: 'DebugCtrl'
       }
     }
+  });
+
+
+  $provide.decorator('$exceptionHandler', function($delegate){
+    return function(exception, cause){
+      $delegate(exception, cause);
+      
+      mixpanel.track('error', {
+        exception: exception,
+        cause: cause,
+        url: window.location.hash,
+        localtime: Date.now()
+      });
+    };
   });
 })
 
