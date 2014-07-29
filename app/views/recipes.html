@@ -21,8 +21,8 @@
           <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">
             <div class="favorite" ng-class="{added: isFavorited(recipe)}">
-              <i class="fa fa-star-o add" ng-click="addToFavorite(recipe)"></i>
-              <i class="fa fa-star remove" ng-click="removeFromFavorite(recipe)"></i>
+              <i class="fa fa-star-o add" ng-click="addToFavorite(recipe, $index)"></i>
+              <i class="fa fa-star remove" ng-click="removeFromFavorite(recipe, $index)"></i>
             </div>
             <div class="price" ng-if="settings.showPrices">
               <div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>

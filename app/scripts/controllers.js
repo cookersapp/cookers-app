@@ -120,13 +120,15 @@ angular.module('ionicApp')
   $scope.isFavorited = function(recipe){
     return RecipeSrv.isFavorite(recipe);
   };
-  $scope.addToFavorite = function(recipe){
+  $scope.addToFavorite = function(recipe, index){
     RecipeSrv.addToFavorite(recipe);
     RecipeSrv.addToHistory(recipe);
+    LogSrv.trackAddRecipeToFavorite(recipe, index, 'weekrecipes');
     window.plugins.toast.show('✔ ajoutée aux favoris');
   };
-  $scope.removeFromFavorite = function(recipe){
+  $scope.removeFromFavorite = function(recipe, index){
     RecipeSrv.removeFromFavorite(recipe);
+    LogSrv.trackRemoveRecipeFromFavorite(recipe, index, 'weekrecipes');
     window.plugins.toast.show('✔ supprimée des favoris');
   };
 })
