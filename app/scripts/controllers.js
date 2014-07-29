@@ -65,7 +65,7 @@ angular.module('ionicApp')
   $scope.weekrecipes = [];
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
-  
+
   WeekrecipeSrv.getCurrent().then(function(weekrecipes){
     $scope.weekrecipes = weekrecipes;
   });
@@ -77,7 +77,7 @@ angular.module('ionicApp')
     $scope.stickyMessages = messages;
   });
   GlobalMessageSrv.execMessages();
-  
+
   $scope.hideStandardMessage = function(){
     LogSrv.trackHideMessage($scope.standardMessage.id);
     $scope.standardMessage.hide = true;
@@ -116,7 +116,7 @@ angular.module('ionicApp')
     CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
-  
+
   $scope.isFavorited = function(recipe){
     return RecipeSrv.isFavorite(recipe);
   };
@@ -218,16 +218,20 @@ angular.module('ionicApp')
   $scope.buyItem = function(item){
     LogSrv.trackBuyItem(item.food.id);
     CartSrv.buyCartItem(item);
-    updateCart();
+    var index = _.findIndex($scope.items, {food:{id: item.food.id}});
+    var elt = $scope.items.splice(index, 1)[0];
+    $scope.boughtItems.unshift(elt);
   };
   $scope.unbuyItem = function(item){
     LogSrv.trackUnbuyItem(item.food.id);
     CartSrv.unbuyCartItem(item);
-    updateCart();
+    var index = _.findIndex($scope.boughtItems, {food:{id: item.food.id}});
+    var elt = $scope.boughtItems.splice(index, 1)[0];
+    $scope.items.unshift(elt);
   };
 
   // add product
-  $scope.ingredientSearch = '';
+  /*$scope.ingredientSearch = '';
   $scope.selectedProduct = null;
   $scope.quantityMult = 1;
   $scope.quantityRound = 0;
@@ -239,7 +243,7 @@ angular.module('ionicApp')
   FoodSrv.getAll().then(function(foods){
     $scope.foods = foods;
   });
-  
+
   $scope.customItemsEdited = function(customItems){
     LogSrv.trackEditCartCustomItems(customItems);
   };
@@ -293,27 +297,27 @@ angular.module('ionicApp')
     resetAddIngredient();
   });
 
+  function resetAddIngredient(){
+    resetProduct();
+    $scope.ingredientSearch = '';
+  }
   function resetProduct(){
     $scope.selectedProduct = null;
     $scope.quantityMult = 1;
     $scope.quantityRound = 0;
-  }
-  function resetAddIngredient(){
-    resetProduct();
-    $scope.ingredientSearch = '';
   }
 
   function updateCart(){
     // TODO : don't create new lists, update them
     $scope.items = CartSrv.getCurrentCartItems();
     $scope.boughtItems = CartSrv.getCurrentCartBoughtItems();
-  }
+  }*/
 })
 
 .controller('ProfileCtrl', function($scope, $localStorage, localStorageDefault, UserSrv, LogSrv){
   'use strict';
   var user = UserSrv.get();
-  
+
   var covers = [
     'images/profile-covers/cover01.jpg',
     'images/profile-covers/cover02.jpg',
@@ -391,12 +395,12 @@ angular.module('ionicApp')
       LogSrv.registerUser();
     }
   });
-  $scope.$watch('settings.strictIngredients', function(newValue, oldValue){
+  /*$scope.$watch('settings.strictIngredients', function(newValue, oldValue){
     if(newValue !== oldValue){
       LogSrv.trackChangeSetting('strictIngredients', newValue);
       LogSrv.registerUser();
     }
-  });
+  });*/
 
   function gravatarCoverIsInCovers(user, covers){
     var gravatarCover = getGravatarCover(user);

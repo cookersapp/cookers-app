@@ -159,9 +159,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
       score: {}
     },
     settings: {
+      //strictIngredients: false,
       showPrices: false,
-      bigImages: true,
-      strictIngredients: false
+      bigImages: true
     },
     launchs: []
   },
