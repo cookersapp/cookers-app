@@ -220,11 +220,6 @@ angular.module('ionicApp')
     CartSrv.buyCartItem(item);
     updateCart();
   };
-  $scope.buySource = function(source, item){
-    LogSrv.trackBuyItemSource(item.food.id, source.recipe ? source.recipe.id : null);
-    CartSrv.buyCartItemSource(source, item);
-    updateCart();
-  };
   $scope.unbuyItem = function(item){
     LogSrv.trackUnbuyItem(item.food.id);
     CartSrv.unbuyCartItem(item);

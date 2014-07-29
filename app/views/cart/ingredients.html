@@ -85,9 +85,6 @@
 
       <div class="details" ng-if="isOpened(item)">
         <div class="source" ng-repeat="source in item.sources">
-          <div class="check pull-right">
-            <div class="box" ng-click="buySource(source, item)"></div>
-          </div>
           <div class="quantity pull-right">
             {{source.quantity | quantity}}
           </div>
