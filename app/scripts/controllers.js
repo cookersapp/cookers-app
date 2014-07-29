@@ -121,14 +121,14 @@ angular.module('ionicApp')
     return RecipeSrv.isFavorite(recipe);
   };
   $scope.addToFavorite = function(recipe, index){
+    LogSrv.trackAddRecipeToFavorite(recipe, index, 'weekrecipes');
     RecipeSrv.addToFavorite(recipe);
     RecipeSrv.addToHistory(recipe);
-    LogSrv.trackAddRecipeToFavorite(recipe, index, 'weekrecipes');
     window.plugins.toast.show('✔ ajoutée aux favoris');
   };
   $scope.removeFromFavorite = function(recipe, index){
-    RecipeSrv.removeFromFavorite(recipe);
     LogSrv.trackRemoveRecipeFromFavorite(recipe, index, 'weekrecipes');
+    RecipeSrv.removeFromFavorite(recipe);
     window.plugins.toast.show('✔ supprimée des favoris');
   };
 })
@@ -141,7 +141,7 @@ angular.module('ionicApp')
     $scope.recipe = recipe;
   });
 
-  $scope.cartHasRecipe = CartSrv.cartHasRecipe;
+  /*$scope.cartHasRecipe = CartSrv.cartHasRecipe;
 
   $scope.addRecipeToCart = function(recipe){
     LogSrv.trackAddRecipeToCart(recipe.id, null, 'recipedetail');
@@ -152,7 +152,7 @@ angular.module('ionicApp')
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipedetail');
     CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
-  };
+  };*/
 })
 
 .controller('CartCtrl', function($scope, CartSrv, LogSrv){
