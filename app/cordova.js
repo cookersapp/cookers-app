@@ -15,3 +15,8 @@ window.plugins.toast = {
   showLongCenter: function(message, successCallback, errorCallback){this.show(message, 'long', 'center', successCallback, errorCallback);},
   showLongBottom: function(message, successCallback, errorCallback){this.show(message, 'long', 'bottom', successCallback, errorCallback);}
 };
+
+window.plugins.insomnia = {
+  keepAwake: function(){console.log('insomnia.keepAwake()');},
+  allowSleepAgain: function(){console.log('insomnia.allowSleepAgain()');}
+};

@@ -41,6 +41,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/recipe.html',
         controller: 'RecipeCtrl'
       }
+    },
+    data: {
+      noSleep: true
     }
   })
   .state('app.cart', {
@@ -61,7 +64,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   .state('app.cart.ingredients', {
     url: '/ingredients',
     templateUrl: 'views/cart/ingredients.html',
-    controller: 'CartIngredientsCtrl'
+    controller: 'CartIngredientsCtrl',
+    data: {
+      noSleep: true
+    }
   })
   .state('app.profile', {
     url: '/profile',
@@ -95,10 +101,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
     return function(exception, cause){
       $delegate(exception, cause);
-      
+
       if(debug){
         console.log('error', exception);
-        alert('Error '+cause);
+        window.alert('Error '+cause);
       } else {
         mixpanel.track('error', {
           exception: exception,
@@ -198,6 +204,16 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   } else {
     UserSrv.launch();
   }
+
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    if(window && window.plugins && window.plugins.insomnia){
+      if(toState && toState.data && toState.data.noSleep){
+        window.plugins.insomnia.keepAwake();
+      } else {
+        window.plugins.insomnia.allowSleepAgain();
+      }
+    }
+  });
 
   $rootScope.isActive = function(viewLocation){
     var regex = new RegExp('^'+viewLocation+'$', 'g');

@@ -8,8 +8,8 @@ angular.module('ionicApp')
       // require cordova plugin https://github.com/driftyco/ionic-plugins-keyboard
       window.addEventListener('native.keyboardhide', function(e){
         element[0].blur();
-        scope.safeApply(function() { 
-          scope.$eval(attrs.blurOnKeyboardOut); 
+        scope.safeApply(function() {
+          scope.$eval(attrs.blurOnKeyboardOut);
         });
       });
     }

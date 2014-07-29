@@ -36,7 +36,7 @@ Your app is now running to your computer. To run it to your android device :
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` (and `platforms/android/ant-build/res` if needed) ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands
@@ -53,10 +53,7 @@ Your app is now running to your computer. To run it to your android device :
 - org.apache.cordova.geolocation : allow to get precise user position
 - https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
 - org.apache.cordova.inappbrowser : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
-
-See :
-
-- https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin
+- https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git : prevent screen to sleep
 
 ## Release process
 
@@ -115,3 +112,4 @@ Inspirationnal apps :
 ## V0.1.1
 
 - recettes en favoris
+- l'écran de s'éteint plus sur la ingrédients de la liste de course (quand on est au magasin) et sur le détail d'une recette (quand on cuisine)
