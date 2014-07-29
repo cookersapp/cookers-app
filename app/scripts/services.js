@@ -41,6 +41,10 @@ angular.module('ionicApp')
     get: getRecipe,
     addToHistory: addToHistory,
     getHistory: function(){return $localStorage.recipesHistory;},
+    addToFavorite: addToFavorite,
+    removeFromFavorite: removeFromFavorite,
+    isFavorite: isFavorite,
+    getFavorites: function(){return $localStorage.favoriteRecipes;},
     store: storeRecipe
   };
 
@@ -56,6 +60,22 @@ angular.module('ionicApp')
   function addToHistory(recipe){
     _.remove($localStorage.recipesHistory, {id: recipe.id});
     $localStorage.recipesHistory.unshift(recipe);
+  }
+
+  function isFavorite(recipe){
+    return _.findIndex($localStorage.favoriteRecipes, {id: recipe.id}) > -1;
+  }
+
+  function addToFavorite(recipe){
+    if(!isFavorite(recipe)){
+      $localStorage.favoriteRecipes.unshift(recipe);
+    }
+  }
+
+  function removeFromFavorite(recipe){
+    if(isFavorite(recipe)){
+      _.remove($localStorage.favoriteRecipes, {id: recipe.id});
+    }
   }
 
   function downloadRecipe(recipeId){

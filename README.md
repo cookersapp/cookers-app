@@ -110,3 +110,8 @@ Inspirationnal apps :
 - Taille écran nexus 4 : 384x568px
 - Taille header : 44px
 
+# Changelog
+
+## V0.1.1
+
+- recettes en favoris

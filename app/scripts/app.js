@@ -163,6 +163,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   recipes: [],
   weekrecipes: [],
   recipesHistory: [],
+  favoriteRecipes: [],
   carts: {
     current: null,
     contents: []
@@ -180,6 +181,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
   if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
   if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
+  if(!$localStorage.favoriteRecipes){$localStorage.favoriteRecipes = localStorageDefault.favoriteRecipes;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
   if(!$localStorage.globalmessages){$localStorage.globalmessages = localStorageDefault.globalmessages;}
 

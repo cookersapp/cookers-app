@@ -56,13 +56,19 @@ angular.module('ionicApp')
   });
 })
 
-.controller('HomeCtrl', function($scope, $timeout, $localStorage, GlobalMessageSrv, CartSrv, RecipeSrv, LogSrv){
+.controller('HomeCtrl', function($scope, $timeout, $localStorage, GlobalMessageSrv, CartSrv, RecipeSrv, WeekrecipeSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.getCurrentCart();
   $scope.items = CartSrv.getCurrentCartItems();
   $scope.recipesHistory = RecipeSrv.getHistory();
+  $scope.favoriteRecipes = RecipeSrv.getFavorites();
+  $scope.weekrecipes = [];
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
+  
+  WeekrecipeSrv.getCurrent().then(function(weekrecipes){
+    $scope.weekrecipes = weekrecipes;
+  });
 
   GlobalMessageSrv.getStandardMessageToDisplay().then(function(message){
     $scope.standardMessage = message;
@@ -109,6 +115,19 @@ angular.module('ionicApp')
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
     CartSrv.removeRecipeFromCart(recipe);
     window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+  };
+  
+  $scope.isFavorited = function(recipe){
+    return RecipeSrv.isFavorite(recipe);
+  };
+  $scope.addToFavorite = function(recipe){
+    RecipeSrv.addToFavorite(recipe);
+    RecipeSrv.addToHistory(recipe);
+    window.plugins.toast.show('✔ ajoutée aux favoris');
+  };
+  $scope.removeFromFavorite = function(recipe){
+    RecipeSrv.removeFromFavorite(recipe);
+    window.plugins.toast.show('✔ supprimée des favoris');
   };
 })
 
