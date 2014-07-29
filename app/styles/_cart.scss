@@ -149,10 +149,17 @@
     .check {
       border-left: 1px solid #ccc;
       margin-left: 5px;
+      margin-right: 5px;
       padding-left: 10px;
-      input[type=checkbox] {
-        width: 20px;
-        height: 20px;
+      .box {
+        width: 26px;
+        height: 26px;
+        font-size: 24px;
+        line-height: 26px;
+        text-align: center;
+        background: #eee;
+        border: 1px solid #ccc;
+        border-radius: 3px;
       }
     }
     .details {
@@ -173,9 +180,13 @@
       }
       .check {
         padding-left: 15px;
-        input[type=checkbox] {
-          width: 15px;
-          height: 15px;
+        .box {
+          width: 18px;
+          height: 18px;
+          margin: 2px 0px 2px 3px;
+          background: #eee;
+          border: 1px solid #ccc;
+          border-radius: 3px;
         }
       }
     }
@@ -189,7 +200,12 @@
       border-color: transparent;
     }
     .check {
-      border-color: #444;
+      border-color: #555;
+      .box {
+        background: #444;
+        border-color: #555;
+        color: #666;
+      }
     }
   }
 }

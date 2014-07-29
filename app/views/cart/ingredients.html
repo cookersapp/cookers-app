@@ -74,7 +74,7 @@
   <div class="list">
     <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items">
       <div class="check pull-right">
-        <input type="checkbox" ng-change="buyItem(item)" ng-model="item.bought">
+        <div class="box" ng-click="buyItem(item)"></div>
       </div>
       <div class="quantity pull-right">
         {{item.quantity | quantity}}
@@ -86,7 +86,7 @@
       <div class="details" ng-if="isOpened(item)">
         <div class="source" ng-repeat="source in item.sources">
           <div class="check pull-right">
-            <input type="checkbox" ng-change="buySource(source, item)" ng-model="source.bought">
+            <div class="box" ng-click="buySource(source, item)"></div>
           </div>
           <div class="quantity pull-right">
             {{source.quantity | quantity}}
@@ -101,7 +101,7 @@
   <div class="list">
     <div class="item item-cart-ingredient bought" ng-repeat="item in boughtItems">
       <div class="check pull-right">
-        <input type="checkbox" ng-change="unbuyItem(item)" ng-model="item.bought">
+        <div class="box" ng-click="unbuyItem(item)">✔</div>
       </div>
       <div class="quantity pull-right">
         {{item.quantity | quantity}}
