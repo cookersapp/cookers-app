@@ -425,7 +425,8 @@ angular.module('ionicApp')
 
   function launch(){
     LogSrv.identify(currentUser.device.uuid);
-    LogSrv.trackLaunch(currentUser.device.uuid);
+    // INIT is defined in top of index.html
+    LogSrv.trackLaunch(currentUser.device.uuid, Date.now()-INIT);
     function addLaunch(user, launch){
       user.launchs.unshift(launch);
       // manage user presence in firebase
@@ -706,7 +707,7 @@ angular.module('ionicApp')
     identify: identify,
     registerUser: registerUser,
     trackInstall: function(user){track('install', {user: user});},
-    trackLaunch: function(user){track('launch', {user: user});},
+    trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
     trackState: function(params){track('state', params);},
     trackStateError: function(params){track('state-error', params);},
