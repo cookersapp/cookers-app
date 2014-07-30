@@ -71,7 +71,7 @@
     <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
   </div>
 
-  <div class="list">
+  <div class="list to-buy">
     <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items">
       <div class="check pull-right">
         <div class="box" ng-click="buyItem(item)"></div>
@@ -95,7 +95,7 @@
     </div>
   </div>
 
-  <div class="list">
+  <div class="list bought">
     <div class="item item-cart-ingredient bought" ng-repeat="item in boughtItems">
       <div class="check pull-right">
         <div class="box" ng-click="unbuyItem(item)">✔</div>

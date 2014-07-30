@@ -97,7 +97,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     }
   });
 
-
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
     return function(exception, cause){
       $delegate(exception, cause);
