@@ -85,6 +85,13 @@ angular.module('ionicApp')
       $state.go('app.home');
     });
   };
+  $scope.facebookConnect = function(){
+    console.log('log with facebook');
+    LoginSrv.facebookConnect().then(function(){
+      console.log('connected !!!!');
+      $state.go('app.home');
+    });
+  };
 })
 
 .controller('AppCtrl', function($scope, $interval, $ionicSideMenuDelegate, RecipeSrv, UserSrv){
@@ -415,7 +422,8 @@ angular.module('ionicApp')
   };
 
   $scope.email = angular.copy(sUser.email);
-  $scope.saveEmail = function(mail){
+  
+  $scope.saveEmail = function(email){
     LogSrv.trackSetEmail(email);
     UserSrv.setEmail(email, function(){
       LogSrv.registerUser();

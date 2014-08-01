@@ -406,83 +406,84 @@ angular.module('ionicApp')
   var service = {
     get: function(){return sApp;},
   };
-  
+
   return service;
 })
 
-.factory('LoginSrv', function($q, $localStorage, firebaseUrl){
+.factory('LoginSrv', function($rootScope, $q, $localStorage, $firebaseSimpleLogin, firebaseUrl){
   'use strict';
   var sUser = $localStorage.user;
   var service = {
     isLogged: function(){return sUser.isLogged;},
     login: login,
-    logWithFacebook: logWithFacebook,
+    facebookConnect: facebookConnect,
     logout: logout
   };
 
+  var firebaseRef = new Firebase(firebaseUrl);
+  var firebaseAuth = $firebaseSimpleLogin(firebaseRef);
+
+  var loginDefer = $q.defer();
+  var logoutDefer = $q.defer();
+
   function login(credentials){
-    sUser.isLogged = true;
-    return $q.when();
+    var loginDefer = $q.defer();
+
+    setTimeout(function() {
+      loginDefer.resolve({
+        email: credentials.email
+      });
+      sUser.isLogged = true;
+    }, 1000);
+
+    return loginDefer.promise;
   }
 
-  function logWithFacebook(){
-    sUser.isLogged = true;
-    return $q.when();
+  function facebookConnect(){
+    loginDefer = $q.defer();
+    firebaseAuth.$login('facebook');
+    return loginDefer.promise;
   }
 
   function logout(){
-    sUser.isLogged = false;
-    return $q.when();
+    var logoutDefer = $q.defer();
+    firebaseAuth.$logout();
+
+    // disconnect after 3 sec even if firebase doesn't answer !
+    setTimeout(function() {
+      logoutDefer.resolve();
+      sUser.isLogged = false;
+    }, 3000);
+
+    return logoutDefer.promise;
   }
+
+  $rootScope.$on("$firebaseSimpleLogin:login", function(event, user) {
+    console.log('$firebaseSimpleLogin:login', user);
+    loginDefer.resolve(user);
+    sUser.isLogged = true;
+  });
+  $rootScope.$on("$firebaseSimpleLogin:logout", function(event) {
+    console.log('$firebaseSimpleLogin:logout');
+    logoutDefer.resolve();
+    sUser.isLogged = false;
+  });
+  $rootScope.$on("$firebaseSimpleLogin:error", function(event, error) {
+    console.log("Error logging user in: ", error);
+    loginDefer.reject(error);
+    logoutDefer.reject(error);
+  });
 
   return service;
 })
 
-.factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, localStorageDefault, md5){
+.factory('UserSrv', function($localStorage, $http, localStorageDefault, md5){
   'use strict';
   var sUser = $localStorage.user;
-  var sLaunchs = $localStorage.logs ? $localStorage.logs.launchs : null;
   var service = {
     get: function(){return sUser;},
-    setEmail: setEmail,
-    isFirstLaunch: function(){return !(sUser && sUser.device && sUser.device.uuid);},
-    firstLaunch: firstLaunch,
-    launch: launch
+    setEmail: setEmail
   };
-
-  function firstLaunch(){
-    if(!sUser){sUser = $localStorage.user;}
-    GamificationSrv.evalLevel();
-    $ionicPlatform.ready(function(){
-      sUser.device = actualDevice();
-      LogSrv.identify(sUser.device.uuid);
-      LogSrv.registerUser();
-      LogSrv.trackInstall(sUser.device.uuid);
-      launch();
-    });
-  }
-
-  function launch(){
-    LogSrv.identify(sUser.device.uuid);
-    // INIT is defined in top of index.html
-    LogSrv.trackLaunch(sUser.device.uuid, Date.now()-INIT);
-
-    navigator.geolocation.getCurrentPosition(function(position){
-      addLaunch(position);
-    }, function(error){
-      error.timestamp = Date.now();
-      addLaunch(error);
-    });
-  }
-
-  function addLaunch(launch){
-    if(!sLaunchs){sLaunchs = $localStorage.logs.launchs;}
-    sLaunchs.unshift(launch);
-    // manage user presence in firebase
-    var firebaseRef = new Firebase(firebaseUrl+'/connected');
-    var userRef = firebaseRef.push(sUser);
-    userRef.onDisconnect().remove();
-  }
 
   function setEmail(email, callback){
     sUser.email = email;
@@ -511,19 +512,123 @@ angular.module('ionicApp')
     }
   }
 
-  function actualDevice(){
+  return service;
+})
+
+.factory('LaunchSrv', function($rootScope, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, firebaseUrl){
+  'use strict';
+  var service = {
+    launch: function(){
+      var sUser = $localStorage.user;
+      if(sUser && sUser.device && sUser.device.uuid){
+        launch();
+      } else {
+        firstLaunch();
+      }
+    }
+  };
+
+  function firstLaunch(){
+    var sUser = $localStorage.user;
+    GamificationSrv.evalLevel();
+    $ionicPlatform.ready(function(){
+      sUser.device = _getDevice();
+      LogSrv.identify(sUser.device.uuid);
+      LogSrv.registerUser();
+      LogSrv.trackInstall(sUser.device.uuid);
+      launch();
+    });
+  }
+
+  function launch(){
+    var sUser = $localStorage.user;
+    LogSrv.identify(sUser.device.uuid);
+
+    // INIT is defined in top of index.html
+    LogSrv.trackLaunch(sUser.device.uuid, Date.now()-INIT);
+
+    // manage user presence in firebase
+    var firebaseRef = new Firebase(firebaseUrl+'/connected');
+    var userRef = firebaseRef.push(sUser);
+    userRef.onDisconnect().remove();
+
+    navigator.geolocation.getCurrentPosition(function(position){
+      $localStorage.logs.launchs.unshift(position);
+    }, function(error){
+      error.timestamp = Date.now();
+      $localStorage.logs.launchs.unshift(error);
+    });
+
+    // track state changes
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+      var params = {};
+      if(fromState && fromState.name)                       {params.fromUrl = $state.href(fromState.name, fromParams);}
+      if(fromState && fromState.name)                       {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
+      if(toState && toState.name)                           {params.toUrl = $state.href(toState.name, toParams);}
+      if(toState && toState.name)                           {params.to = toState.name;}
+      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
+      LogSrv.trackState(params);
+    });
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
+      var params = {};
+      if(fromState && fromState.name)                       {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
+      if(toState && toState.name)                           {params.to = toState.name;}
+      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
+      if(error && !isEmpty(error))                          {params.error = error;}
+      LogSrv.trackStateError(params);
+    });
+    $rootScope.$on('$stateNotFound', function(event, unfoundState, fromState, fromParams){
+      var params = {};
+      if(fromState && fromState.name)                                               {params.from = fromState.name;}
+      if(fromParams && !isEmpty(fromParams))                                        {params.fromParams = fromParams;}
+      if(unfoundState && unfoundState.to)                                           {params.to = unfoundState.to;}
+      if(unfoundState && unfoundState.toParams && !isEmpty(unfoundState.toParams))  {params.toParams = unfoundState.toParams;}
+      LogSrv.trackStateNotFound(params);
+    });
+
+    // If logged, login state is forbidden !
+    // If not logged, all states except intro & login are forbidden !
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+      if($localStorage.user.isLogged){
+        if(toState.name === 'login'){
+          event.preventDefault();
+          if(fromState.name === ''){$state.go('app.home');}
+        }
+      } else {
+        if(toState.name !== 'login' && toState.name !== 'intro'){
+          event.preventDefault();
+          if(fromState.name === ''){$state.go('login');}
+        }
+      }
+    });
+
+    // phone will not sleep on states with attribute 'noSleep'
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+      if(window && window.plugins && window.plugins.insomnia){
+        if(toState && toState.data && toState.data.noSleep){
+          window.plugins.insomnia.keepAwake();
+        } else {
+          window.plugins.insomnia.allowSleepAgain();
+        }
+      }
+    });
+  }
+
+  function _getDevice(){
     var device = angular.copy(ionic.Platform.device());
     delete device.getInfo;
-    device.environment = getEnvironment();
+    device.environment = _getEnvironment();
     device.grade = ionic.Platform.grade;
     device.platforms = ionic.Platform.platforms;
     if(!device.uuid){
-      device.uuid = createUuid();
+      device.uuid = _createUuid();
     }
     return device;
   }
 
-  function getEnvironment(){
+  function _getEnvironment(){
     if(ionic.Platform.isWebView()){return 'WebView';}
     else if(ionic.Platform.isIPad()){return 'IPad';}
     else if(ionic.Platform.isIOS()){return 'IOS';}
@@ -532,9 +637,13 @@ angular.module('ionicApp')
     else {return 'Unknown';}
   }
 
-  function createUuid(){
+  function _createUuid(){
     function S4(){ return (((1+Math.random())*0x10000)|0).toString(16).substring(1); }
     return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0,3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
+  }
+
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
   }
 
   return service;
@@ -685,7 +794,7 @@ angular.module('ionicApp')
     },
     migrate: migrate
   };
-  
+
   function migrate(previousVersion){
     // for version 0.1.1, data is reseted !!!
     $localStorage.$reset(localStorageDefault);
@@ -793,39 +902,8 @@ angular.module('ionicApp')
     trackSendFeedback: function(email){track('send-feedback', {email: email});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
-    trackClearApp: function(user){track('clear-app', {user: user});},
-    trackStates: trackStates
+    trackClearApp: function(user){track('clear-app', {user: user});}
   };
-
-  function trackStates(){
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-      var params = {};
-      if(fromState && fromState.name)                       {params.fromUrl = $state.href(fromState.name, fromParams);}
-      if(fromState && fromState.name)                       {params.from = fromState.name;}
-      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
-      if(toState && toState.name)                           {params.toUrl = $state.href(toState.name, toParams);}
-      if(toState && toState.name)                           {params.to = toState.name;}
-      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
-      service.trackState(params);
-    });
-    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
-      var params = {};
-      if(fromState && fromState.name)                       {params.from = fromState.name;}
-      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
-      if(toState && toState.name)                           {params.to = toState.name;}
-      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
-      if(error && !isEmpty(error))                          {params.error = error;}
-      service.trackStateError(params);
-    });
-    $rootScope.$on('$stateNotFound', function(event, unfoundState, fromState, fromParams){
-      var params = {};
-      if(fromState && fromState.name)                                               {params.from = fromState.name;}
-      if(fromParams && !isEmpty(fromParams))                                        {params.fromParams = fromParams;}
-      if(unfoundState && unfoundState.to)                                           {params.to = unfoundState.to;}
-      if(unfoundState && unfoundState.toParams && !isEmpty(unfoundState.toParams))  {params.toParams = unfoundState.toParams;}
-      service.trackStateNotFound(params);
-    });
-  }
 
   function trackWithPosition(event, params){
     navigator.geolocation.getCurrentPosition(function(position){
@@ -902,10 +980,6 @@ angular.module('ionicApp')
     } else {
       mixpanel.people.set(mixpanelUser);
     }
-  }
-
-  function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
   }
 
   return service;

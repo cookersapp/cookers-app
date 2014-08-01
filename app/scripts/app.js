@@ -101,6 +101,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     }
   });
 
+  // choose default route depending on application state
   var user = JSON.parse(localStorage.getItem('ngStorage-user'));
   if(user){
     if(user.skipIntro){
@@ -215,7 +216,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, StorageSrv, LogSrv, debug, appVersion){
+.run(function($rootScope, $location, $localStorage, localStorageDefault, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
   if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
@@ -227,33 +228,17 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     $localStorage.app.version = appVersion;
   }
 
-  LogSrv.trackStates();
-
   $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
 
-  if(UserSrv.isFirstLaunch()){
-    UserSrv.firstLaunch();
-  } else {
-    UserSrv.launch();
-  }
+  LaunchSrv.launch();
 
-  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    if(window && window.plugins && window.plugins.insomnia){
-      if(toState && toState.data && toState.data.noSleep){
-        window.plugins.insomnia.keepAwake();
-      } else {
-        window.plugins.insomnia.allowSleepAgain();
-      }
-    }
-  });
-
+  // utils methods
   $rootScope.isActive = function(viewLocation){
     var regex = new RegExp('^'+viewLocation+'$', 'g');
     return regex.test($location.path());
   };
-
   $rootScope.safeApply = function(fn){
     var phase = this.$root ? this.$root.$$phase : this.$$phase;
     if(phase === '$apply' || phase === '$digest') {
