@@ -22,7 +22,7 @@
     <form ng-submit="sendFeedback()" class="feedback-form">
       <div class="list list-inset">
         <label class="item item-input">
-          <input type="email" name="mail" placeholder="Mail" ng-model="feedback.mail" ng-disabled="feedback.sending || feedback.sent" required>
+          <input type="email" name="email" placeholder="Email" ng-model="feedback.email" ng-disabled="feedback.sending || feedback.sent" required>
         </label>
         <label class="item item-input">
           <textarea name="content" rows="5" placeholder="Votre remarque" ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" required></textarea>

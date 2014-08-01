@@ -4,6 +4,7 @@
 
 - liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
 - quand on archive une liste et qu'on en crée une nouvelle. Certains ingrédients sont déjà achetés :(
+- refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
 
 # TODO
 

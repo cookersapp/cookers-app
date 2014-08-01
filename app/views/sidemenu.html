@@ -9,15 +9,15 @@
       <div class="profile">
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
         <div menu-close ui-sref="app.profile">
-          <div class="avatar" ng-style="{'background-image': 'url('+userProfile.avatar+')'}"></div>
-          <div class="username">{{userProfile.name}}</div>
-          <div class="role" ng-bind-html="userProfile.score.levelHtml"></div>
+          <div class="avatar" ng-style="{'background-image': 'url('+user.avatar+')'}"></div>
+          <div class="username">{{user.name}}</div>
+          <div class="role" ng-bind-html="user.score.level.html"></div>
           <div class="clearfix"></div>
         </div>
       </div>
       <div class="stats">
         <div class="progress">
-          <div class="progress-bar" ng-class="{'progress-bar-info': userProfile.score.value !== userProfile.score.nextLevel, 'progress-bar-success': userProfile.score.value === userProfile.score.nextLevel}" role="progressbar" aria-valuenow="{{userProfile.score.value}}" aria-valuemin="0" aria-valuemax="{{userProfile.score.nextLevel}}" style="width: {{100 * userProfile.score.value / userProfile.score.nextLevel}}%;">
+          <div class="progress-bar" ng-class="{'progress-bar-info': user.score.value !== user.score.level.next, 'progress-bar-success': user.score.value === user.score.level.next}" role="progressbar" aria-valuenow="{{user.score.value}}" aria-valuemin="0" aria-valuemax="{{user.score.level.next}}" style="width: {{100 * user.score.value / user.score.level.next}}%;">
           </div>
         </div>
         <!-- TODO : put an explanation of the progressbar -->

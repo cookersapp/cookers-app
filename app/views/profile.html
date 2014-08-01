@@ -8,17 +8,17 @@
 
   <ion-content class="profile-screen">
     <div class="profile" ng-click="changeCover()"
-         style="background-color: {{userProfile.background}};"
-         ng-style="{'background-image': 'url('+userProfile.backgroundCover+')'}">
+         style="background-color: {{user.background}};"
+         ng-style="{'background-image': 'url('+user.backgroundCover+')'}">
       <div>&nbsp;</div>
       <div class="avatar">
-        <div class="hexagon" ng-style="{'background-image': 'url('+userProfile.avatar+'?s=100)'}">
+        <div class="hexagon" ng-style="{'background-image': 'url('+user.avatar+'?s=100)'}">
           <div class="hexTop"></div>
           <div class="hexBottom"></div>
         </div>
       </div>
-      <div class="name">{{userProfile.name}}</div>
-      <div class="level" ng-bind-html="userProfile.score.levelHtml"></div>
+      <div class="name">{{user.name}}</div>
+      <div class="level" ng-bind-html="user.score.level.html"></div>
     </div>
     <div class="gravatar-helper">Modifiez votre profil sur <a href="http://gravatar.com">gravatar.com</a></div>
 
@@ -54,7 +54,7 @@ Ingrédients stricts
 </div>-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Ton email</span>
-          <input type="email" ng-model="mail" blur-on-keyboard-out ng-blur="saveMail(mail)" placeholder="Ton email (pour charger ton profil gravatar.com)">
+          <input type="email" ng-model="email" blur-on-keyboard-out ng-blur="saveEmail(email)" placeholder="Ton email (pour charger ton profil gravatar.com)">
         </label>
       </div>
     </div>

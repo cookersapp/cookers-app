@@ -2,6 +2,7 @@ angular.module('ionicApp')
 
 .factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
+  var sRecipesOfWeek = $localStorage.data.recipesOfWeek;
   var service = {
     // TODO set 1 if debug !
     getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 0 : 0)); },
@@ -10,9 +11,9 @@ angular.module('ionicApp')
   };
 
   function getRecipesOfWeek(week){
-    var weekrecipe = _.find($localStorage.weekrecipes, {id: week.toString()});
-    if(weekrecipe){
-      return $q.when(weekrecipe);
+    var weekrecipes = _.find(sRecipesOfWeek, {id: week.toString()});
+    if(weekrecipes){
+      return $q.when(weekrecipes);
     } else {
       return downloadRecipesOfWeek(week);
     }
@@ -28,8 +29,8 @@ angular.module('ionicApp')
     });
   }
 
-  function storeRecipesOfWeek(weekrecipe){
-    $localStorage.weekrecipes.push(weekrecipe);
+  function storeRecipesOfWeek(weekrecipes){
+    sRecipesOfWeek.push(weekrecipes);
   }
 
   return service;
@@ -37,19 +38,22 @@ angular.module('ionicApp')
 
 .factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
+  var sRecipes = $localStorage.data.recipes;
+  var sRecipesHistory = $localStorage.logs.recipesHistory;
+  var sRecipesFavorited = $localStorage.user.recipesFavorited;
   var service = {
     get: getRecipe,
     addToHistory: addToHistory,
-    getHistory: function(){return $localStorage.recipesHistory;},
+    getHistory: function(){return sRecipesHistory;},
     addToFavorite: addToFavorite,
     removeFromFavorite: removeFromFavorite,
     isFavorite: isFavorite,
-    getFavorites: function(){return $localStorage.favoriteRecipes;},
+    getFavorites: function(){return sRecipesFavorited;},
     store: storeRecipe
   };
 
   function getRecipe(recipeId){
-    var recipe = _.find($localStorage.recipes, {id: recipeId});
+    var recipe = _.find(sRecipes, {id: recipeId});
     if(recipe){
       return $q.when(recipe);
     } else {
@@ -58,24 +62,21 @@ angular.module('ionicApp')
   }
 
   function addToHistory(recipe){
-    _.remove($localStorage.recipesHistory, {id: recipe.id});
-    $localStorage.recipesHistory.unshift(recipe);
+    _.remove(sRecipesHistory, {id: recipe.id});
+    sRecipesHistory.unshift(recipe);
   }
 
   function isFavorite(recipe){
-    return _.findIndex($localStorage.favoriteRecipes, {id: recipe.id}) > -1;
+    return _.findIndex(sRecipesFavorited, {id: recipe.id}) > -1;
   }
 
   function addToFavorite(recipe){
-    if(!isFavorite(recipe)){
-      $localStorage.favoriteRecipes.unshift(recipe);
-    }
+    _.remove(sRecipesFavorited, {id: recipe.id});
+    sRecipesFavorited.unshift(recipe);
   }
 
   function removeFromFavorite(recipe){
-    if(isFavorite(recipe)){
-      _.remove($localStorage.favoriteRecipes, {id: recipe.id});
-    }
+    _.remove(sRecipesFavorited, {id: recipe.id});
   }
 
   function downloadRecipe(recipeId){
@@ -86,7 +87,7 @@ angular.module('ionicApp')
   }
 
   function storeRecipe(recipe){
-    $localStorage.recipes.push(recipe);
+    sRecipes.push(recipe);
   }
 
   return service;
@@ -94,17 +95,17 @@ angular.module('ionicApp')
 
 .factory('FoodSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
-  var foods = $localStorage.foods;
+  var sFoods = $localStorage.foods;
   var service = {
     getAll: getAll
   };
 
   function getAll(){
-    if(!foods || foods.length === 0){
+    if(!sFoods || sFoods.length === 0){
       return downloadFoods();
     } else {
       downloadFoods();
-      return $q.when(foods);
+      return $q.when(sFoods);
     }
   }
 
@@ -114,16 +115,16 @@ angular.module('ionicApp')
       for(var i in result.data){
         storeFood(result.data[i]);
       }
-      return foods;
+      return sFoods;
     });
   }
 
   function storeFood(food){
-    var index = _.findIndex(foods, {id: food.id});
+    var index = _.findIndex(sFoods, {id: food.id});
     if(index > -1){
-      angular.copy(food, foods[index]);
+      angular.copy(food, sFoods[index]);
     } else {
-      foods.push(food);
+      sFoods.push(food);
     }
   }
 
@@ -131,14 +132,15 @@ angular.module('ionicApp')
 })
 
 .factory('CartSrv', function($localStorage, UserSrv, debug){
+  var sCarts = $localStorage.user.carts;
   'use strict';
   var service = {
     hasCarts: function(){return hasCarts();},
-    getAllCarts: function(){return $localStorage.carts.contents;},
+    getAllCarts: function(){return sCarts.contents;},
     getCurrentCart: function(){return getCurrentCart();},
     createCart: function(){return createCart();},
     changeCart: function(index){return changeCart(index);},
-    removeCart: function(){return removeCart($localStorage.carts.current);},
+    removeCart: function(){return removeCart(sCarts.current);},
     cartHasRecipe: function(recipe){return cartHasRecipe(getCurrentCart(), recipe);},
     addRecipeToCart: function(recipe){addRecipeToCart(getActiveCart(), recipe);},
     removeRecipeFromCart: function(recipe){removeRecipeFromCart(getCurrentCart(), recipe);},
@@ -153,10 +155,10 @@ angular.module('ionicApp')
   };
 
   function hasCarts(){
-    return $localStorage.carts && $localStorage.carts.contents && $localStorage.carts.contents.length > 0;
+    return sCarts && sCarts.contents && sCarts.contents.length > 0;
   }
   function getCurrentCart(){
-    return hasCarts() ? $localStorage.carts.contents[$localStorage.carts.current] : createCart();
+    return hasCarts() ? sCarts.contents[sCarts.current] : createCart();
   }
   function getActiveCart(){
     var cart = getCurrentCart();
@@ -168,8 +170,8 @@ angular.module('ionicApp')
   }
   function createCart(){
     var cart = buildCart();
-    $localStorage.carts.contents.unshift(cart);
-    $localStorage.carts.current = 0;
+    sCarts.contents.unshift(cart);
+    sCarts.current = 0;
     return cart;
   }
   function archiveCart(cart){
@@ -178,18 +180,18 @@ angular.module('ionicApp')
     }
   }
   function changeCart(index){
-    if(hasCarts() && typeof index === 'number' && -1 < index && index < $localStorage.carts.contents.length){
-      $localStorage.carts.current = index;
+    if(hasCarts() && typeof index === 'number' && -1 < index && index < sCarts.contents.length){
+      sCarts.current = index;
     }
     return getCurrentCart();
   }
   function removeCart(index){
-    if(hasCarts() && typeof index === 'number' && -1 < index && index < $localStorage.carts.contents.length){
-      $localStorage.carts.contents.splice(index, 1);
-      if($localStorage.carts.contents.length === 0){
-        $localStorage.carts.current = null;
-      } else if($localStorage.carts.current === index){
-        $localStorage.carts.current = 0;
+    if(hasCarts() && typeof index === 'number' && -1 < index && index < sCarts.contents.length){
+      sCarts.contents.splice(index, 1);
+      if(sCarts.contents.length === 0){
+        sCarts.current = null;
+      } else if(sCarts.current === index){
+        sCarts.current = 0;
       }
     }
     return getCurrentCart();
@@ -378,7 +380,7 @@ angular.module('ionicApp')
       added: Date.now(),
       id: recipe.id,
       servings: {
-        value: UserSrv.getProfile().defaultServings,
+        value: UserSrv.get().settings.defaultServings,
         unit: recipe.servings.unit
       },
       data: recipe
@@ -398,112 +400,115 @@ angular.module('ionicApp')
   return service;
 })
 
+.factory('AppSrv', function($localStorage){
+  'use strict';
+  var sApp = $localStorage.app;
+  var service = {
+    get: function(){return sApp;},
+  };
+  
+  return service;
+})
+
 .factory('LoginSrv', function($q, $localStorage, firebaseUrl){
   'use strict';
-  var currentUser = $localStorage.user;
+  var sUser = $localStorage.user;
   var service = {
-    isLogged: function(){return currentUser.profile.isLogged;},
+    isLogged: function(){return sUser.isLogged;},
     login: login,
     logWithFacebook: logWithFacebook,
     logout: logout
   };
-  
+
   function login(credentials){
-    currentUser.profile.isLogged = true;
+    sUser.isLogged = true;
     return $q.when();
   }
-  
+
   function logWithFacebook(){
-    currentUser.profile.isLogged = true;
+    sUser.isLogged = true;
     return $q.when();
   }
-  
+
   function logout(){
-    currentUser.profile.isLogged = false;
+    sUser.isLogged = false;
     return $q.when();
   }
-  
+
   return service;
 })
 
 .factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, localStorageDefault, md5){
   'use strict';
-  var currentUser = $localStorage.user;
+  var sUser = $localStorage.user;
+  var sLaunchs = $localStorage.logs ? $localStorage.logs.launchs : null;
   var service = {
-    get: function(){return $localStorage.user;},
-    getProfile: function(){return $localStorage.user.profile;},
-    setMail: setMail,
-    skipIntro: skipIntro,
-    setDefaultServings: setDefaultServings,
-    isFirstLaunch: function(){return !(currentUser && currentUser.device && currentUser.device.uuid);},
+    get: function(){return sUser;},
+    setEmail: setEmail,
+    isFirstLaunch: function(){return !(sUser && sUser.device && sUser.device.uuid);},
     firstLaunch: firstLaunch,
     launch: launch
   };
 
   function firstLaunch(){
-    if(!currentUser){currentUser = $localStorage.user;}
-    GamificationSrv.initScore();
+    if(!sUser){sUser = $localStorage.user;}
+    GamificationSrv.evalLevel();
     $ionicPlatform.ready(function(){
-      currentUser.device = actualDevice();
-      LogSrv.identify(currentUser.device.uuid);
+      sUser.device = actualDevice();
+      LogSrv.identify(sUser.device.uuid);
       LogSrv.registerUser();
-      LogSrv.trackInstall(currentUser.device.uuid);
+      LogSrv.trackInstall(sUser.device.uuid);
       launch();
     });
   }
 
   function launch(){
-    LogSrv.identify(currentUser.device.uuid);
+    LogSrv.identify(sUser.device.uuid);
     // INIT is defined in top of index.html
-    LogSrv.trackLaunch(currentUser.device.uuid, Date.now()-INIT);
-    function addLaunch(user, launch){
-      user.launchs.unshift(launch);
-      // manage user presence in firebase
-      var firebaseRef = new Firebase(firebaseUrl+'/connected');
-      var userRef = firebaseRef.push(user);
-      userRef.onDisconnect().remove();
-    }
+    LogSrv.trackLaunch(sUser.device.uuid, Date.now()-INIT);
 
     navigator.geolocation.getCurrentPosition(function(position){
-      addLaunch(currentUser, position);
+      addLaunch(position);
     }, function(error){
       error.timestamp = Date.now();
-      addLaunch(currentUser, error);
+      addLaunch(error);
     });
   }
 
-  function setMail(mail, callback){
-    currentUser.profile.mail = mail;
-    currentUser.profile.name = localStorageDefault.user.profile.name;
-    currentUser.profile.avatar = localStorageDefault.user.profile.avatar;
-    currentUser.profile.background = localStorageDefault.user.profile.background;
-    currentUser.profile.backgroundCover = localStorageDefault.user.profile.backgroundCover;
-    if(mail){
-      $http.jsonp('http://www.gravatar.com/'+md5.createHash(mail)+'.json?callback=JSON_CALLBACK').then(function(result){
-        currentUser.gravatar = result.data;
-        if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
-          if(currentUser.gravatar.entry[0].thumbnailUrl){ currentUser.profile.avatar = currentUser.gravatar.entry[0].thumbnailUrl; }
-          if(currentUser.gravatar.entry[0].displayName) { currentUser.profile.name = currentUser.gravatar.entry[0].displayName; }
-          if(currentUser.gravatar.entry[0].name && currentUser.gravatar.entry[0].name.formatted){
+  function addLaunch(launch){
+    if(!sLaunchs){sLaunchs = $localStorage.logs.launchs;}
+    sLaunchs.unshift(launch);
+    // manage user presence in firebase
+    var firebaseRef = new Firebase(firebaseUrl+'/connected');
+    var userRef = firebaseRef.push(sUser);
+    userRef.onDisconnect().remove();
+  }
+
+  function setEmail(email, callback){
+    sUser.email = email;
+    sUser.name = localStorageDefault.user.name;
+    sUser.avatar = localStorageDefault.user.avatar;
+    sUser.background = localStorageDefault.user.background;
+    sUser.backgroundCover = localStorageDefault.user.backgroundCover;
+    if(email){
+      $http.jsonp('http://www.gravatar.com/'+md5.createHash(email)+'.json?callback=JSON_CALLBACK').then(function(result){
+        var g = result.data;
+        sUser.profiles.gravatar = g;
+        if(g && g.entry && g.entry.length > 0){
+          if(g.entry[0].thumbnailUrl){ sUser.avatar = g.entry[0].thumbnailUrl; }
+          if(g.entry[0].displayName) { sUser.name = g.entry[0].displayName; }
+          if(g.entry[0].name && g.entry[0].name.formatted){
             // override displayName
-            currentUser.profile.name = currentUser.gravatar.entry[0].name.formatted;
+            sUser.name = g.entry[0].name.formatted;
           }
-          if(currentUser.gravatar.entry[0].profileBackground){
-            if(currentUser.gravatar.entry[0].profileBackground.color) { currentUser.profile.background = currentUser.gravatar.entry[0].profileBackground.color; }
-            if(currentUser.gravatar.entry[0].profileBackground.url)   { currentUser.profile.backgroundCover = currentUser.gravatar.entry[0].profileBackground.url; }
+          if(g.entry[0].profileBackground){
+            if(g.entry[0].profileBackground.color) { sUser.background = g.entry[0].profileBackground.color; }
+            if(g.entry[0].profileBackground.url)   { sUser.backgroundCover = g.entry[0].profileBackground.url; }
           }
         }
         if(callback){callback();}
       });
     }
-  }
-  
-  function skipIntro(bool){
-    currentUser.profile.skipIntro = bool;
-  }
-
-  function setDefaultServings(defaultServings){
-    currentUser.profile.defaultServings = defaultServings;
   }
 
   function actualDevice(){
@@ -537,7 +542,7 @@ angular.module('ionicApp')
 
 .factory('GlobalMessageSrv', function($q, $http, $localStorage, firebaseUrl, debug, appVersion){
   'use strict';
-  var globalmessages = $localStorage.globalmessages;
+  var sGlobalmessages = $localStorage.data.globalmessages;
   var service = {
     getStandardMessageToDisplay: getStandardMessageToDisplay,
     getStickyMessages: getStickyMessages,
@@ -579,26 +584,26 @@ angular.module('ionicApp')
   }
 
   function findMessages(type){
-    return _.filter(globalmessages.messages, function(msg){
+    return _.filter(sGlobalmessages.messages, function(msg){
       return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function findMessage(type){
-    return _.find(globalmessages.messages, function(msg){
+    return _.find(sGlobalmessages.messages, function(msg){
       return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function fetchMessages(){
-    globalmessages.lastCall = Date.now();
+    sGlobalmessages.lastCall = Date.now();
     return $http.get(firebaseUrl+'/globalmessages.json').then(function(result){
       var messages = _.filter(result.data, function(msg){
         return msg && (msg.isProd || debug) && msg.targets && msg.targets.indexOf(appVersion) > -1 && !messageExists(msg);
       });
-      globalmessages.messages = globalmessages.messages.concat(messages);
+      sGlobalmessages.messages = sGlobalmessages.messages.concat(messages);
       // sort chronogically
-      globalmessages.messages.sort(function(a,b){
+      sGlobalmessages.messages.sort(function(a,b){
         return a.added - b.added;
       });
     });
@@ -610,28 +615,28 @@ angular.module('ionicApp')
   }
 
   function messageExists(message){
-    return message && message.added && _.findIndex(globalmessages.messages, {added: message.added}) > -1;
+    return message && message.added && _.findIndex(sGlobalmessages.messages, {added: message.added}) > -1;
   }
 
   return service;
 })
 
-.factory('MailSrv', function($http, $q, mandrillUrl, mandrillKey, supportTeamMail){
+.factory('EmailSrv', function($http, $q, mandrillUrl, mandrillKey, supportTeamEmail){
   'use strict';
   var service = {
     sendFeedback: sendFeedback
   };
 
-  function sendFeedback(mail, feedback){
+  function sendFeedback(email, feedback){
     return $http.post(mandrillUrl+'/messages/send.json', {
       'key': mandrillKey,
       'message': {
         'subject': '[Cookers] Feedback from app',
         'text': feedback,
         //'html': '<p>'+feedback+'</p>',
-        'from_email': mail,
+        'from_email': email,
         'to': [
-          {'email': supportTeamMail, 'name': 'Cookers team'}
+          {'email': supportTeamEmail, 'name': 'Cookers team'}
         ],
         'important': false,
         'track_opens': true,
@@ -667,11 +672,33 @@ angular.module('ionicApp')
   return service;
 })
 
+.factory('StorageSrv', function($localStorage, localStorageDefault){
+  'use strict';
+  var service = {
+    clearCache: function(){
+      $localStorage.data.foods = localStorageDefault.data.foods;
+      $localStorage.data.recipes = localStorageDefault.data.recipes;
+      $localStorage.data.recipesOfWeek = localStorageDefault.data.recipesOfWeek;
+    },
+    clear: function(){
+      $localStorage.$reset(localStorageDefault);
+    },
+    migrate: migrate
+  };
+  
+  function migrate(previousVersion){
+    // for version 0.1.1, data is reseted !!!
+    $localStorage.$reset(localStorageDefault);
+  }
+
+  return service;
+})
+
 .factory('GamificationSrv', function($localStorage){
   'use strict';
-  var userScore = $localStorage.user ? $localStorage.user.profile.score : null;
+  var sScore = $localStorage.user ? $localStorage.user.score : null;
   var service = {
-    initScore: initScore,
+    evalLevel: evalLevel,
     sendEvent: sendEvent
   };
 
@@ -683,10 +710,8 @@ angular.module('ionicApp')
     {score: 150, html: '<i class="fa fa-trophy"></i> Grand chef'}
   ];
 
-  function initScore(){
-    if(!userScore){userScore = $localStorage.user.profile.score;}
-    userScore.value = 0;
-    userScore.events = [];
+  function evalLevel(){
+    if(!sScore){sScore = $localStorage.user.score;}
     _setUserLevel();
   }
 
@@ -696,29 +721,31 @@ angular.module('ionicApp')
     if(event === 'add-item-to-cart'){         _addScore(1, event, params);  }
     if(event === 'remove-item-from-cart'){    _addScore(-1, event, params); }
     if(event === 'archive-cart'){             _addScore(3, event, params);  }
-    if(event === 'state' && params.to === 'app.feedback' && _.find(userScore.events, {event:event, params:{to:params.to}}) === undefined){
+    if(event === 'state' && params.to === 'app.feedback' && _.find(sScore.events, {event:event, params:{to:params.to}}) === undefined){
       _addScore(2, event, params);
     }
   }
 
   function _addScore(value, event, params){
-    userScore.events.push({
+    sScore.events.push({
       time: Date.now(),
       event: event,
       params: params
     });
-    userScore.value += value;
-    if(userScore.value > userScore.nextLevel){
+    sScore.value += value;
+    if(sScore.value > sScore.level.next){
       _setUserLevel();
     }
   }
 
   function _setUserLevel(){
-    var index = _getLevelIndex(userScore.value);
-    userScore.level = index;
-    userScore.levelScore = levels[index].score;
-    userScore.levelHtml = levels[index].html;
-    userScore.nextLevel = index < levels.length-1 ? levels[index+1].score : levels[index].score;
+    var index = _getLevelIndex(sScore.value);
+    sScore.level = {
+      index: index,
+      score: levels[index].score,
+      html: levels[index].html,
+      next: index < levels.length-1 ? levels[index+1].score : levels[index].score
+    };
   }
 
   function _getLevelIndex(score){
@@ -735,7 +762,8 @@ angular.module('ionicApp')
 .factory('LogSrv', function($rootScope, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
-  var currentUser = $localStorage.user;
+  var sApp = $localStorage.app;
+  var sUser = $localStorage.user;
   var service = {
     identify: identify,
     registerUser: registerUser,
@@ -745,7 +773,7 @@ angular.module('ionicApp')
     trackState: function(params){track('state', params);},
     trackStateError: function(params){track('state-error', params);},
     trackStateNotFound: function(params){track('state-not-found', params);},
-    trackSetMail: function(mail){track('set-mail', {mail: mail});},
+    trackSetEmail: function(email){track('set-email', {email: email});},
     trackHideMessage: function(message){track('hide-message', {message: message});},
     // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
     trackAddRecipeToCart: function(recipe, index, from){trackWithPosition('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
@@ -762,7 +790,7 @@ angular.module('ionicApp')
     trackBuyItemSource: function(item, recipe){trackWithPosition('buy-item-source', {item: item, recipe: recipe});},
     trackUnbuyItem: function(item){track('unbuy-item', {item: item});},
     trackArchiveCart: function(){track('archive-cart');},
-    trackSendFeedback: function(mail){track('send-feedback', {mail: mail});},
+    trackSendFeedback: function(email){track('send-feedback', {email: email});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
     trackClearApp: function(user){track('clear-app', {user: user});},
@@ -817,14 +845,14 @@ angular.module('ionicApp')
     params.localtime = Date.now();
     params.appVersion = appVersion;
     if(!params.url && window && window.location && window.location.hash) {params.url = window.location.hash;}
-    if(!params.mail && currentUser && currentUser.profile && currentUser.profile.mail){params.mail = currentUser.profile.mail;}
-    if(currentUser && currentUser.device){
-      if(!params.uuid && currentUser.device.uuid){params.uuid = currentUser.device.uuid;}
-      if(!params.device && currentUser.device.model && currentUser.device.platform && currentUser.device.version){
+    if(!params.email && sUser && sUser.email){params.email = sUser.email;}
+    if(sUser && sUser.device){
+      if(!params.uuid && sUser.device.uuid){params.uuid = sUser.device.uuid;}
+      if(!params.device && sUser.device.model && sUser.device.platform && sUser.device.version){
         params.device = {
-          model: currentUser.device.model,
-          platform: currentUser.device.platform,
-          version: currentUser.device.version
+          model: sUser.device.model,
+          platform: sUser.device.platform,
+          version: sUser.device.version
         };
       }
     }
@@ -846,25 +874,27 @@ angular.module('ionicApp')
   }
 
   function registerUser(){
-    if(!currentUser){currentUser = $localStorage.user;}
+    if(!sApp){sApp = $localStorage.app;}
+    if(!sUser){sUser = $localStorage.user;}
     var mixpanelUser = {
-      $created: moment(currentUser.profile.firstLaunch).format('llll'),
-      $email: currentUser.profile.mail,
-      fullName: currentUser.profile.name,
-      avatar: currentUser.profile.avatar,
-      backgroundCover: currentUser.profile.backgroundCover
+      $created: moment(sApp.firstLaunch).format('llll'),
+      $email: sUser.email,
+      fullName: sUser.name,
+      avatar: sUser.avatar,
+      backgroundCover: sUser.backgroundCover
     };
-    if(currentUser && currentUser.gravatar && currentUser.gravatar.entry && currentUser.gravatar.entry.length > 0){
-      if(currentUser.gravatar.entry[0].hash)            { mixpanelUser.gravatar = currentUser.gravatar.entry[0].hash; }
-      if(currentUser.gravatar.entry[0].aboutMe)         { mixpanelUser.about = currentUser.gravatar.entry[0].aboutMe; }
-      if(currentUser.gravatar.entry[0].currentLocation) { mixpanelUser.location = currentUser.gravatar.entry[0].currentLocation; }
-      if(currentUser.gravatar.entry[0].name){
-        if(currentUser.gravatar.entry[0].name.givenName) { mixpanelUser.$first_name = currentUser.gravatar.entry[0].name.givenName; }
-        if(currentUser.gravatar.entry[0].name.familyName){ mixpanelUser.$last_name = currentUser.gravatar.entry[0].name.familyName; }
+    if(sUser.profiles.gravatar.entry && sUser.profiles.gravatar.entry.length > 0){
+      var e = sUser.profiles.gravatar.entry[0];
+      if(e.hash)            { mixpanelUser.gravatar = e.hash; }
+      if(e.aboutMe)         { mixpanelUser.about = e.aboutMe; }
+      if(e.currentLocation) { mixpanelUser.location = e.currentLocation; }
+      if(e.name){
+        if(e.name.givenName) { mixpanelUser.$first_name = e.name.givenName; }
+        if(e.name.familyName){ mixpanelUser.$last_name = e.name.familyName; }
       }
     }
-    for(var i in currentUser.settings){
-      mixpanelUser['setting.'+i] = currentUser.settings[i];
+    for(var i in sUser.settings){
+      mixpanelUser['setting.'+i] = sUser.settings[i];
     }
 
     if(debug){

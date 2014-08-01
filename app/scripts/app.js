@@ -102,10 +102,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   });
 
   var user = JSON.parse(localStorage.getItem('ngStorage-user'));
-  console.log(user);
   if(user){
-    if(user.profile && user.profile.skipIntro){
-      if(user.profile.isLogged){
+    if(user.skipIntro){
+      if(user.isLogged){
         $urlRouterProvider.otherwise('/app/home');
       } else {
         $urlRouterProvider.otherwise('/login');
@@ -116,8 +115,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   } else {
     $urlRouterProvider.otherwise('/intro');
   }
-
-  //$urlRouterProvider.otherwise('/app/home');
 
   // catch exceptions in angular and send them to mixpanel !
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
@@ -145,7 +142,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
 .constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
-.constant('supportTeamMail', 'loicknuchel@gmail.com')
+.constant('supportTeamEmail', 'loicknuchel@gmail.com')
 
 .constant('dataList', {
   foodCategories:   ['Viandes & Poissons', 'Fruits & Légumes', 'Pains & Pâtisseries', 'Frais', 'Surgelés', 'Épicerie salée', 'Épicerie sucrée', 'Boissons', 'Bébé', 'Bio', 'Hygiène & Beauté', 'Entretien & Nettoyage', 'Animalerie', 'Bazar & Textile'],
@@ -170,57 +167,63 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
 .value('localStorageDefault', {
   app: {
-    version: ''
+    version: '',
+    firstLaunch: Date.now()
   },
   user: {
-    profile: {
-      skipIntro: false,
-      isLogged: false,
-      name: 'Anonymous',
-      avatar: 'images/user.jpg',
-      background: '#6f5499',
-      backgroundCover: 'images/profile-covers/cover01.jpg',
-      mail: '',
-      defaultServings: 2,
-      firstLaunch: Date.now(),
-      score: {}
+    skipIntro: false,
+    isLogged: false,
+    email: '',
+    name: 'Anonymous',
+    avatar: 'images/user.jpg',
+    background: '#6f5499',
+    backgroundCover: 'images/profile-covers/cover01.jpg',
+    score: {
+      value: 0,
+      level: {},
+      events: []
+    },
+    device: {},
+    profiles: {
+      gravatar: {}
+    },
+    recipesFavorited: [],
+    carts: {
+      // TODO : change current cart to closed attribute on cart
+      current: null,
+      contents: []
     },
     settings: {
+      defaultServings: 2,
       //strictIngredients: false,
       showPrices: false,
       bigImages: true
-    },
+    }
+  },
+  data: {
+    foods: [],
+    recipes: [],
+    recipesOfWeek: [],
+    globalmessages: {
+      lastCall: null,
+      messages: []
+    }
+  },
+  logs: {
+    recipesHistory: [],
     launchs: []
-  },
-  foods: [],
-  recipes: [],
-  weekrecipes: [],
-  recipesHistory: [],
-  favoriteRecipes: [],
-  carts: {
-    current: null,
-    contents: []
-  },
-  globalmessages: {
-    lastCall: null,
-    messages: []
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug, appVersion){
+.run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, StorageSrv, LogSrv, debug, appVersion){
   'use strict';
   if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
-  if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
-  if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
-  if(!$localStorage.weekrecipes){$localStorage.weekrecipes = localStorageDefault.weekrecipes;}
-  if(!$localStorage.recipesHistory){$localStorage.recipesHistory = localStorageDefault.recipesHistory;}
-  if(!$localStorage.favoriteRecipes){$localStorage.favoriteRecipes = localStorageDefault.favoriteRecipes;}
-  if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
-  if(!$localStorage.globalmessages){$localStorage.globalmessages = localStorageDefault.globalmessages;}
+  if(!$localStorage.data){$localStorage.data = localStorageDefault.data;}
+  if(!$localStorage.logs){$localStorage.logs = localStorageDefault.logs;}
 
   if($localStorage.app.version !== appVersion){
-    // TODO : migrate
+    StorageSrv.migrate($localStorage.app.version);
     $localStorage.app.version = appVersion;
   }
 
@@ -230,9 +233,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
 
-  $rootScope.showIntro = false;
   if(UserSrv.isFirstLaunch()){
-    $rootScope.showIntro = true;
     UserSrv.firstLaunch();
   } else {
     UserSrv.launch();
