@@ -1,0 +1,32 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>
+      <h1 class="title">Login</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="login">
+    <!--<button class="button button-full button-positive" ng-click="login('facebook')">Login with Facebook</button>
+<button class="button button-full button-outline button-assertive" ng-click="logout()">Logout</button>
+<div class="card">
+<div class="item item-text-wrap" ng-hide="user">User not logged in</div>
+<div class="item item-text-wrap" ng-show="user"><pre>{{user | json}}</pre></div>
+</div>
+
+<button class="button button-full button-custom" ui-sref="app.home">Home</button>-->
+    <form ng-submit="login()">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <span class="input-label">Email</span>
+          <input type="text" ng-model="credentials.email" placeholder="ex: nom@example.com">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Mot de passe</span>
+          <input type="password" ng-model="credentials.password">
+        </label>
+        <button type="submit" class="button button-full button-positive">Se connecter</button>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

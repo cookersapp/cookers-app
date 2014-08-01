@@ -398,6 +398,34 @@ angular.module('ionicApp')
   return service;
 })
 
+.factory('LoginSrv', function($q, $localStorage, firebaseUrl){
+  'use strict';
+  var currentUser = $localStorage.user;
+  var service = {
+    isLogged: function(){return currentUser.profile.isLogged;},
+    login: login,
+    logWithFacebook: logWithFacebook,
+    logout: logout
+  };
+  
+  function login(credentials){
+    currentUser.profile.isLogged = true;
+    return $q.when();
+  }
+  
+  function logWithFacebook(){
+    currentUser.profile.isLogged = true;
+    return $q.when();
+  }
+  
+  function logout(){
+    currentUser.profile.isLogged = false;
+    return $q.when();
+  }
+  
+  return service;
+})
+
 .factory('UserSrv', function($localStorage, $ionicPlatform, $http, GamificationSrv, LogSrv, firebaseUrl, localStorageDefault, md5){
   'use strict';
   var currentUser = $localStorage.user;
@@ -405,6 +433,7 @@ angular.module('ionicApp')
     get: function(){return $localStorage.user;},
     getProfile: function(){return $localStorage.user.profile;},
     setMail: setMail,
+    skipIntro: skipIntro,
     setDefaultServings: setDefaultServings,
     isFirstLaunch: function(){return !(currentUser && currentUser.device && currentUser.device.uuid);},
     firstLaunch: firstLaunch,
@@ -467,6 +496,10 @@ angular.module('ionicApp')
         if(callback){callback();}
       });
     }
+  }
+  
+  function skipIntro(bool){
+    currentUser.profile.skipIntro = bool;
   }
 
   function setDefaultServings(defaultServings){
@@ -813,6 +846,7 @@ angular.module('ionicApp')
   }
 
   function registerUser(){
+    if(!currentUser){currentUser = $localStorage.user;}
     var mixpanelUser = {
       $created: moment(currentUser.profile.firstLaunch).format('llll'),
       $email: currentUser.profile.mail,

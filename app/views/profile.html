@@ -25,10 +25,6 @@
     <div class="settings">
       <div class="list card">
         <div class="item item-divider">Paramètres</div>
-        <label class="item item-input item-floating-label">
-          <span class="input-label">Email</span>
-          <input type="email" ng-model="mail" blur-on-keyboard-out ng-blur="saveMail(mail)" placeholder="Email (permet de charger votre profil gravatar.com)">
-        </label>
         <div class="item item-toggle">
           Afficher le prix des recettes
           <label class="toggle toggle-custom">
@@ -56,6 +52,15 @@ Ingrédients stricts
 </div>
 </label>
 </div>-->
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Ton email</span>
+          <input type="email" ng-model="mail" blur-on-keyboard-out ng-blur="saveMail(mail)" placeholder="Ton email (pour charger ton profil gravatar.com)">
+        </label>
+      </div>
+    </div>
+    <div class="settings">
+      <div class="list card">
+        <div class="item item-divider">Application</div>
         <div class="item">Version de l'application <span class="badge badge-positive">{{appVersion}}</span></div>
         <div class="item item-icon-right" ng-click="about()">A propos <i class="icon ion-chevron-right icon-accessory"></i></div>
         <div class="item item-icon-right" ng-if="debug" ui-sref="app.debug">
@@ -64,6 +69,7 @@ Ingrédients stricts
           <i class="icon ion-chevron-right icon-accessory"></i>
         </div>
         <div class="item item-icon-right" ng-click="clearCache()">Vider le cache <i class="icon ion-chevron-right icon-accessory"></i></div>
+        <div class="item item-icon-right" ng-click="logout()">Se déconnecter <i class="icon ion-chevron-right icon-accessory"></i></div>
         <div class="item item-icon-right assertive" ng-click="resetApp()">
           Supprimer les données de l'application
           <i class="icon ion-chevron-right icon-accessory"></i>

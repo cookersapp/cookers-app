@@ -1,12 +1,17 @@
 angular.module('ionicApp')
 
-.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserSrv, LogSrv){
+.controller('IntroCtrl', function($scope, $state, $ionicPlatform, UserSrv, LoginSrv, LogSrv){
   'use strict';
   var currentSlide = 0;
   $scope.profile = angular.copy(UserSrv.getProfile());
 
   $scope.startApp = function(){
-    $state.go('app.home');
+    UserSrv.skipIntro(true);
+    if(LoginSrv.isLogged()){
+      $state.go('app.home');
+    } else {
+      $state.go('login');
+    }
   };
   $scope.submitUserInfos = function(){
     LogSrv.trackSetMail($scope.profile.mail);
@@ -19,6 +24,61 @@ angular.module('ionicApp')
   $scope.slideChanged = function(index){
     LogSrv.trackIntroChangeSlide(currentSlide, index);
     currentSlide = index;
+  };
+})
+
+.controller('LoginCtrl', function($scope, $state, $rootScope, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
+  'use strict';
+  // TODO : redirect to login if not logged
+  // TODO : manage message errors on login
+  // TODO : real login with mail&pass
+  // TODO : real login with facebook (get mail !)
+  // TODO : real login with twitter (get mail !)
+  
+  /*// Get a reference to the Firebase
+  var firebaseRef = new Firebase(firebaseUrl);
+  // Create a Firebase Simple Login object
+  $scope.auth = $firebaseSimpleLogin(firebaseRef);
+  // Initially set no user to be logged in
+  $scope.user = null;
+  // Logs a user in with inputted provider
+  $scope.login = function(provider) {
+    console.log('login with', provider);
+    $scope.auth.$login(provider);
+  };
+  // Logs a user out
+  $scope.logout = function() {
+    console.log('logout');
+    $scope.auth.$logout();
+  };
+  // Upon successful login, set the user object
+  $rootScope.$on("$firebaseSimpleLogin:login", function(event, user) {
+    console.log('$firebaseSimpleLogin:login', user);
+    $scope.user = user;
+  });
+  // Upon successful logout, reset the user object
+  $rootScope.$on("$firebaseSimpleLogin:logout", function(event) {
+    console.log('$firebaseSimpleLogin:logout');
+    $scope.user = null;
+  });
+  // Log any login-related errors to the console
+  $rootScope.$on("$firebaseSimpleLogin:error", function(event, error) {
+    console.log("Error logging user in: ", error);
+  });*/
+  
+  $scope.credentials = {
+    email: '',
+    password: ''
+  };
+
+  $scope.goIntro = function(){
+    UserSrv.skipIntro(false);
+    $state.go('intro');
+  };
+  $scope.login = function(){
+    LoginSrv.login($scope.credentials).then(function(){
+      $state.go('app.home');
+    });
   };
 })
 
@@ -314,7 +374,7 @@ angular.module('ionicApp')
   }*/
 })
 
-.controller('ProfileCtrl', function($scope, $localStorage, localStorageDefault, UserSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $state, $localStorage, localStorageDefault, UserSrv, LoginSrv, LogSrv){
   'use strict';
   var user = UserSrv.get();
 
@@ -370,6 +430,11 @@ angular.module('ionicApp')
       $localStorage.recipes = localStorageDefault.recipes;
       $localStorage.weekrecipes = localStorageDefault.weekrecipes;
     }
+  };
+  $scope.logout = function(){
+    LoginSrv.logout().then(function(){
+      $state.go('login');
+    });
   };
   $scope.resetApp = function(){
     if(window.confirm('Réinitialiser complètement l\'application ?')){

@@ -1,14 +1,18 @@
-angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
-  $urlRouterProvider.otherwise('/app/home');
 
   $stateProvider
   .state('intro', {
     url: '/intro',
     templateUrl: 'views/intro.html',
     controller: 'IntroCtrl'
+  })
+  .state('login', {
+    url: '/login',
+    templateUrl: 'views/login.html',
+    controller: 'LoginCtrl'
   })
   .state('app', {
     url: '/app',
@@ -97,6 +101,25 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     }
   });
 
+  var user = JSON.parse(localStorage.getItem('ngStorage-user'));
+  console.log(user);
+  if(user){
+    if(user.profile && user.profile.skipIntro){
+      if(user.profile.isLogged){
+        $urlRouterProvider.otherwise('/app/home');
+      } else {
+        $urlRouterProvider.otherwise('/login');
+      }
+    } else {
+      $urlRouterProvider.otherwise('/intro');
+    }
+  } else {
+    $urlRouterProvider.otherwise('/intro');
+  }
+
+  //$urlRouterProvider.otherwise('/app/home');
+
+  // catch exceptions in angular and send them to mixpanel !
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
     return function(exception, cause){
       $delegate(exception, cause);
@@ -146,8 +169,13 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 ])
 
 .value('localStorageDefault', {
+  app: {
+    version: ''
+  },
   user: {
     profile: {
+      skipIntro: false,
+      isLogged: false,
       name: 'Anonymous',
       avatar: 'images/user.jpg',
       background: '#6f5499',
@@ -181,6 +209,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
 
 .run(function($rootScope, $location, $ionicPlatform, $localStorage, localStorageDefault, UserSrv, LogSrv, debug, appVersion){
   'use strict';
+  if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.foods){$localStorage.foods = localStorageDefault.foods;}
   if(!$localStorage.recipes){$localStorage.recipes = localStorageDefault.recipes;}
@@ -189,6 +218,11 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   if(!$localStorage.favoriteRecipes){$localStorage.favoriteRecipes = localStorageDefault.favoriteRecipes;}
   if(!$localStorage.carts){$localStorage.carts = localStorageDefault.carts;}
   if(!$localStorage.globalmessages){$localStorage.globalmessages = localStorageDefault.globalmessages;}
+
+  if($localStorage.app.version !== appVersion){
+    // TODO : migrate
+    $localStorage.app.version = appVersion;
+  }
 
   LogSrv.trackStates();
 
