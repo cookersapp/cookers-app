@@ -179,6 +179,8 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     avatar: 'images/user.jpg',
     background: '#6f5499',
     backgroundCover: 'images/profile-covers/cover01.jpg',
+    firstName: '',
+    lastName: '',
     score: {
       value: 0,
       level: {},

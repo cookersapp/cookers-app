@@ -19,7 +19,7 @@ angular.module('ionicApp')
   };
   $scope.submitUserInfos = function(){
     LogSrv.trackSetEmail($scope.data.email);
-    UserSrv.setEmail($scope.data.email, function(){
+    UserSrv.setEmail($scope.data.email).then(function(){
       LogSrv.registerUser();
     });
     sUser.settings.defaultServings = $scope.data.defaultServings;
@@ -86,9 +86,7 @@ angular.module('ionicApp')
     });
   };
   $scope.facebookConnect = function(){
-    console.log('log with facebook');
     LoginSrv.facebookConnect().then(function(){
-      console.log('connected !!!!');
       $state.go('app.home');
     });
   };
@@ -425,7 +423,7 @@ angular.module('ionicApp')
   
   $scope.saveEmail = function(email){
     LogSrv.trackSetEmail(email);
-    UserSrv.setEmail(email, function(){
+    UserSrv.setEmail(email).then(function(){
       LogSrv.registerUser();
     });
   };
@@ -518,7 +516,7 @@ angular.module('ionicApp')
     });
     if(sUser.email !== $scope.feedback.email){
       LogSrv.trackSetEmail($scope.feedback.email);
-      UserSrv.setEmail($scope.feedback.email, function(){
+      UserSrv.setEmail($scope.feedback.email).then(function(){
         LogSrv.registerUser();
       });
     }

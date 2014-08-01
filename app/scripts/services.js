@@ -410,7 +410,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LoginSrv', function($rootScope, $q, $localStorage, $firebaseSimpleLogin, firebaseUrl){
+.factory('LoginSrv', function($rootScope, $q, $localStorage, $firebaseSimpleLogin, UserSrv, firebaseUrl){
   'use strict';
   var sUser = $localStorage.user;
   var service = {
@@ -423,10 +423,10 @@ angular.module('ionicApp')
   var firebaseRef = new Firebase(firebaseUrl);
   var firebaseAuth = $firebaseSimpleLogin(firebaseRef);
 
-  var loginDefer = $q.defer();
-  var logoutDefer = $q.defer();
+  var loginDefer, logoutDefer, logoutTimeout, loginMethod;
 
   function login(credentials){
+    loginMethod = 'mail';
     var loginDefer = $q.defer();
 
     setTimeout(function() {
@@ -440,8 +440,16 @@ angular.module('ionicApp')
   }
 
   function facebookConnect(){
+    loginMethod = 'facebook';
     loginDefer = $q.defer();
-    firebaseAuth.$login('facebook');
+    var opts = {
+      rememberMe: true,
+      scope: 'email'
+    };
+    if(sUser && sUser.profiles && sUser.profiles[loginMethod] && sUser.profiles[loginMethod].accessToken){
+      opts.access_token = sUser.profiles[loginMethod].accessToken;
+    }
+    firebaseAuth.$login(loginMethod, opts);
     return loginDefer.promise;
   }
 
@@ -449,67 +457,146 @@ angular.module('ionicApp')
     var logoutDefer = $q.defer();
     firebaseAuth.$logout();
 
-    // disconnect after 3 sec even if firebase doesn't answer !
-    setTimeout(function() {
-      logoutDefer.resolve();
+    // disconnect after 1 sec even if firebase doesn't answer !
+    logoutTimeout = setTimeout(function(){
+      console.log('logout timeout !');
       sUser.isLogged = false;
-    }, 3000);
+      logoutDefer.resolve();
+    }, 1000);
 
     return logoutDefer.promise;
   }
 
-  $rootScope.$on("$firebaseSimpleLogin:login", function(event, user) {
+  $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
     console.log('$firebaseSimpleLogin:login', user);
-    loginDefer.resolve(user);
-    sUser.isLogged = true;
+    if(loginDefer){
+      sUser.isLogged = true;
+      sUser.profiles[loginMethod] = user;
+      UserSrv.updateProfile();
+      loginDefer.resolve(user);
+    }
   });
-  $rootScope.$on("$firebaseSimpleLogin:logout", function(event) {
+  $rootScope.$on('$firebaseSimpleLogin:logout', function(event){
     console.log('$firebaseSimpleLogin:logout');
-    logoutDefer.resolve();
-    sUser.isLogged = false;
+    if(logoutDefer){
+      sUser.isLogged = false;
+      // TODO : bug !!! resolve does not notify promise !!!
+      // clearTimeout(logoutTimeout);
+      logoutDefer.resolve();
+    }
   });
-  $rootScope.$on("$firebaseSimpleLogin:error", function(event, error) {
-    console.log("Error logging user in: ", error);
-    loginDefer.reject(error);
-    logoutDefer.reject(error);
+  $rootScope.$on('$firebaseSimpleLogin:error', function(event, error){
+    console.log('$firebaseSimpleLogin:error', error);
+    if(loginDefer){loginDefer.reject(error);}
+    if(logoutDefer){logoutDefer.reject(error);}
   });
 
   return service;
 })
 
-.factory('UserSrv', function($localStorage, $http, localStorageDefault, md5){
+.factory('UserSrv', function($q, $localStorage, $http, localStorageDefault, md5){
   'use strict';
   var sUser = $localStorage.user;
   var service = {
     get: function(){return sUser;},
-    setEmail: setEmail
+    setEmail: setEmail,
+    updateProfile: updateProfile
   };
 
-  function setEmail(email, callback){
+  function setEmail(email){
     sUser.email = email;
     sUser.name = localStorageDefault.user.name;
     sUser.avatar = localStorageDefault.user.avatar;
     sUser.background = localStorageDefault.user.background;
     sUser.backgroundCover = localStorageDefault.user.backgroundCover;
     if(email){
-      $http.jsonp('http://www.gravatar.com/'+md5.createHash(email)+'.json?callback=JSON_CALLBACK').then(function(result){
-        var g = result.data;
-        sUser.profiles.gravatar = g;
-        if(g && g.entry && g.entry.length > 0){
-          if(g.entry[0].thumbnailUrl){ sUser.avatar = g.entry[0].thumbnailUrl; }
-          if(g.entry[0].displayName) { sUser.name = g.entry[0].displayName; }
-          if(g.entry[0].name && g.entry[0].name.formatted){
-            // override displayName
-            sUser.name = g.entry[0].name.formatted;
-          }
-          if(g.entry[0].profileBackground){
-            if(g.entry[0].profileBackground.color) { sUser.background = g.entry[0].profileBackground.color; }
-            if(g.entry[0].profileBackground.url)   { sUser.backgroundCover = g.entry[0].profileBackground.url; }
-          }
-        }
-        if(callback){callback();}
+      return updateGravatar(sUser.email).then(function(){
+        updateProfile();
+      });
+    } else {
+      return $q.when();
+    }
+  }
+
+  function updateProfile(){
+    var defaultProfile = _defaultProfile();
+    var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
+    var facebookProfile = _facebookProfile(sUser.profiles.facebook);
+
+    angular.extend(sUser, defaultProfile, gravatarProfile, facebookProfile);
+
+    if(sUser.email !== gravatarProfile.email){
+      updateGravatar(sUser.email).then(function(){
+        var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
+        angular.extend(sUser, defaultProfile, gravatarProfile, facebookProfile);
       });
     }
+  }
+
+  function updateGravatar(email){
+    var hash = md5.createHash(email);
+    return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
+      var g = result.data;
+      if(g && g.entry && g.entry.length > 0){
+        g.entry[0].email = email;
+      }
+      sUser.profiles.gravatar = g;
+    }, function(error){
+      sUser.profiles.gravatar = {
+        entry: [
+          {email: email, hash: hash}
+        ]
+      };
+      console.log('sUser', sUser);
+    });
+  }
+
+  function _defaultProfile(){
+    return {
+      email: localStorageDefault.user.email,
+      name: localStorageDefault.user.name,
+      avatar: localStorageDefault.user.avatar,
+      background: localStorageDefault.user.background,
+      backgroundCover: localStorageDefault.user.backgroundCover,
+      firstName: localStorageDefault.user.firstName,
+      lastName: localStorageDefault.user.lastName
+    }
+  }
+
+  function _gravatarProfile(g){
+    var profile = {};
+    if(g && g.entry && g.entry.length > 0){
+      if(g.entry[0].email){        profile.email = g.entry[0].email; }
+      if(g.entry[0].displayName) { profile.name = g.entry[0].displayName; }
+      if(g.entry[0].thumbnailUrl){ profile.avatar = g.entry[0].thumbnailUrl; }
+      if(g.entry[0].name){
+        if(g.entry[0].name.givenName){  profile.firstName = g.entry[0].name.givenName; }
+        if(g.entry[0].name.familyName){ profile.lastName = g.entry[0].name.familyName; }
+        // override displayName
+        if(g.entry[0].name.formatted){profile.name = g.entry[0].name.formatted;}
+      }
+      if(g.entry[0].profileBackground){
+        if(g.entry[0].profileBackground.color) { profile.background = g.entry[0].profileBackground.color; }
+        if(g.entry[0].profileBackground.url)   { profile.backgroundCover = g.entry[0].profileBackground.url; }
+      }
+    }
+    return profile;
+  }
+
+  function _facebookProfile(f){
+    var profile = {};
+    if(f){
+      if(f.displayName){ profile.name = f.displayName; }
+      if(f.thirdPartyUserData){
+        if(f.thirdPartyUserData.email){      profile.email = f.thirdPartyUserData.email; }
+        if(f.thirdPartyUserData.first_name){ profile.firstName = f.thirdPartyUserData.first_name; }
+        if(f.thirdPartyUserData.last_name){  profile.lastName = f.thirdPartyUserData.last_name; }
+        if(f.thirdPartyUserData.picture && f.thirdPartyUserData.picture.data && f.thirdPartyUserData.picture.data.url){
+          profile.avatar = f.thirdPartyUserData.picture.data.url.replace('p50x50', 'p100x100');
+        }
+      }
+    }
+    return profile;
   }
 
   return service;
