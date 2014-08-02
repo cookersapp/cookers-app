@@ -5,7 +5,7 @@ angular.module('ionicApp')
   var sRecipesOfWeek = $localStorage.data.recipesOfWeek;
   var service = {
     // TODO set 1 if debug !
-    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 0 : 0)); },
+    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };

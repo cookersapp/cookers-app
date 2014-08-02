@@ -34,47 +34,16 @@ angular.module('ionicApp')
 .controller('LoginCtrl', function($scope, $state, $rootScope, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
   'use strict';
   var sUser = UserSrv.get();
-  // TODO : redirect to login if not logged
-  // TODO : manage message errors on login
-  // TODO : real login with mail&pass
-  // TODO : real login with facebook (get mail !)
-  // TODO : real login with twitter (get mail !)
-  
-  /*// Get a reference to the Firebase
-  var firebaseRef = new Firebase(firebaseUrl);
-  // Create a Firebase Simple Login object
-  $scope.auth = $firebaseSimpleLogin(firebaseRef);
-  // Initially set no user to be logged in
-  $scope.user = null;
-  // Logs a user in with inputted provider
-  $scope.login = function(provider) {
-    console.log('login with', provider);
-    $scope.auth.$login(provider);
-  };
-  // Logs a user out
-  $scope.logout = function() {
-    console.log('logout');
-    $scope.auth.$logout();
-  };
-  // Upon successful login, set the user object
-  $rootScope.$on("$firebaseSimpleLogin:login", function(event, user) {
-    console.log('$firebaseSimpleLogin:login', user);
-    $scope.user = user;
-  });
-  // Upon successful logout, reset the user object
-  $rootScope.$on("$firebaseSimpleLogin:logout", function(event) {
-    console.log('$firebaseSimpleLogin:logout');
-    $scope.user = null;
-  });
-  // Log any login-related errors to the console
-  $rootScope.$on("$firebaseSimpleLogin:error", function(event, error) {
-    console.log("Error logging user in: ", error);
-  });*/
   
   $scope.credentials = {
     email: '',
     password: ''
   };
+  
+  $scope.loading = {
+    mail: false,
+    fb: false
+  }
 
   $scope.goIntro = function(){
     sUser.skipIntro = false;
@@ -82,12 +51,19 @@ angular.module('ionicApp')
   };
   $scope.login = function(){
     LoginSrv.login($scope.credentials).then(function(){
+      $scope.loading.mail = false;
       $state.go('app.home');
+    }, function(){
+      $scope.loading.mail = false;
     });
   };
   $scope.facebookConnect = function(){
+    $scope.loading.fb = true;
     LoginSrv.facebookConnect().then(function(){
+      $scope.loading.fb = false;
       $state.go('app.home');
+    }, function(){
+      $scope.loading.fb = false;
     });
   };
 })

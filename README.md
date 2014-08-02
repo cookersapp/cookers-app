@@ -1,5 +1,9 @@
 # Cookers app
 
+- connexion mail/pass : https://www.firebase.com/docs/web/guide/simple-login/password.html
+- mettre un plugin phonegap pour se connecter "nativement" à facebook
+- ajouter twitter & google
+
 # BUGS
 
 - liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
