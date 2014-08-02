@@ -34,12 +34,12 @@ angular.module('ionicApp')
 .controller('LoginCtrl', function($scope, $state, $rootScope, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
   'use strict';
   var sUser = UserSrv.get();
-  
+
   $scope.credentials = {
     email: '',
     password: ''
   };
-  
+
   $scope.loading = {
     mail: false,
     fb: false
@@ -396,7 +396,7 @@ angular.module('ionicApp')
   };
 
   $scope.email = angular.copy(sUser.email);
-  
+
   $scope.saveEmail = function(email){
     LogSrv.trackSetEmail(email);
     UserSrv.setEmail(email).then(function(){
