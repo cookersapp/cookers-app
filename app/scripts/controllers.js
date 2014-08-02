@@ -132,7 +132,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipesCtrl', function($scope, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($scope, $window, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = [];
@@ -149,13 +149,13 @@ angular.module('ionicApp')
   $scope.addRecipeToCart = function(recipe, index){
     LogSrv.trackAddRecipeToCart(recipe.id, index, 'weekrecipes');
     CartSrv.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
+    $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
     RecipeSrv.addToHistory(recipe);
   };
   $scope.removeRecipeFromCart = function(recipe, index){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
     CartSrv.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 
   $scope.isFavorited = function(recipe){
@@ -165,12 +165,12 @@ angular.module('ionicApp')
     LogSrv.trackAddRecipeToFavorite(recipe, index, 'weekrecipes');
     RecipeSrv.addToFavorite(recipe);
     RecipeSrv.addToHistory(recipe);
-    window.plugins.toast.show('✔ ajoutée aux favoris');
+    $window.plugins.toast.show('✔ ajoutée aux favoris');
   };
   $scope.removeFromFavorite = function(recipe, index){
     LogSrv.trackRemoveRecipeFromFavorite(recipe, index, 'weekrecipes');
     RecipeSrv.removeFromFavorite(recipe);
-    window.plugins.toast.show('✔ supprimée des favoris');
+    $window.plugins.toast.show('✔ supprimée des favoris');
   };
 })
 
@@ -188,27 +188,27 @@ angular.module('ionicApp')
   $scope.addRecipeToCart = function(recipe){
     LogSrv.trackAddRecipeToCart(recipe.id, null, 'recipedetail');
     CartSrv.addRecipeToCart(recipe);
-    window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
+    $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
   };
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipedetail');
     CartSrv.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };*/
 })
 
-.controller('CartCtrl', function($scope, CartSrv, LogSrv){
+.controller('CartCtrl', function($scope, $window, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.getCurrentCart();
   $scope.archiveCart = function(){
-    if(window.confirm('Archiver cette liste ?')){
+    if($window.confirm('Archiver cette liste ?')){
       LogSrv.trackArchiveCart();
       CartSrv.archiveCart();
     }
   };
 })
 
-.controller('CartRecipesCtrl', function($scope, CartSrv, LogSrv){
+.controller('CartRecipesCtrl', function($scope, $window, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.getCurrentCart();
 
@@ -234,7 +234,7 @@ angular.module('ionicApp')
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartSrv.removeRecipeFromCart(recipe);
-    window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
@@ -325,17 +325,17 @@ angular.module('ionicApp')
     LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch);
     CartSrv.addCustomItemToCart(item);
     updateCart();
-    window.plugins.toast.showShortTop('✔ ingrédient ajouté à la liste de courses');
+    $window.plugins.toast.showShortTop('✔ ingrédient ajouté à la liste de courses');
     resetAddIngredient();
   };
   $scope.removeCartItemSource = function(item){
     LogSrv.trackRemoveItemFromCart(item.ingredient.id);
     CartSrv.removeCustomItemFromCart(item);
     updateCart();
-    window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
+    $window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
   };
 
-  window.addEventListener('native.keyboardhide', function(e){
+  $window.addEventListener('native.keyboardhide', function(e){
     resetAddIngredient();
   });
 
@@ -356,7 +356,7 @@ angular.module('ionicApp')
   }*/
 })
 
-.controller('ProfileCtrl', function($scope, $state, StorageSrv, UserSrv, LoginSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, LogSrv){
   'use strict';
   var sUser = UserSrv.get();
 
@@ -404,11 +404,11 @@ angular.module('ionicApp')
     });
   };
   $scope.about = function(){
-    window.alert('Not implemented yet :(');
+    $window.alert('Not implemented yet :(');
   };
 
   $scope.clearCache = function(){
-    if(window.confirm('Vider le cache ?')){
+    if($window.confirm('Vider le cache ?')){
       StorageSrv.clearCache();
     }
   };
@@ -418,7 +418,7 @@ angular.module('ionicApp')
     });
   };
   $scope.resetApp = function(){
-    if(window.confirm('Réinitialiser complètement l\'application ?')){
+    if($window.confirm('Réinitialiser complètement l\'application ?')){
       LogSrv.trackClearApp(sUser.device.uuid);
       StorageSrv.clear();
       if(navigator.app){
@@ -468,7 +468,7 @@ angular.module('ionicApp')
   }
 })
 
-.controller('FeedbackCtrl', function($scope, AppSrv, UserSrv, EmailSrv, LogSrv){
+.controller('FeedbackCtrl', function($scope, $window, AppSrv, UserSrv, EmailSrv, LogSrv){
   'use strict';
   var sApp = AppSrv.get();
   var sUser = UserSrv.get();
@@ -487,7 +487,7 @@ angular.module('ionicApp')
       if(sent){
         $scope.feedback.sent = true;
       } else {
-        window.alert('Echec de l\'envoi du email. Réessayez !');
+        $window.alert('Echec de l\'envoi du email. Réessayez !');
       }
     });
     if(sUser.email !== $scope.feedback.email){

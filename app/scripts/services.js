@@ -131,7 +131,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('CartSrv', function($localStorage, UserSrv, debug){
+.factory('CartSrv', function($localStorage, $window, UserSrv, debug){
   var sCarts = $localStorage.user.carts;
   'use strict';
   var service = {
@@ -301,7 +301,7 @@ angular.module('ionicApp')
     } else {
       // TODO
       if(debug){
-        window.alert('Should convert <'+q2.unit+'> to <'+q1.unit+'> on <'+item.food.name+'> !!!');
+        $window.alert('Should convert <'+q2.unit+'> to <'+q1.unit+'> on <'+item.food.name+'> !!!');
         console.log('item', item);
         console.log('quantitiy 1', q1);
         console.log('quantitiy 2', q2);
@@ -410,7 +410,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LoginSrv', function($rootScope, $q, $localStorage, $firebaseSimpleLogin, UserSrv, firebaseUrl){
+.factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, firebaseUrl){
   'use strict';
   var sUser = $localStorage.user;
   var service = {
@@ -429,7 +429,7 @@ angular.module('ionicApp')
     loginMethod = 'mail';
     var loginDefer = $q.defer();
 
-    setTimeout(function() {
+    $timeout(function() {
       loginDefer.resolve({
         email: credentials.email
       });
@@ -458,7 +458,7 @@ angular.module('ionicApp')
     firebaseAuth.$logout();
 
     // disconnect after 1 sec even if firebase doesn't answer !
-    logoutTimeout = setTimeout(function(){
+    logoutTimeout = $timeout(function(){
       console.log('logout timeout !');
       sUser.isLogged = false;
       logoutDefer.resolve();
@@ -602,7 +602,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LaunchSrv', function($rootScope, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, firebaseUrl){
+.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, firebaseUrl){
   'use strict';
   var service = {
     launch: function(){
@@ -693,11 +693,11 @@ angular.module('ionicApp')
 
     // phone will not sleep on states with attribute 'noSleep'
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-      if(window && window.plugins && window.plugins.insomnia){
+      if($window.plugins && $window.plugins.insomnia){
         if(toState && toState.data && toState.data.noSleep){
-          window.plugins.insomnia.keepAwake();
+          $window.plugins.insomnia.keepAwake();
         } else {
-          window.plugins.insomnia.allowSleepAgain();
+          $window.plugins.insomnia.allowSleepAgain();
         }
       }
     });
@@ -955,7 +955,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LogSrv', function($rootScope, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
+.factory('LogSrv', function($rootScope, $window, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var sApp = $localStorage.app;
@@ -1009,7 +1009,7 @@ angular.module('ionicApp')
     if(!params){params = {};}
     params.localtime = Date.now();
     params.appVersion = appVersion;
-    if(!params.url && window && window.location && window.location.hash) {params.url = window.location.hash;}
+    if(!params.url && $window.location && $window.location.hash) {params.url = $window.location.hash;}
     if(!params.email && sUser && sUser.email){params.email = sUser.email;}
     if(sUser && sUser.device){
       if(!params.uuid && sUser.device.uuid){params.uuid = sUser.device.uuid;}

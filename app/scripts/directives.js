@@ -1,12 +1,12 @@
 angular.module('ionicApp')
 
-.directive('blurOnKeyboardOut', function(){
+.directive('blurOnKeyboardOut', function($window){
   'use strict';
   return {
     restrict: 'A',
     link: function(scope, element, attrs){
       // require cordova plugin https://github.com/driftyco/ionic-plugins-keyboard
-      window.addEventListener('native.keyboardhide', function(e){
+      $window.addEventListener('native.keyboardhide', function(e){
         element[0].blur();
         scope.safeApply(function() {
           scope.$eval(attrs.blurOnKeyboardOut);
@@ -17,18 +17,18 @@ angular.module('ionicApp')
 })
 
 // keep focus on input while keyboard is open
-.directive('focusOnKeyboardOpen', function(){
+.directive('focusOnKeyboardOpen', function($window){
   'use strict';
   return {
     restrict: 'A',
     link: function(scope, element, attrs){
       var keyboardOpen = false;
       // require cordova plugin https://github.com/driftyco/ionic-plugins-keyboard
-      window.addEventListener('native.keyboardshow', function(e){
+      $window.addEventListener('native.keyboardshow', function(e){
         keyboardOpen = true;
         element[0].focus();
       });
-      window.addEventListener('native.keyboardhide', function(e){
+      $window.addEventListener('native.keyboardhide', function(e){
         keyboardOpen = false;
         element[0].blur();
       });
@@ -60,7 +60,7 @@ angular.module('ionicApp')
 })
 
 // open external links (starting with http:// or https://) outside the app
-.directive('href', function(){
+.directive('href', function($window){
   'use strict';
   return {
     restrict: 'A',
@@ -72,7 +72,7 @@ angular.module('ionicApp')
         element.bind('click', function(e){
           e.preventDefault();
           // require cordova plugin org.apache.cordova.inappbrowser
-          window.open(encodeURI(scope.url), '_system', 'location=yes');
+          $window.open(encodeURI(scope.url), '_system', 'location=yes');
         });
       }
     }
