@@ -415,9 +415,13 @@ angular.module('ionicApp')
   var sUser = $localStorage.user;
   var service = {
     isLogged: function(){return sUser.isLogged;},
+    register: register,
     login: login,
     facebookConnect: facebookConnect,
-    logout: logout
+    logout: logout,
+    getMessage: function(error){
+      return error.message.replace('FirebaseSimpleLogin: ', '');
+    }
   };
 
   var firebaseRef = new Firebase(firebaseUrl);
@@ -425,16 +429,32 @@ angular.module('ionicApp')
 
   var loginDefer, logoutDefer, logoutTimeout, loginMethod;
 
-  function login(credentials){
-    loginMethod = 'mail';
-    var loginDefer = $q.defer();
+  function register(credentials){
+    loginMethod = 'email';
+    loginDefer = $q.defer();
 
-    $timeout(function() {
-      loginDefer.resolve({
-        email: credentials.email
+    firebaseAuth.$createUser(credentials.email, credentials.password).then(function(user){
+      firebaseAuth.$login('password', {
+        email: credentials.email,
+        password: credentials.password,
+        rememberMe: true
       });
-      sUser.isLogged = true;
-    }, 1000);
+    }, function(error){
+      loginDefer.reject(error);
+    });
+
+    return loginDefer.promise;
+  }
+
+  function login(credentials){
+    loginMethod = 'email';
+    loginDefer = $q.defer();
+
+    firebaseAuth.$login('password', {
+      email: credentials.email,
+      password: credentials.password,
+      rememberMe: true
+    });
 
     return loginDefer.promise;
   }
@@ -454,7 +474,7 @@ angular.module('ionicApp')
   }
 
   function logout(){
-    var logoutDefer = $q.defer();
+    logoutDefer = $q.defer();
     firebaseAuth.$logout();
 
     // disconnect after 1 sec even if firebase doesn't answer !
@@ -480,8 +500,7 @@ angular.module('ionicApp')
     console.log('$firebaseSimpleLogin:logout');
     if(logoutDefer){
       sUser.isLogged = false;
-      // TODO : bug !!! resolve does not notify promise !!!
-      // clearTimeout(logoutTimeout);
+      clearTimeout(logoutTimeout);
       logoutDefer.resolve();
     }
   });
@@ -505,12 +524,8 @@ angular.module('ionicApp')
 
   function setEmail(email){
     sUser.email = email;
-    sUser.name = localStorageDefault.user.name;
-    sUser.avatar = localStorageDefault.user.avatar;
-    sUser.background = localStorageDefault.user.background;
-    sUser.backgroundCover = localStorageDefault.user.backgroundCover;
     if(email){
-      return updateGravatar(sUser.email).then(function(){
+      return updateGravatar(email).then(function(){
         updateProfile();
       });
     } else {
@@ -521,14 +536,15 @@ angular.module('ionicApp')
   function updateProfile(){
     var defaultProfile = _defaultProfile();
     var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
+    var emailProfile = _emailProfile(sUser.profiles.email);
     var facebookProfile = _facebookProfile(sUser.profiles.facebook);
 
-    angular.extend(sUser, defaultProfile, gravatarProfile, facebookProfile);
+    angular.extend(sUser, defaultProfile, gravatarProfile, emailProfile, facebookProfile);
 
     if(sUser.email !== gravatarProfile.email){
       updateGravatar(sUser.email).then(function(){
         var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
-        angular.extend(sUser, defaultProfile, gravatarProfile, facebookProfile);
+        angular.extend(sUser, defaultProfile, gravatarProfile, emailProfile, facebookProfile);
       });
     }
   }
@@ -547,7 +563,6 @@ angular.module('ionicApp')
           {email: email, hash: hash}
         ]
       };
-      console.log('sUser', sUser);
     });
   }
 
@@ -579,6 +594,14 @@ angular.module('ionicApp')
         if(g.entry[0].profileBackground.color) { profile.background = g.entry[0].profileBackground.color; }
         if(g.entry[0].profileBackground.url)   { profile.backgroundCover = g.entry[0].profileBackground.url; }
       }
+    }
+    return profile;
+  }
+
+  function _emailProfile(e){
+    var profile = {};
+    if(e){
+      if(e.email){ profile.email = e.email; }
     }
     return profile;
   }
@@ -679,12 +702,14 @@ angular.module('ionicApp')
     // If not logged, all states except intro & login are forbidden !
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       if($localStorage.user.isLogged){
-        if(toState.name === 'login'){
+        if(toState.data && toState.data.restrict && toState.data.restrict === 'notConnected'){
+          console.log('Not allowed to go to '+toState.name+' (you are connected !)');
           event.preventDefault();
           if(fromState.name === ''){$state.go('app.home');}
         }
       } else {
-        if(toState.name !== 'login' && toState.name !== 'intro'){
+        if(toState.data && toState.data.restrict && toState.data.restrict === 'connected'){
+          console.log('Not allowed to go to '+toState.name+' (you are not connected !)');
           event.preventDefault();
           if(fromState.name === ''){$state.go('login');}
         }

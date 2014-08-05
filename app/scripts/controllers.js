@@ -31,7 +31,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('LoginCtrl', function($scope, $state, $rootScope, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
+.controller('LoginCtrl', function($scope, $state, $rootScope, $timeout, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
   'use strict';
   var sUser = UserSrv.get();
 
@@ -41,31 +41,57 @@ angular.module('ionicApp')
   };
 
   $scope.loading = {
-    mail: false,
-    fb: false
+    facebook: false,
+    twitter: false,
+    google: false,
+    email: false
   }
 
   $scope.goIntro = function(){
     sUser.skipIntro = false;
     $state.go('intro');
   };
-  $scope.login = function(){
-    LoginSrv.login($scope.credentials).then(function(){
-      $scope.loading.mail = false;
-      $state.go('app.home');
-    }, function(){
-      $scope.loading.mail = false;
-    });
-  };
+
   $scope.facebookConnect = function(){
-    $scope.loading.fb = true;
-    LoginSrv.facebookConnect().then(function(){
-      $scope.loading.fb = false;
-      $state.go('app.home');
-    }, function(){
-      $scope.loading.fb = false;
-    });
+    connect('facebook');
   };
+  $scope.twitterConnect = function(){
+    $scope.loading.twitter = true;
+    $timeout(function(){
+      $scope.loading.twitter = false;
+    }, 2000);
+  };
+  $scope.googleConnect = function(){
+    $scope.loading.google = true;
+    $timeout(function(){
+      $scope.loading.google = false;
+    }, 2000);
+  };
+  $scope.emailConnect = function(tab){
+    connect('email', tab);
+  };
+
+  function connect(provider, tab){
+    $scope.loading[provider] = true;
+    var promise;
+
+    if(provider === 'facebook'){ promise = LoginSrv.facebookConnect(); }
+    else if(provider === 'email' && tab && tab === 'login'){ promise = LoginSrv.login($scope.credentials); }
+    else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); }
+
+    if(promise){
+      promise.then(function(){
+        $scope.loading[provider] = false;
+        $state.go('app.home');
+      }, function(error){
+        $scope.loading[provider] = false;
+        console.log('error', error);
+        alert(LoginSrv.getMessage(error));
+      });
+    } else {
+      $scope.loading[provider] = false;
+    }
+  }
 })
 
 .controller('AppCtrl', function($scope, $interval, $ionicSideMenuDelegate, RecipeSrv, UserSrv){

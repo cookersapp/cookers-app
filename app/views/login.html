@@ -1,39 +1,47 @@
 <ion-view>
-  <ion-header-bar class="bar-custom">
-    <div class="buttons">
-      <button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>
-      <h1 class="title">Login</h1>
-    </div>
-  </ion-header-bar>
-
-  <ion-content class="login">
-    <!--<button class="button button-full button-positive" ng-click="login('facebook')">Login with Facebook</button>
-<button class="button button-full button-outline button-assertive" ng-click="logout()">Logout</button>
-<div class="card">
-<div class="item item-text-wrap" ng-hide="user">User not logged in</div>
-<div class="item item-text-wrap" ng-show="user"><pre>{{user | json}}</pre></div>
+  <!--<ion-header-bar class="bar-custom">
+<div class="buttons">
+<button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>
+<h1 class="title">Login</h1>
 </div>
+</ion-header-bar>-->
 
-<button class="button button-full button-custom" ui-sref="app.home">Home</button>-->
-    <form ng-submit="login()">
-      <div class="list list-inset">
-        <label class="item item-input">
-          <span class="input-label">Email</span>
-          <input type="text" ng-model="credentials.email" placeholder="ex: nom@example.com">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Mot de passe</span>
-          <input type="password" ng-model="credentials.password">
-        </label>
-        <button type="submit" class="button button-full button-positive" ng-disabled="loading.mail">
-          <i class="fa fa-spinner fa-spin" ng-if="loading.mail"></i>
-          Se connecter
-        </button>
-      </div>
-    </form>
-    <button class="button button-full button-positive" ng-class="loading" ng-disabled="loading.fb" ng-click="facebookConnect()">
-      <i class="fa fa-spinner fa-spin" ng-if="loading.fb"></i>
-      Se connecter avec Facebook
-    </button>
-  </ion-content>
+  <div class="login">
+    <div class="header">
+      <h1>Cookers</h1>
+    </div>
+    <div class="content">
+      <h1>La cuisine simple !</h1>
+      <button class="connect-btn facebook" ng-click="facebookConnect()" ng-disabled="loading.facebook">
+        <span class="icon">
+          <i class="fa fa-spinner fa-spin loading"></i>
+          <i class="fa fa-facebook"></i>
+        </span>
+        Connecte-toi avec <b>Facebook</b>
+      </button>
+      <!--<button class="connect-btn twitter" ng-click="twitterConnect()" ng-disabled="loading.twitter">
+        <span class="icon">
+          <i class="fa fa-spinner fa-spin loading"></i>
+          <i class="fa fa-twitter"></i>
+        </span>
+        Connecte-toi avec <b>Twitter</b>
+      </button>
+      <button class="connect-btn google" ng-click="googleConnect()" ng-disabled="loading.google">
+        <span class="icon">
+          <i class="fa fa-spinner fa-spin loading"></i>
+          <i class="fa fa-google"></i>
+        </span>
+        Connecte-toi avec <b>Google</b>
+      </button>-->
+      <button class="connect-btn email" ui-sref="login-email">
+        <span class="icon">
+          <i class="fa fa-envelope"></i>
+        </span>
+        Connecte-toi avec ton <b>Email</b>
+      </button>
+    </div>
+    <div class="footer">
+
+    </div>
+  </div>
 </ion-view>

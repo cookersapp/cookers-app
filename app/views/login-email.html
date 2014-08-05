@@ -1,0 +1,34 @@
+<ion-view>
+  <div class="login">
+    <div class="header">
+      <h1>Cookers</h1>
+    </div>
+    <div class="content">
+      <div class="row email-tabs" ng-init="tab = 'register'">
+        <div class="col" ng-class="{active: tab === 'login'}" ng-click="tab = 'login'">Se connecter</div>
+        <div class="col" ng-class="{active: tab !== 'login'}" ng-click="tab = 'register'">S'inscrire</div>
+      </div>
+      
+      <form ng-submit="emailConnect(tab)">
+        <div class="list list-inset">
+          <label class="item item-input">
+            <span class="input-label">Email</span>
+            <input type="text" ng-model="credentials.email" placeholder="ex: nom@example.com">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Mot de passe</span>
+            <input type="password" ng-model="credentials.password">
+          </label>
+          <button type="submit" class="button button-full button-positive" ng-disabled="loading.email">
+            <i class="fa fa-spinner fa-spin" ng-if="loading.email"></i>
+            <span ng-show="tab === 'login'">Se connecter</span>
+            <span ng-show="tab !== 'login'">S'inscrire</span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="footer">
+
+    </div>
+  </div>
+</ion-view>

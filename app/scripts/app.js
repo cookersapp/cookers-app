@@ -12,13 +12,27 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
   .state('login', {
     url: '/login',
     templateUrl: 'views/login.html',
-    controller: 'LoginCtrl'
+    controller: 'LoginCtrl',
+    data: {
+      restrict: 'notConnected'
+    }
+  })
+  .state('login-email', {
+    url: '/login-email',
+    templateUrl: 'views/login-email.html',
+    controller: 'LoginCtrl',
+    data: {
+      restrict: 'notConnected'
+    }
   })
   .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'views/sidemenu.html',
-    controller: 'AppCtrl'
+    controller: 'AppCtrl',
+    data: {
+      restrict: 'connected'
+    }
   })
   .state('app.home', {
     url: '/home',
@@ -27,6 +41,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/home.html',
         controller: 'HomeCtrl'
       }
+    },
+    data: {
+      restrict: 'connected'
     }
   })
   .state('app.recipes', {
@@ -36,6 +53,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/recipes.html',
         controller: 'RecipesCtrl'
       }
+    },
+    data: {
+      restrict: 'connected'
     }
   })
   .state('app.recipe', {
@@ -47,7 +67,8 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
       }
     },
     data: {
-      noSleep: true
+      noSleep: true,
+      restrict: 'connected'
     }
   })
   .state('app.cart', {
@@ -58,19 +79,26 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/cart/main.html',
         controller: 'CartCtrl'
       }
+    },
+    data: {
+      restrict: 'connected'
     }
   })
   .state('app.cart.recipes', {
     url: '/recipes',
     templateUrl: 'views/cart/recipes.html',
-    controller: 'CartRecipesCtrl'
+    controller: 'CartRecipesCtrl',
+    data: {
+      restrict: 'connected'
+    }
   })
   .state('app.cart.ingredients', {
     url: '/ingredients',
     templateUrl: 'views/cart/ingredients.html',
     controller: 'CartIngredientsCtrl',
     data: {
-      noSleep: true
+      noSleep: true,
+      restrict: 'connected'
     }
   })
   .state('app.profile', {
@@ -80,6 +108,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/profile.html',
         controller: 'ProfileCtrl'
       }
+    },
+    data: {
+      restrict: 'connected'
     }
   })
   .state('app.feedback', {
@@ -89,6 +120,9 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
         templateUrl: 'views/feedback.html',
         controller: 'FeedbackCtrl'
       }
+    },
+    data: {
+      restrict: 'connected'
     }
   })
   .state('app.debug', {
