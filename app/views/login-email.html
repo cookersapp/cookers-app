@@ -1,6 +1,6 @@
 <ion-view>
-  <div class="login">
-    <div class="header">
+  <ion-content class="login">
+    <div class="header hide-on-keyboard-open">
       <h1>Cookers</h1>
     </div>
     <div class="content">
@@ -8,16 +8,16 @@
         <div class="col" ng-class="{active: tab === 'login'}" ng-click="tab = 'login'">Se connecter</div>
         <div class="col" ng-class="{active: tab !== 'login'}" ng-click="tab = 'register'">S'inscrire</div>
       </div>
-      
+
       <form ng-submit="emailConnect(tab)">
         <div class="list list-inset">
           <label class="item item-input">
             <span class="input-label">Email</span>
-            <input type="text" ng-model="credentials.email" placeholder="ex: nom@example.com">
+            <input type="email" ng-model="credentials.email" placeholder="ex: nom@example.com" blur-on-keyboard-out required>
           </label>
           <label class="item item-input">
             <span class="input-label">Mot de passe</span>
-            <input type="password" ng-model="credentials.password">
+            <input type="password" ng-model="credentials.password" blur-on-keyboard-out required>
           </label>
           <button type="submit" class="button button-full button-positive" ng-disabled="loading.email">
             <i class="fa fa-spinner fa-spin" ng-if="loading.email"></i>
@@ -27,8 +27,8 @@
         </div>
       </form>
     </div>
-    <div class="footer">
+    <div class="footer hide-on-keyboard-open">
 
     </div>
-  </div>
+  </ion-content>
 </ion-view>

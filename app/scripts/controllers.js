@@ -31,7 +31,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('LoginCtrl', function($scope, $state, $rootScope, $timeout, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
+.controller('LoginCtrl', function($scope, $state, $rootScope, $timeout, $window, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv){
   'use strict';
   var sUser = UserSrv.get();
 
@@ -85,8 +85,7 @@ angular.module('ionicApp')
         $state.go('app.home');
       }, function(error){
         $scope.loading[provider] = false;
-        console.log('error', error);
-        alert(LoginSrv.getMessage(error));
+        $window.alert(LoginSrv.getMessage(error));
       });
     } else {
       $scope.loading[provider] = false;

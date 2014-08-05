@@ -6,12 +6,13 @@
 </div>
 </ion-header-bar>-->
 
-  <div class="login">
+  <ion-content class="login">
     <div class="header">
       <h1>Cookers</h1>
     </div>
     <div class="content">
       <h1>La cuisine simple !</h1>
+      
       <button class="connect-btn facebook" ng-click="facebookConnect()" ng-disabled="loading.facebook">
         <span class="icon">
           <i class="fa fa-spinner fa-spin loading"></i>
@@ -19,20 +20,23 @@
         </span>
         Connecte-toi avec <b>Facebook</b>
       </button>
+      
       <!--<button class="connect-btn twitter" ng-click="twitterConnect()" ng-disabled="loading.twitter">
-        <span class="icon">
-          <i class="fa fa-spinner fa-spin loading"></i>
-          <i class="fa fa-twitter"></i>
-        </span>
-        Connecte-toi avec <b>Twitter</b>
-      </button>
-      <button class="connect-btn google" ng-click="googleConnect()" ng-disabled="loading.google">
-        <span class="icon">
-          <i class="fa fa-spinner fa-spin loading"></i>
-          <i class="fa fa-google"></i>
-        </span>
-        Connecte-toi avec <b>Google</b>
-      </button>-->
+<span class="icon">
+<i class="fa fa-spinner fa-spin loading"></i>
+<i class="fa fa-twitter"></i>
+</span>
+Connecte-toi avec <b>Twitter</b>
+</button>
+
+<button class="connect-btn google" ng-click="googleConnect()" ng-disabled="loading.google">
+<span class="icon">
+<i class="fa fa-spinner fa-spin loading"></i>
+<i class="fa fa-google"></i>
+</span>
+Connecte-toi avec <b>Google</b>
+</button>-->
+      
       <button class="connect-btn email" ui-sref="login-email">
         <span class="icon">
           <i class="fa fa-envelope"></i>
@@ -43,5 +47,5 @@
     <div class="footer">
 
     </div>
-  </div>
+  </ion-content>
 </ion-view>
