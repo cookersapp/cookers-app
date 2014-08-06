@@ -1,7 +1,7 @@
 @import "_colors";
 
 $header-size: 200px;
-$footer-size: 70px;
+$footer-size: 80px;
 
 .keyboard-open .login {
   .bar-header { display: none; }
@@ -14,19 +14,35 @@ $footer-size: 70px;
   .bar-header {
     border: none;
     height: $header-size;
-    background: url(../images/intro/raspberries.jpg);
+    background: url(../images/login/pizza-soleil-au-chorizo.jpg);
     background-position: 0% 58%;
     background-size: cover;
     h1.title {
+      margin: 0;
       height: $header-size;
       line-height: $header-size;
-      font-size: 40px;
+      font-size: 50px;
+      color: #fff;
+      font-weight: bold;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
+      background-image: linear-gradient(rgba(0,0,0,0.9), transparent);
     }
   }
   .bar-footer {
     height: $footer-size;
-    background: url(../images/profile-covers/cover01.jpg);
+    //background: url(../images/profile-covers/cover01.jpg);
+    padding: 0px;
+    .row {
+      padding: 0px;
+      .col {
+        padding: 0px;
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
+  &.alt .bar-header { background: url(../images/login/wood.jpg); }
   .has-header { top: $header-size; }
   .has-footer { bottom: $footer-size; }
 

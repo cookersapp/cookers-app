@@ -1,4 +1,4 @@
-<ion-view class="login">
+<ion-view class="login alt">
   <ion-header-bar>
     <div class="buttons">
       <!--<button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>-->
@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="login">
+  <ion-content>
     <!-- Inspiration : http://www.pinterest.com/pin/31103053652300405/ -->
     <div class="row email-tabs" ng-init="tab = 'register'">
       <div class="col" ng-class="{active: tab === 'login'}" ng-click="tab = 'login'">Se connecter</div>
@@ -32,5 +32,11 @@
     </form>
   </ion-content>
 
-  <ion-footer-bar></ion-footer-bar>
+  <ion-footer-bar>
+    <div class="row">
+      <div class="col"><img src="images/login/old_cutelry.jpg"></div>
+      <div class="col"><img src="images/login/original_Serve_Set_V2_warmer.jpg"></div>
+      <div class="col"><img src="images/login/cutlery-bouquet.jpg"></div>
+    </div>
+  </ion-footer-bar>
 </ion-view>
