@@ -6,9 +6,9 @@
   </ion-header-bar>
 
   <ion-slide-box on-slide-changed="slideChanged(index)">
-    <ion-slide class="slide-logo">
-      <h1 style="padding-top: 90px;">Cookers</h1>
-      <p style="padding-top: 30px;">
+    <ion-slide class="slide-cookers">
+      <h1>Cookers</h1>
+      <p style="margin-top: 15%;">
         Spécialement pour toi,<br>
         les recettes de tous les jours<br>
         pensées, cuisinées et goûtées<br>
@@ -16,25 +16,39 @@
       </p>
     </ion-slide>
 
-    <ion-slide class="slide-login">
-      <h3>Faisons connaissance</h3>
-      <form ng-submit="submitUserInfos()">
-        <div class="section">
-          Je cuisine habituellement pour {{data.defaultServings}} personnes
-          <div class="range range-calm">
-            <input type="range" name="servings" min="1" max="10" ng-model="data.defaultServings">
-          </div>
-        </div>
-        <div class="section">
-          Connecte-toi et restons en contact !
-          <div class="list">
-            <label class="item item-input">
-              <input type="email" placeholder="Mail" ng-model="data.email">
-            </label>
-          </div>
-          <button type="submit" class="button button-stable pull-right">Démarrer</button>
-        </div>
-      </form>
+    <ion-slide class="slide-recipes">
+      <h3>Choisis tes recettes</h3>
+      <p style="margin-top: 23%;">
+        Chaque semaine découvre dix recettes à cuisiner rapidement,<br>
+        sans prise de tête !
+      </p>
+      <p style="margin-top: 9%;">
+        Choisis celles qui te plaisent et ajoute-les à ta liste de courses.
+      </p>
+    </ion-slide>
+
+    <ion-slide class="slide-shopping">
+      <h3>Fais tes courses</h3>
+      <p style="margin-top: 9%;">
+        Avec dans ta poche, la liste de tes ingrédients, déjà organisée.
+      </p>
+      <p style="margin-top: 60%;">
+        Coche-les au fur et à mesure comme pour une liste papier.
+      </p>
+    </ion-slide>
+
+    <ion-slide class="slide-cooking">
+      <h3>Cuisine tes recettes</h3>
+      <p style="margin-top: 9%;">
+        Profite d'un écran<br>
+        qui ne se met jamais en veille<br>
+        pour suivre nos indications<br>
+        pas à pas !
+      </p>
+    </ion-slide>
+
+    <ion-slide class="slide-start">
+      <button class="button button-start" ng-click="startApp()" style="margin-top: 125%;">On embarque ?</button>
     </ion-slide>
   </ion-slide-box>
 </ion-view>

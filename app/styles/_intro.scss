@@ -1,5 +1,5 @@
 .intro {
-
+  background: #6f5499;
   .bar-header {
     background: transparent;
     border: none;
@@ -15,93 +15,52 @@
   .slider {
     height: 100%;
   }
-  .slide-logo {
-    h1 {
-      text-align: center;
-      color: #fff;
-      font-size: 60px;
-      line-height: 60px;
-      font-weight: bold;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
-    }
-    p {
-      text-align: center;
-      vertical-align: middle;
-      color: #fff;
-      font-size: 23px;
-      line-height: 27px;
-      font-weight: bold;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
-    }
-    background: url(../images/intro/raspberries.jpg) no-repeat center fixed; 
-    -webkit-background-size: cover; /* pour Chrome et Safari */
-    -moz-background-size: cover; /* pour Firefox */
-    -o-background-size: cover; /* pour Opera */
-    background-size: cover; /* version standardisée */
-  }
-  .slide-login {
+  .slider-slide {
     padding: 20px;
-    padding-top: 80px;
+    text-align: center;
     color: #fff;
+    font-weight: bold;
     font-size: 23px;
     line-height: 27px;
-    font-weight: bold;
     text-shadow: 0 1px 1px rgba(0,0,0,0.9);
-    h3 {
-      text-align: center;
+    background: url(../images/profile_bg.png) no-repeat center fixed; 
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+    background-size: cover; /* version standardisée */
+
+    h1, h3 {
+      margin-top: 70px;
       color: #fff;
-      font-size: 30px;
-      line-height: 30px;
-      font-weight: bold;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.9);
     }
-    .section {
-      margin-top: 40px;
-      text-align: center;
-      .item-input {
-        margin-top: 10px;
-      }
+    h1 {
+      font-size: 70px;
+      line-height: 70px;
     }
-    background: url(../images/intro/oignon.jpg) no-repeat center fixed; 
-    -webkit-background-size: cover; /* pour Chrome et Safari */
-    -moz-background-size: cover; /* pour Firefox */
-    -o-background-size: cover; /* pour Opera */
-    background-size: cover; /* version standardisée */
-  }
-
-
-
-
-
-
-  .init-slide {
-    padding-top: 80px;
-    color: #000;
-    text-align: center;
-
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-    font-weight: 300;
-    background: url(../images/intro/raspberries.jpg) no-repeat center fixed; 
-    -webkit-background-size: cover; /* pour Chrome et Safari */
-    -moz-background-size: cover; /* pour Firefox */
-    -o-background-size: cover; /* pour Opera */
-    background-size: cover; /* version standardisée */
-    #logo {
-      margin: 30px 0px;
+    h3 {
+      font-size: 40px;
+      line-height: 40px;
     }
-
-    #list {
-      width: 170px;
-      margin: 30px auto;
-      font-size: 20px;
-    }
-    #list ol {
+    p {
       margin-top: 30px;
     }
-    #list ol li {
-      text-align: left;
-      list-style: decimal;
-      margin: 10px 0px;
+  }
+
+  .slide-cookers { background-image: url(../images/intro/raspberries.jpg); }
+  .slide-recipes { background-image: url(../images/intro/tarte-aux-tomates-multicolores.jpg); background-position: 20%; }
+  .slide-shopping { background-image: url(../images/intro/oignon.jpg); }
+  .slide-cooking { background-image: url(../images/intro/epices.jpg); }
+  .slide-start { background-image: url(../images/intro/start.jpg); background-position: 42%; }
+  
+  .slide-start {
+    .button-start {
+      color: #fff;
+      font-size: 22px;
+      font-weight: bold;
+      background-color: #6f5499;
+      border-color: #563d7c;
+      border-radius: 30px;
+      padding: 10px 50px;
     }
   }
 }
