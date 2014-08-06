@@ -157,10 +157,10 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
       $delegate(exception, cause);
 
       if(debug){
-        console.log('error', exception);
+        console.log('exception', exception);
         window.alert('Error '+cause);
       } else {
-        mixpanel.track('error', {
+        mixpanel.track('exception', {
           exception: exception,
           cause: cause,
           url: window.location.hash,
