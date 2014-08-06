@@ -1,27 +1,24 @@
-<ion-view>
-  <!--<ion-header-bar class="bar-custom">
-<div class="buttons">
-<button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>
-<h1 class="title">Login</h1>
-</div>
-</ion-header-bar>-->
-
-  <ion-content class="login">
-    <div class="header">
-      <h1>Cookers</h1>
+<ion-view class="login">
+  <ion-header-bar>
+    <div class="buttons">
+      <!--<button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>-->
+      <h1 class="title">Cookers</h1>
     </div>
-    <div class="content">
-      <h1>La cuisine simple !</h1>
-      
-      <button class="connect-btn facebook" ng-click="facebookConnect()" ng-disabled="loading.facebook">
-        <span class="icon">
-          <i class="fa fa-spinner fa-spin loading"></i>
-          <i class="fa fa-facebook"></i>
-        </span>
-        Connecte-toi avec <b>Facebook</b>
-      </button>
-      
-      <!--<button class="connect-btn twitter" ng-click="twitterConnect()" ng-disabled="loading.twitter">
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- Inspiration : http://www.pinterest.com/pin/31103053652300431/ -->
+    <h1>La cuisine simple !</h1>
+
+    <button class="connect-btn facebook" ng-click="facebookConnect()" ng-disabled="loading.facebook">
+      <span class="icon">
+        <i class="fa fa-spinner fa-spin loading"></i>
+        <i class="fa fa-facebook"></i>
+      </span>
+      Connecte-toi avec <b>Facebook</b>
+    </button>
+
+    <!--<button class="connect-btn twitter" ng-click="twitterConnect()" ng-disabled="loading.twitter">
 <span class="icon">
 <i class="fa fa-spinner fa-spin loading"></i>
 <i class="fa fa-twitter"></i>
@@ -36,16 +33,14 @@ Connecte-toi avec <b>Twitter</b>
 </span>
 Connecte-toi avec <b>Google</b>
 </button>-->
-      
-      <button class="connect-btn email" ui-sref="login-email">
-        <span class="icon">
-          <i class="fa fa-envelope"></i>
-        </span>
-        Connecte-toi avec ton <b>Email</b>
-      </button>
-    </div>
-    <div class="footer">
 
-    </div>
+    <button class="connect-btn email" ui-sref="login-email">
+      <span class="icon">
+        <i class="fa fa-envelope"></i>
+      </span>
+      Connecte-toi avec ton <b>Email</b>
+    </button>
   </ion-content>
+
+  <ion-footer-bar></ion-footer-bar>
 </ion-view>
