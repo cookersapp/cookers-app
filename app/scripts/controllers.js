@@ -31,11 +31,12 @@ angular.module('ionicApp')
   };
 })
 
-.controller('LoginCtrl', function($scope, $state, $rootScope, $timeout, $window, $firebase, $firebaseSimpleLogin, firebaseUrl, UserSrv, LoginSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, $window, $ionicPopup, UserSrv, LoginSrv, LogSrv){
   'use strict';
   var sUser = UserSrv.get();
 
   $scope.credentials = {
+    dismissed: false,
     email: '',
     password: ''
   };
@@ -45,7 +46,33 @@ angular.module('ionicApp')
     twitter: false,
     google: false,
     email: false
-  }
+  };
+
+  var emailPopup = {
+    template: '<input type="email" placeholder="ex: nom@example.com" ng-model="credentials.email" required>',
+    title: '<i class="fa fa-smile-o"></i> Lâche ton mail &nbsp;<i class="fa fa-smile-o"></i>',
+    subTitle: '!! No spam guaranteed !!',
+    scope: $scope,
+    buttons: [
+      { text: 'Non !', onTap: function(e){
+        if(!$scope.credentials.dismissed){
+          $window.plugins.toast.show('S\'il-te-plaît ...');
+          $scope.credentials.dismissed = true;
+          e.preventDefault();
+        } else {
+          return '';
+        }
+      }},
+      { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
+        if(!$scope.credentials.email){
+          e.preventDefault();
+        } else {
+          $window.plugins.toast.show('Merci :D');
+          return $scope.credentials.email;
+        }
+      }}
+    ]
+  };
 
   $scope.goIntro = function(){
     sUser.skipIntro = false;
@@ -68,11 +95,15 @@ angular.module('ionicApp')
     else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); }
 
     if(promise){
-      promise.then(function(){
-        $scope.loading[provider] = false;
-        // TODO : ask email if not provided !!!
-        // TODO : send welcome mail !
-        $state.go('app.home');
+      promise.then(function(user){
+        if(UserSrv.hasMail()){
+          loginSuccess(provider, user);
+        } else {
+          $ionicPopup.show(emailPopup).then(function(email){
+            UserSrv.setEmail(email);
+            loginSuccess(provider, user);
+          });
+        }
       }, function(error){
         LogSrv.trackError('login:'+provider, error);
         $scope.loading[provider] = false;
@@ -81,6 +112,13 @@ angular.module('ionicApp')
     } else {
       $scope.loading[provider] = false;
     }
+  }
+
+  function loginSuccess(provider, user){
+    $scope.loading[provider] = false;
+    // TODO : send welcome mail if first time !
+    LogSrv.trackLogin(provider, user);
+    $state.go('app.home');
   }
 })
 

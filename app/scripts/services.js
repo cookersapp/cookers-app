@@ -132,8 +132,8 @@ angular.module('ionicApp')
 })
 
 .factory('CartSrv', function($localStorage, $window, UserSrv, debug){
-  var sCarts = $localStorage.user.carts;
   'use strict';
+  var sCarts = $localStorage.user.carts;
   var service = {
     hasCarts: function(){return hasCarts();},
     getAllCarts: function(){return sCarts.contents;},
@@ -457,29 +457,31 @@ angular.module('ionicApp')
   }
 
   function facebookConnect(){
+    var provider = 'facebook';
     var opts = {
       scope: 'email'
     };
-    if(sUser && sUser.profiles && sUser.profiles[loginMethod] && sUser.profiles[loginMethod].accessToken){
-      opts.access_token = sUser.profiles[loginMethod].accessToken;
+    if(sUser && sUser.profiles && sUser.profiles[provider] && sUser.profiles[provider].accessToken){
+      opts.access_token = sUser.profiles[provider].accessToken;
     }
-    return connect('facebook', opts);
+    return connect(provider, opts);
   }
 
   function twitterConnect(){
+    var provider = 'twitter';
     var opts = {};
-    if(sUser && sUser.profiles && sUser.profiles[loginMethod] && sUser.profiles[loginMethod].accessToken){
-      opts.oauth_token = sUser.profiles[loginMethod].accessToken;
-      opts.oauth_token_secret = sUser.profiles[loginMethod].accessTokenSecret;
-      opts.user_id = sUser.profiles[loginMethod].id;
+    if(sUser && sUser.profiles && sUser.profiles[provider] && sUser.profiles[provider].accessToken){
+      opts.oauth_token = sUser.profiles[provider].accessToken;
+      opts.oauth_token_secret = sUser.profiles[provider].accessTokenSecret;
+      opts.user_id = sUser.profiles[provider].id;
     }
-    return connect('twitter', opts);
+    return connect(provider, opts);
   }
 
   function googleConnect(){
     return connect('google', {});
   }
-  
+
   function connect(provider, opts){
     loginMethod = provider;
     loginDefer = $q.defer();
@@ -515,7 +517,7 @@ angular.module('ionicApp')
     console.log('$firebaseSimpleLogin:logout');
     if(logoutDefer){
       sUser.isLogged = false;
-      clearTimeout(logoutTimeout);
+      $timeout.cancel(logoutTimeout);
       logoutDefer.resolve();
     }
   });
@@ -533,14 +535,19 @@ angular.module('ionicApp')
   var sUser = $localStorage.user;
   var service = {
     get: function(){return sUser;},
+    hasMail: hasMail,
     setEmail: setEmail,
     updateProfile: updateProfile
   };
 
+  function hasMail(){
+    return sUser && sUser.email && sUser.email.length > 0;
+  }
+
   function setEmail(email){
     sUser.email = email;
     if(email){
-      return updateGravatar(email).then(function(){
+      return _updateGravatar(email).then(function(){
         updateProfile();
       });
     } else {
@@ -559,28 +566,32 @@ angular.module('ionicApp')
     angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
 
     if(sUser.email !== gravatarProfile.email){
-      updateGravatar(sUser.email).then(function(){
+      _updateGravatar(sUser.email).then(function(){
         var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
         angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
       });
     }
   }
 
-  function updateGravatar(email){
-    var hash = md5.createHash(email);
-    return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
-      var g = result.data;
-      if(g && g.entry && g.entry.length > 0){
-        g.entry[0].email = email;
-      }
-      sUser.profiles.gravatar = g;
-    }, function(error){
-      sUser.profiles.gravatar = {
-        entry: [
-          {email: email, hash: hash}
-        ]
-      };
-    });
+  function _updateGravatar(email){
+    if(email && email.length > 0){
+      var hash = md5.createHash(email);
+      return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
+        var g = result.data;
+        if(g && g.entry && g.entry.length > 0){
+          g.entry[0].email = email;
+        }
+        sUser.profiles.gravatar = g;
+      }, function(error){
+        sUser.profiles.gravatar = {
+          entry: [
+            {email: email, hash: hash}
+          ]
+        };
+      });
+    } else {
+      return $q.when();
+    }
   }
 
   function _defaultProfile(){
@@ -592,7 +603,7 @@ angular.module('ionicApp')
       backgroundCover: localStorageDefault.user.backgroundCover,
       firstName: localStorageDefault.user.firstName,
       lastName: localStorageDefault.user.lastName
-    }
+    };
   }
 
   function _gravatarProfile(g){
@@ -631,7 +642,7 @@ angular.module('ionicApp')
         if(t.thirdPartyUserData.profile_image_url){  profile.avatar = t.thirdPartyUserData.profile_image_url.replace('_normal.', '_bigger.'); }
         if(t.thirdPartyUserData.profile_background_color){  profile.background = '#'+t.thirdPartyUserData.profile_background_color; }
         if(t.thirdPartyUserData.profile_background_image_url_https){  profile.backgroundCover = t.thirdPartyUserData.profile_background_image_url_https; }
-        
+
         /*if(t.thirdPartyUserData.email){      profile.email = t.thirdPartyUserData.email; }
         if(t.thirdPartyUserData.first_name){ profile.firstName = t.thirdPartyUserData.first_name; }
         if(t.thirdPartyUserData.last_name){  profile.lastName = t.thirdPartyUserData.last_name; }*/
@@ -1038,6 +1049,7 @@ angular.module('ionicApp')
     registerUser: registerUser,
     trackInstall: function(user){track('install', {user: user});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
+    trackLogin: function(provider, data){track('login', {provider: provider, data: data});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
     trackState: function(params){track('state', params);},
     trackStateError: function(params){track('state-error', params);},
