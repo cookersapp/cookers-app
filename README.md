@@ -9,8 +9,6 @@
 
 - todo
     - demander à chaque fois pour combien on veut cuisiner cette recette (popup) (ajouter dans liste de courses et à cuisiner)
-    - supprimer la mise en favoris
-    - enlever le changement de mail dans le profil
     - redesign de la liste des recettes
         - mettre dans des cartes
     - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
