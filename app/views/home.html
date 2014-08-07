@@ -38,16 +38,16 @@
     </div>
     
     <!-- favorite recipes -->
-    <div class="dashboard-card favorite-recipes-infos">
+    <div class="dashboard-card recipes-infos">
       <div class="heading" ui-sref="app.recipes">Recettes</div>
       <div class="row">
-        <div class="col"><strong>{{favoriteRecipes.length}}</strong><span>en favoris</span></div>
+        <!--<div class="col"><strong>{{favoriteRecipes.length}}</strong><span>en favoris</span></div>-->
         <div class="col" ui-sref="app.recipes"><strong>{{recipesOfWeek.recipes.length}}</strong><span>cette semaine</span></div>
       </div>
     </div>
 
     <!-- seen recipes history -->
-    <div class="recipes" ng-if="favoriteRecipes && favoriteRecipes.length > 0">
+    <!--<div class="recipes" ng-if="favoriteRecipes && favoriteRecipes.length > 0">
       <div class="list">
         <div class="item item-divider">Recettes en favoris</div>
         <div class="item item-recipe-img-full" ng-repeat="recipe in favoriteRecipes" ui-sref="app.recipe({recipeId: recipe.id})">
@@ -59,6 +59,6 @@
         </div>
         <a class="button button-block button-balanced" ui-sref="app.recipes"><i class="fa fa-cutlery"></i> Voir les recettes de la semaine</a>
       </div>
-    </div>
+    </div>-->
   </ion-content>
 </ion-view>

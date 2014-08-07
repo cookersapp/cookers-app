@@ -156,7 +156,7 @@ angular.module('ionicApp')
   $scope.cart = CartSrv.getCurrentCart();
   $scope.items = CartSrv.getCurrentCartItems();
   $scope.recipesHistory = RecipeSrv.getHistory();
-  $scope.favoriteRecipes = RecipeSrv.getFavorites();
+  //$scope.favoriteRecipes = RecipeSrv.getFavorites();
   $scope.recipesOfWeek = [];
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
@@ -212,7 +212,7 @@ angular.module('ionicApp')
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 
-  $scope.isFavorited = function(recipe){
+  /*$scope.isFavorited = function(recipe){
     return RecipeSrv.isFavorite(recipe);
   };
   $scope.addToFavorite = function(recipe, index){
@@ -225,7 +225,7 @@ angular.module('ionicApp')
     LogSrv.trackRemoveRecipeFromFavorite(recipe, index, 'weekrecipes');
     RecipeSrv.removeFromFavorite(recipe);
     $window.plugins.toast.show('✔ supprimée des favoris');
-  };
+  };*/
 })
 
 .controller('RecipeCtrl', function($scope, $stateParams, RecipeSrv, CartSrv, LogSrv){

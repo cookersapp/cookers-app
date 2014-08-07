@@ -224,7 +224,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     profiles: {
       gravatar: {}
     },
-    recipesFavorited: [],
+    //recipesFavorited: [],
     carts: {
       // TODO : change current cart to closed attribute on cart
       current: null,

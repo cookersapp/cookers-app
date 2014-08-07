@@ -40,15 +40,15 @@ angular.module('ionicApp')
   'use strict';
   var sRecipes = $localStorage.data.recipes;
   var sRecipesHistory = $localStorage.logs.recipesHistory;
-  var sRecipesFavorited = $localStorage.user.recipesFavorited;
+  //var sRecipesFavorited = $localStorage.user.recipesFavorited;
   var service = {
     get: getRecipe,
     addToHistory: addToHistory,
     getHistory: function(){return sRecipesHistory;},
-    addToFavorite: addToFavorite,
+    /*addToFavorite: addToFavorite,
     removeFromFavorite: removeFromFavorite,
     isFavorite: isFavorite,
-    getFavorites: function(){return sRecipesFavorited;},
+    getFavorites: function(){return sRecipesFavorited;},*/
     store: storeRecipe
   };
 
@@ -66,7 +66,7 @@ angular.module('ionicApp')
     sRecipesHistory.unshift(recipe);
   }
 
-  function isFavorite(recipe){
+  /*function isFavorite(recipe){
     return _.findIndex(sRecipesFavorited, {id: recipe.id}) > -1;
   }
 
@@ -77,7 +77,7 @@ angular.module('ionicApp')
 
   function removeFromFavorite(recipe){
     _.remove(sRecipesFavorited, {id: recipe.id});
-  }
+  }*/
 
   function downloadRecipe(recipeId){
     return $http.get(firebaseUrl+'/recipes/'+recipeId+'.json').then(function(result){
@@ -1062,8 +1062,8 @@ angular.module('ionicApp')
     trackAddItemToCart: function(item, quantity, unit, missing, search){trackWithPosition('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
     trackRemoveItemFromCart: function(item){trackWithPosition('remove-item-from-cart', {item: item});},
     trackEditCartCustomItems: function(customItems){trackWithPosition('edit-cart-custom-items', {customItems: customItems});},
-    trackAddRecipeToFavorite: function(recipe, index, from){trackWithPosition('add-recipe-to-favorite', {recipe: recipe, index: index, from: from});},
-    trackRemoveRecipeFromFavorite: function(recipe, index, from){trackWithPosition('remove-recipe-from-favorite', {recipe: recipe, index: index, from: from});},
+    //trackAddRecipeToFavorite: function(recipe, index, from){trackWithPosition('add-recipe-to-favorite', {recipe: recipe, index: index, from: from});},
+    //strackRemoveRecipeFromFavorite: function(recipe, index, from){trackWithPosition('remove-recipe-from-favorite', {recipe: recipe, index: index, from: from});},
     // ??? merge trackCartRecipeDetails with trackCartItemDetails ???
     trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
     trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},
