@@ -16,14 +16,14 @@
     <form ng-submit="emailConnect(tab)">
       <div class="list list-inset">
         <label class="item item-input">
-          <span class="input-label">Email</span>
+          <span class="input-label"><i class="fa fa-envelope"></i> Email</span>
           <input type="email" ng-model="credentials.email" placeholder="ex: nom@example.com" blur-on-keyboard-out required>
         </label>
         <label class="item item-input">
-          <span class="input-label">Mot de passe</span>
+          <span class="input-label"><i class="fa fa-lock"></i> Mot de passe</span>
           <input type="password" ng-model="credentials.password" blur-on-keyboard-out required>
         </label>
-        <button type="submit" class="button button-full button-positive" ng-disabled="loading.email">
+        <button type="submit" class="button button-full button-custom" ng-disabled="loading.email">
           <i class="fa fa-spinner fa-spin" ng-if="loading.email"></i>
           <span ng-show="tab === 'login'">Se connecter</span>
           <span ng-show="tab !== 'login'">S'inscrire</span>

@@ -77,7 +77,7 @@ angular.module('ionicApp')
 
     if(provider === 'facebook'){ promise = LoginSrv.facebookConnect(); }
     else if(provider === 'email' && tab && tab === 'login'){ promise = LoginSrv.login($scope.credentials); }
-    else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); }
+    else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); } // TODO : send welcome mail !
 
     if(promise){
       promise.then(function(){
