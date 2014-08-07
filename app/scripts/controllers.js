@@ -186,7 +186,7 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipesCtrl', function($scope, $window, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $ionicPopup, $window, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = [];
@@ -201,10 +201,32 @@ angular.module('ionicApp')
     recipe.showIngredients = !recipe.showIngredients;
   };
   $scope.addRecipeToCart = function(recipe, index){
-    LogSrv.trackAddRecipeToCart(recipe.id, index, 'weekrecipes');
-    CartSrv.addRecipeToCart(recipe);
-    $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
-    RecipeSrv.addToHistory(recipe);
+    $ionicPopup.show({
+      template: ['<div style="text-align: center;">'+
+                 '<h3 class="title" style="font-size: 20px;">'+recipe.name+'</h3>'+
+                 '<div>Pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
+                 '</div>'+
+                 '<div class="range">'+
+                 '<i class="fa fa-user"></i>'+
+                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
+                 '<i class="fa fa-users"></i>'+
+                 '</div>'].join(''),
+      scope: $scope,
+      buttons: [
+        { text: 'Annuler' },
+        { text: '<b>Ajouter</b>', type: 'button-positive', onTap: function(e){
+          if(!$rootScope.settings.defaultServings){ e.preventDefault(); }
+          else { return $rootScope.settings.defaultServings; }
+        }}
+      ]
+    }).then(function(servings){
+      if(servings){
+        LogSrv.trackAddRecipeToCart(recipe.id, index, 'weekrecipes');
+        CartSrv.addRecipeToCart(recipe);
+        $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
+        RecipeSrv.addToHistory(recipe);
+      }
+    });
   };
   $scope.removeRecipeFromCart = function(recipe, index){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');

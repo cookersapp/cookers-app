@@ -8,7 +8,7 @@
     - refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
 
 - todo
-    - demander à chaque fois pour combien on veut cuisiner cette recette (popup) (ajouter dans liste de courses et à cuisiner)
+    - ajouter les listes : recettes à cuisiner et recettes cuisinées
     - redesign de la liste des recettes
         - mettre dans des cartes
     - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
