@@ -418,6 +418,8 @@ angular.module('ionicApp')
     register: register,
     login: login,
     facebookConnect: facebookConnect,
+    twitterConnect: twitterConnect,
+    googleConnect: googleConnect,
     logout: logout,
     getMessage: function(error){
       return error.message.replace('FirebaseSimpleLogin: ', '');
@@ -430,11 +432,11 @@ angular.module('ionicApp')
   var loginDefer, logoutDefer, logoutTimeout, loginMethod;
 
   function register(credentials){
-    loginMethod = 'email';
+    loginMethod = 'password';
     loginDefer = $q.defer();
 
     firebaseAuth.$createUser(credentials.email, credentials.password).then(function(user){
-      firebaseAuth.$login('password', {
+      firebaseAuth.$login(loginMethod, {
         email: credentials.email,
         password: credentials.password,
         rememberMe: true
@@ -447,28 +449,41 @@ angular.module('ionicApp')
   }
 
   function login(credentials){
-    loginMethod = 'email';
-    loginDefer = $q.defer();
-
-    firebaseAuth.$login('password', {
+    var opts = {
       email: credentials.email,
-      password: credentials.password,
-      rememberMe: true
-    });
-
-    return loginDefer.promise;
+      password: credentials.password
+    };
+    return connect('password', opts);
   }
 
   function facebookConnect(){
-    loginMethod = 'facebook';
-    loginDefer = $q.defer();
     var opts = {
-      rememberMe: true,
       scope: 'email'
     };
     if(sUser && sUser.profiles && sUser.profiles[loginMethod] && sUser.profiles[loginMethod].accessToken){
       opts.access_token = sUser.profiles[loginMethod].accessToken;
     }
+    return connect('facebook', opts);
+  }
+
+  function twitterConnect(){
+    var opts = {};
+    if(sUser && sUser.profiles && sUser.profiles[loginMethod] && sUser.profiles[loginMethod].accessToken){
+      opts.oauth_token = sUser.profiles[loginMethod].accessToken;
+      opts.oauth_token_secret = sUser.profiles[loginMethod].accessTokenSecret;
+      opts.user_id = sUser.profiles[loginMethod].id;
+    }
+    return connect('twitter', opts);
+  }
+
+  function googleConnect(){
+    return connect('google', {});
+  }
+  
+  function connect(provider, opts){
+    loginMethod = provider;
+    loginDefer = $q.defer();
+    opts.rememberMe = true;
     firebaseAuth.$login(loginMethod, opts);
     return loginDefer.promise;
   }
@@ -536,15 +551,17 @@ angular.module('ionicApp')
   function updateProfile(){
     var defaultProfile = _defaultProfile();
     var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
-    var emailProfile = _emailProfile(sUser.profiles.email);
+    var passwordProfile = _passwordProfile(sUser.profiles.password);
+    var twitterProfile = _twitterProfile(sUser.profiles.twitter);
     var facebookProfile = _facebookProfile(sUser.profiles.facebook);
+    var googleProfile = _googleProfile(sUser.profiles.google);
 
-    angular.extend(sUser, defaultProfile, gravatarProfile, emailProfile, facebookProfile);
+    angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
 
     if(sUser.email !== gravatarProfile.email){
       updateGravatar(sUser.email).then(function(){
         var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
-        angular.extend(sUser, defaultProfile, gravatarProfile, emailProfile, facebookProfile);
+        angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
       });
     }
   }
@@ -598,10 +615,27 @@ angular.module('ionicApp')
     return profile;
   }
 
-  function _emailProfile(e){
+  function _passwordProfile(p){
     var profile = {};
-    if(e){
-      if(e.email){ profile.email = e.email; }
+    if(p){
+      if(p.email){ profile.email = p.email; }
+    }
+    return profile;
+  }
+
+  function _twitterProfile(t){
+    var profile = {};
+    if(t){
+      if(t.displayName){ profile.name = t.displayName; }
+      if(t.thirdPartyUserData){
+        if(t.thirdPartyUserData.profile_image_url){  profile.avatar = t.thirdPartyUserData.profile_image_url.replace('_normal.', '_bigger.'); }
+        if(t.thirdPartyUserData.profile_background_color){  profile.background = '#'+t.thirdPartyUserData.profile_background_color; }
+        if(t.thirdPartyUserData.profile_background_image_url_https){  profile.backgroundCover = t.thirdPartyUserData.profile_background_image_url_https; }
+        
+        /*if(t.thirdPartyUserData.email){      profile.email = t.thirdPartyUserData.email; }
+        if(t.thirdPartyUserData.first_name){ profile.firstName = t.thirdPartyUserData.first_name; }
+        if(t.thirdPartyUserData.last_name){  profile.lastName = t.thirdPartyUserData.last_name; }*/
+      }
     }
     return profile;
   }
@@ -617,6 +651,20 @@ angular.module('ionicApp')
         if(f.thirdPartyUserData.picture && f.thirdPartyUserData.picture.data && f.thirdPartyUserData.picture.data.url){
           profile.avatar = f.thirdPartyUserData.picture.data.url.replace('p50x50', 'p100x100');
         }
+      }
+    }
+    return profile;
+  }
+
+  function _googleProfile(g){
+    var profile = {};
+    if(g){
+      if(g.displayName){ profile.name = g.displayName; }
+      if(g.email){ profile.email = g.email; }
+      if(g.thirdPartyUserData){
+        if(g.thirdPartyUserData.given_name){  profile.firstName = g.thirdPartyUserData.given_name; }
+        if(g.thirdPartyUserData.family_name){ profile.lastName = g.thirdPartyUserData.family_name; }
+        if(g.thirdPartyUserData.picture){     profile.avatar = g.thirdPartyUserData.picture; }
       }
     }
     return profile;

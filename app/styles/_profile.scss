@@ -2,7 +2,7 @@
   // from http://subtlepatterns.com/patterns/paper.png
   background-image: url(../images/profile_bg.png);
   .profile {
-    padding-bottom: 10px;
+    padding-bottom: 0px;
     .avatar {
       background-size: cover;
       margin-bottom: 40px;
@@ -73,7 +73,6 @@
       }
     }
     .name, .level {
-      padding-bottom: 10px;
       text-align: center;
       color: #fff;
       font-size: 16px;
@@ -82,9 +81,11 @@
       text-shadow: 0 1px 1px rgba(0,0,0,0.9);
     }
     .name {
+      padding-bottom: 10px;
       font-size: 26px;
     }
     .level {
+      padding-bottom: 6px;
       color: #eee;
     }
   }

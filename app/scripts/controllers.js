@@ -52,41 +52,31 @@ angular.module('ionicApp')
     $state.go('intro');
   };
 
-  $scope.facebookConnect = function(){
-    connect('facebook');
-  };
-  $scope.twitterConnect = function(){
-    $scope.loading.twitter = true;
-    $timeout(function(){
-      $scope.loading.twitter = false;
-    }, 2000);
-  };
-  $scope.googleConnect = function(){
-    $scope.loading.google = true;
-    $timeout(function(){
-      $scope.loading.google = false;
-    }, 2000);
-  };
-  $scope.emailConnect = function(tab){
-    connect('email', tab);
-  };
+  $scope.facebookConnect = function(){ connect('facebook'); };
+  $scope.twitterConnect = function(){ connect('twitter'); };
+  $scope.googleConnect = function(){ connect('google'); };
+  $scope.emailConnect = function(tab){ connect('email', tab); };
 
   function connect(provider, tab){
     $scope.loading[provider] = true;
     var promise;
 
     if(provider === 'facebook'){ promise = LoginSrv.facebookConnect(); }
+    if(provider === 'twitter'){ promise = LoginSrv.twitterConnect(); }
+    if(provider === 'google'){ promise = LoginSrv.googleConnect(); }
     else if(provider === 'email' && tab && tab === 'login'){ promise = LoginSrv.login($scope.credentials); }
-    else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); } // TODO : send welcome mail !
+    else if(provider === 'email' && tab && tab !== 'login'){ promise = LoginSrv.register($scope.credentials); }
 
     if(promise){
       promise.then(function(){
         $scope.loading[provider] = false;
+        // TODO : ask email if not provided !!!
+        // TODO : send welcome mail !
         $state.go('app.home');
       }, function(error){
         LogSrv.trackError('login:'+provider, error);
         $scope.loading[provider] = false;
-        $window.alert(LoginSrv.getMessage(error));
+        $window.plugins.toast.show(LoginSrv.getMessage(error));
       });
     } else {
       $scope.loading[provider] = false;

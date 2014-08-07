@@ -1,31 +1,28 @@
 # Cookers app
 
-- connexion mail/pass : https://www.firebase.com/docs/web/guide/simple-login/password.html
-- mettre un plugin phonegap pour se connecter "nativement" à facebook
-- ajouter twitter & google
-
-# BUGS
-
-- liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
-- quand on archive une liste et qu'on en crée une nouvelle. Certains ingrédients sont déjà achetés :(
-- refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
-
 # TODO
 
-- Petits problèmes à régler :
-    - 1ère ouverture : on voit la transition
-    - champ mail dans l'intro
-    - "loading..."
-- Remplacer added par created (ionic & firebase)
-- Télécharger en local les scripts UserVoice et Mixpanel (et initialiser mixpanel dans la fonction run)
-- Demander une autorisation android pour récupérer le mail de l'utilisateur
-- Ajouter dans les options un choix d'écran de lancement (home, recipes or cart)
-- redesigner les checkbox de la liste de course : agrandir la surface cliquable, mettre en foncé la checkbox des éléments achetés
-- espacer un peu les recettes dans les recettes de la semaine (cards ?)
-- sur la home, le titre "liste de course" donne envie de cliquer dessus (on a l'impression que c'est un bouton)
-- redesign la l'écran recettes : 
-    - l'image de la recette reste fixe
-    - quand on arrive aux étapes, l'image change pour afficher l'image de l'étape
+- bugs
+    - liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
+    - quand on archive une liste et qu'on en crée une nouvelle. Certains ingrédients sont déjà achetés :(
+    - refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
+
+- todo
+    - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
+    - demander à chaque fois pour combien on veut cuisiner cette recette (popup) (ajouter dans liste de courses et à cuisiner)
+    - supprimer la mise en favoris
+    - redesign de la liste des recettes
+        - mettre le détail (i) en bas des ingrédients
+        - ne plus couper le nom de la recette
+        - mettre dans des cartes
+    - enlever le changement de mail dans le profil
+
+- todo, plus tard
+    - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
+    - demander une autorisation android pour récupérer le mail de l'utilisateur
+
+- à réfléchir
+    - bouton home en haut à gauche à la place du menu
 
 # Technical
 
