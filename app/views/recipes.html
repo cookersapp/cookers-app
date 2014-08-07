@@ -35,14 +35,14 @@
               <div ng-repeat="ingredient in recipe.ingredients" class="item ingredient">
                 {{ingredient.quantity | quantity}} {{ingredient.food.name}}
               </div>
+              <a class="fa-stack fa-lg calm details" ui-sref="app.recipe({recipeId: recipe.id})">
+                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                <i class="fa fa-info fa-stack-1x"></i>
+              </a>
             </div>
           </div>
           <div class="legend">
-            <div class="pull-right">
-              <span class="fa-stack fa-lg calm" ui-sref="app.recipe({recipeId: recipe.id})">
-                <i class="fa fa-circle-thin fa-stack-2x"></i>
-                <i class="fa fa-info fa-stack-1x"></i>
-              </span>
+            <div class="actions">
               <span ng-show="!cartHasRecipe(recipe)" class="fa-stack fa-lg balanced" ng-click="addRecipeToCart(recipe, $index)">
                 <i class="fa fa-circle-thin fa-stack-2x"></i>
                 <i class="fa fa-plus fa-stack-1x"></i>
@@ -52,9 +52,9 @@
                 <i class="fa fa-minus fa-stack-1x"></i>
               </span>
             </div>
-            <div ng-click="toggleIngredients(recipe)" style="display: inline;">
-              <div class="title line">{{recipe.name}}</div>
-              <div class="subtitle line">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+            <div class="content" ng-click="toggleIngredients(recipe)">
+              <div class="title">{{recipe.name}}</div>
+              <div class="subtitle">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
             </div>
           </div>
         </div>

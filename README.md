@@ -8,14 +8,12 @@
     - refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
 
 - todo
-    - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
     - demander à chaque fois pour combien on veut cuisiner cette recette (popup) (ajouter dans liste de courses et à cuisiner)
     - supprimer la mise en favoris
-    - redesign de la liste des recettes
-        - mettre le détail (i) en bas des ingrédients
-        - ne plus couper le nom de la recette
-        - mettre dans des cartes
     - enlever le changement de mail dans le profil
+    - redesign de la liste des recettes
+        - mettre dans des cartes
+    - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
 
 - todo, plus tard
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
