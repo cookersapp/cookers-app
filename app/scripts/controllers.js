@@ -3,28 +3,17 @@ angular.module('ionicApp')
 .controller('IntroCtrl', function($scope, $state, UserSrv, LoginSrv, LogSrv){
   'use strict';
   var currentSlide = 0;
-  var sUser = UserSrv.get();
-  $scope.data = {
-    email: sUser.email,
-    defaultServings: sUser.settings.defaultServings
-  };
 
   $scope.startApp = function(){
-    sUser.skipIntro = true;
+    LogSrv.trackIntroExit(currentSlide);
+    UserSrv.get().skipIntro = true;
     if(LoginSrv.isLogged()){
       $state.go('app.home');
     } else {
       $state.go('login');
     }
   };
-  $scope.submitUserInfos = function(){
-    LogSrv.trackSetEmail($scope.data.email);
-    UserSrv.setEmail($scope.data.email).then(function(){
-      LogSrv.registerUser();
-    });
-    sUser.settings.defaultServings = $scope.data.defaultServings;
-    $scope.startApp();
-  };
+  
   $scope.slideChanged = function(index){
     LogSrv.trackIntroChangeSlide(currentSlide, index);
     currentSlide = index;
@@ -46,32 +35,6 @@ angular.module('ionicApp')
     twitter: false,
     google: false,
     email: false
-  };
-
-  var emailPopup = {
-    template: '<input type="email" placeholder="ex: nom@example.com" ng-model="credentials.email" required>',
-    title: '<i class="fa fa-smile-o"></i> Lâche ton mail &nbsp;<i class="fa fa-smile-o"></i>',
-    subTitle: '!! No spam guaranteed !!',
-    scope: $scope,
-    buttons: [
-      { text: 'Non !', onTap: function(e){
-        if(!$scope.credentials.dismissed){
-          $window.plugins.toast.show('S\'il-te-plaît ...');
-          $scope.credentials.dismissed = true;
-          e.preventDefault();
-        } else {
-          return '';
-        }
-      }},
-      { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
-        if(!$scope.credentials.email){
-          e.preventDefault();
-        } else {
-          $window.plugins.toast.show('Merci :D');
-          return $scope.credentials.email;
-        }
-      }}
-    ]
   };
 
   $scope.goIntro = function(){
@@ -120,6 +83,32 @@ angular.module('ionicApp')
     LogSrv.trackLogin(provider, user);
     $state.go('app.home');
   }
+
+  var emailPopup = {
+    template: '<input type="email" placeholder="ex: nom@example.com" ng-model="credentials.email" required>',
+    title: '<i class="fa fa-smile-o"></i> Lâche ton mail &nbsp;<i class="fa fa-smile-o"></i>',
+    subTitle: '!! No spam guaranteed !!',
+    scope: $scope,
+    buttons: [
+      { text: 'Non !', onTap: function(e){
+        if(!$scope.credentials.dismissed){
+          $window.plugins.toast.show('S\'il-te-plaît ...');
+          $scope.credentials.dismissed = true;
+          e.preventDefault();
+        } else {
+          return '';
+        }
+      }},
+      { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
+        if(!$scope.credentials.email){
+          e.preventDefault();
+        } else {
+          $window.plugins.toast.show('Merci :D');
+          return $scope.credentials.email;
+        }
+      }}
+    ]
+  };
 })
 
 .controller('AppCtrl', function($scope, $interval, $ionicSideMenuDelegate, RecipeSrv, UserSrv){
@@ -138,7 +127,7 @@ angular.module('ionicApp')
     }
   }, 10000);
 
-  $scope.$watch($ionicSideMenuDelegate.getOpenRatio, function(newValue, oldValue){
+  /*$scope.$watch($ionicSideMenuDelegate.getOpenRatio, function(newValue, oldValue){
     if(newValue !== oldValue){
       if(newValue === 0){
         // close
@@ -148,7 +137,7 @@ angular.module('ionicApp')
         // opening ...
       }
     }
-  });
+  });*/
 })
 
 .controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, CartSrv, RecipeSrv, WeekrecipeSrv, LogSrv){
@@ -259,7 +248,6 @@ angular.module('ionicApp')
   'use strict';
   $scope.recipe = {};
   RecipeSrv.get($stateParams.recipeId).then(function(recipe){
-    // TODO : track view recipe !
     RecipeSrv.addToHistory(recipe);
     $scope.recipe = recipe;
   });
@@ -280,6 +268,7 @@ angular.module('ionicApp')
 
 .controller('CartCtrl', function($scope, $window, CartSrv, LogSrv){
   'use strict';
+  // TODO : add $ionicPopover
   $scope.cart = CartSrv.getCurrentCart();
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){

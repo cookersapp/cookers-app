@@ -1051,6 +1051,7 @@ angular.module('ionicApp')
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
     trackLogin: function(provider, data){track('login', {provider: provider, data: data});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
+    trackIntroExit: function(slide){track('intro-exit', {slide: slide});},
     trackState: function(params){track('state', params);},
     trackStateError: function(params){track('state-error', params);},
     trackStateNotFound: function(params){track('state-not-found', params);},
