@@ -1039,7 +1039,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LogSrv', function($rootScope, $window, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
+.factory('LogSrv', function($rootScope, $timeout, $window, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
   var sApp = $localStorage.app;
@@ -1056,6 +1056,7 @@ angular.module('ionicApp')
     trackStateNotFound: function(params){track('state-not-found', params);},
     trackSetEmail: function(email){track('set-email', {email: email});},
     trackHideMessage: function(message){track('hide-message', {message: message});},
+    trackRecipesFeedback: function(week, feedback){track('recipes-feedback', {week: week, feedback: feedback});},
     // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
     trackAddRecipeToCart: function(recipe, index, from){trackWithPosition('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
     trackRemoveRecipeFromCart: function(recipe, index, from){trackWithPosition('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
@@ -1079,16 +1080,28 @@ angular.module('ionicApp')
   };
 
   function trackWithPosition(event, params){
-    navigator.geolocation.getCurrentPosition(function(position){
-      params.position = position.coords;
-      params.position.timestamp = position.timestamp;
-      if(event === 'buy-item' || event === 'buy-item-source'){buyLogsRef.push(params);}
+    if(navigator && navigator.geolocation){
+      var fallbackTrack = $timeout(function(){
+        track(event, params);
+      }, 3000);
+      navigator.geolocation.getCurrentPosition(function(position){
+        $timeout.cancel(fallbackTrack);
+        params.position = position.coords;
+        params.position.timestamp = position.timestamp;
+        if(event === 'buy-item' || event === 'buy-item-source'){buyLogsRef.push(params);}
+        track(event, params);
+      }, function(error){
+        params.position = error;
+        params.position.timestamp = Date.now();
+        track(event, params);
+      }, {
+        enableHighAccuracy: true,
+        timeout: 2000,
+        maximumAge: 0
+      });
+    } else {
       track(event, params);
-    }, function(error){
-      params.position = error;
-      params.position.timestamp = Date.now();
-      track(event, params);
-    });
+    }
   }
 
   function track(event, params){

@@ -114,7 +114,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     }
   })
   .state('app.feedback', {
-    url: '/feedback',
+    url: '/feedback?source',
     views: {
       'menuContent' :{
         templateUrl: 'views/feedback.html',

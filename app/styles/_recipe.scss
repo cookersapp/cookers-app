@@ -1,3 +1,5 @@
+@import "_colors";
+
 .recipes {
   .recipes-empty {
     background: #fff;
@@ -123,6 +125,15 @@
       }
       .actions {
         float: right;
+      }
+    }
+  }
+  
+  .feedback {
+    .item.row .col {
+      text-align: center;
+      img {
+        width: 60%;
       }
     }
   }

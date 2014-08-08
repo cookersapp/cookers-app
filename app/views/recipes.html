@@ -60,15 +60,16 @@
         </div>
       </div>
 
-      <div class="list card" ui-sref="app.feedback" style="margin-bottom: 20px;">
-        <div class="item item-text-wrap">
-          C'est la fin des recettes de cette semaine !<br>
-          Comment as-tu trouvé notre sélection ?
+      <div class="list card feedback">
+        <div class="item item-text-wrap" ui-sref="app.feedback">
+          C'était nos 10 recettes de la semaine !<br>
+          Content ou pas ?
         </div>
-        <a href="#" class="item item-icon-right">
-          <i class="icon ion-arrow-right-c"></i>
-          Fais-nous un retour sur tes attentes !
-        </a>
+        <div class="item row">
+          <div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>
+          <div class="col" ng-click="recipeFeedback(2)"><img src="images/great.png"></div>
+          <div class="col" ng-click="recipeFeedback(3)"><img src="images/awesome.png"></div>
+        </div>
       </div>
     </div>
   </ion-content>

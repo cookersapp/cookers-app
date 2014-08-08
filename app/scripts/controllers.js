@@ -186,10 +186,10 @@ angular.module('ionicApp')
   };
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $ionicPopup, $window, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
-  $scope.recipesOfWeek = [];
+  $scope.recipesOfWeek = {};
   WeekrecipeSrv.getCurrent().then(function(recipesOfWeek){
     $scope.recipesOfWeek = recipesOfWeek;
     $scope.loading = false;
@@ -232,6 +232,11 @@ angular.module('ionicApp')
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
     CartSrv.removeRecipeFromCart(recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+  };
+  
+  $scope.recipeFeedback = function(feedback){
+    LogSrv.trackRecipesFeedback($scope.recipesOfWeek.week, feedback);
+    $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
   };
 
   /*$scope.isFavorited = function(recipe){
@@ -544,7 +549,7 @@ angular.module('ionicApp')
   }
 })
 
-.controller('FeedbackCtrl', function($scope, $window, AppSrv, UserSrv, EmailSrv, LogSrv){
+.controller('FeedbackCtrl', function($scope, $stateParams, $window, AppSrv, UserSrv, EmailSrv, LogSrv){
   'use strict';
   var sApp = AppSrv.get();
   var sUser = UserSrv.get();
@@ -554,6 +559,12 @@ angular.module('ionicApp')
     sending: false,
     sent: false
   };
+  
+  if($stateParams.source){
+    if($stateParams.source === 'recipes-rating-1'){$scope.feedback.content = 'Bof bof bof... Tiens quelques conseils !\n\nJe serais plus fan de ...';}
+    else if($stateParams.source === 'recipes-rating-2'){$scope.feedback.content = 'Plutôt cool tes recettes !\n\nJe verrais bien un peu plus ... ou un peu moins de ...';}
+    else if($stateParams.source === 'recipes-rating-3'){$scope.feedback.content = 'Wahou c\'est top !\n\nEt ça serait encore mieux si tu pouvais ...';}
+  }
 
   $scope.sendFeedback = function(){
     $scope.feedback.sending = true;
