@@ -124,15 +124,6 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
     data: {
       restrict: 'connected'
     }
-  })
-  .state('app.debug', {
-    url: '/debug',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/debug.html',
-        controller: 'DebugCtrl'
-      }
-    }
   });
 
   // choose default route depending on application state

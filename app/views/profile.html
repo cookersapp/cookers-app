@@ -63,11 +63,6 @@ Ingrédients stricts
         <div class="item item-divider">Application</div>
         <div class="item">Version de l'application <span class="badge badge-positive">{{appVersion}}</span></div>
         <a class="item item-icon-right" href="http://cookers.io/">A propos <i class="icon ion-chevron-right icon-accessory"></i></a>
-        <div class="item item-icon-right" ng-if="debug" ui-sref="app.debug">
-          Debug mode
-          <span class="badge badge-assertive">On</span>
-          <i class="icon ion-chevron-right icon-accessory"></i>
-        </div>
         <div class="item item-icon-right" ng-click="clearCache()">Vider le cache <i class="icon ion-chevron-right icon-accessory"></i></div>
         <div class="item item-icon-right" ng-click="logout()">Se déconnecter <i class="icon ion-chevron-right icon-accessory"></i></div>
         <div class="item item-icon-right assertive" ng-click="resetApp()">

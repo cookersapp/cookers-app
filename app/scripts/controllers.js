@@ -600,9 +600,4 @@ angular.module('ionicApp')
   UserVoice.push(['identify', identity]);
   UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
   UserVoice.push(['autoprompt', {}]);
-})
-
-.controller('DebugCtrl', function($scope, $localStorage){
-  'use strict';
-  $scope.$storage = $localStorage;
 });
