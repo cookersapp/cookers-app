@@ -217,7 +217,7 @@ angular.module('ionicApp')
   }
   function removeCustomItemFromCart(cart, item){
     if(cart){
-      _removeFromArrayWithFinder(cart.items, {id: item.ingredient.id, added: item.ingredient.added});
+      _removeFromArrayWithFinder(cart.items, {id: item.ingredient.id, created: item.ingredient.created});
     }
   }
   function _removeFromArrayWithFinder(array, finder){
@@ -239,7 +239,7 @@ angular.module('ionicApp')
         buyIngredient(ingredient, recipe, bought);
       }
     } else if(source && source.ingredient && source.ingredient.food && source.ingredient.food.id){
-      var cartItem = _.find(cart.items, {id: source.ingredient.id, added: source.ingredient.added});
+      var cartItem = _.find(cart.items, {id: source.ingredient.id, created: source.ingredient.created});
       buyIngredient(cartItem, null, bought);
     }
   }
@@ -366,7 +366,7 @@ angular.module('ionicApp')
   }
   function buildCartCustomItem(item){
     return {
-      added: Date.now(),
+      created: Date.now(),
       id: item.product.id,
       quantity: {
         value: item.quantity,
@@ -377,7 +377,7 @@ angular.module('ionicApp')
   }
   function buildCartRecipe(recipe){
     return {
-      added: Date.now(),
+      created: Date.now(),
       id: recipe.id,
       servings: {
         value: UserSrv.get().settings.defaultServings,

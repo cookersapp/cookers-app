@@ -221,6 +221,7 @@ angular.module('ionicApp', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ng
       current: null,
       contents: []
     },
+    carts2: [],
     settings: {
       defaultServings: 2,
       //strictIngredients: false,
