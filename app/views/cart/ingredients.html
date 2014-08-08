@@ -2,7 +2,8 @@
   <div class="list add-product" ng-if="!settings.strictIngredients">
     <div class="item">
       <textarea msd-elastic
-                blur-on-keyboard-out="customItemsEdited(cart.customItems)"
+                blur-on-keyboard-out
+                ng-blur="customItemsEdited(cart.customItems)"
                 ng-model="cart.customItems"
                 rows="1"
                 placeholder="Penser à acheter ..."></textarea>

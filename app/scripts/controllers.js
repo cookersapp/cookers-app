@@ -353,6 +353,10 @@ angular.module('ionicApp')
     $scope.items.unshift(elt);
   };
 
+  $scope.customItemsEdited = function(customItems){
+    LogSrv.trackEditCartCustomItems(customItems);
+  };
+
   // add product
   /*$scope.ingredientSearch = '';
   $scope.selectedProduct = null;
@@ -366,10 +370,6 @@ angular.module('ionicApp')
   FoodSrv.getAll().then(function(foods){
     $scope.foods = foods;
   });
-
-  $scope.customItemsEdited = function(customItems){
-    LogSrv.trackEditCartCustomItems(customItems);
-  };
 
   $scope.selectProduct = function(product){
     if(typeof product === 'string'){
@@ -476,25 +476,23 @@ angular.module('ionicApp')
     LogSrv.registerUser();
   };
 
-  $scope.email = angular.copy(sUser.email);
-
+  /*$scope.email = angular.copy(sUser.email);
   $scope.saveEmail = function(email){
     LogSrv.trackSetEmail(email);
     UserSrv.setEmail(email).then(function(){
       LogSrv.registerUser();
     });
-  };
-  $scope.about = function(){
-    $window.alert('Not implemented yet :(');
-  };
+  };*/
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
+      LogSrv.trackClearCache(sUser.device.uuid);
       StorageSrv.clearCache();
     }
   };
   $scope.logout = function(){
     LoginSrv.logout().then(function(){
+      LogSrv.trackLogout(sUser.device.uuid);
       $state.go('login');
     });
   };

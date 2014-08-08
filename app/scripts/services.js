@@ -1075,6 +1075,8 @@ angular.module('ionicApp')
     trackSendFeedback: function(email){track('send-feedback', {email: email});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
+    trackLogout: function(user){track('logout', {user: user});},
+    trackClearCache: function(user){track('clear-cache', {user: user});},
     trackClearApp: function(user){track('clear-app', {user: user});},
     trackError: function(id, error){track('error', {id: id, error: error});}
   };
