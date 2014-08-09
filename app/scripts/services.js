@@ -131,7 +131,7 @@ angular.module('app')
   return service;
 })
 
-.factory('CartSrv', function($localStorage, $window, UserSrv, debug){
+/*.factory('CartSrv', function($localStorage, $window, UserSrv, debug){
   'use strict';
   var sCarts = $localStorage.user.carts;
   var service = {
@@ -398,7 +398,7 @@ angular.module('app')
   }
 
   return service;
-})
+})*/
 
 .factory('AppSrv', function($localStorage){
   'use strict';
@@ -1054,7 +1054,7 @@ angular.module('app')
     trackHideMessage: function(message){track('hide-message', {message: message});},
     trackRecipesFeedback: function(week, feedback){track('recipes-feedback', {week: week, feedback: feedback});},
     // ??? merge trackAddRecipeToCart with trackRemoveRecipeFromCart ??? And with trackAddItemToCart or trackRemoveItemFromCart ???
-    trackAddRecipeToCart: function(recipe, index, from){trackWithPosition('add-recipe-to-cart', {recipe: recipe, index: index, from: from});},
+    trackAddRecipeToCart: function(recipe, servings, index, from){trackWithPosition('add-recipe-to-cart', {recipe: recipe, servings: servings, index: index, from: from});},
     trackRemoveRecipeFromCart: function(recipe, index, from){trackWithPosition('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
     trackAddItemToCart: function(item, quantity, unit, missing, search){trackWithPosition('add-item-to-cart', {item: item, quantity: quantity, unit: unit, missing: missing, search: search});},
     trackRemoveItemFromCart: function(item){trackWithPosition('remove-item-from-cart', {item: item});},

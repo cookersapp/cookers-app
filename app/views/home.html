@@ -23,11 +23,11 @@
     <!-- cart dashboard -->
     <div class="dashboard-card cart-infos">
       <div class="heading" ui-sref="app.cart.ingredients">Liste de courses</div>
-      <div class="row" ng-if="cart && !cart.archived && cart.recipes && cart.recipes.length > 0">
-        <div class="col" ui-sref="app.cart.recipes"><strong>{{cart.recipes.length}}</strong><span>recettes</span></div>
-        <div class="col" ui-sref="app.cart.ingredients"><strong>{{items.length}}</strong><span>ingrédients</span></div>
+      <div class="row" ng-if="recipesInCart.length > 0">
+        <div class="col" ui-sref="app.cart.recipes"><strong>{{recipesInCart.length}}</strong><span>recettes</span></div>
+        <div class="col" ui-sref="app.cart.ingredients"><strong>{{itemsInCart.length}}</strong><span>ingrédients</span></div>
       </div>
-      <div class="row" ng-if="!(cart && !cart.archived && cart.recipes && cart.recipes.length > 0)">
+      <div class="row" ng-if="!(recipesInCart.length > 0)">
         <div class="col">
           <span>
             Votre liste actuelle est vide.<br>
@@ -37,7 +37,7 @@
       </div>
     </div>
     
-    <!-- favorite recipes -->
+    <!-- recipe dashboard -->
     <div class="dashboard-card recipes-infos">
       <div class="heading" ui-sref="app.recipes">Recettes</div>
       <div class="row">
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <!-- seen recipes history -->
+    <!-- favorite recipes -->
     <!--<div class="recipes" ng-if="favoriteRecipes && favoriteRecipes.length > 0">
       <div class="list">
         <div class="item item-divider">Recettes en favoris</div>

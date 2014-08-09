@@ -1,12 +1,8 @@
 <div>
   <div class="list add-product" ng-if="!settings.strictIngredients">
     <div class="item">
-      <textarea msd-elastic
-                blur-on-keyboard-out
-                ng-blur="customItemsEdited(cart.customItems)"
-                ng-model="cart.customItems"
-                rows="1"
-                placeholder="Penser à acheter ..."></textarea>
+      <textarea msd-elastic blur-on-keyboard-out ng-blur="customItemsEdited(customItems)" ng-model="customItems" 
+                rows="1" placeholder="Penser à acheter ..."></textarea>
     </div>
   </div>
   <!--<div class="list add-product-strict" ng-if="settings.strictIngredients">
@@ -62,51 +58,42 @@
 
 
 
-  <div ng-if="(!items || items.length === 0) && boughtItems.length === 0" class="cart-empty">
+  <div ng-if="items.length === 0" class="cart-empty">
     Aucun ingrédient à acheter :(
     <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute une recette !</button>
   </div>
-  <div ng-if="(!items || items.length === 0) && boughtItems.length > 0" class="cart-empty">
+  <div ng-if="allItemsBought()" class="cart-empty">
     Bravo ! Tu as tout acheté !!!<br>
     <br>
     <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
   </div>
 
   <div class="list to-buy">
-    <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items">
+    <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items" ng-if="!isBought(item)">
       <div class="check pull-right">
         <div class="box" ng-click="buyItem(item)"></div>
       </div>
-      <div class="quantity pull-right">
-        {{item.quantity | quantity}}
-      </div>
-      <div class="text" ng-click="toggleItem(item)">
-        {{item.food.name}}
-      </div>
+      <div class="quantity pull-right">{{item.quantity | quantity}}</div>
+      <div class="text" ng-click="toggleItem(item)">{{item.food.name}}</div>
 
       <div class="details" ng-if="isOpened(item)">
         <div class="source" ng-repeat="source in item.sources">
           <div class="quantity pull-right">
             {{source.quantity | quantity}}
           </div>
-          <div class="text" ng-if="source.recipe">{{source.recipe.data.name}} ({{source.recipe.servings.value}} {{source.recipe.servings.unit}})</div>
-          <div class="text" ng-if="!source.recipe"><button class="button button-xs button-assertive" ng-click="removeCartItemSource(source)">&times;</button> Ajouté manuellement</div>
+          <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings.value}} {{source.recipe.cartData.servings.unit}})</div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="list bought">
-    <div class="item item-cart-ingredient bought" ng-repeat="item in boughtItems">
+    <div class="item item-cart-ingredient bought" ng-repeat="item in items" ng-if="isBought(item)">
       <div class="check pull-right">
         <div class="box" ng-click="unbuyItem(item)">✔</div>
       </div>
-      <div class="quantity pull-right">
-        {{item.quantity | quantity}}
-      </div>
-      <div class="text">
-        {{item.food.name}}
-      </div>
+      <div class="quantity pull-right">{{item.quantity | quantity}}</div>
+      <div class="text">{{item.food.name}}</div>
     </div>
   </div>
 </div>

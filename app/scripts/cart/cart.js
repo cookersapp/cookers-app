@@ -1,18 +1,21 @@
 angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
 
-.factory('CartSrv2', function($localStorage, CartUtils){
+.factory('CartSrv2', function($localStorage, CartBuilder, CartUtils){
   'use strict';
   var service = {
     getCarts: getCarts,
+    hasOpenedCarts: hasOpenedCarts,
     getOpenedCarts: getOpenedCarts,
     getCart: getCart,
-    isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
-    isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,
+    createCart: createCart,
+    /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
+    isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
     
     recipesFromOpenedCarts: recipesFromOpenedCarts,
     itemsFromOpenedCarts: itemsFromOpenedCarts,
 
     getItems: getItems,
+    hasRecipe: hasRecipe,
     addRecipe: addRecipe,
     removeRecipe: removeRecipe,
     buyItem: function(cart, item){buyItem(cart, item, true);},
@@ -22,6 +25,10 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
 
   function getCarts(){return $localStorage.user.carts2;}
   
+  function hasOpenedCarts(){
+    return _.findIndex(getCarts(), {archived: false}) > -1;
+  }
+  
   function getOpenedCarts(){
     return _.filter(getCarts(), {archived: false});
   }
@@ -30,7 +37,13 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     return _.find(getCarts(), {id: id});
   }
   
-  function isRecipeExistInOpenedCart(recipe){
+  function createCart(name){
+    var cart = CartBuilder.createCart(name);
+    getCarts().unshift(cart);
+    return cart;
+  }
+  
+  /*function isRecipeExistInOpenedCart(recipe){
     return _cartsWithRecipe(getOpenedCarts(), recipe).length > 0;
   }
   
@@ -38,7 +51,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     var openedCarts = getOpenedCarts();
     var cartsWithRecipe = _cartsWithRecipe(openedCarts, recipe);
     return openedCarts.length === cartsWithRecipe.length;
-  }
+  }*/
 
   function recipesFromOpenedCarts(){
     return _.reduce(getOpenedCarts(), function(result, cart){
@@ -55,9 +68,13 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     return CartUtils.recipesToItems(cart.recipes);
   }
   
+  function hasRecipe(cart, recipe){
+    return _.findIndex(cart.recipes, {id: recipe.id}) > -1;
+  }
+  
   function addRecipe(cart, recipe, servings){
     var r = CartBuilder.createRecipe(recipe, servings);
-    cart.push(r);
+    cart.recipes.push(r);
   }
   
   function removeRecipe(cart, recipe){
@@ -76,7 +93,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
   
   function _cartsWithRecipe(carts, recipe){
     return _.filter(carts, function(cart){
-      return _.contains(cart.recipes, {id: recipe.id});
+      return hasRecipe(cart, recipe);
     });
   }
 
@@ -153,23 +170,23 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
   function createItem(ingredient, recipe){
     var item = angular.copy(ingredient);
     var source = _createItemSource(ingredient, recipe);
-    item.price = source.price;
-    item.quantity = source.quantity;
+    item.price = ingredient.bought ? null : source.price;
+    item.quantity = ingredient.bought ? null : source.quantity;
     item.sources = [source];
     return item;
   }
   
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
-    item.price = Utils.addPrices(item.price, source.price);
-    item.quantity = Utils.addQuantities(item.quantity, source.quantity);
+    if(!ingredient.bought){item.price = Utils.addPrices(item.price, source.price);}
+    if(!ingredient.bought){item.quantity = Utils.addQuantities(item.quantity, source.quantity);}
     item.sources.push(source);
   }
 
   function _createItemSource(ingredient, recipe){
     return {
       price: Utils.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
-      quantity: Utils.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
+      quantity: Utils.adjustForServings(ingredient.quantity, recipe.servings, recipe.cartData.servings),
       ingredient: ingredient,
       recipe: recipe
     };
