@@ -1,4 +1,4 @@
-angular.module('ionicApp')
+angular.module('app')
 
 .filter('mynumber', function($filter){
   'use strict';

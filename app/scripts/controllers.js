@@ -1,4 +1,4 @@
-angular.module('ionicApp')
+angular.module('app')
 
 .controller('IntroCtrl', function($scope, $state, UserSrv, LoginSrv, LogSrv){
   'use strict';

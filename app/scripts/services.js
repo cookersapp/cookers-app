@@ -1,4 +1,4 @@
-angular.module('ionicApp')
+angular.module('app')
 
 .factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
@@ -217,7 +217,7 @@ angular.module('ionicApp')
   }
   function removeCustomItemFromCart(cart, item){
     if(cart){
-      _removeFromArrayWithFinder(cart.items, {id: item.ingredient.id, created: item.ingredient.created});
+      _removeFromArrayWithFinder(cart.items, {id: item.ingredient.id, added: item.ingredient.added});
     }
   }
   function _removeFromArrayWithFinder(array, finder){
@@ -239,7 +239,7 @@ angular.module('ionicApp')
         buyIngredient(ingredient, recipe, bought);
       }
     } else if(source && source.ingredient && source.ingredient.food && source.ingredient.food.id){
-      var cartItem = _.find(cart.items, {id: source.ingredient.id, created: source.ingredient.created});
+      var cartItem = _.find(cart.items, {id: source.ingredient.id, added: source.ingredient.added});
       buyIngredient(cartItem, null, bought);
     }
   }
@@ -366,7 +366,7 @@ angular.module('ionicApp')
   }
   function buildCartCustomItem(item){
     return {
-      created: Date.now(),
+      added: Date.now(),
       id: item.product.id,
       quantity: {
         value: item.quantity,
@@ -377,7 +377,7 @@ angular.module('ionicApp')
   }
   function buildCartRecipe(recipe){
     return {
-      created: Date.now(),
+      added: Date.now(),
       id: recipe.id,
       servings: {
         value: UserSrv.get().settings.defaultServings,
@@ -388,7 +388,7 @@ angular.module('ionicApp')
   }
   function buildCart(){
     return {
-      created: Date.now(),
+      added: Date.now(),
       archived: false,
       name: 'Liste du '+moment().format('LL'),
       recipes: [],
@@ -684,7 +684,7 @@ angular.module('ionicApp')
   return service;
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, firebaseUrl){
+.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, Utils, firebaseUrl){
   'use strict';
   var service = {
     launch: function(){
@@ -794,7 +794,7 @@ angular.module('ionicApp')
     device.grade = ionic.Platform.grade;
     device.platforms = ionic.Platform.platforms;
     if(!device.uuid){
-      device.uuid = _createUuid();
+      device.uuid = Utils.createUuid();
     }
     return device;
   }
@@ -806,11 +806,6 @@ angular.module('ionicApp')
     else if(ionic.Platform.isAndroid()){return 'Android';}
     else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
     else {return 'Unknown';}
-  }
-
-  function _createUuid(){
-    function S4(){ return (((1+Math.random())*0x10000)|0).toString(16).substring(1); }
-    return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0,3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
   }
 
   function isEmpty(obj) {

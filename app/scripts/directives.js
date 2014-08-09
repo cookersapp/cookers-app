@@ -1,4 +1,4 @@
-angular.module('ionicApp')
+angular.module('app')
 
 .directive('blurOnKeyboardOut', function($window){
   'use strict';
