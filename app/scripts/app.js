@@ -76,7 +76,7 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
     abstract: true,
     views: {
       'menuContent' :{
-        templateUrl: 'views/cart/main.html',
+        templateUrl: 'scrips/cart/main.html',
         controller: 'CartCtrl'
       }
     },
@@ -86,7 +86,7 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
   })
   .state('app.cart.recipes', {
     url: '/recipes',
-    templateUrl: 'views/cart/recipes.html',
+    templateUrl: 'scrips/cart/recipes.html',
     controller: 'CartRecipesCtrl',
     data: {
       restrict: 'connected'
@@ -94,7 +94,7 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
   })
   .state('app.cart.ingredients', {
     url: '/ingredients',
-    templateUrl: 'views/cart/ingredients.html',
+    templateUrl: 'scrips/cart/ingredients.html',
     controller: 'CartIngredientsCtrl',
     data: {
       noSleep: true,

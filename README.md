@@ -86,6 +86,7 @@ Inspirationnal apps :
 ## Tools 
 
 - screenshots : https://developer.android.com/distribute/tools/promote/device-art.html
+- optimisation images : https://kraken.io/web-interface
 - Crop images : [croppola](http://www.croppola.com/) ([fixpicture](http://www.fixpicture.org/) to resize)
 - Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
@@ -110,5 +111,4 @@ Inspirationnal apps :
 
 ## V0.1.1
 
-- recettes en favoris
 - l'écran de s'éteint plus sur la ingrédients de la liste de course (quand on est au magasin) et sur le détail d'une recette (quand on cuisine)
