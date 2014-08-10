@@ -144,7 +144,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     StorageSrv.migrate($localStorage.app.version);
     $localStorage.app.version = appVersion;
   }
-  
+
   if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.data){$localStorage.data = localStorageDefault.data;}
@@ -154,7 +154,9 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
 
-  LaunchSrv.launch();
+  ionic.Platform.ready(function(){
+    LaunchSrv.launch();
+  });
 
   // utils methods
   $rootScope.isActive = function(viewLocation){
