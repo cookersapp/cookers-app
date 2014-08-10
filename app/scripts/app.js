@@ -1,4 +1,4 @@
-angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['app.auth', 'app.cart', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
@@ -8,22 +8,6 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
     url: '/intro',
     templateUrl: 'views/intro.html',
     controller: 'IntroCtrl'
-  })
-  .state('login', {
-    url: '/login',
-    templateUrl: 'views/login.html',
-    controller: 'LoginCtrl',
-    data: {
-      restrict: 'notConnected'
-    }
-  })
-  .state('login-email', {
-    url: '/login-email',
-    templateUrl: 'views/login-email.html',
-    controller: 'LoginCtrl',
-    data: {
-      restrict: 'notConnected'
-    }
   })
   .state('app', {
     url: '/app',
