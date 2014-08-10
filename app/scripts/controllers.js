@@ -145,7 +145,6 @@ angular.module('app')
   $scope.recipesInCart = CartSrv2.recipesFromOpenedCarts();
   $scope.itemsInCart = CartSrv2.itemsFromOpenedCarts();
   $scope.recipesHistory = RecipeSrv.getHistory();
-  //$scope.favoriteRecipes = RecipeSrv.getFavorites();
   $scope.recipesOfWeek = [];
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
@@ -231,21 +230,6 @@ angular.module('app')
     LogSrv.trackRecipesFeedback($scope.recipesOfWeek.week, feedback);
     $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
   };
-
-  /*$scope.isFavorited = function(recipe){
-    return RecipeSrv.isFavorite(recipe);
-  };
-  $scope.addToFavorite = function(recipe, index){
-    LogSrv.trackAddRecipeToFavorite(recipe, index, 'weekrecipes');
-    RecipeSrv.addToFavorite(recipe);
-    RecipeSrv.addToHistory(recipe);
-    $window.plugins.toast.show('✔ ajoutée aux favoris');
-  };
-  $scope.removeFromFavorite = function(recipe, index){
-    LogSrv.trackRemoveRecipeFromFavorite(recipe, index, 'weekrecipes');
-    RecipeSrv.removeFromFavorite(recipe);
-    $window.plugins.toast.show('✔ supprimée des favoris');
-  };*/
 })
 
 .controller('RecipeCtrl', function($scope, $stateParams, RecipeSrv, LogSrv){

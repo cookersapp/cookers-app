@@ -215,7 +215,6 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
     profiles: {
       gravatar: {}
     },
-    //recipesFavorited: [],
     carts: {
       // TODO : change current cart to closed attribute on cart
       current: null,

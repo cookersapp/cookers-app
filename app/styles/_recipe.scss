@@ -28,21 +28,6 @@
       left: 0px;
       right: 0px;
       top: 0px;
-      .favorite {
-        font-size: 30px;
-        color: #fff;
-        font-weight: bold;
-        padding: 8px 10px;
-        float: left;
-        .remove {
-          display: none;
-          color: #efca28;
-        }
-        &.added {
-          .add {display: none;}
-          .remove {display: block;}
-        }
-      }
       .price {
         text-align: right;
         color: #fff;
