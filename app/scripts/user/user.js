@@ -183,20 +183,21 @@ angular.module('app.user', ['ui.router'])
 
 .factory('UserSrv', function($q, $localStorage, $http, localStorageDefault, md5){
   'use strict';
-  var sUser = $localStorage.user;
   var service = {
-    get: function(){return sUser;},
+    get: sUser,
     hasMail: hasMail,
     setEmail: setEmail,
     updateProfile: updateProfile
   };
+  
+  function sUser(){return $localStorage.user;}
 
   function hasMail(){
-    return sUser && sUser.email && sUser.email.length > 0;
+    return sUser() && sUser().email && sUser().email.length > 0;
   }
 
   function setEmail(email){
-    sUser.email = email;
+    sUser().email = email;
     if(email){
       return _updateGravatar(email).then(function(){
         updateProfile();
@@ -208,18 +209,18 @@ angular.module('app.user', ['ui.router'])
 
   function updateProfile(){
     var defaultProfile = _defaultProfile();
-    var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
-    var passwordProfile = _passwordProfile(sUser.profiles.password);
-    var twitterProfile = _twitterProfile(sUser.profiles.twitter);
-    var facebookProfile = _facebookProfile(sUser.profiles.facebook);
-    var googleProfile = _googleProfile(sUser.profiles.google);
+    var gravatarProfile = _gravatarProfile(sUser().profiles.gravatar);
+    var passwordProfile = _passwordProfile(sUser().profiles.password);
+    var twitterProfile = _twitterProfile(sUser().profiles.twitter);
+    var facebookProfile = _facebookProfile(sUser().profiles.facebook);
+    var googleProfile = _googleProfile(sUser().profiles.google);
 
-    angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+    angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
 
-    if(sUser.email !== gravatarProfile.email){
-      _updateGravatar(sUser.email).then(function(){
-        var gravatarProfile = _gravatarProfile(sUser.profiles.gravatar);
-        angular.extend(sUser, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+    if(sUser().email !== gravatarProfile.email){
+      _updateGravatar(sUser().email).then(function(){
+        var gravatarProfile = _gravatarProfile(sUser().profiles.gravatar);
+        angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
       });
     }
   }
@@ -232,9 +233,9 @@ angular.module('app.user', ['ui.router'])
         if(g && g.entry && g.entry.length > 0){
           g.entry[0].email = email;
         }
-        sUser.profiles.gravatar = g;
+        sUser().profiles.gravatar = g;
       }, function(error){
-        sUser.profiles.gravatar = {
+        sUser().profiles.gravatar = {
           entry: [
             {email: email, hash: hash}
           ]
@@ -333,22 +334,22 @@ angular.module('app.user', ['ui.router'])
 
 .factory('GamificationSrv', function($localStorage){
   'use strict';
-  var sScore = $localStorage.user ? $localStorage.user.score : null;
   var service = {
     evalLevel: evalLevel,
     sendEvent: sendEvent
   };
+  
+  function sScore(){return $localStorage.user ? $localStorage.user.score : null;}
 
   var levels = [
     {score: 0, html: '<i class="fa fa-eye"></i> Explorateur'},
     {score: 10, html: '<i class="fa fa-thumbs-o-up"></i> Testeur'},
-    {score: 30, html: '<i class="fa fa-graduation-cap"></i> Cuisinier'},
+    {score: 30, html: '<i class="fa fa-g$raduation-cap"></i> Cuisinier'},
     {score: 80, html: '<i class="fa fa-university"></i> Chef'},
     {score: 150, html: '<i class="fa fa-trophy"></i> Grand chef'}
   ];
 
   function evalLevel(){
-    if(!sScore){sScore = $localStorage.user.score;}
     _setUserLevel();
   }
 
@@ -358,26 +359,26 @@ angular.module('app.user', ['ui.router'])
     if(event === 'add-item-to-cart'){         _addScore(1, event, params);  }
     if(event === 'remove-item-from-cart'){    _addScore(-1, event, params); }
     if(event === 'archive-cart'){             _addScore(3, event, params);  }
-    if(event === 'state' && params.to === 'app.feedback' && _.find(sScore.events, {event:event, params:{to:params.to}}) === undefined){
+    if(event === 'state' && params.to === 'app.feedback' && _.find(sScore().events, {event:event, params:{to:params.to}}) === undefined){
       _addScore(2, event, params);
     }
   }
 
   function _addScore(value, event, params){
-    sScore.events.push({
+    sScore().events.push({
       time: Date.now(),
       event: event,
       params: params
     });
-    sScore.value += value;
-    if(sScore.value > sScore.level.next){
+    sScore().value += value;
+    if(sScore().value > sScore().level.next){
       _setUserLevel();
     }
   }
 
   function _setUserLevel(){
-    var index = _getLevelIndex(sScore.value);
-    sScore.level = {
+    var index = _getLevelIndex(sScore().value);
+    sScore().level = {
       index: index,
       score: levels[index].score,
       html: levels[index].html,

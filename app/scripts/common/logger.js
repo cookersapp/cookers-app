@@ -24,8 +24,6 @@ angular.module('app.logger', [])
 .factory('LogSrv', function($rootScope, $timeout, $window, $localStorage, $state, GamificationSrv, firebaseUrl, appVersion, debug){
   'use strict';
   var buyLogsRef = new Firebase(firebaseUrl+'/logs/buy');
-  var sApp = $localStorage.app;
-  var sUser = $localStorage.user;
   var service = {
     identify: identify,
     registerUser: registerUser,
@@ -61,6 +59,9 @@ angular.module('app.logger', [])
     trackClearApp: function(user){track('clear-app', {user: user});},
     trackError: function(id, error){track('error', {id: id, error: error});}
   };
+  
+  function sApp(){return $localStorage.app;}
+  function sUser(){return $localStorage.user;}
 
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
@@ -92,14 +93,14 @@ angular.module('app.logger', [])
     params.localtime = Date.now();
     params.appVersion = appVersion;
     if(!params.url && $window.location && $window.location.hash) {params.url = $window.location.hash;}
-    if(!params.email && sUser && sUser.email){params.email = sUser.email;}
-    if(sUser && sUser.device){
-      if(!params.uuid && sUser.device.uuid){params.uuid = sUser.device.uuid;}
-      if(!params.device && sUser.device.model && sUser.device.platform && sUser.device.version){
+    if(!params.email && sUser() && sUser().email){params.email = sUser().email;}
+    if(sUser() && sUser().device){
+      if(!params.uuid && sUser().device.uuid){params.uuid = sUser().device.uuid;}
+      if(!params.device && sUser().device.model && sUser().device.platform && sUser().device.version){
         params.device = {
-          model: sUser.device.model,
-          platform: sUser.device.platform,
-          version: sUser.device.version
+          model: sUser().device.model,
+          platform: sUser().device.platform,
+          version: sUser().device.version
         };
       }
     }
@@ -121,17 +122,15 @@ angular.module('app.logger', [])
   }
 
   function registerUser(){
-    if(!sApp){sApp = $localStorage.app;}
-    if(!sUser){sUser = $localStorage.user;}
     var mixpanelUser = {
-      $created: moment(sApp.firstLaunch).format('llll'),
-      $email: sUser.email,
-      fullName: sUser.name,
-      avatar: sUser.avatar,
-      backgroundCover: sUser.backgroundCover
+      $created: moment(sApp().firstLaunch).format('llll'),
+      $email: sUser().email,
+      fullName: sUser().name,
+      avatar: sUser().avatar,
+      backgroundCover: sUser().backgroundCover
     };
-    if(sUser.profiles.gravatar.entry && sUser.profiles.gravatar.entry.length > 0){
-      var e = sUser.profiles.gravatar.entry[0];
+    if(sUser().profiles.gravatar.entry && sUser().profiles.gravatar.entry.length > 0){
+      var e = sUser().profiles.gravatar.entry[0];
       if(e.hash)            { mixpanelUser.gravatar = e.hash; }
       if(e.aboutMe)         { mixpanelUser.about = e.aboutMe; }
       if(e.currentLocation) { mixpanelUser.location = e.currentLocation; }
@@ -140,8 +139,8 @@ angular.module('app.logger', [])
         if(e.name.familyName){ mixpanelUser.$last_name = e.name.familyName; }
       }
     }
-    for(var i in sUser.settings){
-      mixpanelUser['setting.'+i] = sUser.settings[i];
+    for(var i in sUser().settings){
+      mixpanelUser['setting.'+i] = sUser().settings[i];
     }
 
     if(debug){

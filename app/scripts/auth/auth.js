@@ -22,9 +22,11 @@ angular.module('app.auth', ['ui.router'])
   });
 })
 
-.controller('LoginCtrl', function($scope, $state, $window, $ionicPopup, UserSrv, LoginSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, $window, $ionicPopup, UserSrv, LoginSrv, WeekrecipeSrv, LogSrv){
   'use strict';
-  var sUser = UserSrv.get();
+  WeekrecipeSrv.getCurrent().then(function(recipesOfWeek){
+    // this is only to preload recipes of week at first launch !
+  });
 
   $scope.credentials = {
     dismissed: false,
@@ -40,7 +42,7 @@ angular.module('app.auth', ['ui.router'])
   };
 
   $scope.goIntro = function(){
-    sUser.skipIntro = false;
+    UserSrv.get().skipIntro = false;
     $state.go('intro');
   };
 
@@ -115,9 +117,8 @@ angular.module('app.auth', ['ui.router'])
 
 .factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, firebaseUrl){
   'use strict';
-  var sUser = $localStorage.user;
   var service = {
-    isLogged: function(){return sUser.isLogged;},
+    isLogged: function(){return sUser().isLogged;},
     register: register,
     login: login,
     facebookConnect: facebookConnect,
@@ -128,6 +129,8 @@ angular.module('app.auth', ['ui.router'])
       return error.message.replace('FirebaseSimpleLogin: ', '');
     }
   };
+  
+  function sUser(){return $localStorage.user;}
 
   var firebaseRef = new Firebase(firebaseUrl);
   var firebaseAuth = $firebaseSimpleLogin(firebaseRef);
@@ -164,8 +167,8 @@ angular.module('app.auth', ['ui.router'])
     var opts = {
       scope: 'email'
     };
-    if(sUser && sUser.profiles && sUser.profiles[provider] && sUser.profiles[provider].accessToken){
-      opts.access_token = sUser.profiles[provider].accessToken;
+    if(sUser() && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
+      opts.access_token = sUser().profiles[provider].accessToken;
     }
     return connect(provider, opts);
   }
@@ -173,10 +176,10 @@ angular.module('app.auth', ['ui.router'])
   function twitterConnect(){
     var provider = 'twitter';
     var opts = {};
-    if(sUser && sUser.profiles && sUser.profiles[provider] && sUser.profiles[provider].accessToken){
-      opts.oauth_token = sUser.profiles[provider].accessToken;
-      opts.oauth_token_secret = sUser.profiles[provider].accessTokenSecret;
-      opts.user_id = sUser.profiles[provider].id;
+    if(u && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
+      opts.oauth_token = sUser().profiles[provider].accessToken;
+      opts.oauth_token_secret = sUser().profiles[provider].accessTokenSecret;
+      opts.user_id = sUser().profiles[provider].id;
     }
     return connect(provider, opts);
   }
@@ -200,7 +203,7 @@ angular.module('app.auth', ['ui.router'])
     // disconnect after 1 sec even if firebase doesn't answer !
     logoutTimeout = $timeout(function(){
       console.log('logout timeout !');
-      sUser.isLogged = false;
+      sUser().isLogged = false;
       logoutDefer.resolve();
     }, 1000);
 
@@ -210,8 +213,8 @@ angular.module('app.auth', ['ui.router'])
   $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
     console.log('$firebaseSimpleLogin:login', user);
     if(loginDefer){
-      sUser.isLogged = true;
-      sUser.profiles[loginMethod] = user;
+      sUser().isLogged = true;
+      sUser().profiles[loginMethod] = user;
       UserSrv.updateProfile();
       loginDefer.resolve(user);
     }
@@ -219,7 +222,7 @@ angular.module('app.auth', ['ui.router'])
   $rootScope.$on('$firebaseSimpleLogin:logout', function(event){
     console.log('$firebaseSimpleLogin:logout');
     if(logoutDefer){
-      sUser.isLogged = false;
+      sUser().isLogged = false;
       $timeout.cancel(logoutTimeout);
       logoutDefer.resolve();
     }

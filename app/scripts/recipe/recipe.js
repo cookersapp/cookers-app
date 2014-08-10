@@ -31,7 +31,7 @@ angular.module('app.recipe', ['ui.router'])
   });
 })
 
-.controller('RecipesCtrl', function($localStorage, $rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = {};
@@ -100,17 +100,18 @@ angular.module('app.recipe', ['ui.router'])
 
 .factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
-  var sRecipes = $localStorage.data.recipes;
-  var sRecipesHistory = $localStorage.logs.recipesHistory;
   var service = {
     get: getRecipe,
     addToHistory: addToHistory,
-    getHistory: function(){return sRecipesHistory;},
+    getHistory: function(){return sRecipesHistory();},
     store: storeRecipe
   };
+  
+  function sRecipes(){return $localStorage.data.recipes;}
+  function sRecipesHistory(){return $localStorage.logs.recipesHistory;}
 
   function getRecipe(recipeId){
-    var recipe = _.find(sRecipes, {id: recipeId});
+    var recipe = _.find(sRecipes(), {id: recipeId});
     if(recipe){
       return $q.when(recipe);
     } else {
@@ -119,8 +120,8 @@ angular.module('app.recipe', ['ui.router'])
   }
 
   function addToHistory(recipe){
-    _.remove(sRecipesHistory, {id: recipe.id});
-    sRecipesHistory.unshift(recipe);
+    _.remove(sRecipesHistory(), {id: recipe.id});
+    sRecipesHistory().unshift(recipe);
   }
 
   function downloadRecipe(recipeId){
@@ -131,7 +132,7 @@ angular.module('app.recipe', ['ui.router'])
   }
 
   function storeRecipe(recipe){
-    sRecipes.push(recipe);
+    sRecipes().push(recipe);
   }
 
   return service;
@@ -139,15 +140,16 @@ angular.module('app.recipe', ['ui.router'])
 
 .factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
-  var sRecipesOfWeek = $localStorage.data.recipesOfWeek;
   var service = {
     getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };
+  
+  function sRecipesOfWeek(){return $localStorage.data.recipesOfWeek;}
 
   function getRecipesOfWeek(week){
-    var weekrecipes = _.find(sRecipesOfWeek, {id: week.toString()});
+    var weekrecipes = _.find(sRecipesOfWeek(), {id: week.toString()});
     if(weekrecipes){
       return $q.when(weekrecipes);
     } else {
@@ -166,7 +168,7 @@ angular.module('app.recipe', ['ui.router'])
   }
 
   function storeRecipesOfWeek(weekrecipes){
-    sRecipesOfWeek.push(weekrecipes);
+    sRecipesOfWeek().push(weekrecipes);
   }
 
   return service;

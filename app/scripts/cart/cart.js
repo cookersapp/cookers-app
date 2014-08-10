@@ -137,7 +137,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 .factory('CartSrv', function($localStorage, CartBuilder, CartUtils){
   'use strict';
   var service = {
-    getCarts: getCarts,
+    getCarts: sCarts,
     hasOpenedCarts: hasOpenedCarts,
     getOpenedCarts: getOpenedCarts,
     getCart: getCart,
@@ -157,23 +157,23 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     archive: archive
   };
 
-  function getCarts(){return $localStorage.user.carts;}
+  function sCarts(){return $localStorage.user.carts;}
 
   function hasOpenedCarts(){
-    return _.findIndex(getCarts(), {archived: false}) > -1;
+    return _.findIndex(sCarts(), {archived: false}) > -1;
   }
 
   function getOpenedCarts(){
-    return _.filter(getCarts(), {archived: false});
+    return _.filter(sCarts(), {archived: false});
   }
 
   function getCart(id){
-    return _.find(getCarts(), {id: id});
+    return _.find(sCarts(), {id: id});
   }
 
   function createCart(name){
     var cart = CartBuilder.createCart(name);
-    getCarts().unshift(cart);
+    sCarts().unshift(cart);
     return cart;
   }
 
