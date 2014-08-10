@@ -9,8 +9,8 @@
 @import "_home";
 @import "_recipe";
 @import "../scripts/cart/_cart";
-@import "_profile";
-@import "_feedback";
+@import "../scripts/user/_profile";
+@import "../scripts/user/_feedback";
 
 .title:first-letter {
   text-transform: uppercase;

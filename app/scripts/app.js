@@ -1,4 +1,4 @@
-angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.user', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
@@ -47,30 +47,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'ionic', 'ionic.con
     },
     data: {
       noSleep: true,
-      restrict: 'connected'
-    }
-  })
-  .state('app.profile', {
-    url: '/profile',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/profile.html',
-        controller: 'ProfileCtrl'
-      }
-    },
-    data: {
-      restrict: 'connected'
-    }
-  })
-  .state('app.feedback', {
-    url: '/feedback?source',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/feedback.html',
-        controller: 'FeedbackCtrl'
-      }
-    },
-    data: {
       restrict: 'connected'
     }
   });

@@ -40,7 +40,8 @@ angular.module('app')
   };
 })
 
-.filter('ingredientFilter', function(){
+// to filter & order ingredients by pertinence
+/*.filter('ingredientFilter', function(){
   'use strict';
   function startsWith(str, sub){
     return str.indexOf(sub) === 0;
@@ -75,4 +76,4 @@ angular.module('app')
     }
     return filtered;
   };
-});
+})*/;

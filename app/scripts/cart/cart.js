@@ -1,6 +1,6 @@
 angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage'])
 
-.config(function($stateProvider, $urlRouterProvider){
+.config(function($stateProvider){
   'use strict';
 
   $stateProvider

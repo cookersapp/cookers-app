@@ -1,6 +1,6 @@
 angular.module('app.auth', ['ui.router'])
 
-.config(function($stateProvider, $urlRouterProvider){
+.config(function($stateProvider){
   'use strict';
 
   $stateProvider
