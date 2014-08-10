@@ -350,85 +350,6 @@ angular.module('app')
     LogSrv.trackUnbuyItem(item.food.id);
     CartSrv2.unbuyItem(cart, item);
   };
-
-  // add product
-  /*$scope.ingredientSearch = '';
-  $scope.selectedProduct = null;
-  $scope.quantityMult = 1;
-  $scope.quantityRound = 0;
-
-  $scope.foods = [];
-  $scope.quantities = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  $scope.units = dataList.quantityUnits;
-
-  FoodSrv.getAll().then(function(foods){
-    $scope.foods = foods;
-  });
-
-  $scope.selectProduct = function(product){
-    if(typeof product === 'string'){
-      product = {
-        id: getSlug(product),
-        name: product,
-        category: 'Inconnue'
-      };
-      FirebaseSrv.push('/missing/food', product);
-    }
-    $scope.selectedProduct = {
-      product: product
-    };
-  };
-  $scope.unselectProduct = function(){
-    resetProduct();
-  };
-  $scope.increaseQuantityMult = function(){
-    $scope.quantityMult = $scope.quantityMult * 10;
-    $scope.quantityRound--;
-  };
-  $scope.decreaseQuantityMult = function(){
-    $scope.quantityMult = $scope.quantityMult / 10;
-    $scope.quantityRound++;
-  };
-  $scope.selectQuantity = function(quantity){
-    $scope.selectedProduct.quantity = quantity;
-  };
-  $scope.selectUnit = function(unit){
-    $scope.selectedProduct.unit = unit;
-  };
-  $scope.addSelectedProductToCart = function(){
-    var item = $scope.selectedProduct;
-    LogSrv.trackAddItemToCart(item.product.id, item.quantity, item.unit, item.product.category === 'Inconnue', $scope.ingredientSearch);
-    CartSrv.addCustomItemToCart(item);
-    updateCart();
-    $window.plugins.toast.showShortTop('✔ ingrédient ajouté à la liste de courses');
-    resetAddIngredient();
-  };
-  $scope.removeCartItemSource = function(item){
-    LogSrv.trackRemoveItemFromCart(item.ingredient.id);
-    CartSrv.removeCustomItemFromCart(item);
-    updateCart();
-    $window.plugins.toast.show('✔ ingrédient supprimé de la liste de courses');
-  };
-
-  $window.addEventListener('native.keyboardhide', function(e){
-    resetAddIngredient();
-  });
-
-  function resetAddIngredient(){
-    resetProduct();
-    $scope.ingredientSearch = '';
-  }
-  function resetProduct(){
-    $scope.selectedProduct = null;
-    $scope.quantityMult = 1;
-    $scope.quantityRound = 0;
-  }
-
-  function updateCart(){
-    // TODO : don't create new lists, update them
-    $scope.items = CartSrv.getCurrentCartItems();
-    $scope.boughtItems = CartSrv.getCurrentCartBoughtItems();
-  }*/
 })
 
 .controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, LogSrv){
@@ -514,12 +435,6 @@ angular.module('app')
       LogSrv.registerUser();
     }
   });
-  /*$scope.$watch('settings.strictIngredients', function(newValue, oldValue){
-    if(newValue !== oldValue){
-      LogSrv.trackChangeSetting('strictIngredients', newValue);
-      LogSrv.registerUser();
-    }
-  });*/
 
   function gravatarCoverIsInCovers(user, covers){
     var gravatarCover = getGravatarCover(user);
