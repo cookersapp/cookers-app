@@ -1,4 +1,4 @@
-angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.user', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.user', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
@@ -22,31 +22,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.user', 'ionic'
       }
     },
     data: {
-      restrict: 'connected'
-    }
-  })
-  .state('app.recipes', {
-    url: '/recipes',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/recipes.html',
-        controller: 'RecipesCtrl'
-      }
-    },
-    data: {
-      restrict: 'connected'
-    }
-  })
-  .state('app.recipe', {
-    url: '/recipe/:recipeId',
-    views: {
-      'menuContent' :{
-        templateUrl: 'views/recipe.html',
-        controller: 'RecipeCtrl'
-      }
-    },
-    data: {
-      noSleep: true,
       restrict: 'connected'
     }
   });
