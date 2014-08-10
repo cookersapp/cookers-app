@@ -312,8 +312,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
-    if(!ingredient.bought){item.price = Utils.addPrices(item.price, source.price);}
-    if(!ingredient.bought){item.quantity = Utils.addQuantities(item.quantity, source.quantity);}
+    if(!ingredient.bought){item.price = Utils.addPrices(item.price, source.price, item);}
+    if(!ingredient.bought){item.quantity = Utils.addQuantities(item.quantity, source.quantity, item);}
     item.sources.push(source);
   }
 

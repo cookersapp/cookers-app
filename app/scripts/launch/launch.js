@@ -61,7 +61,7 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
 
     // INIT is defined in top of index.html
     var launchTime = Date.now()-INIT;
-    if(debug){$window.plugins.toast.show('Application started in '+launchTime+' ms.');}
+    if(debug && ionic.Platform.isWebView()){$window.plugins.toast.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(sUser().device.uuid, launchTime);
 
     // manage user presence in firebase
