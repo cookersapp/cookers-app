@@ -6,7 +6,8 @@ angular.module('app.utils', [])
     createUuid: createUuid,
     adjustForServings: adjustForServings,
     addQuantities: addQuantities,
-    addPrices: addPrices
+    addPrices: addPrices,
+    getDevice: getDevice
   };
 
   function createUuid(){
@@ -60,6 +61,27 @@ angular.module('app.utils', [])
       }
       return null;
     }
+  }
+
+  function getDevice(){
+    var device = angular.copy(ionic.Platform.device());
+    delete device.getInfo;
+    device.environment = _getEnvironment();
+    device.grade = ionic.Platform.grade;
+    device.platforms = ionic.Platform.platforms;
+    if(!device.uuid){
+      device.uuid = createUuid();
+    }
+    return device;
+  }
+
+  function _getEnvironment(){
+    if(ionic.Platform.isWebView()){return 'WebView';}
+    else if(ionic.Platform.isIPad()){return 'IPad';}
+    else if(ionic.Platform.isIOS()){return 'IOS';}
+    else if(ionic.Platform.isAndroid()){return 'Android';}
+    else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
+    else {return 'Unknown';}
   }
 
   return service;

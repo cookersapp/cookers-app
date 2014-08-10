@@ -1,14 +1,9 @@
-angular.module('app', ['app.auth', 'app.cart', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
 
   $stateProvider
-  .state('intro', {
-    url: '/intro',
-    templateUrl: 'views/intro.html',
-    controller: 'IntroCtrl'
-  })
   .state('app', {
     url: '/app',
     abstract: true,

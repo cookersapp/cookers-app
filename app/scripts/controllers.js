@@ -1,25 +1,5 @@
 angular.module('app')
 
-.controller('IntroCtrl', function($scope, $state, UserSrv, LoginSrv, LogSrv){
-  'use strict';
-  var currentSlide = 0;
-
-  $scope.startApp = function(){
-    LogSrv.trackIntroExit(currentSlide);
-    UserSrv.get().skipIntro = true;
-    if(LoginSrv.isLogged()){
-      $state.go('app.home');
-    } else {
-      $state.go('login');
-    }
-  };
-  
-  $scope.slideChanged = function(index){
-    LogSrv.trackIntroChangeSlide(currentSlide, index);
-    currentSlide = index;
-  };
-})
-
 .controller('AppCtrl', function($scope, $interval, $ionicSideMenuDelegate, RecipeSrv, UserSrv){
   'use strict';
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
