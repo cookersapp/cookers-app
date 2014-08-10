@@ -126,18 +126,6 @@ angular.module('app')
       $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
     }
   }, 10000);
-
-  /*$scope.$watch($ionicSideMenuDelegate.getOpenRatio, function(newValue, oldValue){
-    if(newValue !== oldValue){
-      if(newValue === 0){
-        // close
-      } else if(newValue === 1){
-        // open
-      } else {
-        // opening ...
-      }
-    }
-  });*/
 })
 
 .controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, CartSrv2, RecipeSrv, WeekrecipeSrv, LogSrv){
@@ -239,19 +227,6 @@ angular.module('app')
     RecipeSrv.addToHistory(recipe);
     $scope.recipe = recipe;
   });
-
-  /*$scope.cartHasRecipe = CartSrv.cartHasRecipe;
-
-  $scope.addRecipeToCart = function(recipe){
-    LogSrv.trackAddRecipeToCart(recipe.id, null, 'recipedetail');
-    CartSrv.addRecipeToCart(recipe);
-    $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
-  };
-  $scope.removeRecipeFromCart = function(recipe){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipedetail');
-    CartSrv.removeRecipeFromCart(recipe);
-    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
-  };*/
 })
 
 .controller('CartCtrl', function($scope, $window, CartSrv2, LogSrv){
@@ -390,14 +365,6 @@ angular.module('app')
     LogSrv.trackChangeSetting('profileCover', sUser.backgroundCover);
     LogSrv.registerUser();
   };
-
-  /*$scope.email = angular.copy(sUser.email);
-  $scope.saveEmail = function(email){
-    LogSrv.trackSetEmail(email);
-    UserSrv.setEmail(email).then(function(){
-      LogSrv.registerUser();
-    });
-  };*/
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){

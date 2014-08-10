@@ -4,7 +4,6 @@ angular.module('app')
   'use strict';
   var sRecipesOfWeek = $localStorage.data.recipesOfWeek;
   var service = {
-    // TODO set 1 if debug !
     getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
@@ -355,10 +354,6 @@ angular.module('app')
         if(t.thirdPartyUserData.profile_image_url){  profile.avatar = t.thirdPartyUserData.profile_image_url.replace('_normal.', '_bigger.'); }
         if(t.thirdPartyUserData.profile_background_color){  profile.background = '#'+t.thirdPartyUserData.profile_background_color; }
         if(t.thirdPartyUserData.profile_background_image_url_https){  profile.backgroundCover = t.thirdPartyUserData.profile_background_image_url_https; }
-
-        /*if(t.thirdPartyUserData.email){      profile.email = t.thirdPartyUserData.email; }
-        if(t.thirdPartyUserData.first_name){ profile.firstName = t.thirdPartyUserData.first_name; }
-        if(t.thirdPartyUserData.last_name){  profile.lastName = t.thirdPartyUserData.last_name; }*/
       }
     }
     return profile;
