@@ -23,7 +23,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     archive: archive
   };
 
-  function getCarts(){return $localStorage.user.carts2;}
+  function getCarts(){return $localStorage.user.carts;}
   
   function hasOpenedCarts(){
     return _.findIndex(getCarts(), {archived: false}) > -1;
