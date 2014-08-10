@@ -40,7 +40,7 @@ angular.module('app.utils', [])
     var q1 = p1 ? {unit: p1.currency, value: p1.value} : null;
     var q2 = p2 ? {unit: p2.currency, value: p2.value} : null;
     var q = _add(q1, q2, source);
-    return q ? {currency: q.unit, value: q.value} : null
+    return q ? {currency: q.unit, value: q.value} : null;
   }
 
   function _add(q1, q2, source){

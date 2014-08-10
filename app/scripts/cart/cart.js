@@ -52,7 +52,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 .controller('CartRecipesCtrl', function($scope, $window, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-  $scope.selectedRecipe;
+  $scope.selectedRecipe = null;
 
   $scope.ingredientBoughtPc = function(recipe){
     // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
@@ -80,12 +80,12 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
-    CartSrv.removeRecipe(cart, recipe);
+    CartSrv.removeRecipe($scope.cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList, LogSrv){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, FirebaseSrv, dataList, LogSrv){
   'use strict';
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
