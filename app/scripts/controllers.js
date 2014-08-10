@@ -128,10 +128,10 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, CartSrv2, RecipeSrv, WeekrecipeSrv, LogSrv){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, CartSrv, RecipeSrv, WeekrecipeSrv, LogSrv){
   'use strict';
-  $scope.recipesInCart = CartSrv2.recipesFromOpenedCarts();
-  $scope.itemsInCart = CartSrv2.itemsFromOpenedCarts();
+  $scope.recipesInCart = CartSrv.recipesFromOpenedCarts();
+  $scope.itemsInCart = CartSrv.itemsFromOpenedCarts();
   $scope.recipesHistory = RecipeSrv.getHistory();
   $scope.recipesOfWeek = [];
   $scope.standardMessage = null;
@@ -162,7 +162,7 @@ angular.module('app')
   };
 })
 
-.controller('RecipesCtrl', function($localStorage, $rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv2, LogSrv){
+.controller('RecipesCtrl', function($localStorage, $rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = {};
@@ -171,10 +171,10 @@ angular.module('app')
     $scope.loading = false;
   });
   
-  var cart = CartSrv2.hasOpenedCarts() ? CartSrv2.getOpenedCarts()[0] : CartSrv2.createCart();
+  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
   $scope.cartHasRecipe = function(recipe){
-    return CartSrv2.hasRecipe(cart, recipe);
+    return CartSrv.hasRecipe(cart, recipe);
   };
 
   $scope.toggleIngredients = function(recipe){
@@ -202,7 +202,7 @@ angular.module('app')
     }).then(function(servings){
       if(servings){
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'weekrecipes');
-        CartSrv2.addRecipe(cart, recipe, servings);
+        CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
         RecipeSrv.addToHistory(recipe);
       }
@@ -210,7 +210,7 @@ angular.module('app')
   };
   $scope.removeRecipeFromCart = function(recipe, index){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
-    CartSrv2.removeRecipe(cart, recipe);
+    CartSrv.removeRecipe(cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
   
@@ -227,104 +227,6 @@ angular.module('app')
     RecipeSrv.addToHistory(recipe);
     $scope.recipe = recipe;
   });
-})
-
-.controller('CartCtrl', function($scope, $window, CartSrv2, LogSrv){
-  'use strict';
-  // TODO : add $ionicPopover for more options (rename, archive, switch...)
-  $scope.cart = CartSrv2.hasOpenedCarts() ? CartSrv2.getOpenedCarts()[0] : CartSrv2.createCart();
-  $scope.archiveCart = function(){
-    if($window.confirm('Archiver cette liste ?')){
-      LogSrv.trackArchiveCart();
-      CartSrv2.archive($scope.cart);
-      // TODO : what to do now ???
-    }
-  };
-})
-
-.controller('CartRecipesCtrl', function($scope, $window, CartSrv2, LogSrv){
-  'use strict';
-  $scope.cart = CartSrv2.hasOpenedCarts() ? CartSrv2.getOpenedCarts()[0] : CartSrv2.createCart();
-  $scope.selectedRecipe;
-
-  $scope.ingredientBoughtPc = function(recipe){
-    // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
-    if(recipe && recipe.ingredients && recipe.ingredients.length > 0){
-      var ingredientBought = 0;
-      for(var i in recipe.ingredients){
-        if(recipe.ingredients[i].bought){
-          ingredientBought++;
-        }
-      }
-      return 100 * ingredientBought / recipe.ingredients.length;
-    } else {
-      return 100;
-    }
-  };
-
-  $scope.toggleRecipe = function(recipe){
-    if($scope.selectedRecipe === recipe){
-      LogSrv.trackCartRecipeDetails(recipe.id, 'hide');
-      $scope.selectedRecipe = null;
-    } else {
-      LogSrv.trackCartRecipeDetails(recipe.id, 'show');
-      $scope.selectedRecipe = recipe;
-    }
-  };
-  $scope.removeRecipeFromCart = function(recipe){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
-    CartSrv2.removeRecipe(cart, recipe);
-    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
-  };
-})
-
-.controller('CartIngredientsCtrl', function($scope, CartSrv2, FoodSrv, FirebaseSrv, dataList, LogSrv){
-  'use strict';
-  var cart = CartSrv2.hasOpenedCarts() ? CartSrv2.getOpenedCarts()[0] : CartSrv2.createCart();
-  
-  $scope.openedItems = [];
-  $scope.customItems = cart.customItems;
-  $scope.items = CartSrv2.getItems(cart);
-
-  $scope.customItemsEdited = function(customItems){
-    cart.customItems = customItems;
-    LogSrv.trackEditCartCustomItems(customItems);
-  };
-
-  $scope.categoryId = function(food){
-    return getSlug(food.category);
-  };
-  $scope.isOpened = function(item){
-    return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
-  };
-  $scope.toggleItem = function(item){
-    var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
-    LogSrv.trackCartItemDetails(item.food.id, index > -1 ? 'hide' : 'show');
-    if(index > -1){$scope.openedItems.splice(index, 1);}
-    else {$scope.openedItems.push(item);}
-  };
-  
-  $scope.allItemsBought = function(){
-    var boughtItems = _.filter($scope.items, function(item){
-      return $scope.isBought(item);
-    });
-    return $scope.items.length > 0 && $scope.items.length === boughtItems.length;
-  };
-  $scope.isBought = function(item){
-    var bought = true;
-    angular.forEach(item.sources, function(source){
-      if(!source.ingredient.bought){bought = false;}
-    });
-    return bought;
-  };
-  $scope.buyItem = function(item){
-    LogSrv.trackBuyItem(item.food.id);
-    CartSrv2.buyItem(cart, item);
-  };
-  $scope.unbuyItem = function(item){
-    LogSrv.trackUnbuyItem(item.food.id);
-    CartSrv2.unbuyItem(cart, item);
-  };
 })
 
 .controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, LogSrv){

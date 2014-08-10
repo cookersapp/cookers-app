@@ -1,6 +1,140 @@
-angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
+angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage'])
 
-.factory('CartSrv2', function($localStorage, CartBuilder, CartUtils){
+.config(function($stateProvider, $urlRouterProvider){
+  'use strict';
+
+  $stateProvider
+  .state('app.cart', {
+    url: '/cart',
+    abstract: true,
+    views: {
+      'menuContent' :{
+        templateUrl: 'scripts/cart/main.html',
+        controller: 'CartCtrl'
+      }
+    },
+    data: {
+      restrict: 'connected'
+    }
+  })
+  .state('app.cart.recipes', {
+    url: '/recipes',
+    templateUrl: 'scripts/cart/recipes.html',
+    controller: 'CartRecipesCtrl',
+    data: {
+      restrict: 'connected'
+    }
+  })
+  .state('app.cart.ingredients', {
+    url: '/ingredients',
+    templateUrl: 'scripts/cart/ingredients.html',
+    controller: 'CartIngredientsCtrl',
+    data: {
+      noSleep: true,
+      restrict: 'connected'
+    }
+  });
+})
+
+.controller('CartCtrl', function($scope, $window, CartSrv, LogSrv){
+  'use strict';
+  // TODO : add $ionicPopover for more options (rename, archive, switch...)
+  $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  $scope.archiveCart = function(){
+    if($window.confirm('Archiver cette liste ?')){
+      LogSrv.trackArchiveCart();
+      CartSrv.archive($scope.cart);
+      // TODO : what to do now ???
+    }
+  };
+})
+
+.controller('CartRecipesCtrl', function($scope, $window, CartSrv, LogSrv){
+  'use strict';
+  $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  $scope.selectedRecipe;
+
+  $scope.ingredientBoughtPc = function(recipe){
+    // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
+    if(recipe && recipe.ingredients && recipe.ingredients.length > 0){
+      var ingredientBought = 0;
+      for(var i in recipe.ingredients){
+        if(recipe.ingredients[i].bought){
+          ingredientBought++;
+        }
+      }
+      return 100 * ingredientBought / recipe.ingredients.length;
+    } else {
+      return 100;
+    }
+  };
+
+  $scope.toggleRecipe = function(recipe){
+    if($scope.selectedRecipe === recipe){
+      LogSrv.trackCartRecipeDetails(recipe.id, 'hide');
+      $scope.selectedRecipe = null;
+    } else {
+      LogSrv.trackCartRecipeDetails(recipe.id, 'show');
+      $scope.selectedRecipe = recipe;
+    }
+  };
+  $scope.removeRecipeFromCart = function(recipe){
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
+    CartSrv.removeRecipe(cart, recipe);
+    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+  };
+})
+
+.controller('CartIngredientsCtrl', function($scope, CartSrv, FoodSrv, FirebaseSrv, dataList, LogSrv){
+  'use strict';
+  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+
+  $scope.openedItems = [];
+  $scope.customItems = cart.customItems;
+  $scope.items = CartSrv.getItems(cart);
+
+  $scope.customItemsEdited = function(customItems){
+    cart.customItems = customItems;
+    LogSrv.trackEditCartCustomItems(customItems);
+  };
+
+  $scope.categoryId = function(food){
+    return getSlug(food.category);
+  };
+  $scope.isOpened = function(item){
+    return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
+  };
+  $scope.toggleItem = function(item){
+    var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
+    LogSrv.trackCartItemDetails(item.food.id, index > -1 ? 'hide' : 'show');
+    if(index > -1){$scope.openedItems.splice(index, 1);}
+    else {$scope.openedItems.push(item);}
+  };
+
+  $scope.allItemsBought = function(){
+    var boughtItems = _.filter($scope.items, function(item){
+      return $scope.isBought(item);
+    });
+    return $scope.items.length > 0 && $scope.items.length === boughtItems.length;
+  };
+  $scope.isBought = function(item){
+    var bought = true;
+    angular.forEach(item.sources, function(source){
+      if(!source.ingredient.bought){bought = false;}
+    });
+    return bought;
+  };
+  $scope.buyItem = function(item){
+    LogSrv.trackBuyItem(item.food.id);
+    CartSrv.buyItem(cart, item);
+  };
+  $scope.unbuyItem = function(item){
+    LogSrv.trackUnbuyItem(item.food.id);
+    CartSrv.unbuyItem(cart, item);
+  };
+})
+
+.factory('CartSrv', function($localStorage, CartBuilder, CartUtils){
   'use strict';
   var service = {
     getCarts: getCarts,
@@ -10,7 +144,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     createCart: createCart,
     /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
     isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
-    
+
     recipesFromOpenedCarts: recipesFromOpenedCarts,
     itemsFromOpenedCarts: itemsFromOpenedCarts,
 
@@ -24,29 +158,29 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
   };
 
   function getCarts(){return $localStorage.user.carts;}
-  
+
   function hasOpenedCarts(){
     return _.findIndex(getCarts(), {archived: false}) > -1;
   }
-  
+
   function getOpenedCarts(){
     return _.filter(getCarts(), {archived: false});
   }
-  
+
   function getCart(id){
     return _.find(getCarts(), {id: id});
   }
-  
+
   function createCart(name){
     var cart = CartBuilder.createCart(name);
     getCarts().unshift(cart);
     return cart;
   }
-  
+
   /*function isRecipeExistInOpenedCart(recipe){
     return _cartsWithRecipe(getOpenedCarts(), recipe).length > 0;
   }
-  
+
   function isRecipeExistInAllOpenedCart(recipe){
     var openedCarts = getOpenedCarts();
     var cartsWithRecipe = _cartsWithRecipe(openedCarts, recipe);
@@ -63,34 +197,34 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     var recipes = recipesFromOpenedCarts();
     return CartUtils.recipesToItems(recipes);
   }
-  
+
   function getItems(cart){
     return CartUtils.recipesToItems(cart.recipes);
   }
-  
+
   function hasRecipe(cart, recipe){
     return _.findIndex(cart.recipes, {id: recipe.id}) > -1;
   }
-  
+
   function addRecipe(cart, recipe, servings){
     var r = CartBuilder.createRecipe(recipe, servings);
     cart.recipes.push(r);
   }
-  
+
   function removeRecipe(cart, recipe){
     _.remove(cart.recipes, {id: recipe.id});
   }
-  
+
   function buyItem(cart, item, bought){
     _.map(item.sources, function(source){
       source.ingredient.bought = bought;
     });
   }
-  
+
   function archive(cart){
     cart.archived = true;
   }
-  
+
   function _cartsWithRecipe(carts, recipe){
     return _.filter(carts, function(cart){
       return hasRecipe(cart, recipe);
@@ -119,7 +253,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     _sortItemsByCategory(items);
     return items;
   }
-  
+
   function _sortItemsByCategory(items){
     items.sort(function(a, b){
       if(a.food.category > b.food.category){return 1;}
@@ -175,7 +309,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ngStorage'])
     item.sources = [source];
     return item;
   }
-  
+
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
     if(!ingredient.bought){item.price = Utils.addPrices(item.price, source.price);}

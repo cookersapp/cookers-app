@@ -71,36 +71,6 @@ angular.module('app', ['app.utils', 'app.logger', 'app.cart', 'ionic', 'ionic.co
       restrict: 'connected'
     }
   })
-  .state('app.cart', {
-    url: '/cart',
-    abstract: true,
-    views: {
-      'menuContent' :{
-        templateUrl: 'scrips/cart/main.html',
-        controller: 'CartCtrl'
-      }
-    },
-    data: {
-      restrict: 'connected'
-    }
-  })
-  .state('app.cart.recipes', {
-    url: '/recipes',
-    templateUrl: 'scrips/cart/recipes.html',
-    controller: 'CartRecipesCtrl',
-    data: {
-      restrict: 'connected'
-    }
-  })
-  .state('app.cart.ingredients', {
-    url: '/ingredients',
-    templateUrl: 'scrips/cart/ingredients.html',
-    controller: 'CartIngredientsCtrl',
-    data: {
-      noSleep: true,
-      restrict: 'connected'
-    }
-  })
   .state('app.profile', {
     url: '/profile',
     views: {
