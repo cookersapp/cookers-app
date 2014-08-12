@@ -280,7 +280,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   function createCart(name){
     return {
       id: Utils.createUuid(),
-      added: Date.now(),
+      created: Date.now(),
       archived: false,
       name: name ? name : 'Liste du '+moment().format('LL'),
       recipes: [],
@@ -291,7 +291,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   function createRecipe(recipe, servings){
     var r = angular.copy(recipe);
     r.cartData = {
-      added: Date.now(),
+      created: Date.now(),
       cooked: false,
       servings: {
         value: servings,

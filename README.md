@@ -8,7 +8,6 @@
     - refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
 
 - todo
-    - refactor : added => created (& firebase admin)
     - ajouter les listes : recettes à cuisiner et recettes cuisinées
     - redesign de la liste des recettes
         - mettre dans des cartes

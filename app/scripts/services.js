@@ -76,7 +76,7 @@ angular.module('app')
       sGlobalmessages().messages = sGlobalmessages().messages.concat(messages);
       // sort chronogically
       sGlobalmessages().messages.sort(function(a,b){
-        return a.added - b.added;
+        return a.created - b.created;
       });
     });
   }
@@ -87,7 +87,7 @@ angular.module('app')
   }
 
   function messageExists(message){
-    return message && message.added && _.findIndex(sGlobalmessages().messages, {added: message.added}) > -1;
+    return message && message.created && _.findIndex(sGlobalmessages().messages, {created: message.created}) > -1;
   }
 
   return service;
