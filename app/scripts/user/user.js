@@ -167,9 +167,9 @@ angular.module('app.user', ['ui.router'])
 
   // UserVoice widget
   UserVoice.push(['set', {
-    accent_color: '#e2753a',
+    accent_color: '#f62',
     trigger_color: 'white',
-    trigger_background_color: '#e2753a'
+    trigger_background_color: '#f62'
   }]);
   var identity = {};
   if(sUser && sUser.email){identity.email = sUser.email;}

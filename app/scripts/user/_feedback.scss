@@ -1,12 +1,37 @@
-.feedback-form {
-  .list-inset {
-    margin: 10px;
+.feedback-screen {
+  .team {
+    background: #ccc;
+    background-image: linear-gradient(#aaa, white);
+    img {
+      width: 100%;
+    }
+    .legend {
+      margin-top: -35px;
+      margin-left: 10px;
+      padding: 5px;
+      width: 66%;
+      color: #555;
+      font-style: italic;
+    }
   }
-  .padding {
-    padding-top: 0px;
-    padding-bottom: 0px;
+
+  .feedback-form {
+    .list-inset {
+      margin: 10px;
+    }
+    .padding {
+      padding-top: 0px;
+      padding-bottom: 0px;
+    }
+    button[type="submit"] {
+      margin-bottom: 0px;
+    }
   }
-  button[type="submit"] {
-    margin-bottom: 0px;
+
+  #uservoice {
+    margin-top: -28px;
+    margin-right: 10px;
+    float: right;
+    position: initial;
   }
 }

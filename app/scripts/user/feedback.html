@@ -2,30 +2,23 @@
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
-      <h1 class="title">Remarques</h1>
+      <h1 class="title">Donne ton avis !</h1>
     </div>
   </ion-header-bar>
 
-  <ion-content>
-    <div class="row">
-      <div class="col col-33">
-        <img src="images/team.jpg" style="width: 100%;">
-      </div>
-      <div class="col col-67">
-        Merci d'utiliser notre application.<br>
-        Nous sommes toujours très intéressé par échanger avec les utilisateurs et nous sommes preneurs de toute remarque, avis, problème ou encouragement !
-      </div>
+  <ion-content class="feedback-screen">
+    <div class="team hide-on-keyboard-open">
+      <img src="images/team.png">
+      <div class="legend">Nous sommes friands de retours et adorons discuter avec nos utilisateurs !</div>
     </div>
-    <div class="padding">
-      Consulte aussi <a href="http://cookers.uservoice.com/">http://cookers.uservoice.com/</a> pour suggérer et voter pour les nouvelles fonctionnalités !
-    </div>
+
     <form ng-submit="sendFeedback()" class="feedback-form">
       <div class="list list-inset">
         <label class="item item-input" ng-if="!feedback.email">
           <input type="email" name="email" placeholder="Email" ng-model="feedback.email" ng-disabled="feedback.sending || feedback.sent" required>
         </label>
         <label class="item item-input">
-          <textarea name="content" rows="5" placeholder="Un p'tit compliment ?" ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" required>{{feedback.content}}</textarea>
+          <textarea name="content" rows="5" blur-on-keyboard-out ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" placeholder="Un p'tit compliment ?" required>{{feedback.content}}</textarea>
         </label>
       </div>
       <div class="padding" ng-class="{hide: feedback.sent}">
@@ -41,10 +34,9 @@
       </div>
     </form>
     <div class="padding">
-      Si tu as un peu de temps et que tu es sur Paris, nous serions très heureux de t'offrir un café et d'échanger<br>
-      avec toi au sujet de l'application !
+      Viens découvrir <a href="http://cookers.uservoice.com/">les prochaines fonctionnalités</a> et vote pour celles que tu préfères !
     </div>
-    
+
     <!-- UserVoice widget -->
     <div id="uservoice" data-html2canvas-ignore="true" class="uv-icon uv-bottom-right" ng-click="openUservoice()">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="39px" height="39px" viewBox="0 0 39 39" enable-background="new 0 0 39 39" xml:space="preserve">
