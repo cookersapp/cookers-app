@@ -110,15 +110,15 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       if(sUser().isLogged){
         if(toState.data && toState.data.restrict && toState.data.restrict === 'notConnected'){
-          console.log('Not allowed to go to '+toState.name+' (you are connected !)');
           event.preventDefault();
-          if(fromState.name === ''){$state.go('app.home');}
+          console.log('Not allowed to go to '+toState.name+' (you are connected !)');
+          if(fromState.data && fromState.data.restrict && fromState.data.restrict === 'notConnected'){$state.go('app.home');}
         }
       } else {
         if(toState.data && toState.data.restrict && toState.data.restrict === 'connected'){
-          console.log('Not allowed to go to '+toState.name+' (you are not connected !)');
           event.preventDefault();
-          if(fromState.name === ''){$state.go('login');}
+          console.log('Not allowed to go to '+toState.name+' (you are not connected !)');
+          if(fromState.data && fromState.data.restrict && fromState.data.restrict === 'connected'){$state.go('login');}
         }
       }
     });
