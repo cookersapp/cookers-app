@@ -63,7 +63,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 })
 
 .constant('debug', true)
-.constant('appVersion', '~0.1.0')
+.constant('appVersion', '~0.2.0')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
@@ -140,16 +140,16 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 
 .run(function($rootScope, $location, $localStorage, localStorageDefault, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
-  if($localStorage.user && $localStorage.app.version !== appVersion){
-    StorageSrv.migrate($localStorage.app.version);
-    $localStorage.app.version = appVersion;
-  }
-
   if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
   if(!$localStorage.data){$localStorage.data = localStorageDefault.data;}
   if(!$localStorage.logs){$localStorage.logs = localStorageDefault.logs;}
 
+  if($localStorage.app.version !== appVersion && $localStorage.carts){
+    StorageSrv.migrate($localStorage.app.version, appVersion);
+    $localStorage.app.version = appVersion;
+  }
+  
   $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;

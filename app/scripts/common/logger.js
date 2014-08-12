@@ -71,12 +71,12 @@ angular.module('app.logger', [])
       navigator.geolocation.getCurrentPosition(function(position){
         $timeout.cancel(fallbackTrack);
         params.position = position.coords;
-        params.position.timestamp = position.timestamp;
+        if(params.position){params.position.timestamp = position.timestamp;}
         if(event === 'buy-item' || event === 'buy-item-source'){buyLogsRef.push(params);}
         track(event, params);
       }, function(error){
         params.position = error;
-        params.position.timestamp = Date.now();
+        if(params.position){params.position.timestamp = Date.now();}
         track(event, params);
       }, {
         enableHighAccuracy: true,

@@ -115,7 +115,7 @@ angular.module('app.auth', ['ui.router'])
   };
 })
 
-.factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, firebaseUrl){
+.factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, LogSrv, firebaseUrl){
   'use strict';
   var service = {
     isLogged: function(){return sUser().isLogged;},
@@ -176,7 +176,7 @@ angular.module('app.auth', ['ui.router'])
   function twitterConnect(){
     var provider = 'twitter';
     var opts = {};
-    if(u && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
+    if(sUser() && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
       opts.oauth_token = sUser().profiles[provider].accessToken;
       opts.oauth_token_secret = sUser().profiles[provider].accessTokenSecret;
       opts.user_id = sUser().profiles[provider].id;
@@ -211,7 +211,6 @@ angular.module('app.auth', ['ui.router'])
   }
 
   $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
-    console.log('$firebaseSimpleLogin:login', user);
     if(loginDefer){
       sUser().isLogged = true;
       sUser().profiles[loginMethod] = user;
@@ -220,7 +219,6 @@ angular.module('app.auth', ['ui.router'])
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:logout', function(event){
-    console.log('$firebaseSimpleLogin:logout');
     if(logoutDefer){
       sUser().isLogged = false;
       $timeout.cancel(logoutTimeout);
@@ -228,7 +226,7 @@ angular.module('app.auth', ['ui.router'])
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:error', function(event, error){
-    console.log('$firebaseSimpleLogin:error', error);
+    LogSrv.trackError('$firebaseSimpleLogin:error', error);
     if(loginDefer){loginDefer.reject(error);}
     if(logoutDefer){logoutDefer.reject(error);}
   });
