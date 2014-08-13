@@ -218,4 +218,38 @@ angular.module('app.recipe', ['ui.router'])
   }
 
   return service;
+})
+
+.directive('cookTimer', function($interval){
+  'use strict';
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: 'scripts/recipe/timer.html',
+    scope: {
+      label: '=',
+      seconds: '=',
+      color: '@'
+    },
+    link: function(scope, element, attrs){
+      var timer = null;
+      scope.timer = scope.seconds;
+
+      scope.toggleTimer = function(){
+        if(timer === null){startTimer();}
+        else {stopTimer();}
+      };
+
+      function startTimer(){
+        timer = $interval(function(){
+          if(scope.timer > 0){scope.timer--;}
+          else {stopTimer();}
+        }, 1000);
+      }
+      function stopTimer(){
+        $interval.cancel(timer);
+        timer = null;
+      }
+    }
+  };
 });
