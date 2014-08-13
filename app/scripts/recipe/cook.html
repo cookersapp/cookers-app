@@ -46,9 +46,98 @@
     </div>
 
     <div class="cooking">
-      <h2 class="title">Préparation ({{recipe.instructions.length}} étapes) :</h2>
-      <div ng-repeat="instruction in recipe.instructions" class="step card">
-        <div class="content" ng-bind-html="instruction.content"></div>
+      <h2 class="title">Préparation (6 étapes) :</h2>
+      <div>
+        <div class="step card">
+          En avant guingamp, préchauffe ton four à <b>200°C</b> et sors ton matos de cuisine !
+          <ul>
+            <li>Un mixeur</li>
+            <li>Un plat qui va au four</li>
+            <li>Une poêle</li>
+            <li>Une casserole (optionnel)</li>
+            <li>Une planche à découper</li>
+            <li>Des couverts.</li>
+          </ul>
+          Lance la cuisson de ton riz, s'il est prévu au repas (d'où la nécessité de la casserole).
+        </div>
+      </div>
+      <div>
+        <div class="step card">
+          Prépare tes découpes :<br>
+          <ol>
+            <li>Ôte leur chapeau aux aubergines et retires-en la chair que tu haches et réserves <span class="help">(pour les first level, 'que tu mets de côté')</span></li>
+            <li>Les tomates en dés</li>
+            <li>L'oignon en quadrillage <span class="help">(je m'explique, tu découpes en rondelles fines, puis en maintenant celles-ci ensembles, à nouveau en rondelles fines mais perpendiculaire à ta première découpe)</span></li>
+            <li>L'ail en petits morceaux</li>
+          </ol>
+        </div>
+      </div>
+      <div>
+        <div class="step card">
+          Fais cuire les aubergines vidées pendant <b>20 minutes</b>, partie peau vers le haut (ça a son importance).<br>
+          Dès que tu vois des 'ridules' sur la peau de l'aubergine, time's up !
+        </div>
+        <div class="timers">
+          <div class="timer red">
+            <div class="label">Sors les aubergines du four</div>
+            <div class="time">{{1200 | duration}}</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="step card">
+          Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :
+          <ul>
+            <li>Après <b>5 minutes</b>, ajoutes-y les oignons et l'ail et laisse dorer pendant <b>5 minutes</b></li>
+            <li>Ajoute ensuite la chair d'aubergine hachée puis les tomates coupées</li>
+            <li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li>
+            <li>Laisse mijoter pendant encore <b>5 minutes</b></li>
+          </ul>
+        </div>
+        <div class="timers">
+          <div class="multi-timer red">
+            <div class="time">{{1500 | duration}}</div>
+            <ul>
+              <li class="unselected">
+                <div class="date">{{0 | duration}}</div>
+                <div class="circle"></div>
+                <div class="label">Met la viande hachée dans la poêle</div>
+              </li>
+              <li class="unselected">
+                <div class="date">{{300 | duration}}</div>
+                <div class="circle"></div>
+                <div class="label">Ajoute les oignons et l'ail</div>
+              </li>
+              <li class="selected">
+                <div class="date">{{600 | duration}}</div>
+                <div class="circle"></div>
+                <div class="label">Ajoute la chair de l'aubergine et les tomates</div>
+              </li>
+              <li>
+                <div class="date">{{1200 | duration}}</div>
+                <div class="circle"></div>
+                <div class="label">Ajoute la purée de tomates</div>
+              </li>
+              <li>
+                <div class="date">{{1500 | duration}}</div>
+                <div class="circle"></div>
+                <div class="label">Sors la préparation du feu</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="step card">
+          Retire les aubergines du four, passe-le en mode grill.
+        </div>
+      </div>
+      <div>
+        <div class="step card">
+          Remplis tes aubergines vides avec la farce,<br>
+          Mélange la chapelure au parmesan,<br>
+          Saupoudre tes aubergines,<br>
+          Passe le tout au grill 3 minutes.</div>
       </div>
     </div>
 

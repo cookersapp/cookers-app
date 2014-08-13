@@ -67,7 +67,8 @@ angular.module('app')
 .filter('duration', function($filter){
   'use strict';
   return function(seconds){
-    return moment.duration(seconds, 'seconds').format('hh:mm:ss');
+    var prefix = seconds < 60 ? '00:' : '';
+    return prefix + moment.duration(seconds, 'seconds').format('mm:ss');
   };
 })
 
