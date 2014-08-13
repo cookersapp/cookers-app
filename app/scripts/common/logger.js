@@ -59,7 +59,7 @@ angular.module('app.logger', [])
     trackClearApp: function(user){track('clear-app', {user: user});},
     trackError: function(id, error){track('error', {id: id, error: error});}
   };
-  
+
   function sApp(){return $localStorage.app;}
   function sUser(){return $localStorage.user;}
 
@@ -125,19 +125,24 @@ angular.module('app.logger', [])
     var mixpanelUser = {
       $created: moment(sApp().firstLaunch).format('llll'),
       $email: sUser().email,
+      $first_name: sUser().firstName,
+      $last_name: sUser().lastName,
       fullName: sUser().name,
       avatar: sUser().avatar,
       backgroundCover: sUser().backgroundCover
     };
-    if(sUser().profiles.gravatar.entry && sUser().profiles.gravatar.entry.length > 0){
+    mixpanelUser.appVersion = appVersion;
+    if(sUser() && sUser().profiles && sUser().profiles.gravatar && sUser().profiles.gravatar.entry && sUser().profiles.gravatar.entry.length > 0){
       var e = sUser().profiles.gravatar.entry[0];
       if(e.hash)            { mixpanelUser.gravatar = e.hash; }
       if(e.aboutMe)         { mixpanelUser.about = e.aboutMe; }
       if(e.currentLocation) { mixpanelUser.location = e.currentLocation; }
-      if(e.name){
-        if(e.name.givenName) { mixpanelUser.$first_name = e.name.givenName; }
-        if(e.name.familyName){ mixpanelUser.$last_name = e.name.familyName; }
-      }
+    }
+    if(sUser() && sUser().device){
+      if(sUser().device.uuid)     { mixpanelUser['device.uuid']       = sUser().device.uuid;      }
+      if(sUser().device.model)    { mixpanelUser['device.model']      = sUser().device.model;     }
+      if(sUser().device.platform) { mixpanelUser['device.platform']   = sUser().device.platform;  }
+      if(sUser().device.version)  { mixpanelUser['device.version']    = sUser().device.version;   }
     }
     for(var i in sUser().settings){
       mixpanelUser['setting.'+i] = sUser().settings[i];

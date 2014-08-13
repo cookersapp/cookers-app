@@ -16,7 +16,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   .state('app.home', {
     url: '/home',
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'views/home.html',
         controller: 'HomeCtrl'
       }
@@ -118,7 +118,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     carts: [],
     settings: {
       defaultServings: 2,
-      //strictIngredients: false,
       showPrices: false,
       bigImages: true
     }
