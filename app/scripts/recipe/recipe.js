@@ -7,7 +7,7 @@ angular.module('app.recipe', ['ui.router'])
   .state('app.recipes', {
     url: '/recipes',
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'scripts/recipe/recipes.html',
         controller: 'RecipesCtrl'
       }
@@ -19,9 +19,21 @@ angular.module('app.recipe', ['ui.router'])
   .state('app.recipe', {
     url: '/recipe/:recipeId',
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'scripts/recipe/recipe.html',
         controller: 'RecipeCtrl'
+      }
+    },
+    data: {
+      restrict: 'connected'
+    }
+  })
+  .state('app.cook', {
+    url: '/cook/:recipeId',
+    views: {
+      'menuContent': {
+        templateUrl: 'scripts/recipe/cook.html',
+        controller: 'CookCtrl'
       }
     },
     data: {
@@ -39,7 +51,7 @@ angular.module('app.recipe', ['ui.router'])
     $scope.recipesOfWeek = recipesOfWeek;
     $scope.loading = false;
   });
-  
+
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
   $scope.cartHasRecipe = function(recipe){
@@ -82,7 +94,7 @@ angular.module('app.recipe', ['ui.router'])
     CartSrv.removeRecipe(cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
-  
+
   $scope.recipeFeedback = function(feedback){
     LogSrv.trackRecipesFeedback($scope.recipesOfWeek.week, feedback);
     $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
@@ -98,6 +110,40 @@ angular.module('app.recipe', ['ui.router'])
   });
 })
 
+.controller('CookCtrl', function($scope, $state, $stateParams, $interval, RecipeSrv, LogSrv){
+  'use strict';
+  // TODO : should get servings in $stateParams !
+  var timer = null;
+  $scope.recipe = {};
+  $scope.timer = 0;
+
+  RecipeSrv.get($stateParams.recipeId).then(function(recipe){
+    RecipeSrv.addToHistory(recipe);
+    $scope.recipe = recipe;
+    $scope.timer = moment.duration(recipe.time.eat, "minutes").asSeconds();
+    startTimer();
+  });
+
+  $scope.toggleTimer = function(){
+    if(timer === null){startTimer();}
+    else {stopTimer();}
+  };
+  $scope.done = function(){
+    $state.go('app.home');
+  };
+
+  function startTimer(){
+    timer = $interval(function(){
+      if($scope.timer > 0){$scope.timer--;}
+      else {stopTimer();}
+    }, 1000);
+  }
+  function stopTimer(){
+    $interval.cancel(timer);
+    timer = null;
+  }
+})
+
 .factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){
   'use strict';
   var service = {
@@ -106,7 +152,7 @@ angular.module('app.recipe', ['ui.router'])
     getHistory: function(){return sRecipesHistory();},
     store: storeRecipe
   };
-  
+
   function sRecipes(){return $localStorage.data.recipes;}
   function sRecipesHistory(){return $localStorage.logs.recipesHistory;}
 
@@ -145,7 +191,7 @@ angular.module('app.recipe', ['ui.router'])
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };
-  
+
   function sRecipesOfWeek(){return $localStorage.data.recipesOfWeek;}
 
   function getRecipesOfWeek(week){

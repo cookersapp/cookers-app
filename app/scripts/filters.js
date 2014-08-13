@@ -28,8 +28,32 @@ angular.module('app')
 
 .filter('ingredient', function($filter){
   'use strict';
+  function endsWith(str, suffix){
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  }
+  
+  function preWords(ingredient){
+    if(ingredient && ingredient.pre){
+      return ' ' + ingredient.pre + (endsWith(ingredient.pre, '\'') ? '' : ' ');
+    } else {
+      return ' ';
+    }
+  }
+  
+  function postWords(ingredient){
+    if(ingredient && ingredient.post){
+      return ' ' + ingredient.post;
+    } else {
+      return '';
+    }
+  }
+  
   return function(ingredient){
-    return ingredient ? $filter('quantity')(ingredient.quantity)+' '+(ingredient.pre?ingredient.pre:'')+' '+ingredient.food.name+' '+(ingredient.post?ingredient.post:'') : '';
+    if(ingredient){
+      return $filter('quantity')(ingredient.quantity) + preWords(ingredient) + ingredient.food.name + postWords(ingredient);
+    } else {
+      return '';
+    }
   };
 })
 
@@ -37,6 +61,13 @@ angular.module('app')
   'use strict';
   return function(price){
     return price ? $filter('number')(price.value, 2)+' '+price.currency+(price.unit ? '/' + price.unit : '') : '';
+  };
+})
+
+.filter('duration', function($filter){
+  'use strict';
+  return function(seconds){
+    return moment.duration(seconds, 'seconds').format('hh:mm:ss');
   };
 })
 

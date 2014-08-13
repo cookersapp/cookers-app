@@ -3,6 +3,7 @@
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
       <h1 class="title">{{recipe.name}}</h1>
+      <button class="button button-icon fa fa-cutlery" ui-sref="app.cook({recipeId: recipe.id})"></button>
     </div>
   </ion-header-bar>
 
@@ -16,9 +17,7 @@
     <div class="ingredients">
       <h2 class="title">Ingrédients ({{recipe.ingredients.length}})</h2>
       <div class="padding">
-        <div ng-repeat="ingredient in recipe.ingredients" class="ingredient">
-          {{ingredient.quantity | quantity}} {{ingredient.food.name}}
-        </div>
+        <div ng-repeat="ingredient in recipe.ingredients" class="ingredient">{{ingredient | ingredient}}</div>
       </div>
     </div>
     <div class="instructions">

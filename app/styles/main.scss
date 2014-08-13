@@ -11,9 +11,24 @@
 @import "../scripts/user/_profile";
 @import "../scripts/user/_feedback";
 
-.title:first-letter {
-  text-transform: uppercase;
+@font-face {
+  font-family: 'desyrelregular';
+  src: url('../fonts/desyrel-webfont.eot');
+  src: url('../fonts/desyrel-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/desyrel-webfont.woff') format('woff'),
+    url('../fonts/desyrel-webfont.ttf') format('truetype'),
+    url('../fonts/desyrel-webfont.svg#desyrelregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
+
+@mixin handwritten {
+  font-family: 'desyrelregular', cursive;
+}
+
+.title:first-letter { text-transform: uppercase; }
+.handwritten { @include handwritten; }
+.bold { font-weight: bold !important; }
 
 .button-icon {
   font-size: 30px;

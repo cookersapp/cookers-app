@@ -7,7 +7,7 @@ angular.module('app.user', ['ui.router'])
   .state('app.profile', {
     url: '/profile',
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'scripts/user/profile.html',
         controller: 'ProfileCtrl'
       }
@@ -19,7 +19,7 @@ angular.module('app.user', ['ui.router'])
   .state('app.feedback', {
     url: '/feedback?source',
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'scripts/user/feedback.html',
         controller: 'FeedbackCtrl'
       }

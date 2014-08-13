@@ -8,7 +8,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     url: '/cart',
     abstract: true,
     views: {
-      'menuContent' :{
+      'menuContent': {
         templateUrl: 'scripts/cart/main.html',
         controller: 'CartCtrl'
       }

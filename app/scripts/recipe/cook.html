@@ -1,0 +1,66 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title handwritten">Cook time !</h1>
+      <div class="buttons">
+        <button class="button button-clear bold" ng-click="toggleTimer()">{{timer | duration}}</button>
+      </div>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="cook" ng-cloack>
+
+    <div class="header row card">
+      <div class="col col-33 picture">
+        <img ng-src="{{recipe.images.portrait}}">
+      </div>
+      <div class="col text">
+        <h1 class="title">{{recipe.name}}</h1>
+        <div class="tags">
+          <span>2 personnes</span>
+          <span>35 minutes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="requirements row card">
+      <div class="col">
+        <h2 class="title">Ingrédients ({{recipe.ingredients.length}})</h2>
+        <ul>
+          <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient}}</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h2 class="title">Ustensiles (7)</h2>
+        <ul>
+          <li>Four</li>
+          <li>Mixeur</li>
+          <li>Poêle</li>
+          <li>Casserole</li>
+          <li>Planche à découper</li>
+          <li>Couteau</li>
+          <li>Grosse cuillère</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cooking">
+      <h2 class="title">Préparation ({{recipe.instructions.length}} étapes) :</h2>
+      <div ng-repeat="instruction in recipe.instructions" class="step card">
+        <div class="content" ng-bind-html="instruction.content"></div>
+      </div>
+    </div>
+
+    <div class="cooked">
+      <img ng-src="{{recipe.images.landing}}" style="width: 100%">
+      <div class="content">
+        <button class="button button-balanced handwritten" ng-click="done()">J'ai fini !</button>
+        <h1 class="title handwritten">
+          Bravo !<br>
+          Et bon appétit <i class="fa fa-smile-o"></i>
+        </h1>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
