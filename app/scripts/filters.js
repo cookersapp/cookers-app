@@ -26,6 +26,27 @@ angular.module('app')
   };
 })
 
+.filter('servings', function($filter){
+  'use strict';
+  return function(servings){
+    return servings && servings.value > 0 ? $filter('number')(Math.round(servings.value*100)/100)+' '+$filter('unit')(servings.unit) : '';
+  };
+})
+
+.filter('time', function($filter){
+  'use strict';
+  return function(time){
+    return time && time.eat > 0 ? $filter('number')(Math.round(time.eat*100)/100)+' '+$filter('unit')(time.unit) : '';
+  };
+})
+
+.filter('tool', function(){
+  'use strict';
+  return function(tool){
+    return tool && tool.name ? tool.name : '';
+  };
+})
+
 .filter('ingredient', function($filter){
   'use strict';
   function endsWith(str, suffix){

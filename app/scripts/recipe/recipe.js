@@ -114,30 +114,73 @@ angular.module('app.recipe', ['ui.router'])
   'use strict';
   // TODO : should get servings in $stateParams !
   var timer = null;
-  $scope.recipe = {};
   $scope.timer = 0;
+  /*$scope.recipe = {};
 
   RecipeSrv.get($stateParams.recipeId).then(function(recipe){
     RecipeSrv.addToHistory(recipe);
     $scope.recipe = recipe;
-    $scope.timer = moment.duration(recipe.time.eat, "minutes").asSeconds();
+    $scope.timer = moment.duration(recipe.time.eat, 'minutes').asSeconds();
     startTimer();
-  });
+  });*/
 
-  $scope.steps = [
-    {time: 0, label: 'Met la viande hachée dans la poêle'},
-    {time: 300, label: 'Ajoute les oignons et l\'ail'},
-    {time: 300, label: 'Ajoute la chair de l\'aubergine et les tomates'},
-    {time: 600, label: 'Ajoute la purée de tomates'},
-    {time: 300, label: 'Sors la préparation du feu'}
-  ];
-  $scope.steps = [
-    {time: 0, label: 'Met la viande hachée dans la poêle'},
-    {time: 10, label: 'Ajoute les oignons et l\'ail'},
-    {time: 10, label: 'Ajoute la chair de l\'aubergine et les tomates'},
-    {time: 10, label: 'Ajoute la purée de tomates'},
-    {time: 10, label: 'Sors la préparation du feu'}
-  ];
+  $scope.recipe = {
+    name: 'aubergines en farce',
+    images: { portrait: 'https://cdn.mediacru.sh/kRCuEv9YTmxZ.jpg', landing: 'https://cdn.mediacru.sh/P-pXlNbu91hO.jpg' },
+    servings: { value: 2, unit: 'personnes' },
+    time: { cooking: 30, eat: 35, preparation: 15, unit: 'minutes' },
+    price: { value: 4.228, currency: '€', unit: 'personnes' },
+    tools: [
+      {name: 'four'},
+      {name: 'mixeur'},
+      {name: 'poêle'},
+      {name: 'casserole'},
+      {name: 'planche à découper'},
+      {name: 'couteau'},
+      {name: 'grosse cuillère'}
+    ],
+    ingredients:[
+      {food:{category:'Fruits & Légumes',id:'aubergine',name:'aubergine'},pre:'',price:{currency:'€',value:2.98},quantity:{unit:'pièce',value:2},role:'essentiel'},
+      {food:{category:'Viandes & Poissons',id:'viande-hachee',name:'viande hachée'},pre:'de',price:{currency:'€',value:2.375},quantity:{unit:'g',value:250},role:'essentiel'},
+      {food:{category:'Fruits & Légumes',id:'tomate',name:'tomate'},pre:'',price:{currency:'€',value:1.58},quantity:{unit:'pièce',value:2},role:'essentiel'},
+      {food:{category:'Épicerie salée',id:'puree-de-tomates',name:'purée de tomates'},price:{currency:'€',value:0},quantity:{unit:'pièce',value:1},role:'accompagnement'},
+      {food:{category:'Fruits & Légumes',id:'ail',name:'ail'},pre:'d\'',price:{currency:'€',value:0.78},quantity:{unit:'pièce',value:1},role:'accompagnement'},
+      {food:{category:'Frais',id:'parmesan-rape',name:'parmesan rapé'},pre:'de',price:{currency:'€',value:0.40},quantity:{unit:'g',value:20},role:'accompagnement'},
+      {food:{category:'Épicerie salée',id:'chapelure',name:'chapelure'},pre:'de',price:{currency:'€',value:0.04},quantity:{unit:'g',value:20},role:'accompagnement'},
+      {food:{category:'Épicerie salée',id:'poivre',name:'poivre'},pre:'',price:{currency:'€',value:0},quantity:{unit:'g',value:0},role:'accompagnement'},
+      {food:{category:'Épicerie salée',id:'sel',name:'sel'},pre:'',price:{currency:'€',value:0},quantity:{unit:'g',value:0},role:'accompagnement'},
+      {food:{category:'Épicerie salée',id:'riz',name:'riz'},pre:'de',price:{currency:'€',value:0.295},quantity:{unit:'g',value:100},role:'facultatif'}],
+    instructions: [{
+      content: 'En avant guingamp, préchauffe ton four à <b>200°C</b> et sors ton matos de cuisine !<ul><li>Un mixeur</li><li>Un plat qui va au four</li><li>Une poêle</li><li>Une casserole (optionnel)</li><li>Une planche à découper</li><li>Des couverts.</li></ul>Lance la cuisson de ton riz, s\'il est prévu au repas (d\'où la nécessité de la casserole).'
+    }, {
+      content: 'Prépare tes découpes :<ol><li>Ôte leur chapeau aux aubergines et retires-en la chair que tu haches et réserves <span class="help">(pour les first level, "que tu mets de côté")</span></li><li>Les tomates en dés</li><li>L\'oignon en quadrillage <span class="help">(je m\'explique, tu découpes en rondelles fines, puis en maintenant celles-ci ensembles, à nouveau en rondelles fines mais perpendiculaire à ta première découpe)</span></li><li>L\'ail en petits morceaux</li></ol>'
+    }, {
+      content: 'Fais cuire les aubergines vidées pendant <b>20 minutes</b>, partie peau vers le haut (ça a son importance).<br>Dès que tu vois des "ridules" sur la peau de l\'aubergine, time\'s up !',
+      timers: [
+        {color: 'red', label: 'Sors les aubergines du four', seconds: 1200}
+      ]
+    }, {
+      content: 'Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :<ul><li>Après <b>5 minutes</b>, ajoutes-y les oignons et l\'ail et laisse dorer pendant <b>5 minutes</b></li><li>Ajoute ensuite la chair d\'aubergine hachée puis les tomates coupées</li><li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li><li>Laisse mijoter pendant encore <b>5 minutes</b></li></ul>',
+      timers: [
+        {color: 'red', steps: [
+          {time: 0, label: 'Met la viande hachée dans la poêle'},
+          {time: 300, label: 'Ajoute les oignons et l\'ail'},
+          {time: 300, label: 'Ajoute la chair de l\'aubergine et les tomates'},
+          {time: 600, label: 'Ajoute la purée de tomates'},
+          {time: 300, label: 'Sors la préparation du feu'}
+        ]}
+      ]
+    }, {
+      content: 'Retire les aubergines du four, passe-le en mode grill.'
+    }, {
+      content: 'Remplis tes aubergines vides avec la farce,<br>Mélange la chapelure au parmesan,<br>Saupoudre tes aubergines,<br>Passe le tout au grill <b>3 minutes</b>.',
+      timers: [
+        {color: 'red', label: 'Sors les aubergines du grill', seconds: 180}
+      ]
+    }]
+  };
+  $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
+  startTimer();
 
   $scope.toggleTimer = function(){
     if(timer === null){startTimer();}
@@ -237,31 +280,57 @@ angular.module('app.recipe', ['ui.router'])
 
 .directive('cookTimer', function($interval){
   'use strict';
+  var nearInterval = 60;
+
+  function getParams(scope){
+    if(scope.pData){return angular.copy(scope.pData);}
+    else if(scope.pSteps){
+      return {
+        color: scope.pColor,
+        label: scope.pLabel,
+        steps: angular.copy(scope.pSteps)
+      };
+    } else {
+      return {
+        color: scope.pColor,
+        label: scope.pLabel,
+        seconds: scope.pSeconds
+      };
+    }
+  }
+
+  function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
+  function stepReached(step){ console.log('stepReached(step)', step); }
+  function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
+  function timerEnds(){ console.log('timerEnds()'); }
+
   return {
     restrict: 'E',
-    replace: true,
     templateUrl: 'scripts/recipe/timer.html',
     scope: {
-      color: '@',
-      label: '=',
-      seconds: '=',
-      steps: '='
+      pData: '=data',
+      pColor: '=color',
+      pLabel: '=label',
+      pSeconds: '=seconds',
+      pSteps: '=steps'
     },
     link: function(scope, element, attrs){
+      // TODO : synchronize all timers !
       var timer = null;
-      var nearInterval = 6;
+      var params = getParams(scope);
+      angular.extend(scope, params);
 
       scope.time = 0;
-      if(scope.steps){
+      if(params.steps){
         scope.timeline = [];
         var acc = 0;
-        for(var i in scope.steps){
-          acc += scope.steps[i].time;
-          scope.timeline.push({time: acc, label: scope.steps[i].label});
+        for(var i in params.steps){
+          acc += params.steps[i].time;
+          scope.timeline.push({time: acc, label: params.steps[i].label});
         }
         scope.timer = acc;
       } else {
-        scope.timer = scope.seconds;
+        scope.timer = params.seconds;
       }
 
       scope.isSelected = function(step){
@@ -280,15 +349,15 @@ angular.module('app.recipe', ['ui.router'])
         timer = $interval(function(){
           if(scope.timer - scope.time > 0){
             scope.time++;
-            
-            if(scope.timeline){
+
+            if(scope.timer === scope.time+(nearInterval/2)){timerNearlyEnds();}
+            else if(scope.timer === scope.time){timerEnds();}
+            else if(scope.timeline){
               for(var i in scope.timeline){
                 if(scope.timeline[i].time === scope.time+(nearInterval/2)){stepNearlyReached(scope.timeline[i]);}
                 if(scope.timeline[i].time === scope.time){stepReached(scope.timeline[i]);}
               }
             }
-            if(scope.timer === scope.time+(nearInterval/2)){timerNearlyEnds();}
-            if(scope.timer === scope.time){timerEnds();}
           } else {
             stopTimer();
           }
@@ -298,11 +367,6 @@ angular.module('app.recipe', ['ui.router'])
         $interval.cancel(timer);
         timer = null;
       }
-
-      function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
-      function stepReached(step){ console.log('stepReached(step)', step); }
-      function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
-      function timerEnds(){ console.log('timerEnds()'); }
     }
   };
 });

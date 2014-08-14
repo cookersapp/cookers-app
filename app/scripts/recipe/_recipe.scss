@@ -317,6 +317,9 @@ $card-size: 300px;
   }
   .cooked {
     background: #444;
+    img {
+      width: 100%;
+    }
     .content {
       button {
         display: block;

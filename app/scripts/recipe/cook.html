@@ -10,7 +10,6 @@
   </ion-header-bar>
 
   <ion-content class="cook" ng-cloack>
-
     <div class="header row card">
       <div class="col col-33 picture">
         <img ng-src="{{recipe.images.portrait}}">
@@ -18,103 +17,40 @@
       <div class="col text">
         <h1 class="title">{{recipe.name}}</h1>
         <div class="tags">
-          <span>2 personnes</span>
-          <span>35 minutes</span>
+          <span>{{recipe.servings | servings}}</span>
+          <span>{{recipe.time | time}}</span>
         </div>
       </div>
     </div>
-
     <div class="requirements row card">
       <div class="col">
-        <h2 class="title">Ingrédients ({{recipe.ingredients.length}})</h2>
+        <h2 class="title">Ingrédients</h2>
         <ul>
           <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient}}</li>
         </ul>
       </div>
       <div class="col">
-        <h2 class="title">Ustensiles (7)</h2>
+        <h2 class="title">Ustensiles</h2>
         <ul>
-          <li>Four</li>
-          <li>Mixeur</li>
-          <li>Poêle</li>
-          <li>Casserole</li>
-          <li>Planche à découper</li>
-          <li>Couteau</li>
-          <li>Grosse cuillère</li>
+          <li ng-repeat="tool in recipe.tools" class="title">{{tool | tool}}</li>
         </ul>
       </div>
     </div>
-
     <div class="cooking">
-      <h2 class="title">Préparation (6 étapes) :</h2>
-      <div>
-        <div class="step card">
-          En avant guingamp, préchauffe ton four à <b>200°C</b> et sors ton matos de cuisine !
-          <ul>
-            <li>Un mixeur</li>
-            <li>Un plat qui va au four</li>
-            <li>Une poêle</li>
-            <li>Une casserole (optionnel)</li>
-            <li>Une planche à découper</li>
-            <li>Des couverts.</li>
-          </ul>
-          Lance la cuisson de ton riz, s'il est prévu au repas (d'où la nécessité de la casserole).
+      <h2 class="title">Préparation</h2>
+      <div ng-repeat="instruction in recipe.instructions">
+        <div class="step card" ng-bind-html="instruction.content"></div>
+        <div class="timers" ng-if="instruction.timers">
+          <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
         </div>
-      </div>
-      <div>
-        <div class="step card">
-          Prépare tes découpes :<br>
-          <ol>
-            <li>Ôte leur chapeau aux aubergines et retires-en la chair que tu haches et réserves <span class="help">(pour les first level, 'que tu mets de côté')</span></li>
-            <li>Les tomates en dés</li>
-            <li>L'oignon en quadrillage <span class="help">(je m'explique, tu découpes en rondelles fines, puis en maintenant celles-ci ensembles, à nouveau en rondelles fines mais perpendiculaire à ta première découpe)</span></li>
-            <li>L'ail en petits morceaux</li>
-          </ol>
-        </div>
-      </div>
-      <div>
-        <div class="step card">
-          Fais cuire les aubergines vidées pendant <b>20 minutes</b>, partie peau vers le haut (ça a son importance).<br>
-          Dès que tu vois des 'ridules' sur la peau de l'aubergine, time's up !
-        </div>
-        <div class="timers">
-          <cook-timer color="red" label="'Sors les aubergines du four'" seconds="1200"></cook-timer>
-        </div>
-      </div>
-      <div>
-        <div class="step card">
-          Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :
-          <ul>
-            <li>Après <b>5 minutes</b>, ajoutes-y les oignons et l'ail et laisse dorer pendant <b>5 minutes</b></li>
-            <li>Ajoute ensuite la chair d'aubergine hachée puis les tomates coupées</li>
-            <li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li>
-            <li>Laisse mijoter pendant encore <b>5 minutes</b></li>
-          </ul>
-        </div>
-        <div class="timers">
-          <cook-timer color="red" steps="steps"></cook-timer>
-        </div>
-      </div>
-      <div>
-        <div class="step card">
-          Retire les aubergines du four, passe-le en mode grill.
-        </div>
-      </div>
-      <div>
-        <div class="step card">
-          Remplis tes aubergines vides avec la farce,<br>
-          Mélange la chapelure au parmesan,<br>
-          Saupoudre tes aubergines,<br>
-          Passe le tout au grill 3 minutes.</div>
       </div>
     </div>
-
     <div class="cooked">
-      <img ng-src="{{recipe.images.landing}}" style="width: 100%">
+      <img ng-src="{{recipe.images.landing}}">
       <div class="content">
-        <button class="button button-balanced handwritten" ng-click="done()">J'ai fini !</button>
+        <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
         <h1 class="title handwritten">
-          Bravo !<br>
+          Bravo,<br>
           Et bon appétit <i class="fa fa-smile-o"></i>
         </h1>
       </div>

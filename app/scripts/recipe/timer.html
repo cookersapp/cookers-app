@@ -1,4 +1,4 @@
-<div class="timer {{color}}" ng-click="toggleTimer()">
+<div class="timer {{color}}" ng-click="toggleTimer()" ng-if="timer > 0">
   <div class="label">{{label}}</div>
   <div class="time">{{timer-time | duration}}</div>
   <ul class="steps">
