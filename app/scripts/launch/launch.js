@@ -77,6 +77,7 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
     });
 
     // track state changes
+    var lastStateChange = Date.now();
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       var params = {};
       if(fromState && fromState.name)                       {params.fromUrl = $state.href(fromState.name, fromParams);}
@@ -85,6 +86,11 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
       if(toState && toState.name)                           {params.toUrl = $state.href(toState.name, toParams);}
       if(toState && toState.name)                           {params.to = toState.name;}
       if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
+      if(lastStateChange) {
+        var now = Date.now();
+        params.timePassed = now - lastStateChange;
+        lastStateChange = now;
+      }
       LogSrv.trackState(params);
     });
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
