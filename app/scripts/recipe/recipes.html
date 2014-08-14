@@ -16,7 +16,7 @@
     </div>
     <div ng-if="!loading">
       <div class="list">
-        <div class="item item-recipe-img-full" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
+        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
           <img class="portrait" ng-src="{{recipe.images.portrait}}" ng-click="toggleIngredients(recipe)">
           <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">

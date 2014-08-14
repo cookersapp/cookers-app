@@ -302,7 +302,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 .factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
   'use strict';
   var service = {
-    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
+    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 0 : 0)); },
     get: getRecipesOfWeek,
     store: storeRecipesOfWeek
   };
