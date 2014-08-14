@@ -147,6 +147,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
     recipesFromOpenedCarts: recipesFromOpenedCarts,
     itemsFromOpenedCarts: itemsFromOpenedCarts,
+    getRecipesToCook: getRecipesToCook,
+    getCookedRecipes: getCookedRecipes,
 
     getItems: getItems,
     hasRecipe: hasRecipe,
@@ -188,14 +190,22 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }*/
 
   function recipesFromOpenedCarts(){
-    return _.reduce(getOpenedCarts(), function(result, cart){
-      return result.concat(cart.recipes);
-    }, []);
+    return _recipesFromCarts(getOpenedCarts());
   }
 
   function itemsFromOpenedCarts(){
     var recipes = recipesFromOpenedCarts();
     return CartUtils.recipesToItems(recipes);
+  }
+
+  function getRecipesToCook(){
+    var recipes = _recipesFromCarts(sCarts());
+    return _.filter(recipes, {cartData: {cooked: false}});
+  }
+
+  function getCookedRecipes(){
+    var recipes = _recipesFromCarts(sCarts());
+    return _.filter(recipes, {cartData: {cooked: true}});
   }
 
   function getItems(cart){
@@ -223,6 +233,12 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function archive(cart){
     cart.archived = true;
+  }
+
+  function _recipesFromCarts(carts){
+    return _.reduce(carts, function(result, cart){
+      return result.concat(cart.recipes);
+    }, []);
   }
 
   function _cartsWithRecipe(carts, recipe){

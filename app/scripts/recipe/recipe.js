@@ -40,6 +40,30 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       noSleep: true,
       restrict: 'connected'
     }
+  })
+  .state('app.tocook', {
+    url: '/tocook',
+    views: {
+      'menuContent': {
+        templateUrl: 'scripts/recipe/tocook.html',
+        controller: 'TocookCtrl'
+      }
+    },
+    data: {
+      restrict: 'connected'
+    }
+  })
+  .state('app.cooked', {
+    url: '/cooked',
+    views: {
+      'menuContent': {
+        templateUrl: 'scripts/recipe/cooked.html',
+        controller: 'CookedCtrl'
+      }
+    },
+    data: {
+      restrict: 'connected'
+    }
   });
 })
 
@@ -257,6 +281,40 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       }
     });
   }
+})
+
+.controller('TocookCtrl', function($scope, $ionicPopup, CartSrv){
+  $scope.recipes = CartSrv.getRecipesToCook();
+
+  $scope.changeServings = function(recipe){
+    $ionicPopup.show({
+      template: ['<div style="text-align: center;">'+
+                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
+                 '</div>'+
+                 '<div class="range">'+
+                 '<i class="fa fa-user"></i>'+
+                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
+                 '<i class="fa fa-users"></i>'+
+                 '</div>'].join(''),
+      scope: $scope,
+      buttons: [
+        { text: 'Annuler' },
+        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
+          if(!$scope.settings.defaultServings){ e.preventDefault(); }
+          else { return $scope.settings.defaultServings; }
+        }}
+      ]
+    }).then(function(servings){
+      if(servings){
+        recipe.cartData.servings.value = servings;
+      }
+    });
+  };
+})
+
+.controller('CookedCtrl', function($scope, CartSrv){
+  $scope.recipes = CartSrv.getCookedRecipes();
+
 })
 
 .factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){

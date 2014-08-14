@@ -1,0 +1,23 @@
+<ion-view>
+  <ion-header-bar class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+      <h1 class="title handwritten">Recettes à cuisiner</h1>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="cook">
+    <div class="header row card" ng-repeat="recipe in recipes">
+      <div class="col col-33 picture" ng-if="$index%2 === 0"><img ng-src="{{recipe.images.portrait}}"></div>
+      <div class="col text">
+        <h1 class="title">{{recipe.name}}</h1>
+        <button class="button button-balanced" ui-sref="app.cook({recipeId: recipe.id, servings: recipe.cartData.servings.value})">Cuisiner</button>
+        <div class="tags">
+          <span ng-click="changeServings(recipe)">{{recipe.cartData.servings | servings}}</span>
+          <span>{{recipe.time | time}}</span>
+        </div>
+      </div>
+      <div class="col col-33 picture" ng-if="$index%2 === 1"><img ng-src="{{recipe.images.portrait}}"></div>
+    </div>
+  </ion-content>
+</ion-view>
