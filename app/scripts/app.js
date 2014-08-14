@@ -54,7 +54,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
         url: window.location.hash,
         localtime: Date.now()
       };
-      
+
       if(debug){
         console.log('exception', data);
         window.alert('Error: '+cause);
@@ -65,16 +65,20 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   }]);
 
   window.onerror = function(message, url, line, col, error){
+    var stopPropagation = debug ? false : true;
     var data = {
       type: 'javascript',
-      message: message,
-      causeUrl: url,
-      line: line,
-      col: col,
-      error: error,
       url: window.location.hash,
       localtime: Date.now()
     };
+    if(message) { data.message      = message;  }
+    if(url)     { data.fileName     = url;      }
+    if(line)    { data.lineNumber   = line;     }
+    if(col)     { data.columnNumber = col;      }
+    if(error){
+      if(error.name)  { data.name   = error.name; }
+      if(error.stack) { data.stack  = error.stack;}
+    }
 
     if(debug){
       console.log('exception', data);
@@ -82,7 +86,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     } else {
       mixpanel.track('exception', data);
     }
-    return true;
+    return stopPropagation;
   };
 })
 
