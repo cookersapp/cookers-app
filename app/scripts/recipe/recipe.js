@@ -29,7 +29,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }
   })
   .state('app.cook', {
-    url: '/cook/:recipeId',
+    url: '/cook/:recipeId?servings',
     views: {
       'menuContent': {
         templateUrl: 'scripts/recipe/cook.html',
@@ -117,6 +117,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   // TODO : should go to next when knock knock
   var timer = null;
   $scope.timer = 0;
+  $scope.servings = $stateParams.servings;
+  if(!$scope.servings){ changeServings(); }
   /*$scope.recipe = {};
 
   RecipeSrv.get($stateParams.recipeId).then(function(recipe){
@@ -181,6 +183,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       ]
     }]
   };
+  $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
   $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
   startTimer();
 
@@ -188,6 +191,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     if(timer === null){startTimer();}
     else {stopTimer();}
   };
+  $scope.changeServings = changeServings;
   $scope.done = function(){
     if(navigator.app){
       navigator.app.exitApp();
@@ -228,6 +232,31 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   function stopTimer(){
     Utils.cancelClock(timer);
     timer = null;
+  }
+  function changeServings(){
+    $ionicPopup.show({
+      template: ['<div style="text-align: center;">'+
+                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
+                 '</div>'+
+                 '<div class="range">'+
+                 '<i class="fa fa-user"></i>'+
+                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
+                 '<i class="fa fa-users"></i>'+
+                 '</div>'].join(''),
+      scope: $scope,
+      buttons: [
+        { text: 'Annuler' },
+        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
+          if(!$scope.settings.defaultServings){ e.preventDefault(); }
+          else { return $scope.settings.defaultServings; }
+        }}
+      ]
+    }).then(function(servings){
+      if(servings){
+        $scope.servings = servings;
+        $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
+      }
+    });
   }
 })
 

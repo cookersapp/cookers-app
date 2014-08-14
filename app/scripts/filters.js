@@ -21,15 +21,17 @@ angular.module('app')
 
 .filter('quantity', function($filter){
   'use strict';
-  return function(quantity){
-    return quantity && quantity.value > 0 ? $filter('number')(Math.round(quantity.value*100)/100)+' '+$filter('unit')(quantity.unit) : '';
+  return function(quantity, servingsAdjust){
+    if(!servingsAdjust){servingsAdjust = 1;}
+    return quantity && quantity.value > 0 ? $filter('number')(Math.round(quantity.value*servingsAdjust*100)/100)+' '+$filter('unit')(quantity.unit) : '';
   };
 })
 
 .filter('servings', function($filter){
   'use strict';
-  return function(servings){
-    return servings && servings.value > 0 ? $filter('number')(Math.round(servings.value*100)/100)+' '+$filter('unit')(servings.unit) : '';
+  return function(servings, servingsAdjust){
+    if(!servingsAdjust){servingsAdjust = 1;}
+    return servings && servings.value > 0 ? $filter('number')(Math.round(servings.value*servingsAdjust*100)/100)+' '+$filter('unit')(servings.unit) : '';
   };
 })
 
@@ -69,9 +71,9 @@ angular.module('app')
     }
   }
   
-  return function(ingredient){
+  return function(ingredient, servingsAdjust){
     if(ingredient){
-      return $filter('quantity')(ingredient.quantity) + preWords(ingredient) + ingredient.food.name + postWords(ingredient);
+      return $filter('quantity')(ingredient.quantity, servingsAdjust) + preWords(ingredient) + ingredient.food.name + postWords(ingredient);
     } else {
       return '';
     }
