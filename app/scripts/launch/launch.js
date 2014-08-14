@@ -66,7 +66,9 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
 
     // manage user presence in firebase
     var firebaseRef = new Firebase(firebaseUrl+'/connected');
-    var userRef = firebaseRef.push(sUser());
+    var lightUser = angular.copy(sUser());
+    delete lightUser.carts;
+    var userRef = firebaseRef.push(lightUser);
     userRef.onDisconnect().remove();
 
     navigator.geolocation.getCurrentPosition(function(position){
