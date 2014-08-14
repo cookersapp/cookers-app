@@ -1,4 +1,11 @@
 <div class="timer {{color}}" ng-click="toggleTimer()">
   <div class="label">{{label}}</div>
-  <div class="time">{{timer | duration}}</div>
+  <div class="time">{{timer-time | duration}}</div>
+  <ul class="steps">
+    <li class="step" ng-class="{selected: isSelected(step), unselected: isUnselected(step)}" ng-repeat="step in timeline">
+      <div class="date">{{step.time | duration}}</div>
+      <div class="circle"></div>
+      <div class="label">{{step.label}}</div>
+    </li>
+  </ul>
 </div>

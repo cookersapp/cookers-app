@@ -313,80 +313,6 @@ $card-size: 300px;
     }
     .timers {
       margin: 10px;
-      .timer, .multi-timer {
-        padding: 5px;
-        margin: 10px 20px;
-        box-shadow: 0 4px 15px -4px #000;
-        color: #fff;
-        .time {
-          color: #fff;
-          font-family: 'Source Sans Pro', sans-serif;
-          font-weight: bold;
-          font-size: 35px;
-          line-height: 35px;
-          text-align: center;
-        }
-      }
-      .timer {
-        .label {
-          margin-bottom: 0px;
-          color: #fff;
-          font-size: 20px;
-          text-align: center;
-        }
-      }
-      .multi-timer {
-        ul {
-          list-style: none;
-          margin-left: 55px;
-          border-left: 8px solid #eee9dc;
-          li {
-            position: relative;
-            margin: 5px 0;
-            padding: 50px 5px 0;
-            .date {
-              position: absolute;
-              top: 50%;
-              left: -58px;
-              margin-top: -3px;
-            }
-            .circle {
-              position: absolute;
-              top: 50%;
-              left: -14px;
-              margin-top: -3px;
-              width: 20px;
-              height: 20px;
-              background: #bbb;
-              border: 5px solid #eee9dc;
-              border-radius: 50%;
-            }
-            .label {
-              position: absolute;
-              top: 23px;
-              left: 15px;
-            }
-            &.selected {
-              font-weight: bold;
-              .circle {
-                background: #bbb;
-              }
-            }
-            &.unselected {
-              color: rgba(255,255,255,0.5);
-              .circle {
-                border-color: rgba(255,255,255,0.5);
-              }
-            }
-          }
-        }
-      }
-      // colors from http://www.colourlovers.com/palette/845564/its_raining_love
-      .timer.green, .multi-timer.green, .multi-timer.green .circle { background: #A3A948; }
-      .timer.yellow, .multi-timer.yellow, .multi-timer.yellow .circle { background: #EDB92E; }
-      .timer.orange, .multi-timer.orange, .multi-timer.orange .circle { background: #F85931; }
-      .timer.red, .multi-timer.red, .multi-timer.red .circle { background: #CE1836; }
-      .timer.blue, .multi-timer.blue, .multi-timer.blue .circle { background: #009989; }
     }
   }
   .cooked {
@@ -406,4 +332,77 @@ $card-size: 300px;
       }
     }
   }
+}
+
+
+.timer {
+  padding: 5px;
+  margin: 10px 20px;
+  box-shadow: 0 4px 15px -4px #000;
+  color: #fff;
+  .label {
+    margin-bottom: 0px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+  }
+  .time {
+    color: #fff;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 35px;
+    line-height: 35px;
+    text-align: center;
+  }
+  .steps {
+    list-style: none;
+    margin-left: 55px;
+    border-left: 8px solid #eee9dc;
+    .step {
+      position: relative;
+      margin: 5px 0;
+      padding: 50px 5px 0;
+      border: none;
+      .date {
+        position: absolute;
+        top: 50%;
+        left: -58px;
+        margin-top: -3px;
+      }
+      .circle {
+        position: absolute;
+        top: 50%;
+        left: -14px;
+        margin-top: -3px;
+        width: 20px;
+        height: 20px;
+        background: #bbb;
+        border: 5px solid #eee9dc;
+        border-radius: 50%;
+      }
+      .label {
+        position: absolute;
+        top: 23px;
+        left: 15px;
+        width: 100%;
+        font-size: 1em;
+        text-align: left;
+      }
+      &.unselected {
+        color: rgba(255,255,255,0.5);
+        .label { color: rgba(255,255,255,0.5); }
+        .circle { border-color: rgba(255,255,255,0.5); }
+      }
+      &.selected {
+        font-weight: bold;
+        .circle { background: #bbb; }
+      }
+    }
+  }
+  // colors from http://www.colourlovers.com/palette/845564/its_raining_love
+  &.green, &.green .circle { background: #A3A948; }
+  &.yellow, &.yellow .circle { background: #EDB92E; }
+  &.orange, &.orange .circle { background: #F85931; }
+  &.red, &.red .steps .circle { background: #CE1836; }
+  &.blue, &.blue .circle { background: #009989; }
 }

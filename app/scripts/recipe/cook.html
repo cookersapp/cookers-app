@@ -78,7 +78,7 @@
           Dès que tu vois des 'ridules' sur la peau de l'aubergine, time's up !
         </div>
         <div class="timers">
-          <cook-timer label="'Sors les aubergines du four'" seconds="1200" color="red"></cook-timer>
+          <cook-timer color="red" label="'Sors les aubergines du four'" seconds="1200"></cook-timer>
         </div>
       </div>
       <div>
@@ -92,36 +92,7 @@
           </ul>
         </div>
         <div class="timers">
-          <div class="multi-timer red">
-            <div class="time">{{1500 | duration}}</div>
-            <ul>
-              <li class="unselected">
-                <div class="date">{{0 | duration}}</div>
-                <div class="circle"></div>
-                <div class="label">Met la viande hachée dans la poêle</div>
-              </li>
-              <li class="unselected">
-                <div class="date">{{300 | duration}}</div>
-                <div class="circle"></div>
-                <div class="label">Ajoute les oignons et l'ail</div>
-              </li>
-              <li class="selected">
-                <div class="date">{{600 | duration}}</div>
-                <div class="circle"></div>
-                <div class="label">Ajoute la chair de l'aubergine et les tomates</div>
-              </li>
-              <li>
-                <div class="date">{{1200 | duration}}</div>
-                <div class="circle"></div>
-                <div class="label">Ajoute la purée de tomates</div>
-              </li>
-              <li>
-                <div class="date">{{1500 | duration}}</div>
-                <div class="circle"></div>
-                <div class="label">Sors la préparation du feu</div>
-              </li>
-            </ul>
-          </div>
+          <cook-timer color="red" steps="steps"></cook-timer>
         </div>
       </div>
       <div>

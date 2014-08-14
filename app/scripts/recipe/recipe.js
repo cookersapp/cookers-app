@@ -124,6 +124,21 @@ angular.module('app.recipe', ['ui.router'])
     startTimer();
   });
 
+  $scope.steps = [
+    {time: 0, label: 'Met la viande hachée dans la poêle'},
+    {time: 300, label: 'Ajoute les oignons et l\'ail'},
+    {time: 300, label: 'Ajoute la chair de l\'aubergine et les tomates'},
+    {time: 600, label: 'Ajoute la purée de tomates'},
+    {time: 300, label: 'Sors la préparation du feu'}
+  ];
+  $scope.steps = [
+    {time: 0, label: 'Met la viande hachée dans la poêle'},
+    {time: 10, label: 'Ajoute les oignons et l\'ail'},
+    {time: 10, label: 'Ajoute la chair de l\'aubergine et les tomates'},
+    {time: 10, label: 'Ajoute la purée de tomates'},
+    {time: 10, label: 'Sors la préparation du feu'}
+  ];
+
   $scope.toggleTimer = function(){
     if(timer === null){startTimer();}
     else {stopTimer();}
@@ -227,13 +242,34 @@ angular.module('app.recipe', ['ui.router'])
     replace: true,
     templateUrl: 'scripts/recipe/timer.html',
     scope: {
+      color: '@',
       label: '=',
       seconds: '=',
-      color: '@'
+      steps: '='
     },
     link: function(scope, element, attrs){
       var timer = null;
-      scope.timer = scope.seconds;
+      var nearInterval = 6;
+
+      scope.time = 0;
+      if(scope.steps){
+        scope.timeline = [];
+        var acc = 0;
+        for(var i in scope.steps){
+          acc += scope.steps[i].time;
+          scope.timeline.push({time: acc, label: scope.steps[i].label});
+        }
+        scope.timer = acc;
+      } else {
+        scope.timer = scope.seconds;
+      }
+
+      scope.isSelected = function(step){
+        return step.time - (nearInterval/2) <= scope.time && scope.time < step.time + (nearInterval/2);
+      };
+      scope.isUnselected = function(step){
+        return scope.time >= step.time + (nearInterval/2);
+      };
 
       scope.toggleTimer = function(){
         if(timer === null){startTimer();}
@@ -242,14 +278,31 @@ angular.module('app.recipe', ['ui.router'])
 
       function startTimer(){
         timer = $interval(function(){
-          if(scope.timer > 0){scope.timer--;}
-          else {stopTimer();}
+          if(scope.timer - scope.time > 0){
+            scope.time++;
+            
+            if(scope.timeline){
+              for(var i in scope.timeline){
+                if(scope.timeline[i].time === scope.time+(nearInterval/2)){stepNearlyReached(scope.timeline[i]);}
+                if(scope.timeline[i].time === scope.time){stepReached(scope.timeline[i]);}
+              }
+            }
+            if(scope.timer === scope.time+(nearInterval/2)){timerNearlyEnds();}
+            if(scope.timer === scope.time){timerEnds();}
+          } else {
+            stopTimer();
+          }
         }, 1000);
       }
       function stopTimer(){
         $interval.cancel(timer);
         timer = null;
       }
+
+      function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
+      function stepReached(step){ console.log('stepReached(step)', step); }
+      function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
+      function timerEnds(){ console.log('timerEnds()'); }
     }
   };
 });
