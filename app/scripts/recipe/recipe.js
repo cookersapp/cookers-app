@@ -113,6 +113,8 @@ angular.module('app.recipe', ['ui.router'])
 .controller('CookCtrl', function($scope, $state, $stateParams, $interval, RecipeSrv, LogSrv){
   'use strict';
   // TODO : should get servings in $stateParams !
+  // TODO : should play alarms when timer ends
+  // TODO : should go to next when knock knock
   var timer = null;
   $scope.timer = 0;
   /*$scope.recipe = {};
@@ -162,7 +164,7 @@ angular.module('app.recipe', ['ui.router'])
     }, {
       content: 'Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :<ul><li>Après <b>5 minutes</b>, ajoutes-y les oignons et l\'ail et laisse dorer pendant <b>5 minutes</b></li><li>Ajoute ensuite la chair d\'aubergine hachée puis les tomates coupées</li><li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li><li>Laisse mijoter pendant encore <b>5 minutes</b></li></ul>',
       timers: [
-        {color: 'red', steps: [
+        {color: 'blue', steps: [
           {time: 0, label: 'Met la viande hachée dans la poêle'},
           {time: 300, label: 'Ajoute les oignons et l\'ail'},
           {time: 300, label: 'Ajoute la chair de l\'aubergine et les tomates'},
@@ -175,7 +177,7 @@ angular.module('app.recipe', ['ui.router'])
     }, {
       content: 'Remplis tes aubergines vides avec la farce,<br>Mélange la chapelure au parmesan,<br>Saupoudre tes aubergines,<br>Passe le tout au grill <b>3 minutes</b>.',
       timers: [
-        {color: 'red', label: 'Sors les aubergines du grill', seconds: 180}
+        {color: 'orange', label: 'Sors les aubergines du grill', seconds: 180}
       ]
     }]
   };
