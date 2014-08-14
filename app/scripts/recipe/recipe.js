@@ -1,4 +1,4 @@
-angular.module('app.recipe', ['ui.router'])
+angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .config(function($stateProvider){
   'use strict';
@@ -110,7 +110,7 @@ angular.module('app.recipe', ['ui.router'])
   });
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $interval, RecipeSrv, LogSrv){
+.controller('CookCtrl', function($scope, $state, $stateParams, $ionicPopup, RecipeSrv, LogSrv, Utils){
   'use strict';
   // TODO : should get servings in $stateParams !
   // TODO : should play alarms when timer ends
@@ -177,7 +177,7 @@ angular.module('app.recipe', ['ui.router'])
     }, {
       content: 'Remplis tes aubergines vides avec la farce,<br>Mélange la chapelure au parmesan,<br>Saupoudre tes aubergines,<br>Passe le tout au grill <b>3 minutes</b>.',
       timers: [
-        {color: 'orange', label: 'Sors les aubergines du grill', seconds: 180}
+        {color: 'yellow', label: 'Sors les aubergines du grill', seconds: 180}
       ]
     }]
   };
@@ -189,17 +189,44 @@ angular.module('app.recipe', ['ui.router'])
     else {stopTimer();}
   };
   $scope.done = function(){
-    $state.go('app.home');
+    if(navigator.app){
+      navigator.app.exitApp();
+    } else if(navigator.device){
+      navigator.device.exitApp();
+    }
+    /*$ionicPopup.show({
+      title: 'La recette est maintenant terminée !',
+      subTitle: 'Que veux-tu faire ?',
+      buttons: [{
+        text: 'Revenir à l\'accueil',
+        onTap: function(e){
+          $state.go('app.home');
+          return null;
+        }
+      }, {
+        text: '<b>Quitter l\'application</b>',
+        type: 'button-positive',
+        onTap: function(e){
+          $state.go('app.home');
+          if(navigator.app){
+            navigator.app.exitApp();
+          } else if(navigator.device){
+            navigator.device.exitApp();
+          }
+          return null;
+        }
+      }]
+    });*/
   };
 
   function startTimer(){
-    timer = $interval(function(){
+    timer = Utils.clock(function(){
       if($scope.timer > 0){$scope.timer--;}
       else {stopTimer();}
-    }, 1000);
+    });
   }
   function stopTimer(){
-    $interval.cancel(timer);
+    Utils.cancelClock(timer);
     timer = null;
   }
 })
@@ -280,7 +307,7 @@ angular.module('app.recipe', ['ui.router'])
   return service;
 })
 
-.directive('cookTimer', function($interval){
+.directive('cookTimer', function(Utils){
   'use strict';
   var nearInterval = 60;
 
@@ -348,7 +375,7 @@ angular.module('app.recipe', ['ui.router'])
       };
 
       function startTimer(){
-        timer = $interval(function(){
+        timer = Utils.clock(function(){
           if(scope.timer - scope.time > 0){
             scope.time++;
 
@@ -363,10 +390,10 @@ angular.module('app.recipe', ['ui.router'])
           } else {
             stopTimer();
           }
-        }, 1000);
+        });
       }
       function stopTimer(){
-        $interval.cancel(timer);
+        Utils.cancelClock(timer);
         timer = null;
       }
     }

@@ -1,13 +1,15 @@
 angular.module('app.utils', [])
 
-.factory('Utils', function($window, debug){
+.factory('Utils', function($window, $interval, debug){
   'use strict';
   var service = {
     createUuid: createUuid,
     adjustForServings: adjustForServings,
     addQuantities: addQuantities,
     addPrices: addPrices,
-    getDevice: getDevice
+    getDevice: getDevice,
+    clock: addClock,
+    cancelClock: removeClock
   };
 
   function createUuid(){
@@ -60,6 +62,32 @@ angular.module('app.utils', [])
         //TODO track
       }
       return null;
+    }
+  }
+
+  var clockElts = [];
+  var clockTimer = null;
+  function addClock(fn){
+    if(clockElts.length === 0){ startClock(); }
+    return clockElts.push(fn) - 1;
+  }
+  function removeClock(index){
+    if(0 <= index && index < clockElts.length){clockElts.splice(index, 1);}
+    if(clockElts.length === 0){ stopClock(); }
+  }
+  function startClock(){
+    if(clockTimer === null){
+      clockTimer = $interval(function(){
+        for(var i in clockElts){
+          clockElts[i]();
+        }
+      }, 1000);
+    }
+  }
+  function stopClock(){
+    if(clockTimer !== null){
+      $interval.cancel(clockTimer);
+      timer = null;
     }
   }
 
