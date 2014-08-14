@@ -87,7 +87,7 @@ angular.module('app.utils', [])
   function stopClock(){
     if(clockTimer !== null){
       $interval.cancel(clockTimer);
-      timer = null;
+      clockTimer = null;
     }
   }
 

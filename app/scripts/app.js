@@ -47,19 +47,43 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     return function(exception, cause){
       $delegate(exception, cause);
 
+      var data = {
+        type: 'angular',
+        exception: exception,
+        cause: cause,
+        url: window.location.hash,
+        localtime: Date.now()
+      };
+      
       if(debug){
-        console.log('exception', exception);
-        window.alert('Error '+cause);
+        console.log('exception', data);
+        window.alert('Error: '+cause);
       } else {
-        mixpanel.track('exception', {
-          exception: exception,
-          cause: cause,
-          url: window.location.hash,
-          localtime: Date.now()
-        });
+        mixpanel.track('exception', data);
       }
     };
   }]);
+
+  window.onerror = function(message, url, line, col, error){
+    var data = {
+      type: 'javascript',
+      message: message,
+      causeUrl: url,
+      line: line,
+      col: col,
+      error: error,
+      url: window.location.hash,
+      localtime: Date.now()
+    };
+
+    if(debug){
+      console.log('exception', data);
+      window.alert('Error: '+message);
+    } else {
+      mixpanel.track('exception', data);
+    }
+    return true;
+  };
 })
 
 .constant('debug', true)
@@ -148,7 +172,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     StorageSrv.migrate($localStorage.app.version, appVersion);
     $localStorage.app.version = appVersion;
   }
-  
+
   $rootScope.settings = $localStorage.user.settings;
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
