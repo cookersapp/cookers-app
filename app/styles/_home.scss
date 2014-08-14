@@ -7,6 +7,46 @@
     }
   }
 
+  
+  .card {
+    background: #fff;
+    padding: 0px;
+    margin: 20px 50px;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+    .media {
+      padding: 20px 0px;
+      font-size: 40px;
+      line-height: 40px;
+      color: #fff;
+      text-align: center;
+    }
+    .content {
+      padding: 33px 10px;
+      color: #aaa;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  }
+  .card:nth-child(1) {
+    border-color: #009989;
+    .media { background: #009989; }
+  }
+  .card:nth-child(2) {
+    border-color: #CE1836;
+    .media { background: #CE1836; }
+  }
+  .card:nth-child(3) {
+    border-color: #F85931;
+    .media { background: #F85931; }
+  }
+  .card:nth-child(4) {
+    border-color: #EDB92E;
+    .media { background: #EDB92E; }
+  }
+
+
   .dashboard-card {
     border: 1px solid #d4d4d4;
     background: #fff;

@@ -30,6 +30,10 @@
 .handwritten { @include handwritten; }
 .bold { font-weight: bold !important; }
 
+.bar-header .title {
+  @include handwritten;
+}
+
 .button-icon {
   font-size: 30px;
   &.light {color: $ionic-light-bg; &:hover {color: $ionic-light-border;} }

@@ -112,7 +112,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .controller('CookCtrl', function($scope, $state, $stateParams, $ionicPopup, RecipeSrv, LogSrv, Utils){
   'use strict';
-  // TODO : should get servings in $stateParams !
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
   var timer = null;
@@ -373,7 +372,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       pSteps: '=steps'
     },
     link: function(scope, element, attrs){
-      // TODO : synchronize all timers !
       var timer = null;
       var params = getParams(scope);
       angular.extend(scope, params);
