@@ -67,7 +67,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, $ionicPopup, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, PopupSrv, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = {};
@@ -86,26 +86,9 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     recipe.showIngredients = !recipe.showIngredients;
   };
   $scope.addRecipeToCart = function(recipe, index){
-    $ionicPopup.show({
-      template: ['<div style="text-align: center;">'+
-                 '<h3 class="title" style="font-size: 20px;">'+recipe.name+'</h3>'+
-                 '<div>Pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
-                 '</div>'+
-                 '<div class="range">'+
-                 '<i class="fa fa-user"></i>'+
-                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
-                 '<i class="fa fa-users"></i>'+
-                 '</div>'].join(''),
-      scope: $scope,
-      buttons: [
-        { text: 'Annuler' },
-        { text: '<b>Ajouter</b>', type: 'button-positive', onTap: function(e){
-          if(!$rootScope.settings.defaultServings){ e.preventDefault(); }
-          else { return $rootScope.settings.defaultServings; }
-        }}
-      ]
-    }).then(function(servings){
+    PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
+        $rootScope.settings.defaultServings = servings;
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'weekrecipes');
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
@@ -134,7 +117,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   });
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $ionicPopup, RecipeSrv, CartSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
   'use strict';
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
@@ -231,24 +214,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   $scope.changeServings = function(){
-    $ionicPopup.show({
-      template: ['<div style="text-align: center;">'+
-                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
-                 '</div>'+
-                 '<div class="range">'+
-                 '<i class="fa fa-user"></i>'+
-                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
-                 '<i class="fa fa-users"></i>'+
-                 '</div>'].join(''),
-      scope: $scope,
-      buttons: [
-        { text: 'Annuler' },
-        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
-          if(!$scope.settings.defaultServings){ e.preventDefault(); }
-          else { return $scope.settings.defaultServings; }
-        }}
-      ]
-    }).then(function(servings){
+    PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
         $scope.servings = servings;
         $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
@@ -263,35 +229,23 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
         duration: Date.now() - startTime
       };
     }
-    
+
     if(navigator.app){
       navigator.app.exitApp();
     } else if(navigator.device){
       navigator.device.exitApp();
     }
-    
-    /*$ionicPopup.show({
-      title: 'La recette est maintenant terminée !',
-      subTitle: 'Que veux-tu faire ?',
-      buttons: [{
-        text: 'Revenir à l\'accueil',
-        onTap: function(e){
-          $state.go('app.home');
-          return null;
+
+    /*PopupSrv.recipeCooked().then(function(shouldExit){
+      if(shouldExit){
+        if(navigator.app){
+          navigator.app.exitApp();
+        } else if(navigator.device){
+          navigator.device.exitApp();
         }
-      }, {
-        text: '<b>Quitter l\'application</b>',
-        type: 'button-positive',
-        onTap: function(e){
-          $state.go('app.home');
-          if(navigator.app){
-            navigator.app.exitApp();
-          } else if(navigator.device){
-            navigator.device.exitApp();
-          }
-          return null;
-        }
-      }]
+      } else {
+        $state.go('app.home');
+      }
     });*/
   };
 
@@ -307,7 +261,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   }
 })
 
-.controller('TocookCtrl', function($scope, $ionicPopup, CartSrv){
+.controller('TocookCtrl', function($scope, PopupSrv, CartSrv){
   'use strict';
   $scope.recipes = CartSrv.getRecipesToCook();
   $scope.recipes.sort(function(a, b){
@@ -317,24 +271,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   $scope.boughtPercentage = CartSrv.boughtPercentage;
 
   $scope.changeServings = function(recipe){
-    $ionicPopup.show({
-      template: ['<div style="text-align: center;">'+
-                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
-                 '</div>'+
-                 '<div class="range">'+
-                 '<i class="fa fa-user"></i>'+
-                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
-                 '<i class="fa fa-users"></i>'+
-                 '</div>'].join(''),
-      scope: $scope,
-      buttons: [
-        { text: 'Annuler' },
-        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
-          if(!$scope.settings.defaultServings){ e.preventDefault(); }
-          else { return $scope.settings.defaultServings; }
-        }}
-      ]
-    }).then(function(servings){
+    PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
         recipe.cartData.servings.value = servings;
       }

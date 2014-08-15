@@ -113,4 +113,93 @@ angular.module('app.utils', [])
   }
 
   return service;
+})
+
+.factory('PopupSrv', function($rootScope, $ionicPopup, $window){
+  var service = {
+    askMail: askMail,
+    changeServings: changeServings,
+    recipeCooked: recipeCooked
+  };
+
+  function askMail(){
+    var $scope = $rootScope.$new(true);
+    $scope.data = {
+      email: '',
+      shouldInsist: true
+    };
+
+    return $ionicPopup.show({
+      title: '<i class="fa fa-smile-o"></i> Lâche ton mail &nbsp;<i class="fa fa-smile-o"></i>',
+      subTitle: '!! No spam guaranteed !!',
+      template: '<input type="email" placeholder="ex: nom@example.com" ng-model="data.email" required>',
+      scope: $scope,
+      buttons: [
+        { text: 'Non !', onTap: function(e){
+          if($scope.data.shouldInsist){
+            $window.plugins.toast.show('S\'il-te-plaît ...');
+            $scope.data.shouldInsist = false;
+            e.preventDefault();
+          } else {
+            return '';
+          }
+        }},
+        { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
+          if($scope.data.email){
+            $window.plugins.toast.show('Merci :D');
+            return $scope.data.email;
+          } else {
+            e.preventDefault();
+          }
+        }}
+      ]
+    });
+  }
+
+  function changeServings(defaultServings, title){
+    var $scope = $rootScope.$new(true);
+    $scope.data = {
+      servings: defaultServings ? defaultServings : 2
+    };
+
+    return $ionicPopup.show({
+      template: ['<div style="text-align: center;">'+
+                 (title ? '<h3 class="title" style="font-size: 20px;">'+title+'</h3>' : '')+
+                 '<div>Cuisiner pour <b ng-bind="data.servings">??</b> personnes ?</div>'+
+                 '</div>'+
+                 '<div class="range">'+
+                 '<i class="fa fa-user"></i>'+
+                 '<input type="range" name="servings" min="1" max="10" ng-model="data.servings">'+
+                 '<i class="fa fa-users"></i>'+
+                 '</div>'].join(''),
+      scope: $scope,
+      buttons: [
+        { text: 'Annuler' },
+        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
+          return $scope.data.servings;
+        }}
+      ]
+    });
+  }
+
+  function recipeCooked(){
+    return $ionicPopup.show({
+      title: 'La recette est maintenant terminée !',
+      subTitle: 'Que veux-tu faire ?',
+      buttons: [{
+        text: 'Revenir à l\'accueil',
+        onTap: function(e){
+          return false;
+        }
+      }, {
+        text: '<b>Quitter l\'application</b>',
+        type: 'button-positive',
+        onTap: function(e){
+          return true;
+        }
+      }]
+    });
+  }
+
+  return service;
 });

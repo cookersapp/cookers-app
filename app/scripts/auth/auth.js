@@ -22,14 +22,13 @@ angular.module('app.auth', ['ui.router'])
   });
 })
 
-.controller('LoginCtrl', function($scope, $state, $window, $ionicPopup, UserSrv, LoginSrv, WeekrecipeSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, $window, PopupSrv, UserSrv, LoginSrv, WeekrecipeSrv, LogSrv){
   'use strict';
   WeekrecipeSrv.getCurrent().then(function(recipesOfWeek){
     // this is only to preload recipes of week at first launch !
   });
 
   $scope.credentials = {
-    dismissed: false,
     email: '',
     password: ''
   };
@@ -66,7 +65,7 @@ angular.module('app.auth', ['ui.router'])
         if(UserSrv.hasMail()){
           loginSuccess(provider, user);
         } else {
-          $ionicPopup.show(emailPopup).then(function(email){
+          PopupSrv.askMail().then(function(email){
             UserSrv.setEmail(email);
             loginSuccess(provider, user);
           });
@@ -87,32 +86,6 @@ angular.module('app.auth', ['ui.router'])
     LogSrv.trackLogin(provider, user);
     $state.go('app.home');
   }
-
-  var emailPopup = {
-    template: '<input type="email" placeholder="ex: nom@example.com" ng-model="credentials.email" required>',
-    title: '<i class="fa fa-smile-o"></i> Lâche ton mail &nbsp;<i class="fa fa-smile-o"></i>',
-    subTitle: '!! No spam guaranteed !!',
-    scope: $scope,
-    buttons: [
-      { text: 'Non !', onTap: function(e){
-        if(!$scope.credentials.dismissed){
-          $window.plugins.toast.show('S\'il-te-plaît ...');
-          $scope.credentials.dismissed = true;
-          e.preventDefault();
-        } else {
-          return '';
-        }
-      }},
-      { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
-        if(!$scope.credentials.email){
-          e.preventDefault();
-        } else {
-          $window.plugins.toast.show('Merci :D');
-          return $scope.credentials.email;
-        }
-      }}
-    ]
-  };
 })
 
 .factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, LogSrv, firebaseUrl){
