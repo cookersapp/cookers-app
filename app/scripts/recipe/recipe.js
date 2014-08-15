@@ -176,7 +176,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       {food:{category:'Épicerie salée',id:'chapelure',name:'chapelure'},pre:'de',price:{currency:'€',value:0.04},quantity:{unit:'g',value:20},role:'accompagnement'},
       {food:{category:'Épicerie salée',id:'poivre',name:'poivre'},pre:'',price:{currency:'€',value:0},quantity:{unit:'g',value:0},role:'accompagnement'},
       {food:{category:'Épicerie salée',id:'sel',name:'sel'},pre:'',price:{currency:'€',value:0},quantity:{unit:'g',value:0},role:'accompagnement'},
-      {food:{category:'Épicerie salée',id:'riz',name:'riz'},pre:'de',price:{currency:'€',value:0.295},quantity:{unit:'g',value:100},role:'facultatif'}],
+      {food:{category:'Épicerie salée',id:'riz',name:'riz'},pre:'de',price:{currency:'€',value:0.295},quantity:{unit:'g',value:100},role:'facultatif'}
+    ],
     instructions: [{
       content: 'En avant guingamp, préchauffe ton four à <b>200°C</b> et sors ton matos de cuisine !<ul><li>Un mixeur</li><li>Un plat qui va au four</li><li>Une poêle</li><li>Une casserole (optionnel)</li><li>Une planche à découper</li><li>Des couverts.</li></ul>Lance la cuisson de ton riz, s\'il est prévu au repas (d\'où la nécessité de la casserole).'
     }, {
@@ -284,11 +285,12 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 })
 
 .controller('TocookCtrl', function($scope, $ionicPopup, CartSrv){
+  'use strict';
   $scope.recipes = CartSrv.getRecipesToCook();
   $scope.recipes.sort(function(a, b){
     return CartSrv.boughtPercentage(b) - CartSrv.boughtPercentage(a);
   });
-  
+
   $scope.boughtPercentage = CartSrv.boughtPercentage;
 
   $scope.changeServings = function(recipe){
@@ -318,6 +320,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 })
 
 .controller('CookedCtrl', function($scope, CartSrv){
+  'use strict';
   $scope.recipes = CartSrv.getCookedRecipes();
 
 })

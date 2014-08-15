@@ -122,7 +122,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
 })
 
-.factory('CartSrv', function($localStorage, CartBuilder, CartUtils){
+.factory('CartSrv', function($localStorage, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
     getCarts: sCarts,
@@ -146,7 +146,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     unbuyItem: function(cart, item){buyItem(cart, item, false);},
     archive: archive,
     
-    boughtPercentage: CartUtils.boughtPercentage
+    boughtPercentage: _CartUtils.boughtPercentage
   };
 
   function sCarts(){return $localStorage.user.carts;}
@@ -164,7 +164,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }
 
   function createCart(name){
-    var cart = CartBuilder.createCart(name);
+    var cart = _CartBuilder.createCart(name);
     sCarts().unshift(cart);
     return cart;
   }
@@ -185,7 +185,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function itemsFromOpenedCarts(){
     var recipes = recipesFromOpenedCarts();
-    return CartUtils.recipesToItems(recipes);
+    return _CartUtils.recipesToItems(recipes);
   }
 
   function getRecipesToCook(){
@@ -199,7 +199,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }
 
   function getItems(cart){
-    return CartUtils.recipesToItems(cart.recipes);
+    return _CartUtils.recipesToItems(cart.recipes);
   }
 
   function hasRecipe(cart, recipe){
@@ -207,7 +207,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }
 
   function addRecipe(cart, recipe, servings){
-    var r = CartBuilder.createRecipe(cart, recipe, servings);
+    var r = _CartBuilder.createRecipe(cart, recipe, servings);
     cart.recipes.push(r);
   }
 
@@ -241,7 +241,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 })
 
 
-.factory('CartUtils', function($window, CartBuilder, debug){
+// this service should be used only on other services in this file !!!
+.factory('_CartUtils', function($window, _CartBuilder, debug){
   'use strict';
   var service = {
     recipesToItems: recipesToItems,
@@ -253,8 +254,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     _.map(recipes, function(recipe){
       _.map(recipe.ingredients, function(ingredient){
         var item = _.find(items, {food: {id: ingredient.food.id}});
-        if(item){ CartBuilder.addSourceToItem(item, ingredient, recipe); }
-        else { items.push(CartBuilder.createItem(ingredient, recipe)); }
+        if(item){ _CartBuilder.addSourceToItem(item, ingredient, recipe); }
+        else { items.push(_CartBuilder.createItem(ingredient, recipe)); }
       });
     });
     _sortItemsByCategory(items);
@@ -289,7 +290,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 })
 
 
-.factory('CartBuilder', function(Utils){
+// this service should be used only on other services in this file !!!
+.factory('_CartBuilder', function(Utils){
   'use strict';
   var service = {
     createCart: createCart,
