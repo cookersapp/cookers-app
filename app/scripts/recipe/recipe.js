@@ -29,7 +29,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }
   })
   .state('app.cook', {
-    url: '/cook/:recipeId?servings',
+    url: '/cook/:cartId/:recipeId',
     views: {
       'menuContent': {
         templateUrl: 'scripts/recipe/cook.html',
@@ -134,24 +134,38 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   });
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $ionicPopup, RecipeSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $ionicPopup, RecipeSrv, CartSrv, LogSrv, Utils){
   'use strict';
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
+  var cartId = $stateParams.cartId;
+  var recipeId = $stateParams.recipeId;
+  var startTime = Date.now();
   var timer = null;
   $scope.timer = 0;
-  $scope.servings = $stateParams.servings;
-  if(!$scope.servings){ changeServings(); }
-  /*$scope.recipe = {};
 
-  RecipeSrv.get($stateParams.recipeId).then(function(recipe){
-    RecipeSrv.addToHistory(recipe);
-    $scope.recipe = recipe;
-    $scope.timer = moment.duration(recipe.time.eat, 'minutes').asSeconds();
-    startTimer();
-  });*/
+  if(cartId === 'none'){
+    RecipeSrv.get(recipeId).then(function(recipe){
+      initData(recipe);
+    });
+  } else {
+    initData(CartSrv.getCartRecipe(cartId, recipeId));
+  }
 
-  $scope.recipe = {
+  function initData(recipe){
+    if(recipe){
+      $scope.recipe = recipe;
+      RecipeSrv.addToHistory($scope.recipe);
+      $scope.servings = $scope.recipe.cartData ? $scope.recipe.cartData.servings.value : $scope.recipe.servings.value;
+      $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
+      $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
+      startTimer();
+    } else {
+      // TODO error !
+    }
+  }
+
+  /*$scope.recipe = {
     name: 'aubergines en farce',
     images: { portrait: 'https://cdn.mediacru.sh/kRCuEv9YTmxZ.jpg', landing: 'https://cdn.mediacru.sh/P-pXlNbu91hO.jpg' },
     servings: { value: 2, unit: 'personnes' },
@@ -209,19 +223,53 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
   $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
   $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
-  startTimer();
+  startTimer();*/
 
   $scope.toggleTimer = function(){
     if(timer === null){startTimer();}
     else {stopTimer();}
   };
-  $scope.changeServings = changeServings;
+
+  $scope.changeServings = function(){
+    $ionicPopup.show({
+      template: ['<div style="text-align: center;">'+
+                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
+                 '</div>'+
+                 '<div class="range">'+
+                 '<i class="fa fa-user"></i>'+
+                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
+                 '<i class="fa fa-users"></i>'+
+                 '</div>'].join(''),
+      scope: $scope,
+      buttons: [
+        { text: 'Annuler' },
+        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
+          if(!$scope.settings.defaultServings){ e.preventDefault(); }
+          else { return $scope.settings.defaultServings; }
+        }}
+      ]
+    }).then(function(servings){
+      if(servings){
+        $scope.servings = servings;
+        $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
+      }
+    });
+  };
+
   $scope.done = function(){
+    if($scope.recipe && $scope.recipe.cartData){
+      $scope.recipe.cartData.cooked = {
+        time: Date.now(),
+        duration: Date.now() - startTime
+      };
+    }
+    
     if(navigator.app){
       navigator.app.exitApp();
     } else if(navigator.device){
       navigator.device.exitApp();
     }
+    
     /*$ionicPopup.show({
       title: 'La recette est maintenant terminée !',
       subTitle: 'Que veux-tu faire ?',
@@ -256,31 +304,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   function stopTimer(){
     Utils.cancelClock(timer);
     timer = null;
-  }
-  function changeServings(){
-    $ionicPopup.show({
-      template: ['<div style="text-align: center;">'+
-                 '<div>Cuisiner pour <b ng-bind="settings.defaultServings">??</b> personnes ?</div>'+
-                 '</div>'+
-                 '<div class="range">'+
-                 '<i class="fa fa-user"></i>'+
-                 '<input type="range" name="servings" min="1" max="10" ng-model="settings.defaultServings">'+
-                 '<i class="fa fa-users"></i>'+
-                 '</div>'].join(''),
-      scope: $scope,
-      buttons: [
-        { text: 'Annuler' },
-        { text: '<b>Ok</b>', type: 'button-positive', onTap: function(e){
-          if(!$scope.settings.defaultServings){ e.preventDefault(); }
-          else { return $scope.settings.defaultServings; }
-        }}
-      ]
-    }).then(function(servings){
-      if(servings){
-        $scope.servings = servings;
-        $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
-      }
-    });
   }
 })
 

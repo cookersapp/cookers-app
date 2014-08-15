@@ -17,7 +17,7 @@
             {{boughtPercentage(recipe) | number:0}}%
           </div>
         </div>
-        <button class="button" ui-sref="app.cook({recipeId: recipe.id, servings: recipe.cartData.servings.value})">Cuisiner</button>
+        <button class="button" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})">Cuisiner</button>
         <div class="tags">
           <span ng-click="changeServings(recipe)">{{recipe.cartData.servings | servings}}</span>
           <span>{{recipe.time | time}}</span>

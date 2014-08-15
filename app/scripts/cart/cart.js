@@ -129,6 +129,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     hasOpenedCarts: hasOpenedCarts,
     getOpenedCarts: getOpenedCarts,
     getCart: getCart,
+    getCartRecipe: getCartRecipe,
     createCart: createCart,
     /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
     isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
@@ -162,7 +163,12 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   function getCart(id){
     return _.find(sCarts(), {id: id});
   }
-
+  
+  function getCartRecipe(cartId, recipeId){
+    var cart = getCart(cartId);
+    return cart ? _.find(cart.recipes, {id: recipeId}) : null;
+  }
+  
   function createCart(name){
     var cart = _CartBuilder.createCart(name);
     sCarts().unshift(cart);
@@ -195,7 +201,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function getCookedRecipes(){
     var recipes = _recipesFromCarts(sCarts());
-    return _.filter(recipes, {cartData: {cooked: true}});
+    return _.reject(recipes, {cartData: {cooked: false}});
   }
 
   function getItems(cart){
