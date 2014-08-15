@@ -9,7 +9,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     abstract: true,
     views: {
       'menuContent': {
-        templateUrl: 'scripts/cart/main.html',
+        templateUrl: 'scripts/cart/cart.html',
         controller: 'CartCtrl'
       }
     },
@@ -19,7 +19,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   })
   .state('app.cart.recipes', {
     url: '/recipes',
-    templateUrl: 'scripts/cart/recipes.html',
+    templateUrl: 'scripts/cart/cart-recipes.html',
     controller: 'CartRecipesCtrl',
     data: {
       restrict: 'connected'
@@ -27,7 +27,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   })
   .state('app.cart.ingredients', {
     url: '/ingredients',
-    templateUrl: 'scripts/cart/ingredients.html',
+    templateUrl: 'scripts/cart/cart-ingredients.html',
     controller: 'CartIngredientsCtrl',
     data: {
       noSleep: true,
@@ -36,16 +36,21 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   });
 })
 
-.controller('CartCtrl', function($scope, $window, CartSrv, LogSrv){
+.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, LogSrv){
   'use strict';
-  // TODO : add $ionicPopover for more options (rename, archive, switch...)
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-  
+
+  $ionicPopover.fromTemplateUrl('scripts/cart/cart-popover.html', {
+    scope: $scope
+  }).then(function(popover){
+    $scope.popover = popover;
+  });
+
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){
       LogSrv.trackArchiveCart();
       CartSrv.archive($scope.cart);
-      // TODO : what to do now ???
+      $state.go('app.home');
     }
   };
 })
@@ -66,7 +71,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
       $scope.selectedRecipe = recipe;
     }
   };
-  
+
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartSrv.removeRecipe($scope.cart, recipe);
@@ -147,7 +152,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     buyItem: function(cart, item){buyItem(cart, item, true);},
     unbuyItem: function(cart, item){buyItem(cart, item, false);},
     archive: archive,
-    
+
     boughtPercentage: _CartUtils.boughtPercentage
   };
 
@@ -164,12 +169,12 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   function getCart(id){
     return _.find(sCarts(), {id: id});
   }
-  
+
   function getCartRecipe(cartId, recipeId){
     var cart = getCart(cartId);
     return cart ? _.find(cart.recipes, {id: recipeId}) : null;
   }
-  
+
   function createCart(name){
     var cart = _CartBuilder.createCart(name);
     sCarts().unshift(cart);

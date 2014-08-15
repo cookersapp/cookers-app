@@ -119,6 +119,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
   'use strict';
+  // TODO : add tracking
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
   var cartId = $stateParams.cartId;
