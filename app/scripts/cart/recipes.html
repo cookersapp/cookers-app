@@ -23,8 +23,8 @@
             </div>
             <div>
               <div class="progress">
-                <div class="progress-bar" ng-class="{'progress-bar-success': ingredientBoughtPc(recipe) === 100}" role="progressbar" aria-valuenow="{{ingredientBoughtPc(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ingredientBoughtPc(recipe)}}%;">
-                  {{ingredientBoughtPc(recipe) | number:0}}%
+                <div class="progress-bar" ng-class="{'progress-bar-success': boughtPercentage(recipe) === 100}" role="progressbar" aria-valuenow="{{boughtPercentage(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{boughtPercentage(recipe)}}%;">
+                  {{boughtPercentage(recipe) | number:0}}%
                 </div>
               </div>
             </div>

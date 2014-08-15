@@ -336,6 +336,68 @@ $card-size: 300px;
   }
 }
 
+.tocook {
+  background: #E9ECF1;
+
+  .card {
+    margin: 10px;
+    padding: 0px;
+    background: #E87151;
+    .col {
+      padding: 0px;
+    }
+    .picture {
+      img {
+        width: 100%;
+      }
+    }
+    .text {
+      position: relative;
+      margin: 10px;
+      .cart-link {
+        float: right;
+        padding-left: 5px;
+        color: #fff;
+      }
+      h1 {
+        font-size: 18px;
+        color: #fff;
+        min-height: 42px;
+        margin-top: 0px;
+        margin-right: 10px;
+        margin-bottom: 5px;
+      }
+      .progress {
+        margin-bottom: 10px;
+        .progress-bar {
+          background-color: #26C0B8;
+        }
+      }
+      .button {
+        display: block;
+        margin: auto;
+        padding: 0 30px;
+        color: #fff;
+        background: rgba(0,0,0,0.2);
+        border-color: rgba(0, 0, 0, 0.2);
+        border-radius: 25px;
+        line-height: 36px;
+        min-height: 38px;
+      }
+      .tags {
+        position: absolute;
+        bottom: 0px;
+        span {
+          color: #fff;
+          padding: 4px 10px;
+          background: rgba(0,0,0,0.2);
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+}
+
 
 .timer {
   padding: 5px;

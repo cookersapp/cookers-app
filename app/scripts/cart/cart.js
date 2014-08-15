@@ -54,20 +54,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   $scope.selectedRecipe = null;
 
-  $scope.ingredientBoughtPc = function(recipe){
-    // TODO : this method is call 4 times by recipe... It's highly inefficient... Must fix !!!
-    if(recipe && recipe.ingredients && recipe.ingredients.length > 0){
-      var ingredientBought = 0;
-      for(var i in recipe.ingredients){
-        if(recipe.ingredients[i].bought){
-          ingredientBought++;
-        }
-      }
-      return 100 * ingredientBought / recipe.ingredients.length;
-    } else {
-      return 100;
-    }
-  };
+  $scope.boughtPercentage = CartSrv.boughtPercentage;
 
   $scope.toggleRecipe = function(recipe){
     if($scope.selectedRecipe === recipe){
@@ -78,6 +65,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
       $scope.selectedRecipe = recipe;
     }
   };
+  
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartSrv.removeRecipe($scope.cart, recipe);
@@ -156,7 +144,9 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     removeRecipe: removeRecipe,
     buyItem: function(cart, item){buyItem(cart, item, true);},
     unbuyItem: function(cart, item){buyItem(cart, item, false);},
-    archive: archive
+    archive: archive,
+    
+    boughtPercentage: CartUtils.boughtPercentage
   };
 
   function sCarts(){return $localStorage.user.carts;}
@@ -217,7 +207,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }
 
   function addRecipe(cart, recipe, servings){
-    var r = CartBuilder.createRecipe(recipe, servings);
+    var r = CartBuilder.createRecipe(cart, recipe, servings);
     cart.recipes.push(r);
   }
 
@@ -254,7 +244,8 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 .factory('CartUtils', function($window, CartBuilder, debug){
   'use strict';
   var service = {
-    recipesToItems: recipesToItems
+    recipesToItems: recipesToItems,
+    boughtPercentage: boughtPercentage
   };
 
   function recipesToItems(recipes){
@@ -268,6 +259,20 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     });
     _sortItemsByCategory(items);
     return items;
+  }
+
+  function boughtPercentage(recipe){
+    if(recipe && recipe.cartData && recipe.ingredients && recipe.ingredients.length > 0){
+      var ingredientBought = 0;
+      for(var i in recipe.ingredients){
+        if(recipe.ingredients[i].bought){
+          ingredientBought++;
+        }
+      }
+      return 100 * ingredientBought / recipe.ingredients.length;
+    } else {
+      return 100;
+    }
   }
 
   function _sortItemsByCategory(items){
@@ -304,9 +309,10 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     };
   }
 
-  function createRecipe(recipe, servings){
+  function createRecipe(cart, recipe, servings){
     var r = angular.copy(recipe);
     r.cartData = {
+      cart: cart.id,
       created: Date.now(),
       cooked: false,
       servings: {

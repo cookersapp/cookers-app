@@ -285,6 +285,11 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .controller('TocookCtrl', function($scope, $ionicPopup, CartSrv){
   $scope.recipes = CartSrv.getRecipesToCook();
+  $scope.recipes.sort(function(a, b){
+    return CartSrv.boughtPercentage(b) - CartSrv.boughtPercentage(a);
+  });
+  
+  $scope.boughtPercentage = CartSrv.boughtPercentage;
 
   $scope.changeServings = function(recipe){
     $ionicPopup.show({
