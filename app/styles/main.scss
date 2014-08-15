@@ -2,6 +2,7 @@
 @import "_ionic_override";
 @import "_ionic_new_color";
 @import "_bootstrap_imports";
+@import "_global";
 @import "../scripts/launch/_intro";
 @import "../scripts/auth/_login";
 @import "_menu";
@@ -20,19 +21,6 @@
     url('../fonts/desyrel-webfont.svg#desyrelregular') format('svg');
   font-weight: normal;
   font-style: normal;
-}
-
-@mixin handwritten {
-  font-family: 'desyrelregular', cursive;
-}
-
-.title:first-letter { text-transform: uppercase; }
-.handwritten { @include handwritten; }
-.bold { font-weight: bold !important; }
-
-.bar-header .title {
-  @include handwritten;
-  font-size: 20px;
 }
 
 .button-icon {

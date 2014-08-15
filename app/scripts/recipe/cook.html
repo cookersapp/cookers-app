@@ -9,50 +9,54 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="cook" ng-cloack>
-    <div class="header row card">
-      <div class="col col-33 picture">
-        <img ng-src="{{recipe.images.portrait}}">
-      </div>
-      <div class="col text">
-        <h1 class="title">{{recipe.name}}</h1>
-        <div class="tags">
-          <span ng-click="changeServings()">{{recipe.servings | servings:servingsAdjust}}</span>
-          <span>{{recipe.time | time}}</span>
+  <ion-content class="cook-screen" ng-class="{empty: !(recipe && recipe.id)}">
+    <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
+
+    <div class="screen" ng-cloack>
+      <div class="header row card">
+        <div class="col col-33 picture">
+          <img ng-src="{{recipe.images.portrait}}">
+        </div>
+        <div class="col text">
+          <h1 class="title">{{recipe.name}}</h1>
+          <div class="tags">
+            <span ng-click="changeServings()">{{recipe.servings | servings:servingsAdjust}}</span>
+            <span>{{recipe.time | time}}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="requirements row card">
-      <div class="col">
-        <h2 class="title">Ingrédients</h2>
-        <ul>
-          <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient:servingsAdjust}}</li>
-        </ul>
-      </div>
-      <div class="col">
-        <h2 class="title">Ustensiles</h2>
-        <ul>
-          <li ng-repeat="tool in recipe.tools" class="title">{{tool | tool}}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="cooking">
-      <h2 class="title">Préparation</h2>
-      <div ng-repeat="instruction in recipe.instructions">
-        <div class="step card" ng-bind-html="instruction.content"></div>
-        <div class="timers" ng-if="instruction.timers">
-          <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
+      <div class="requirements row card">
+        <div class="col">
+          <h2 class="title">Ingrédients</h2>
+          <ul>
+            <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient:servingsAdjust}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2 class="title">Ustensiles</h2>
+          <ul>
+            <li ng-repeat="tool in recipe.tools" class="title">{{tool | tool}}</li>
+          </ul>
         </div>
       </div>
-    </div>
-    <div class="cooked">
-      <img ng-src="{{recipe.images.landing}}">
-      <div class="content">
-        <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
-        <h1 class="title handwritten">
-          Bravo,<br>
-          Et bon appétit <i class="fa fa-smile-o"></i>
-        </h1>
+      <div class="cooking">
+        <h2 class="title">Préparation</h2>
+        <div ng-repeat="instruction in recipe.instructions">
+          <div class="step card" ng-bind-html="instruction.content"></div>
+          <div class="timers" ng-if="instruction.timers">
+            <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
+          </div>
+        </div>
+      </div>
+      <div class="cooked">
+        <img ng-src="{{recipe.images.landing}}">
+        <div class="content">
+          <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
+          <h1 class="title handwritten">
+            Bravo,<br>
+            Et bon appétit <i class="fa fa-smile-o"></i>
+          </h1>
+        </div>
       </div>
     </div>
   </ion-content>

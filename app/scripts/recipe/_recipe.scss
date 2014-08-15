@@ -1,6 +1,6 @@
 @import "_colors";
 
-.recipes {
+.recipes-screen {
   .recipes-empty {
     padding: 30px;
     text-align: center;
@@ -122,7 +122,8 @@
   }
 }
 
-$card-size: 300px;
+
+/*$card-size: 300px;
 .recipe-cards {
   background-color: #333;
   .scroll {
@@ -195,10 +196,10 @@ $card-size: 300px;
       }
     } 
   }
-}
+}*/
 
 
-.recipe {
+.recipe-screen {
   background: #fff;
   .recipe-meta {
     background: #eee;
@@ -228,8 +229,7 @@ $card-size: 300px;
   }
 }
 
-.cook {
-  background: #E9ECF1;
+.cook-screen {
   .card {
     margin: 10px;
   }
@@ -336,9 +336,7 @@ $card-size: 300px;
   }
 }
 
-.tocook {
-  background: #E9ECF1;
-
+.tocook-screen {
   .card {
     margin: 10px;
     padding: 0px;
@@ -398,6 +396,39 @@ $card-size: 300px;
   }
 }
 
+.cooked-screen {
+  .card {
+    margin: 10px;
+    padding: 0px;
+    background: #E87151;
+    .col {
+      padding: 0px;
+    }
+    .picture {
+      img {
+        width: 100%;
+      }
+    }
+    .text {
+      h1 {
+        font-size: 20px;
+        color: #fff;
+      }
+      margin: 10px;
+      position: relative;
+      .tags {
+        position: absolute;
+        bottom: 0px;
+        span {
+          color: #fff;
+          padding: 4px 10px;
+          background: rgba(0,0,0,0.2);
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+}
 
 .timer {
   padding: 5px;

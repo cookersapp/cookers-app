@@ -7,7 +7,7 @@
       <button class="button button-icon ion-checkmark" ng-if="cart && cart.archived"></button>
     </div>
   </ion-header-bar>
-  <ion-content class="cart">
+  <ion-content class="cart-screen" ng-class="{empty: !(cart && ((cart.recipes && cart.recipes.length > 0) || (cart.customItems && cart.customItems.length > 0)))}">
     <div class="cart-chooser padding hide-on-keyboard-open">
       <div class="button-bar bar-light">
         <a class="button" ng-class="{active: isActive('.*recipes')}" ui-sref="app.cart.recipes">Recettes</a>
@@ -16,11 +16,4 @@
     </div>
     <ui-view></ui-view>
   </ion-content>
-  <!--<ion-footer-bar class="bar-dark item-input-inset">
-    <label class="item-input-wrapper">
-      <i class="icon ion-ios7-search placeholder-icon"></i>
-      <input type="search" ng-model="ingredientSearch" placeholder="Ajouter un ingrédient ...">
-    </label>
-    <button class="button button-clear" ng-click="selectProduct(ingredientSearch)">Ajouter</button>
-  </ion-footer-bar>-->
 </ion-view>

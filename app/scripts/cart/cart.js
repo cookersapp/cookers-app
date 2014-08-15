@@ -40,6 +40,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   'use strict';
   // TODO : add $ionicPopover for more options (rename, archive, switch...)
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){
       LogSrv.trackArchiveCart();

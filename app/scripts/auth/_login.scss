@@ -3,15 +3,17 @@
 $header-size: 200px;
 $footer-size: 80px;
 
-.keyboard-open .login {
+.keyboard-open .login-screen {
   .bar-header { display: none; }
   .bar-footer { display: none; }
   .has-header { top: 0px; }
   .has-footer { bottom: 0px; }
 }
 
-.login {
-  background: #fff;
+.login-screen {
+  .scroll-content {
+    background: #fff;
+  }
   .bar-header {
     border: none;
     height: $header-size;

@@ -1,16 +1,16 @@
 @import "_colors";
 
-.cart {
+.cart-screen {
   background: #333;
 
   .cart-chooser {
     background: #fff;
   }
 
-  .cart-empty {
+  .no-items-to-buy {
     background: #fff;
-    padding: 30px 10px;
-    min-height: 50px;
+    padding: 60px 10px;
+    min-height: 200px;
     text-align: center;
   }
 

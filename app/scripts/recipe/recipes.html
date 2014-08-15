@@ -6,15 +6,18 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="recipes">
-    <div ng-if="loading" class="recipes-empty">
-      CHARGEMENT ...
+  <ion-content class="recipes-screen" ng-class="{empty: !(recipesOfWeek && recipesOfWeek.recipes && recipesOfWeek.recipes.length > 0)}">
+    <div class="screen-empty">
+      <div ng-if="loading">
+        CHARGEMENT ...
+      </div>
+      <div ng-if="!loading">
+        Aucune recette planifiée cette semaine :(<br>
+        Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
+      </div>
     </div>
-    <div ng-if="!loading && (!recipesOfWeek || !recipesOfWeek.recipes || recipesOfWeek.recipes.length === 0)" class="recipes-empty">
-      Aucune recette planifiée cette semaine :(<br>
-      Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
-    </div>
-    <div ng-if="!loading">
+
+    <div class="screen">
       <div class="list">
         <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
           <img class="portrait" ng-src="{{recipe.images.portrait}}" ng-click="toggleIngredients(recipe)">

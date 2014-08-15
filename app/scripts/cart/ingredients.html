@@ -1,47 +1,58 @@
 <div>
-  <div class="list add-product" ng-if="!settings.strictIngredients">
+  <div class="list add-product">
     <div class="item">
       <textarea msd-elastic blur-on-keyboard-out ng-blur="customItemsEdited(customItems)" ng-model="customItems" 
-                rows="1" placeholder="Penser à acheter ..."></textarea>
+                rows="1" placeholder="Penser à acheter ..." ng-disabled="cart.archived"></textarea>
     </div>
   </div>
-
-  <div ng-if="items.length === 0" class="cart-empty">
-    Aucun ingrédient à acheter :(
+  <div class="screen-empty">
+    La liste de courses est vide :(
     <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute une recette !</button>
   </div>
-  <div ng-if="allItemsBought()" class="cart-empty">
-    Bravo ! Tu as tout acheté !!!<br>
-    <br>
-    <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
-  </div>
 
-  <div class="list to-buy">
-    <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items" ng-if="!isBought(item)">
-      <div class="check pull-right">
-        <div class="box" ng-click="buyItem(item)"></div>
-      </div>
-      <div class="quantity pull-right">{{item.quantity | quantity}}</div>
-      <div class="text" ng-click="toggleItem(item)">{{item.food.name}}</div>
+  <div class="screen">
+    <div class="no-items-to-buy" ng-if="!(cart && cart.recipes && cart.recipes.length > 0)">
+      Aucune recette ajoutée à la liste de course.
+      <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
+    </div>
+    <div class="no-items-to-buy" ng-if="allItemsBought() && !cart.archived">
+      Bravo ! Tu as tout acheté !!!<br>
+      <br>
+      <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
+    </div>
+    <div class="no-items-to-buy" ng-if="cart.archived">
+      Liste archivée !
+    </div>
 
-      <div class="details" ng-if="isOpened(item)">
-        <div class="source" ng-repeat="source in item.sources">
-          <div class="quantity pull-right">
-            {{source.quantity | quantity}}
+    <div ng-if="!cart.archived">
+      <div class="list to-buy">
+        <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items" ng-if="!isBought(item)">
+          <div class="check pull-right">
+            <div class="box" ng-click="buyItem(item)"></div>
           </div>
-          <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings.value}} {{source.recipe.cartData.servings.unit}})</div>
+          <div class="quantity pull-right">{{item.quantity | quantity}}</div>
+          <div class="text" ng-click="toggleItem(item)">{{item.food.name}}</div>
+
+          <div class="details" ng-if="isOpened(item)">
+            <div class="source" ng-repeat="source in item.sources">
+              <div class="quantity pull-right">
+                {{source.quantity | quantity}}
+              </div>
+              <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings.value}} {{source.recipe.cartData.servings.unit}})</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="list bought">
-    <div class="item item-cart-ingredient bought" ng-repeat="item in items" ng-if="isBought(item)">
-      <div class="check pull-right">
-        <div class="box" ng-click="unbuyItem(item)">✔</div>
+      <div class="list bought">
+        <div class="item item-cart-ingredient bought" ng-repeat="item in items" ng-if="isBought(item)">
+          <div class="check pull-right">
+            <div class="box" ng-click="unbuyItem(item)">✔</div>
+          </div>
+          <div class="quantity pull-right">{{item.quantity | quantity}}</div>
+          <div class="text">{{item.food.name}}</div>
+        </div>
       </div>
-      <div class="quantity pull-right">{{item.quantity | quantity}}</div>
-      <div class="text">{{item.food.name}}</div>
     </div>
   </div>
 </div>
