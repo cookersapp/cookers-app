@@ -1,12 +1,8 @@
 $avatar-size: 80px;
 .sidemenu {
-  background: #6f5499;
+  // from http://www.transparenttextures.com/patterns/navy.png
+  background: #6f5499 url(../images/menu_bg.png);
   color: #fff;
-  .scroll {
-    // from http://www.transparenttextures.com/patterns/navy.png
-    background-image: url(../images/menu_bg.png);
-    height: 100%;
-  }
   .profile {
     .cover {
       width: 100%;
