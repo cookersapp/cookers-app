@@ -38,6 +38,8 @@
       line-height: 70px;
       img {
         width: 60%;
+        -webkit-filter: drop-shadow(0 1px 1px rgba(0,0,0,0.9));
+        filter:         drop-shadow(0 1px 1px rgba(0,0,0,0.9));
       }
     }
     h3 {
@@ -54,7 +56,7 @@
   .slide-shopping { background-image: url(../images/intro/oignon.jpg); }
   .slide-cooking { background-image: url(../images/intro/epices.jpg); }
   .slide-start { background-image: url(../images/intro/start.jpg); background-position: 42%; }
-  
+
   .slide-start {
     .button-start {
       color: #fff;
