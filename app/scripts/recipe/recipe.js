@@ -119,7 +119,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
   'use strict';
-  // TODO : add tracking
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
   // TODO : should stick active timers on top of screen if you scroll
@@ -225,6 +224,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   $scope.done = function(){
+    LogSrv.trackRecipeCooked($scope.recipe.id);
     if($scope.recipe && $scope.recipe.cartData){
       $scope.recipe.cartData.cooked = {
         time: Date.now(),

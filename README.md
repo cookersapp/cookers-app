@@ -74,6 +74,7 @@ Your app is now running to your computer. To run it to your android device :
 ## Useful infos
 
 - android push notifications : http://intown.biz/2014/04/11/android-notifications/
+- speech recoggnition : https://github.com/jcsmesquita/cordova-speechrecognition https://github.com/poiuytrez/SpeechRecognizer https://github.com/manueldeveloper/cordova-plugin-speech-recognizer https://github.com/macdonst/SpeechRecognitionPlugin
 
 ## Design
 
@@ -85,30 +86,21 @@ Inspirationnal apps :
 
 ## Tools 
 
+- images : [croppola](http://www.croppola.com/) (corp), [fixpicture](http://www.fixpicture.org/) (resize) and [kraken](https://kraken.io/web-interface) (optimize)
 - screenshots : https://developer.android.com/distribute/tools/promote/device-art.html
-- optimisation images : https://kraken.io/web-interface
-- Crop images : [croppola](http://www.croppola.com/) ([fixpicture](http://www.fixpicture.org/) to resize)
 - Android remote debug : [chrome://inspect/#devices](chrome://inspect/#devices) (tuto: https://developer.chrome.com/devtools/docs/remote-debugging)
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
 - newsletter : [customer.io](http://customer.io/)
-- cordova plugins : http://plugreg.com/plugins
-
-# Business
-
-## Data
-
-- __weekrecipe__ (recettes de la semaine) : suggested recipes for the week
-    - __recipe__ (recette) : recette
-        - __ingredient__ (ingrédient) : food with quantity in a recipe
-            - __food__ (aliment) : basic food element
-- __cart__ (liste de courses) : list of recipes to buy
-    - recipeItem (recette) : recipe added to cart with wanted quantity
-
-- Taille écran nexus 4 : 384x568px
-- Taille header : 44px
+- cordova plugins : http://plugreg.com/plugins and http://plugins.cordova.io/
 
 # Changelog
 
-## V0.1.1
+## v0.3.0
+
+- écran de cuisine
+- recettes à cuisiner et recettes cuisinées
+- améliorations design
+
+## v0.2.0
 
 - l'écran de s'éteint plus sur la ingrédients de la liste de course (quand on est au magasin) et sur le détail d'une recette (quand on cuisine)
