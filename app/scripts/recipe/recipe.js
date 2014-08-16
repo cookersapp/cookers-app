@@ -122,6 +122,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   // TODO : add tracking
   // TODO : should play alarms when timer ends
   // TODO : should go to next when knock knock
+  // TODO : should stick active timers on top of screen if you scroll
   var cartId = $stateParams.cartId;
   var recipeId = $stateParams.recipeId;
   var startTime = Date.now();
