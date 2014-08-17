@@ -9,7 +9,7 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="cook-screen" ng-class="{empty: !(recipe && recipe.id)}">
+  <ion-content class="cook-screen" ng-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
     <div class="screen" ng-cloack>

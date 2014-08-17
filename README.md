@@ -74,7 +74,7 @@ Your app is now running to your computer. To run it to your android device :
 ## Useful infos
 
 - android push notifications : http://intown.biz/2014/04/11/android-notifications/
-- speech recoggnition : https://github.com/jcsmesquita/cordova-speechrecognition https://github.com/poiuytrez/SpeechRecognizer https://github.com/manueldeveloper/cordova-plugin-speech-recognizer https://github.com/macdonst/SpeechRecognitionPlugin
+- speech recognition : https://github.com/jcsmesquita/cordova-speechrecognition https://github.com/poiuytrez/SpeechRecognizer https://github.com/manueldeveloper/cordova-plugin-speech-recognizer https://github.com/macdonst/SpeechRecognitionPlugin
 
 ## Design
 

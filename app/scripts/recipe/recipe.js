@@ -119,9 +119,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
 .controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
   'use strict';
-  // TODO : should play alarms when timer ends
-  // TODO : should go to next when knock knock
-  // TODO : should stick active timers on top of screen if you scroll
+  // TODO : should go to next step when knock knock (speech recognition)
+  // TODO : should stick active timers on top (or bottom?) of screen if you scroll
   var cartId = $stateParams.cartId;
   var recipeId = $stateParams.recipeId;
   var startTime = Date.now();
@@ -163,7 +162,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }, {
       content: 'Fais cuire les aubergines vidées pendant <b>20 minutes</b>, partie peau vers le haut (ça a son importance).<br>Dès que tu vois des "ridules" sur la peau de l\'aubergine, time\'s up !',
       timers: [
-        {color: 'red', label: 'Sors les aubergines du four', seconds: 12}
+        {color: 'red', label: 'Sors les aubergines du four', seconds: 5}
       ]
     }, {
       content: 'Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :<ul><li>Après <b>5 minutes</b>, ajoutes-y les oignons et l\'ail et laisse dorer pendant <b>5 minutes</b></li><li>Ajoute ensuite la chair d\'aubergine hachée puis les tomates coupées</li><li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li><li>Laisse mijoter pendant encore <b>5 minutes</b></li></ul>',
@@ -362,7 +361,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   return service;
 })
 
-.directive('cookTimer', function(MediaSrv, Utils){
+.directive('cookTimer', function($ionicScrollDelegate, MediaSrv, Utils){
   'use strict';
   var nearInterval = 60;
 
@@ -383,18 +382,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }
   }
 
-  function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
-  function stepReached(step){ console.log('stepReached(step)', step); }
-  function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
-  function timerEnds(){
-    console.log('timerEnds()');
-    // TODO : must stop sound if click on timer or if leave screen
-    // TODO : running timers should be on top of screen (or bottom?)
-    MediaSrv.loadMedia('sounds/timerEnds.mp3').then(function(media){
-      media.play();
-    });
-  }
-
   return {
     restrict: 'E',
     templateUrl: 'scripts/recipe/timer.html',
@@ -406,21 +393,29 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       pSteps: '=steps'
     },
     link: function(scope, element, attrs){
-      var timer = null;
-      var params = getParams(scope);
-      angular.extend(scope, params);
+      var scrollDelegate = $ionicScrollDelegate.$getByHandle('cookScroll');
+      var timer = getParams(scope);
+      timer.duration = null;
+      timer.clock = null;
+      timer.alarm = false;
+      timer.media = null;
+      timer.scroll = null;
+      scope.timer = timer;
+      MediaSrv.loadMedia('sounds/timerEnds.mp3', null, null, restartAlarm).then(function(media){
+        timer.media = media;
+      });
 
       scope.time = 0;
-      if(params.steps){
-        scope.timeline = [];
+      if(timer.steps){
+        timer.timeline = [];
         var acc = 0;
-        for(var i in params.steps){
-          acc += params.steps[i].time;
-          scope.timeline.push({time: acc, label: params.steps[i].label});
+        for(var i in timer.steps){
+          acc += timer.steps[i].time;
+          timer.timeline.push({time: acc, label: timer.steps[i].label});
         }
-        scope.timer = acc;
+        timer.duration = acc;
       } else {
-        scope.timer = params.seconds;
+        timer.duration = timer.seconds;
       }
 
       scope.isSelected = function(step){
@@ -430,22 +425,30 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
         return scope.time >= step.time + (nearInterval/2);
       };
 
-      scope.toggleTimer = function(){
-        if(timer === null){startTimer();}
-        else {stopTimer();}
+      scope.timerClick = function(){
+        if(timer.alarm === true){stopAlarm();}
+        else if(timer.clock !== null){stopTimer();}
+        else {startTimer();}
       };
 
+      // clean alarms if leave view
+      scope.$on('$destroy', function(){
+        stopAlarm();
+      });
+
+
       function startTimer(){
-        timer = Utils.clock(function(){
-          if(scope.timer - scope.time > 0){
+        timer.scroll = scrollDelegate.getScrollPosition();
+        timer.clock = Utils.clock(function(){
+          if(timer.duration - scope.time > 0){
             scope.time++;
 
-            if(scope.timer === scope.time+(nearInterval/2)){timerNearlyEnds();}
-            else if(scope.timer === scope.time){timerEnds();}
-            else if(scope.timeline){
-              for(var i in scope.timeline){
-                if(scope.timeline[i].time === scope.time+(nearInterval/2)){stepNearlyReached(scope.timeline[i]);}
-                if(scope.timeline[i].time === scope.time){stepReached(scope.timeline[i]);}
+            if(timer.duration === scope.time+(nearInterval/2)){timerNearlyEnds();}
+            else if(timer.duration === scope.time){timerEnds();}
+            else if(timer.timeline){
+              for(var i in timer.timeline){
+                if(timer.timeline[i].time === scope.time+(nearInterval/2)){stepNearlyReached(timer.timeline[i]);}
+                if(timer.timeline[i].time === scope.time){stepReached(timer.timeline[i]);}
               }
             }
           } else {
@@ -454,8 +457,35 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
         });
       }
       function stopTimer(){
-        Utils.cancelClock(timer);
-        timer = null;
+        Utils.cancelClock(timer.clock);
+        timer.clock = null;
+      }
+      function startAlarm(){
+        if(timer.alarm === false){
+          timer.alarm = true;
+          timer.media.play();
+          scrollDelegate.scrollTo(timer.scroll.left, timer.scroll.top, true);
+        }
+      }
+      function restartAlarm(){
+        if(timer.alarm === true){
+          timer.media.play();
+        }
+      }
+      function stopAlarm(){
+        if(timer.alarm === true){
+          timer.alarm = false;
+          timer.media.stop();
+          timer.media.release();
+        }
+      }
+
+      function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
+      function stepReached(step){ console.log('stepReached(step)', step); }
+      function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
+      function timerEnds(){
+        console.log('timerEnds()');
+        startAlarm();
       }
     }
   };

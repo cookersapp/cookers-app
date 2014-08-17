@@ -125,77 +125,77 @@
 
 /*$card-size: 300px;
 .recipe-cards {
-  background-color: #333;
-  .scroll {
-    height: 100%;
-  }
-  .cards-container {  
-    .swipe-cards {
-      position: fixed;
-      #start-card {
-        background-color: #30BD8A;
-        border: 6px solid #4CD68E;
-        color: #fff;
-        line-height: $card-size;
-        word-wrap: break-word;
-        text-align: center;
-        span {
-          display: inline-block;
-          width: $card-size - 50;
-          font-size: 30px;
-          line-height: 40px;
-          vertical-align: middle;
-        }
-      }
-      .swipe-card {
-        display: none;
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        width: $card-size;
-        height: $card-size;
-        margin-left: -$card-size/2;
-        margin-top: -$card-size/2;
-        overflow: hidden;
-        border: 1px solid #d4d4d4;
-        background-color: #fff;
-        color: #444;
-        border-radius: 4px;
-        box-sizing: border-box;
-        -webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
-        -moz-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
-        box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
-        -webkit-perspective: 1000;
-        -webkit-transform: scale(1,1);
-        -webkit-backface-visibility: hidden;
-        -webkit-animation-fill-mode: forwards;
-        .title {
-          font-size: 20px;
-          line-height: 30px;
-          padding: 5px;
-        }
-        .subtitle {
-          padding: 5px;
-          padding-top: 0;
-        }
-        .image {
-          img {
-            width: 100%;
-          }
-        }
-        .button-bar {
-          position: absolute;
-          bottom: 0;
-        }
-        .pop-in-start {
-          -webkit-transform: scale(0,0);
-        }
-        .pop-in {
-          -webkit-animation: bounceIn 0.3s ease-out;
-        }
-      }
-    } 
-  }
+background-color: #333;
+.scroll {
+height: 100%;
+}
+.cards-container {  
+.swipe-cards {
+position: fixed;
+#start-card {
+background-color: #30BD8A;
+border: 6px solid #4CD68E;
+color: #fff;
+line-height: $card-size;
+word-wrap: break-word;
+text-align: center;
+span {
+display: inline-block;
+width: $card-size - 50;
+font-size: 30px;
+line-height: 40px;
+vertical-align: middle;
+}
+}
+.swipe-card {
+display: none;
+position: fixed;
+left: 50%;
+top: 50%;
+width: $card-size;
+height: $card-size;
+margin-left: -$card-size/2;
+margin-top: -$card-size/2;
+overflow: hidden;
+border: 1px solid #d4d4d4;
+background-color: #fff;
+color: #444;
+border-radius: 4px;
+box-sizing: border-box;
+-webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
+-moz-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.1);
+-webkit-perspective: 1000;
+-webkit-transform: scale(1,1);
+-webkit-backface-visibility: hidden;
+-webkit-animation-fill-mode: forwards;
+.title {
+font-size: 20px;
+line-height: 30px;
+padding: 5px;
+}
+.subtitle {
+padding: 5px;
+padding-top: 0;
+}
+.image {
+img {
+width: 100%;
+}
+}
+.button-bar {
+position: absolute;
+bottom: 0;
+}
+.pop-in-start {
+-webkit-transform: scale(0,0);
+}
+.pop-in {
+-webkit-animation: bounceIn 0.3s ease-out;
+}
+}
+} 
+}
 }*/
 
 
@@ -435,6 +435,13 @@
   margin: 10px 20px;
   box-shadow: 0 4px 15px -4px #000;
   color: #fff;
+  &.alarm {
+    -webkit-animation: blink 1.2s linear infinite;
+    -moz-animation: blink 1.2s linear infinite;
+    -ms-animation: blink 1.2s linear infinite;
+    -o-animation: blink 1.2s linear infinite;
+    animation: blink 1.2s linear infinite;
+  }
   .label {
     margin-bottom: 0px;
     color: #fff;
