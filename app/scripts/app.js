@@ -169,7 +169,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   }
 })
 
-.run(function($rootScope, $location, $localStorage, localStorageDefault, LaunchSrv, StorageSrv, appVersion, debug){
+.run(function($rootScope, $location, $localStorage, $ionicPlatform, localStorageDefault, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
   if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
   if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
@@ -185,7 +185,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
 
-  ionic.Platform.ready(function(){
+  $ionicPlatform.ready(function(){
     LaunchSrv.launch();
   });
 

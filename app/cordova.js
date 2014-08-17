@@ -43,30 +43,24 @@ window.Media = function(src, mediaSuccess, mediaError, mediaStatus){
 
   return {
     // Returns the current position within an audio file (in seconds).
-    getCurrentPosition: function(mediaSuccess, mediaError){ mediaSuccess(sound.currentTime); }, // ok
+    getCurrentPosition: function(mediaSuccess, mediaError){ mediaSuccess(sound.currentTime); },
     // Returns the duration of an audio file (in seconds) or -1.
-    getDuration: function(){ return isNaN(sound.duration) ? -1 : sound.duration; }, // ok
+    getDuration: function(){ return isNaN(sound.duration) ? -1 : sound.duration; },
     // Start or resume playing an audio file.
-    play: function(){ console.log('media play', src); sound.play(); }, // ok
+    play: function(){ sound.play(); },
     // Pause playback of an audio file.
-    pause: function(){ console.log('media pause', src); sound.pause(); }, // ok
+    pause: function(){ sound.pause(); },
     // Releases the underlying operating system's audio resources. Should be called on a ressource when it's no longer needed !
     release: function(){},
     // Moves the position within the audio file.
-    seekTo: function(milliseconds){},
+    seekTo: function(milliseconds){}, // TODO
     // Set the volume for audio playback (between 0.0 and 1.0).
-    setVolume: function(volume){ sound.volume = volume; }, // ok
+    setVolume: function(volume){ sound.volume = volume; },
     // Start recording an audio file.
     startRecord: function(){},
     // Stop recording an audio file.
     stopRecord: function(){},
     // Stop playing an audio file.
-    stop: function(){ console.log('media stop', src); sound.pause(); if(mediaSuccess){mediaSuccess();} } // TODO : correct
+    stop: function(){ sound.pause(); if(mediaSuccess){mediaSuccess();} } // TODO
   };
 };
-// constants for mediaStatus
-window.Media.MEDIA_NONE = 0;
-window.Media.MEDIA_STARTING = 1;
-window.Media.MEDIA_RUNNING = 2;
-window.Media.MEDIA_PAUSED = 3;
-window.Media.MEDIA_STOPPED = 4;

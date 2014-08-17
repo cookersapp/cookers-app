@@ -128,28 +128,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   var timer = null;
   $scope.timer = 0;
 
-  if(cartId === 'none'){
-    RecipeSrv.get(recipeId).then(function(recipe){
-      initData(recipe);
-    });
-  } else {
-    initData(CartSrv.getCartRecipe(cartId, recipeId));
-  }
-
-  function initData(recipe){
-    if(recipe){
-      $scope.recipe = recipe;
-      RecipeSrv.addToHistory($scope.recipe);
-      $scope.servings = $scope.recipe.cartData ? $scope.recipe.cartData.servings.value : $scope.recipe.servings.value;
-      $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
-      $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
-      startTimer();
-    } else {
-      // TODO error !
-    }
-  }
-
-  /*$scope.recipe = {
+  /*var recipe = {
+    id: 'aubergines-en-farce',
     name: 'aubergines en farce',
     images: { portrait: 'https://cdn.mediacru.sh/kRCuEv9YTmxZ.jpg', landing: 'https://cdn.mediacru.sh/P-pXlNbu91hO.jpg' },
     servings: { value: 2, unit: 'personnes' },
@@ -183,7 +163,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }, {
       content: 'Fais cuire les aubergines vidées pendant <b>20 minutes</b>, partie peau vers le haut (ça a son importance).<br>Dès que tu vois des "ridules" sur la peau de l\'aubergine, time\'s up !',
       timers: [
-        {color: 'red', label: 'Sors les aubergines du four', seconds: 1200}
+        {color: 'red', label: 'Sors les aubergines du four', seconds: 12}
       ]
     }, {
       content: 'Profite de la cuisson au four pour faire cuire la viande hachée dans la poêle :<ul><li>Après <b>5 minutes</b>, ajoutes-y les oignons et l\'ail et laisse dorer pendant <b>5 minutes</b></li><li>Ajoute ensuite la chair d\'aubergine hachée puis les tomates coupées</li><li><b>10 minutes</b> plus tard, rajoute la purée de tomates et assaisonne à ta guise</li><li>Laisse mijoter pendant encore <b>5 minutes</b></li></ul>',
@@ -205,9 +185,28 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       ]
     }]
   };
-  $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
-  $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
-  startTimer();*/
+  initData(recipe);*/
+
+  if(cartId === 'none'){
+    RecipeSrv.get(recipeId).then(function(recipe){
+      initData(recipe);
+    });
+  } else {
+    initData(CartSrv.getCartRecipe(cartId, recipeId));
+  }
+
+  function initData(recipe){
+    if(recipe){
+      $scope.recipe = recipe;
+      RecipeSrv.addToHistory($scope.recipe);
+      $scope.servings = $scope.recipe.cartData ? $scope.recipe.cartData.servings.value : $scope.recipe.servings.value;
+      $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
+      $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
+      startTimer();
+    } else {
+      // TODO error !
+    }
+  }
 
   $scope.toggleTimer = function(){
     if(timer === null){startTimer();}
@@ -363,7 +362,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   return service;
 })
 
-.directive('cookTimer', function(Utils){
+.directive('cookTimer', function(MediaSrv, Utils){
   'use strict';
   var nearInterval = 60;
 
@@ -387,7 +386,14 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
   function stepReached(step){ console.log('stepReached(step)', step); }
   function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
-  function timerEnds(){ console.log('timerEnds()'); }
+  function timerEnds(){
+    console.log('timerEnds()');
+    // TODO : must stop sound if click on timer or if leave screen
+    // TODO : running timers should be on top of screen (or bottom?)
+    MediaSrv.loadMedia('sounds/timerEnds.mp3').then(function(media){
+      media.play();
+    });
+  }
 
   return {
     restrict: 'E',
