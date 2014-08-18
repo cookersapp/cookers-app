@@ -3,7 +3,7 @@
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
-    <h1 class="title">Recettes de la semaine</h1>
+    <h1 class="title">La sélection Cookers</h1>
   </ion-header-bar>
 
   <ion-content class="recipes-screen" ng-class="{empty: !(recipesOfWeek && recipesOfWeek.recipes && recipesOfWeek.recipes.length > 0)}">
@@ -51,7 +51,7 @@
             </div>
             <div class="content" ng-click="toggleIngredients(recipe)">
               <div class="title">{{recipe.name}}</div>
-              <div class="subtitle">{{recipe.time.eat}} {{recipe.time.unit}}, {{recipe.ingredients.length}} ingrédients</div>
+              <div class="subtitle">{{recipe.time | time}}, {{recipe.ingredients.length}} ingrédients</div>
             </div>
           </div>
         </div>
@@ -59,8 +59,8 @@
 
       <div class="list card feedback">
         <div class="item item-text-wrap" ui-sref="app.feedback">
-          C'était nos 10 recettes de la semaine !<br>
-          Content ou pas ?
+          C'était notre sélection de la semaine !<br>
+          Tu valides ?
         </div>
         <div class="item row">
           <div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>

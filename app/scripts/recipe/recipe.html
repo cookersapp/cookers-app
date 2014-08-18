@@ -4,9 +4,6 @@
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
     <h1 class="title">{{recipe.name}}</h1>
-    <div class="buttons">
-      <button class="button button-icon fa fa-cutlery" ui-sref="app.cook({cartId: 'none', recipeId: recipe.id})"></button>
-    </div>
   </ion-header-bar>
 
   <ion-content class="recipe-screen" ng-class="{empty: !(recipe && recipe.id)}">
@@ -14,12 +11,12 @@
 
     <div class="screen" ng-cloack>
       <img ng-src="{{recipe.images.landing}}" style="width: 100%">
-      <div class="row recipe-meta">
+      <div class="row recipe-meta card">
         <div class="col"><i class="fa fa-tag"></i> {{recipe.category}}</div>
-        <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time.eat}} {{recipe.time.unit}}</div>
-        <div class="col"><i class="fa fa-users"></i> {{recipe.servings.value}} {{recipe.servings.unit}}</div>
+        <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time | time}}</div>
+        <div class="col"><i class="fa fa-users"></i> {{recipe.servings | servings}}</div>
       </div>
-      <div class="requirements">
+      <div class="requirements card">
         <h2 class="header">
           <div class="row">
             <div class="col">Ingrédients</div>
@@ -29,7 +26,7 @@
         <div class="row">
           <div class="col">
             <ul>
-              <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient:servingsAdjust}}</li>
+              <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient}}</li>
             </ul>
           </div>
           <div class="col">
@@ -39,7 +36,7 @@
           </div>
         </div>
       </div>
-      <div class="instructions">
+      <div class="instructions card">
         <h2 class="header">Préparation</h2>
         <div class="padding">
           <ul ng-repeat="instruction in recipe.instructions" class="instruction">
@@ -50,4 +47,12 @@
       </div>
     </div>
   </ion-content>
+
+  <ion-footer-bar class="bar-dark">
+    <div class="button-bar">
+      <a class="button button-assertive" ui-sref="app.cook({cartId: 'none', recipeId: recipe.id})" style="margin: 0px 80px;">
+        <i class="fa fa-cutlery"></i> Cuisiner !
+      </a>
+    </div>
+  </ion-footer-bar>
 </ion-view>
