@@ -216,14 +216,9 @@ bottom: 0;
   }
   .instruction {
     margin: 0 0 10px;
-    .title {
-      border: none;
-      background: none;
-      min-height: 0;
-      padding: 0;
-      padding-bottom: 5px;
-    }
-    .content {
+    list-style-position: inside;
+    li {
+      list-style-type: circle;
       padding-left: 10px;
     }
   }
@@ -292,8 +287,12 @@ bottom: 0;
     }
     .step {
       padding: 10px;
-      border-top: 1px solid #fff;
-      border-bottom: 1px solid #bbb;
+      h3 {
+        margin-top: 0px;
+        text-align: center;
+        color: #666;
+        font-weight: bold;
+      }
       ul, ol {
         list-style-position: inside;
         margin: 5px;
@@ -303,12 +302,6 @@ bottom: 0;
       .help {
         color: #888;
       }
-    }
-    .step:first-child {
-      border-top: none;
-    }
-    .step:last-child {
-      border-bottom: none;
     }
     .timers {
       margin: 10px;

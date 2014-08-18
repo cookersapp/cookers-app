@@ -1,8 +1,8 @@
 <div class="timer {{timer.color}}" ng-class="{alarm: timer.alarm}" ng-click="timerClick()" ng-if="timer.duration > 0">
-  <div class="label">{{timer.label}}</div>
+  <div class="label" ng-if="timer.label" ng-bind-html="timer.label"></div>
   <div class="time">{{timer.duration - time | duration}}</div>
   <ul class="steps">
-    <li class="step" ng-class="{selected: isSelected(step), unselected: isUnselected(step)}" ng-repeat="step in timer.timeline">
+    <li class="step" ng-class="{selected: isSelected(step), unselected: isUnselected(step)}" ng-repeat="step in timer.steps">
       <div class="date">{{step.time | duration}}</div>
       <div class="circle"></div>
       <div class="label">{{step.label}}</div>

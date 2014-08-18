@@ -26,12 +26,12 @@
         </div>
       </div>
       <div class="instructions">
-        <h2 class="title">Préparation ({{recipe.instructions.length}} étapes)</h2>
+        <h2 class="title">Préparation</h2>
         <div class="padding">
-          <div ng-repeat="instruction in recipe.instructions" class="instruction">
-            <h3 class="title">étape {{$index+1}}</h3>
-            <div class="content" ng-bind-html="instruction.content"></div>
-          </div>
+          <ul ng-repeat="instruction in recipe.instructions" class="instruction">
+            <li ng-if="instruction.summary" ng-bind-html="instruction.summary"></li>
+            <li ng-if="!instruction.summary" ng-bind-html="instruction.content"></li>
+          </ul>
         </div>
       </div>
     </div>

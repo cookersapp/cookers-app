@@ -42,7 +42,10 @@
       <div class="cooking">
         <h2 class="title">Préparation</h2>
         <div ng-repeat="instruction in recipe.instructions">
-          <div class="step card" ng-bind-html="instruction.content"></div>
+          <div class="step card">
+            <h3 ng-if="instruction.title" ng-bind-html="instruction.title"></h3>
+            <div ng-bind-html="instruction.content"></div>
+          </div>
           <div class="timers" ng-if="instruction.timers">
             <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
           </div>
