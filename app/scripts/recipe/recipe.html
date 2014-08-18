@@ -19,14 +19,28 @@
         <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time.eat}} {{recipe.time.unit}}</div>
         <div class="col"><i class="fa fa-users"></i> {{recipe.servings.value}} {{recipe.servings.unit}}</div>
       </div>
-      <div class="ingredients">
-        <h2 class="title">Ingrédients ({{recipe.ingredients.length}})</h2>
-        <div class="padding">
-          <div ng-repeat="ingredient in recipe.ingredients" class="ingredient">{{ingredient | ingredient}}</div>
+      <div class="requirements">
+        <h2 class="header">
+          <div class="row">
+            <div class="col">Ingrédients</div>
+            <div class="col">Ustensiles</div>
+          </div>
+        </h2>
+        <div class="row">
+          <div class="col">
+            <ul>
+              <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient:servingsAdjust}}</li>
+            </ul>
+          </div>
+          <div class="col">
+            <ul>
+              <li ng-repeat="tool in recipe.tools">{{tool | tool}}</li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="instructions">
-        <h2 class="title">Préparation</h2>
+        <h2 class="header">Préparation</h2>
         <div class="padding">
           <ul ng-repeat="instruction in recipe.instructions" class="instruction">
             <li ng-if="instruction.summary" ng-bind-html="instruction.summary"></li>
