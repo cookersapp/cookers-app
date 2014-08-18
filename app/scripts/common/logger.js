@@ -51,7 +51,7 @@ angular.module('app.logger', [])
     trackBuyItemSource: function(item, recipe){trackWithPosition('buy-item-source', {item: item, recipe: recipe});},
     trackUnbuyItem: function(item){track('unbuy-item', {item: item});},
     trackArchiveCart: function(){track('archive-cart');},
-    trackRecipeCooked: function(recipe){track('recipe-cooked', {recipe: recipe});},
+    trackRecipeCooked: function(recipe, cookDuration){track('recipe-cooked', {recipe: recipe, cookDuration: cookDuration});},
     trackSendFeedback: function(email){track('send-feedback', {email: email});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},

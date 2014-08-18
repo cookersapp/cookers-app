@@ -163,11 +163,12 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   $scope.done = function(){
-    LogSrv.trackRecipeCooked($scope.recipe.id);
+    var cookDuration = Date.now() - startTime;
+    LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
     if($scope.recipe && $scope.recipe.cartData){
       $scope.recipe.cartData.cooked = {
         time: Date.now(),
-        duration: Date.now() - startTime
+        duration: cookDuration
       };
     }
 
