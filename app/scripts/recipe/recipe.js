@@ -315,7 +315,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   return service;
 })
 
-.directive('cookTimer', function($ionicScrollDelegate, MediaSrv, Utils){
+.directive('cookTimer', function($timeout, $ionicScrollDelegate, MediaSrv, Utils){
   'use strict';
   var nearInterval = 60;
 
@@ -428,9 +428,21 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
           timer.media.release();
         }
       }
+      function playShortAlarm(){
+        if(timer && timer.media){
+          timer.media.play();
+          $timeout(function(){
+            timer.media.stop();
+          }, 1200);
+          if(timer.scroll){scrollDelegate.scrollTo(timer.scroll.left, timer.scroll.top, true);}
+        }
+      }
 
       function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
-      function stepReached(step){ console.log('stepReached(step)', step); }
+      function stepReached(step){
+        console.log('stepReached(step)', step);
+        playShortAlarm();
+      }
       function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
       function timerEnds(){
         console.log('timerEnds()');
