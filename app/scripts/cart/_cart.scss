@@ -1,30 +1,26 @@
 @import "_colors";
 
 .cart-screen {
-  background: #333;
-
   .cart-chooser {
-    background: #fff;
+    padding-bottom: 0px;
   }
 
   .no-items-to-buy {
-    background: #fff;
-    padding: 60px 10px;
     min-height: 200px;
     text-align: center;
+    
+    margin: 35px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 25px;
+    color: #aaa;
   }
 
   .item-cart-recipe {
-    // inspiration : https://twitter.com/GeoffreyDorne/status/477837215578722305
-    &:nth-child(2n+1) {
-      .item .item-content, .addon {
-        background: #f0f0f0;
-      }
-    }
     .item {
       border: none;
       .item-content {
-        padding: 0px; // 15px 45px 15px 15px;
+        padding: 0px;
         .thumbnail {
           max-width: 100px;
           img {
@@ -126,11 +122,11 @@
       }
     }
   }
-  
+
   .list.to-buy {
-    background: #fff;
+    padding: 5px 0px;
   }
-  
+
   .item-cart-ingredient {
     padding: 5px 10px;
     border: none;
@@ -186,19 +182,14 @@
     }
   }
 
-  .item-cart-ingredient.bought {
-    text-decoration: line-through;
-    background: transparent;
-    color: #666;
-    .text {
-      border-color: transparent;
-    }
-    .check {
-      border-color: #555;
-      .box {
-        background: #444;
-        border-color: #555;
-        color: #666;
+  .bought {
+    margin: 10px;
+    .item-cart-ingredient {
+      text-decoration: line-through;
+      background: transparent;
+      color: #bbb;
+      .text {
+        border-color: transparent;
       }
     }
   }

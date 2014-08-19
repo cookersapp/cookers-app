@@ -10,26 +10,20 @@
       <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
     </div>
     <ion-list>
-      <div class="item-cart-recipe" ng-repeat="recipe in cart.recipes">
+      <div class="item-cart-recipe card" ng-repeat="recipe in cart.recipes">
         <ion-item ng-click="toggleRecipe(recipe)">
           <div>
             <div class="thumbnail pull-left">
               <img ng-src="{{recipe.images.thumbnail}}">
             </div>
             <div class="content">
-              <h2 class="pull-right" ng-if="settings.showPrices">
-                {{recipe.price.value*recipe.cartData.servings.value | mynumber}} {{recipe.price.currency}}
-              </h2>
+              <h2 class="pull-right" ng-if="settings.showPrices">{{recipe.price | price:recipe.cartData.servings.value}}</h2>
               <h2 class="title">{{recipe.name}}</h2>
-              <div>
-                {{recipe.cartData.servings.value}} {{recipe.cartData.servings.unit}},
-                {{recipe.time.eat}} {{recipe.time.unit}},
-                {{recipe.ingredients.length}} ingrédients
-              </div>
+              <div>{{recipe.cartData.servings | servings}}, {{recipe.time | time}}</div>
               <div>
                 <div class="progress">
                   <div class="progress-bar" ng-class="{'progress-bar-success': boughtPercentage(recipe) === 100}" role="progressbar" aria-valuenow="{{boughtPercentage(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{boughtPercentage(recipe)}}%;">
-                    {{boughtPercentage(recipe) | number:0}}%
+                    {{boughtPercentage(recipe) | mynumber:0}}%
                   </div>
                 </div>
               </div>

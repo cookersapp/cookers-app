@@ -1,47 +1,5 @@
 angular.module('app')
 
-.filter('mynumber', function($filter){
-  'use strict';
-  return function(number, round){
-    var mul = Math.pow(10, round ? round : 0);
-    return $filter('number')(Math.round(number*mul)/mul);
-  };
-})
-
-.filter('unit', function(){
-  'use strict';
-  return function(unit){
-    if(unit === 'piece' || unit === 'pièce'){
-      return '';
-    } else {
-      return unit;
-    }
-  };
-})
-
-.filter('quantity', function($filter){
-  'use strict';
-  return function(quantity, servingsAdjust){
-    if(!servingsAdjust){servingsAdjust = 1;}
-    return quantity && quantity.value > 0 ? $filter('number')(Math.round(quantity.value*servingsAdjust*100)/100)+' '+$filter('unit')(quantity.unit) : '';
-  };
-})
-
-.filter('servings', function($filter){
-  'use strict';
-  return function(servings, servingsAdjust){
-    if(!servingsAdjust){servingsAdjust = 1;}
-    return servings && servings.value > 0 ? $filter('number')(Math.round(servings.value*servingsAdjust*100)/100)+' '+$filter('unit')(servings.unit) : '';
-  };
-})
-
-.filter('time', function($filter){
-  'use strict';
-  return function(time){
-    return time && time.eat > 0 ? $filter('number')(Math.round(time.eat*100)/100)+' '+$filter('unit')(time.unit) : '';
-  };
-})
-
 .filter('date', function(){
   'use strict';
   return function(timestamp, format){
@@ -63,6 +21,63 @@ angular.module('app')
       console.warn('Unable to format duration', seconds);
       return '<duration>';
     }
+  };
+})
+
+.filter('mynumber', function($filter){
+  'use strict';
+  return function(number, round){
+    var mul = Math.pow(10, round ? round : 0);
+    return $filter('number')(Math.round(number*mul)/mul);
+  };
+})
+
+.filter('unit', function(){
+  'use strict';
+  return function(unit){
+    if(unit === 'piece' || unit === 'pièce'){
+      return '';
+    } else {
+      return unit;
+    }
+  };
+})
+
+.filter('time', function($filter){
+  'use strict';
+  return function(time){
+    return time && time.eat > 0 ? $filter('mynumber')(time.eat, 2)+' '+$filter('unit')(time.unit) : '';
+  };
+})
+
+.filter('servings', function($filter){
+  'use strict';
+  return function(servings, servingsAdjust){
+    if(!servingsAdjust){servingsAdjust = 1;}
+    return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+' '+$filter('unit')(servings.unit) : '';
+  };
+})
+
+.filter('price', function($filter){
+  'use strict';
+  return function(price, priceAdjust){
+    if(price){
+      if(priceAdjust){
+        return $filter('mynumber')(price.value*priceAdjust, 2) + ' ' + price.currency;
+      } else {
+        return $filter('mynumber')(price.value, 2) + ' ' + price.currency + (price.unit ? '/' + price.unit : '');
+      }
+    } else {
+      return '<price>';
+    }
+  };
+})
+
+.filter('quantity', function($filter){
+  'use strict';
+  return function(quantity, servingsAdjust){
+    if(!servingsAdjust){servingsAdjust = 1;}
+    return quantity && quantity.value > 0 ? $filter('mynumber')(quantity.value*servingsAdjust, 2)+' '+$filter('unit')(quantity.unit) : '';
   };
 })
 
@@ -101,13 +116,6 @@ angular.module('app')
     } else {
       return '';
     }
-  };
-})
-
-.filter('price', function($filter){
-  'use strict';
-  return function(price){
-    return price ? $filter('number')(price.value, 2)+' '+price.currency+(price.unit ? '/' + price.unit : '') : '';
   };
 })
 

@@ -1,5 +1,5 @@
 <div>
-  <div class="list add-product">
+  <div class="list card add-product">
     <div class="item">
       <textarea msd-elastic blur-on-keyboard-out ng-blur="customItemsEdited(customItems)" ng-model="customItems" 
                 rows="1" placeholder="Penser à acheter ..." ng-disabled="cart.archived"></textarea>
@@ -25,13 +25,12 @@
     </div>
 
     <div ng-if="!cart.archived">
-      <div class="list to-buy">
+      <div class="list card to-buy" ng-if="items && items.length > 0">
         <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items" ng-if="!isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="buyItem(item)"></div>
           </div>
-          <div class="quantity pull-right">{{item.quantity | quantity}}</div>
-          <div class="text" ng-click="toggleItem(item)">{{item.food.name}}</div>
+          <div class="text" ng-click="toggleItem(item)">{{item | ingredient}}</div>
 
           <div class="details" ng-if="isOpened(item)">
             <div class="source" ng-repeat="source in item.sources">
@@ -45,12 +44,11 @@
       </div>
 
       <div class="list bought">
-        <div class="item item-cart-ingredient bought" ng-repeat="item in items" ng-if="isBought(item)">
+        <div class="item item-cart-ingredient" ng-repeat="item in items" ng-if="isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="unbuyItem(item)">✔</div>
           </div>
-          <div class="quantity pull-right">{{item.quantity | quantity}}</div>
-          <div class="text">{{item.food.name}}</div>
+          <div class="text">{{item | ingredient}}</div>
         </div>
       </div>
     </div>
