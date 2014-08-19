@@ -9,33 +9,34 @@
   <ion-content class="home">
     <!-- contextual message -->
     <div class="padding message" ng-repeat="msg in stickyMessages">
-      <div class="alert alert-{{msg.display}}">
+      <div class="alert alert-{{msg.display}} card">
         <span external-content="msg.content"></span>
       </div>
     </div>
     <div class="padding message" ng-if="standardMessage">
-      <div class="alert alert-{{standardMessage.display}}">
+      <div class="alert alert-{{standardMessage.display}} card">
         <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
         <span external-content="standardMessage.content"></span>
       </div>
     </div>
 
-
-    <div class="card row" ui-sref="app.recipes">
-      <div class="col col-25 media"><i class="icon ion-lightbulb"></i></div>
-      <div class="col content">La sélection Cookers</div>
-    </div>
-    <div class="card row" ui-sref="app.cart.ingredients">
-      <div class="col col-25 media"><i class="icon ion-clipboard"></i></div>
-      <div class="col content">Ma liste de courses</div>
-    </div>
-    <div class="card row" ui-sref="app.tocook">
-      <div class="col col-25 media"><i class="icon ion-clock"></i></div>
-      <div class="col content">Mes recettes à cuisiner</div>
-    </div>
-    <div class="card row" ui-sref="app.cooked">
-      <div class="col col-25 media"><i class="icon ion-checkmark"></i></div>
-      <div class="col content">Mes recettes cuisinées</div>
+    <div class="dashboard">
+      <div class="card row" ui-sref="app.recipes">
+        <div class="col col-25 media"><i class="icon ion-lightbulb"></i></div>
+        <div class="col content">La sélection Cookers</div>
+      </div>
+      <div class="card row" ui-sref="app.cart.ingredients">
+        <div class="col col-25 media"><i class="icon ion-clipboard"></i></div>
+        <div class="col content">Ma liste de courses</div>
+      </div>
+      <div class="card row" ui-sref="app.tocook">
+        <div class="col col-25 media"><i class="icon ion-clock"></i></div>
+        <div class="col content">Mes recettes à cuisiner</div>
+      </div>
+      <div class="card row" ui-sref="app.cooked">
+        <div class="col col-25 media"><i class="icon ion-checkmark"></i></div>
+        <div class="col content">Mes recettes cuisinées</div>
+      </div>
     </div>
 
 
