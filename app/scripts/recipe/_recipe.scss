@@ -450,7 +450,16 @@ bottom: 0;
   padding: 5px;
   margin: 10px 20px;
   box-shadow: 0 4px 15px -4px #000;
-  color: #fff;
+  color: rgba(255,255,255,0.7);
+  &.active {
+    color: rgba(255,255,255,1);
+    .steps {
+      border-color: rgba(238,233,220,1);
+      .step .circle {
+        border-color: rgba(238,233,220,1);
+      }
+    }
+  }
   &.alarm {
     -webkit-animation: blink 1.2s linear infinite;
     -moz-animation: blink 1.2s linear infinite;
@@ -460,12 +469,10 @@ bottom: 0;
   }
   .label {
     margin-bottom: 0px;
-    color: #fff;
     font-size: 20px;
     text-align: center;
   }
   .time {
-    color: #fff;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 35px;
@@ -475,7 +482,7 @@ bottom: 0;
   .steps {
     list-style: none;
     margin-left: 55px;
-    border-left: 8px solid #eee9dc;
+    border-left: 8px solid rgba(238,233,220,0.7);
     .step {
       position: relative;
       margin: 5px 0;
@@ -495,7 +502,7 @@ bottom: 0;
         width: 20px;
         height: 20px;
         background: #bbb;
-        border: 5px solid #eee9dc;
+        border: 5px solid rgba(238,233,220,0.7);
         border-radius: 50%;
       }
       .label {

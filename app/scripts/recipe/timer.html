@@ -1,4 +1,4 @@
-<div class="timer {{timer.color}}" ng-class="{alarm: timer.alarm}" ng-click="timerClick()" ng-if="timer.duration > 0">
+<div class="timer {{timer.color}}" ng-class="{active: timer.clock, alarm: timer.alarm}" ng-click="timerClick()" ng-if="timer.duration > 0">
   <div class="label" ng-if="timer.label" ng-bind-html="timer.label"></div>
   <div class="time">{{timer.duration - time | duration}}</div>
   <ul class="steps">
