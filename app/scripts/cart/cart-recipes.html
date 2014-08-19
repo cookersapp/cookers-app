@@ -47,7 +47,7 @@
             <button class="button button-xs button-assertive" ng-click="removeRecipeFromCart(recipe)">Supprimer</button>
           </div>
           <button class="button button-xs button-stable" ui-sref="app.recipe({recipeId: recipe.id})">Voir</button>
-          <button class="button button-xs button-positive" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})">
+          <button class="button button-xs button-positive" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})" ng-disabled="recipe.cartData.cooked">
             Cuisiner
           </button>
         </div>

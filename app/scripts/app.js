@@ -148,6 +148,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
       gravatar: {}
     },
     carts: [],
+    standaloneCookedRecipes: [],
     settings: {
       defaultServings: 2,
       showPrices: false,

@@ -42,6 +42,30 @@ angular.module('app')
   };
 })
 
+.filter('date', function(){
+  'use strict';
+  return function(timestamp, format){
+    return timestamp ? moment(timestamp).format(format ? format : 'LL') : '<date>';
+  };
+})
+
+.filter('duration', function($filter){
+  'use strict';
+  return function(seconds, humanize){
+    if(seconds || seconds === 0){
+      if(humanize){
+        return moment.duration(seconds, 'seconds').humanize();
+      } else {
+        var prefix = seconds < 60 ? '00:' : '';
+        return prefix + moment.duration(seconds, 'seconds').format('hh:mm:ss');
+      }
+    } else {
+      console.warn('Unable to format duration', seconds);
+      return '<duration>';
+    }
+  };
+})
+
 .filter('tool', function(){
   'use strict';
   return function(tool){
@@ -54,7 +78,7 @@ angular.module('app')
   function endsWith(str, suffix){
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
-  
+
   function preWords(ingredient){
     if(ingredient && ingredient.pre){
       return ' ' + ingredient.pre + (endsWith(ingredient.pre, '\'') ? '' : ' ');
@@ -62,7 +86,7 @@ angular.module('app')
       return ' ';
     }
   }
-  
+
   function postWords(ingredient){
     if(ingredient && ingredient.post){
       return ' ' + ingredient.post;
@@ -70,7 +94,7 @@ angular.module('app')
       return '';
     }
   }
-  
+
   return function(ingredient, servingsAdjust){
     if(ingredient){
       return $filter('quantity')(ingredient.quantity, servingsAdjust) + preWords(ingredient) + ingredient.food.name + postWords(ingredient);
@@ -84,19 +108,6 @@ angular.module('app')
   'use strict';
   return function(price){
     return price ? $filter('number')(price.value, 2)+' '+price.currency+(price.unit ? '/' + price.unit : '') : '';
-  };
-})
-
-.filter('duration', function($filter){
-  'use strict';
-  return function(seconds){
-    if(seconds || seconds === 0){
-      var prefix = seconds < 60 ? '00:' : '';
-      return prefix + moment.duration(seconds, 'seconds').format('mm:ss');
-    } else {
-      console.warn('Unable to format duration', seconds);
-      return '<duration>';
-    }
   };
 })
 

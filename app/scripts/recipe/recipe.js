@@ -163,13 +163,26 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   $scope.done = function(){
-    var cookDuration = Date.now() - startTime;
+    var cookDuration = (Date.now() - startTime)/1000;
     LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
     if($scope.recipe && $scope.recipe.cartData){
       $scope.recipe.cartData.cooked = {
         time: Date.now(),
         duration: cookDuration
       };
+    } else {
+      var recipe = angular.copy($scope.recipe);
+      recipe.cartData = {
+        cooked: {
+          time: Date.now(),
+          duration: cookDuration
+        },
+        servings: {
+          value: $scope.servings,
+          unit: recipe.servings.unit
+        }
+      };
+      CartSrv.addStandaloneCookedRecipe(recipe);
     }
 
     if(navigator.app){
@@ -224,7 +237,9 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 .controller('CookedCtrl', function($scope, CartSrv){
   'use strict';
   $scope.recipes = CartSrv.getCookedRecipes();
-
+  $scope.recipes.sort(function(a, b){
+    return b.cartData.cooked.time - a.cartData.cooked.time;
+  });
 })
 
 .factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){

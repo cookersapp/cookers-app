@@ -144,6 +144,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     itemsFromOpenedCarts: itemsFromOpenedCarts,
     getRecipesToCook: getRecipesToCook,
     getCookedRecipes: getCookedRecipes,
+    addStandaloneCookedRecipe: addStandaloneCookedRecipe,
 
     getItems: getItems,
     hasRecipe: hasRecipe,
@@ -157,6 +158,10 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
 
   function sCarts(){return $localStorage.user.carts;}
+  function sStandaloneCookedRecipes(){
+    if(!$localStorage.user.standaloneCookedRecipes){$localStorage.user.standaloneCookedRecipes = [];}
+    return $localStorage.user.standaloneCookedRecipes;
+  }
 
   function hasOpenedCarts(){
     return _.findIndex(sCarts(), {archived: false}) > -1;
@@ -207,7 +212,12 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function getCookedRecipes(){
     var recipes = _recipesFromCarts(sCarts());
-    return _.reject(recipes, {cartData: {cooked: false}});
+    var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
+    return cartCookedRecipes.concat(sStandaloneCookedRecipes());
+  }
+  
+  function addStandaloneCookedRecipe(recipe){
+    sStandaloneCookedRecipes().push(recipe);
   }
 
   function getItems(cart){

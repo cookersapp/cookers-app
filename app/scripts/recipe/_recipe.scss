@@ -422,12 +422,16 @@ bottom: 0;
       }
     }
     .text {
+      position: relative;
+      margin: 10px;
+      color: #fff;
       h1 {
         font-size: 20px;
         color: #fff;
       }
-      margin: 10px;
-      position: relative;
+      .content {
+        padding-top: 20px;
+      }
       .tags {
         position: absolute;
         bottom: 0px;
