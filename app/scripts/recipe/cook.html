@@ -5,7 +5,7 @@
     </div>
     <h1 class="title handwritten">Cook time !</h1>
     <div class="buttons">
-      <button class="button button-clear bold" ng-click="toggleTimer()">{{timer | duration}}</button>
+      <button class="button button-clear bold" ng-class="{warn: timer < 0}">{{timer | duration}}</button>
     </div>
   </ion-header-bar>
 

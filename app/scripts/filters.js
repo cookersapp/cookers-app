@@ -14,7 +14,7 @@ angular.module('app')
       if(humanize){
         return moment.duration(seconds, 'seconds').humanize();
       } else {
-        var prefix = seconds < 60 ? '00:' : '';
+        var prefix = -60 < seconds && seconds < 60 ? '00:' : '';
         return prefix + moment.duration(seconds, 'seconds').format('hh:mm:ss');
       }
     } else {

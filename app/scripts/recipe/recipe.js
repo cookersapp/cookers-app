@@ -148,11 +148,6 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }
   }
 
-  $scope.toggleTimer = function(){
-    if(timer === null){startTimer();}
-    else {stopTimer();}
-  };
-
   $scope.changeServings = function(){
     PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
@@ -206,8 +201,10 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
 
   function startTimer(){
     timer = Utils.clock(function(){
-      if($scope.timer > 0){$scope.timer--;}
-      else {stopTimer();}
+      $scope.timer--;
+    });
+    $scope.$on('$destroy', function(){
+      stopTimer();
     });
   }
   function stopTimer(){
