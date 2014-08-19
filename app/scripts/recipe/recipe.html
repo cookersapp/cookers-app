@@ -13,7 +13,7 @@
       <img ng-src="{{recipe.images.landing}}" style="width: 100%">
       <div class="row recipe-meta card">
         <div class="col"><i class="fa fa-tag"></i> {{recipe.category}}</div>
-        <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time | time}}</div>
+        <div class="col"><i class="fa fa-clock-o"></i> {{recipe.time | cookTime}}</div>
         <div class="col"><i class="fa fa-users"></i> {{recipe.servings | servings}}</div>
       </div>
       <div class="requirements card">

@@ -43,7 +43,7 @@ angular.module('app')
   };
 })
 
-.filter('time', function($filter){
+.filter('cookTime', function($filter){
   'use strict';
   return function(time){
     return time && time.eat > 0 ? $filter('mynumber')(time.eat, 2)+' '+$filter('unit')(time.unit) : '';
@@ -60,13 +60,11 @@ angular.module('app')
 
 .filter('price', function($filter){
   'use strict';
-  return function(price, priceAdjust){
+  return function(price, showUnit, priceAdjust){
     if(price){
-      if(priceAdjust){
-        return $filter('mynumber')(price.value*priceAdjust, 2) + ' ' + price.currency;
-      } else {
-        return $filter('mynumber')(price.value, 2) + ' ' + price.currency + (price.unit ? '/' + price.unit : '');
-      }
+      if(showUnit === undefined){showUnit = true;}
+      if(priceAdjust === undefined){priceAdjust = 1;}
+      return $filter('mynumber')(price.value*priceAdjust, 2) + ' ' + price.currency + (showUnit && price.unit ? '/' + price.unit : '');
     } else {
       return '<price>';
     }

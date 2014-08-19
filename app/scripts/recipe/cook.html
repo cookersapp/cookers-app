@@ -21,7 +21,7 @@
           <h1 class="title">{{recipe.name}}</h1>
           <div class="tags">
             <span ng-click="changeServings()">{{recipe.servings | servings:servingsAdjust}}</span>
-            <span>{{recipe.time | time}}</span>
+            <span>{{recipe.time | cookTime}}</span>
           </div>
         </div>
       </div>

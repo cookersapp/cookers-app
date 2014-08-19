@@ -17,9 +17,9 @@
               <img ng-src="{{recipe.images.thumbnail}}">
             </div>
             <div class="content">
-              <h2 class="pull-right" ng-if="settings.showPrices">{{recipe.price | price:recipe.cartData.servings.value}}</h2>
+              <h2 class="pull-right" ng-if="settings.showPrices">{{recipe.price | price:false:recipe.cartData.servings.value}}</h2>
               <h2 class="title">{{recipe.name}}</h2>
-              <div>{{recipe.cartData.servings | servings}}, {{recipe.time | time}}</div>
+              <div>{{recipe.cartData.servings | servings}}, {{recipe.time | cookTime}}</div>
               <div>
                 <div class="progress">
                   <div class="progress-bar" ng-class="{'progress-bar-success': boughtPercentage(recipe) === 100}" role="progressbar" aria-valuenow="{{boughtPercentage(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{boughtPercentage(recipe)}}%;">

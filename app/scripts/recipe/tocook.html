@@ -17,13 +17,13 @@
           <h1 class="title">{{recipe.name}}</h1>
           <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{boughtPercentage(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{boughtPercentage(recipe)}}%;">
-              {{boughtPercentage(recipe) | number:0}}%
+              {{boughtPercentage(recipe) | mynumber:0}}%
             </div>
           </div>
           <button class="button" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})">Cuisiner</button>
           <div class="tags">
             <span ng-click="changeServings(recipe)">{{recipe.cartData.servings | servings}}</span>
-            <span>{{recipe.time | time}}</span>
+            <span>{{recipe.time | cookTime}}</span>
           </div>
         </div>
         <div class="col col-33 picture" ng-if="$index%2 === 1"><img ng-src="{{recipe.images.portrait}}"></div>

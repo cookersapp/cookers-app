@@ -20,7 +20,7 @@
           </div>
           <div class="tags">
             <span ng-click="changeServings(recipe)">{{recipe.cartData.servings | servings}}</span>
-            <span>{{recipe.time | time}}</span>
+            <span>{{recipe.time | cookTime}}</span>
           </div>
         </div>
         <div class="col col-33 picture" ng-if="$index%2 === 1"><img ng-src="{{recipe.images.portrait}}"></div>

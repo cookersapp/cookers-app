@@ -24,7 +24,7 @@
           <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">
             <div class="price" ng-if="settings.showPrices">
-              <div class="number">{{recipe.price.value | number:2}} {{recipe.price.currency}}</div>
+              <div class="number">{{recipe.price | price:false}}</div>
               <div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>
             </div>
           </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="content" ng-click="toggleIngredients(recipe)">
               <div class="title">{{recipe.name}}</div>
-              <div class="subtitle">{{recipe.time | time}}, {{recipe.ingredients.length}} ingrédients</div>
+              <div class="subtitle">{{recipe.time | cookTime}}, {{recipe.ingredients.length}} ingrédients</div>
             </div>
           </div>
         </div>

@@ -37,7 +37,7 @@
               <div class="quantity pull-right">
                 {{source.quantity | quantity}}
               </div>
-              <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings.value}} {{source.recipe.cartData.servings.unit}})</div>
+              <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings | servings}})</div>
             </div>
           </div>
         </div>
