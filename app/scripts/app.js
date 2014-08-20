@@ -62,7 +62,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 
       if(debug){
         console.log('exception', data);
-        window.alert('Error: '+cause);
+        window.alert('Error: '+data.message);
       } else {
         mixpanel.track('exception', data);
       }
@@ -86,7 +86,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 
     if(debug){
       console.log('exception', data);
-      window.alert('Error: '+message);
+      window.alert('Error: '+data.message);
     } else {
       mixpanel.track('exception', data);
     }
