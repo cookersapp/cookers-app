@@ -175,7 +175,8 @@ angular.module('app.utils', [])
   var service = {
     askMail: askMail,
     changeServings: changeServings,
-    recipeCooked: recipeCooked
+    recipeCooked: recipeCooked,
+    tourCookFeatures: tourCookFeatures
   };
 
   function askMail(){
@@ -253,6 +254,22 @@ angular.module('app.utils', [])
         onTap: function(e){
           return true;
         }
+      }]
+    });
+  }
+
+  function tourCookFeatures(){
+    return $ionicPopup.show({
+      title: 'Man vs Time',
+      subTitle: 'Respecte le chrono !!!',
+      template: ['<ul style="list-style: circle;">'+
+                 '<li style="margin-left: 15px;">Ne brûle rien, aide toi des timers</li>'+
+                 '<li style="margin-left: 15px;">Ne perds pas ton temps avec le téléphone, l\'écran reste allumé</li>'+
+                 '<li style="margin-left: 15px;">Valide ton chrono en cliquant sur Finir !</li>'+
+                 '</ul>'].join(''),
+      buttons: [{
+        text: '<b>Go !</b>',
+        type: 'button-positive'
       }]
     });
   }

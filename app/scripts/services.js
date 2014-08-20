@@ -123,6 +123,8 @@ angular.module('app')
       $localStorage.$reset(localStorageDefault);
       $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
       $state.go('intro');
+    } else if(nextVersion === '0.3.0'){
+      if(!$localStorage.user.data){$localStorage.user.data = {};}
     }
   }
 

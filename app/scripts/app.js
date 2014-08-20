@@ -153,6 +153,10 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
       defaultServings: 2,
       showPrices: false,
       bigImages: true
+    },
+    data: {
+      skipCookFeatures: false,
+      skipCartFeatures: false
     }
   },
   data: {
@@ -177,7 +181,9 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   if(!$localStorage.data){$localStorage.data = localStorageDefault.data;}
   if(!$localStorage.logs){$localStorage.logs = localStorageDefault.logs;}
 
-  if($localStorage.app.version !== appVersion && $localStorage.carts){
+  if($localStorage.app.version === ''){
+    $localStorage.app.version = appVersion;
+  } else if($localStorage.app.version !== appVersion){
     StorageSrv.migrate($localStorage.app.version, appVersion);
     $localStorage.app.version = appVersion;
   }

@@ -121,7 +121,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   $scope.cartHasRecipe = function(recipe){
     return CartSrv.hasRecipe(cart, recipe);
   };
-  
+
   $scope.addRecipeToCart = function(recipe){
     PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
@@ -139,7 +139,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, UserSrv, PopupSrv, LogSrv, Utils){
   'use strict';
   // TODO : should go to next step when knock knock (speech recognition)
   // TODO : should stick active timers on top (or bottom?) of screen if you scroll
@@ -164,7 +164,16 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       $scope.servings = $scope.recipe.cartData ? $scope.recipe.cartData.servings.value : $scope.recipe.servings.value;
       $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
       $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
-      startTimer();
+
+      var sUser = UserSrv.get();
+      if(sUser && sUser.data && sUser.data.skipCookFeatures){
+        startTimer();
+      } else {
+        PopupSrv.tourCookFeatures().then(function(){
+          sUser.data.skipCookFeatures = true;
+          startTimer();
+        });
+      }
     } else {
       // TODO error !
     }
