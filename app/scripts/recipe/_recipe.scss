@@ -321,6 +321,28 @@ bottom: 0;
       .help {
         color: #888;
       }
+      mark, .mark {
+        padding: .2em;
+        background-color: #fcf8e3;
+      }
+      del, .del {
+        text-decoration: line-through;
+      }
+      u, ins, .ins {
+        text-decoration: underline;
+      }
+      i, em, .em { font-style: italic; }
+      b, strong, .strong { font-weight: 700; }
+      small, .small {
+        font-size: 85%;
+      }
+      abbr[title], .abbr[title] {
+        cursor: help;
+        border-bottom: 1px dotted #000;
+        .title {
+          display: none;
+        }
+      }
     }
     .timers {
       margin: 10px;
