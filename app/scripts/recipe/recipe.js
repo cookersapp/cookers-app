@@ -242,7 +242,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   'use strict';
   $scope.recipes = CartSrv.getRecipesToCook();
   $scope.recipes.sort(function(a, b){
-    return CartSrv.boughtPercentage(b) - CartSrv.boughtPercentage(a);
+    var ret = -(CartSrv.boughtPercentage(a) - CartSrv.boughtPercentage(b));
+    return ret === 0 ? -(a.cartData.created - b.cartData.created) : ret;
   });
 
   $scope.boughtPercentage = CartSrv.boughtPercentage;
@@ -260,7 +261,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   'use strict';
   $scope.recipes = CartSrv.getCookedRecipes();
   $scope.recipes.sort(function(a, b){
-    return b.cartData.cooked.time - a.cartData.cooked.time;
+    return -(a.cartData.cooked.time - b.cartData.cooked.time);
   });
 })
 

@@ -119,11 +119,11 @@ angular.module('app')
   };
 
   function migrate(previousVersion, nextVersion){
-    if(nextVersion === '0.2.0'){
+    if(previousVersion === '0.1.0'){
       $localStorage.$reset(localStorageDefault);
       $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
       $state.go('intro');
-    } else if(nextVersion === '0.3.0'){
+    } else if(previousVersion === '0.2.0'){
       if(!$localStorage.user.data){$localStorage.user.data = {};}
     }
   }
