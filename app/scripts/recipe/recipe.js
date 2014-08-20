@@ -202,13 +202,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       CartSrv.addStandaloneCookedRecipe(recipe);
     }
 
-    if(navigator.app){
-      navigator.app.exitApp();
-    } else if(navigator.device){
-      navigator.device.exitApp();
-    }
-
-    /*PopupSrv.recipeCooked().then(function(shouldExit){
+    PopupSrv.recipeCooked().then(function(shouldExit){
       if(shouldExit){
         if(navigator.app){
           navigator.app.exitApp();
@@ -218,7 +212,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       } else {
         $state.go('app.home');
       }
-    });*/
+    });
   };
 
   function startTimer(){
