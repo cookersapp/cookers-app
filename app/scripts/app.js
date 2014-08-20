@@ -131,6 +131,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   user: {
     skipIntro: false,
     isLogged: false,
+    loggedWith: null,
     email: '',
     name: 'Anonymous',
     avatar: 'images/user.jpg',
@@ -138,15 +139,14 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     backgroundCover: 'images/profile-covers/cover01.jpg',
     firstName: '',
     lastName: '',
+    more: {},
     score: {
       value: 0,
       level: {},
       events: []
     },
     device: {},
-    profiles: {
-      gravatar: {}
-    },
+    profiles: {},
     carts: [],
     standaloneCookedRecipes: [],
     settings: {

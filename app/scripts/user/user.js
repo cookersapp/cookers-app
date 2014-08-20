@@ -136,7 +136,7 @@ angular.module('app.user', ['ui.router'])
     sending: false,
     sent: false
   };
-  
+
   if($stateParams.source){
     if($stateParams.source === 'recipes-rating-1'){$scope.feedback.content = 'Bof bof bof... Tiens quelques conseils !\n\nJe serais plus fan de ...';}
     else if($stateParams.source === 'recipes-rating-2'){$scope.feedback.content = 'Plutôt cool tes recettes !\n\nJe verrais bien un peu plus ... ou un peu moins de ...';}
@@ -189,7 +189,7 @@ angular.module('app.user', ['ui.router'])
     setEmail: setEmail,
     updateProfile: updateProfile
   };
-  
+
   function sUser(){return $localStorage.user;}
 
   function hasMail(){
@@ -234,6 +234,7 @@ angular.module('app.user', ['ui.router'])
           g.entry[0].email = email;
         }
         sUser().profiles.gravatar = g;
+        console.log('gravatr profile', g);
       }, function(error){
         sUser().profiles.gravatar = {
           entry: [
@@ -254,61 +255,87 @@ angular.module('app.user', ['ui.router'])
       background: localStorageDefault.user.background,
       backgroundCover: localStorageDefault.user.backgroundCover,
       firstName: localStorageDefault.user.firstName,
-      lastName: localStorageDefault.user.lastName
+      lastName: localStorageDefault.user.lastName,
+      more: {}
     };
   }
 
   function _gravatarProfile(g){
-    var profile = {};
+    var profile = {more:{}};
     if(g && g.entry && g.entry.length > 0){
-      if(g.entry[0].email){        profile.email = g.entry[0].email; }
-      if(g.entry[0].displayName) { profile.name = g.entry[0].displayName; }
-      if(g.entry[0].thumbnailUrl){ profile.avatar = g.entry[0].thumbnailUrl; }
-      if(g.entry[0].name){
-        if(g.entry[0].name.givenName){  profile.firstName = g.entry[0].name.givenName; }
-        if(g.entry[0].name.familyName){ profile.lastName = g.entry[0].name.familyName; }
-        // override displayName
-        if(g.entry[0].name.formatted){profile.name = g.entry[0].name.formatted;}
+      var d = g.entry[0];
+      if(d.email)                         { profile.email                         = d.email;                    }
+      if(d.displayName)                   { profile.name                          = d.displayName;              }
+      if(d.thumbnailUrl)                  { profile.avatar                        = d.thumbnailUrl;             }
+      if(d.aboutMe)                       { profile.more.gravatarDescription      = d.aboutMe;                  }
+      if(d.hash)                          { profile.more.gravatarHash             = d.hash;                     }
+      if(d.profileUrl)                    { profile.more.gravatarProfile          = d.profileUrl;               }
+      if(d.name){
+        if(d.name.givenName)              { profile.firstName                     = d.name.givenName;           }
+        if(d.name.familyName)             { profile.lastName                      = d.name.familyName;          }
+        if(d.name.formatted)              { profile.name                          = d.name.formatted;           }
       }
-      if(g.entry[0].profileBackground){
-        if(g.entry[0].profileBackground.color) { profile.background = g.entry[0].profileBackground.color; }
-        if(g.entry[0].profileBackground.url)   { profile.backgroundCover = g.entry[0].profileBackground.url; }
+      if(d.profileBackground){
+        if(d.profileBackground.color)     { profile.background                    = d.profileBackground.color;  }
+        if(d.profileBackground.url)       { profile.backgroundCover               = d.profileBackground.url;    }
+      }
+      if(d.accounts && d.accounts.length > 0){
+        for(var i in d.accounts){
+          var di = d.accounts[i];
+          if(di.shortname && di.url)      { profile.more[di.shortname+'Profile']  = di.url;                     }
+          if(di.shortname && di.username) { profile.more[di.shortname+'Username'] = di.username;                }
+        }
       }
     }
     return profile;
   }
 
   function _passwordProfile(p){
-    var profile = {};
+    var profile = {more:{}};
     if(p){
-      if(p.email){ profile.email = p.email; }
+      if(p.email) { profile.email           = p.email;  }
+      if(p.id)    { profile.more.firebaseId = p.id;     }
     }
     return profile;
   }
 
   function _twitterProfile(t){
-    var profile = {};
+    var profile = {more:{}};
     if(t){
-      if(t.displayName){ profile.name = t.displayName; }
+      if(t.displayName)                           { profile.name                    = t.displayName;                                        }
+      if(t.username)                              { profile.more.twitterUsername    = t.username;                                           }
+      if(t.username)                              { profile.more.twitterProfile     = 'https://twitter.com/'+t.username;                    }
+      if(t.id)                                    { profile.more.twitterId          = t.id;                                                 }
       if(t.thirdPartyUserData){
-        if(t.thirdPartyUserData.profile_image_url){  profile.avatar = t.thirdPartyUserData.profile_image_url.replace('_normal.', '_bigger.'); }
-        if(t.thirdPartyUserData.profile_background_color){  profile.background = '#'+t.thirdPartyUserData.profile_background_color; }
-        if(t.thirdPartyUserData.profile_background_image_url_https){  profile.backgroundCover = t.thirdPartyUserData.profile_background_image_url_https; }
+        var d = t.thirdPartyUserData;
+        if(d.profile_image_url)                   { profile.avatar                  = d.profile_image_url.replace('_normal.', '_bigger.');  }
+        if(d.profile_background_color)            { profile.background              = '#'+d.profile_background_color;                       }
+        if(d.profile_background_image_url_https)  { profile.backgroundCover         = d.profile_background_image_url_https;                 }
+        if(d.description)                         { profile.more.twitterDescription = d.description;                                        }
+        if(d.followers_count)                     { profile.more.twitterFollowers   = d.description;                                        }
       }
     }
     return profile;
   }
 
   function _facebookProfile(f){
-    var profile = {};
+    var profile = {more:{}};
     if(f){
-      if(f.displayName){ profile.name = f.displayName; }
+      if(f.displayName)           { profile.name                  = f.displayName;                                    }
+      if(f.id)                    { profile.more.facebookId       = f.id;                                             }
       if(f.thirdPartyUserData){
-        if(f.thirdPartyUserData.email){      profile.email = f.thirdPartyUserData.email; }
-        if(f.thirdPartyUserData.first_name){ profile.firstName = f.thirdPartyUserData.first_name; }
-        if(f.thirdPartyUserData.last_name){  profile.lastName = f.thirdPartyUserData.last_name; }
-        if(f.thirdPartyUserData.picture && f.thirdPartyUserData.picture.data && f.thirdPartyUserData.picture.data.url){
-          profile.avatar = f.thirdPartyUserData.picture.data.url.replace('p50x50', 'p100x100');
+        var d = f.thirdPartyUserData;
+        if(d.email)               { profile.email                 = d.email;                                          }
+        if(d.first_name)          { profile.firstName             = d.first_name;                                     }
+        if(d.last_name)           { profile.lastName              = d.last_name;                                      }
+        if(d.link)                { profile.more.facebookProfile  = d.link;                                           }
+        if(d.gender)              { profile.more.gender           = d.gender;                                         }
+        if(d.age_range){
+          if(d.age_range.min)     { profile.more.minAge           = d.age_range.min;                                  }
+          if(d.age_range.max)     { profile.more.maxAge           = d.age_range.max;                                  }
+        }
+        if(d.picture && d.picture.data){
+          if(d.picture.data.url)  { profile.avatar                = d.picture.data.url.replace('p50x50', 'p100x100'); }
         }
       }
     }
@@ -316,14 +343,18 @@ angular.module('app.user', ['ui.router'])
   }
 
   function _googleProfile(g){
-    var profile = {};
+    var profile = {more:{}};
     if(g){
-      if(g.displayName){ profile.name = g.displayName; }
-      if(g.email){ profile.email = g.email; }
+      if(g.displayName)   { profile.name                = g.displayName;  }
+      if(g.email)         { profile.email               = g.email;        }
+      if(g.id)            { profile.more.googleId       = g.id;           }
       if(g.thirdPartyUserData){
-        if(g.thirdPartyUserData.given_name){  profile.firstName = g.thirdPartyUserData.given_name; }
-        if(g.thirdPartyUserData.family_name){ profile.lastName = g.thirdPartyUserData.family_name; }
-        if(g.thirdPartyUserData.picture){     profile.avatar = g.thirdPartyUserData.picture; }
+        var d = g.thirdPartyUserData;
+        if(d.given_name)  { profile.firstName           = d.given_name;   }
+        if(d.family_name) { profile.lastName            = d.family_name;  }
+        if(d.picture)     { profile.avatar              = d.picture;      }
+        if(d.gender)      { profile.more.gender         = d.gender;       }
+        if(d.link)        { profile.more.googleProfile  = d.link;         }
       }
     }
     return profile;
@@ -338,7 +369,7 @@ angular.module('app.user', ['ui.router'])
     evalLevel: evalLevel,
     sendEvent: sendEvent
   };
-  
+
   function sScore(){return $localStorage.user ? $localStorage.user.score : null;}
 
   var levels = [

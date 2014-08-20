@@ -66,8 +66,9 @@ angular.module('app.auth', ['ui.router'])
           loginSuccess(provider, user);
         } else {
           PopupSrv.askMail().then(function(email){
-            UserSrv.setEmail(email);
-            loginSuccess(provider, user);
+            UserSrv.setEmail(email).then(function(){
+              loginSuccess(provider, user);
+            });
           });
         }
       }, function(error){
@@ -84,6 +85,7 @@ angular.module('app.auth', ['ui.router'])
     $scope.loading[provider] = false;
     // TODO : send welcome mail if first time !
     LogSrv.trackLogin(provider, user);
+    LogSrv.registerUser();
     $state.go('app.home');
   }
 })
@@ -102,7 +104,7 @@ angular.module('app.auth', ['ui.router'])
       return error.message.replace('FirebaseSimpleLogin: ', '');
     }
   };
-  
+
   function sUser(){return $localStorage.user;}
 
   var firebaseRef = new Firebase(firebaseUrl);
@@ -185,7 +187,9 @@ angular.module('app.auth', ['ui.router'])
 
   $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
     if(loginDefer){
+      console.log('user profile', user);
       sUser().isLogged = true;
+      sUser().loggedWith = loginMethod;
       sUser().profiles[loginMethod] = user;
       UserSrv.updateProfile();
       loginDefer.resolve(user);
