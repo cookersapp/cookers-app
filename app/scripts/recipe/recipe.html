@@ -49,10 +49,10 @@
   </ion-content>
 
   <ion-footer-bar class="bar-dark">
-    <div class="button-bar">
-      <a class="button button-assertive" ui-sref="app.cook({cartId: 'none', recipeId: recipe.id})" style="margin: 0px 80px;">
-        <i class="fa fa-cutlery"></i> Cuisiner !
-      </a>
+    <div class="button-bar spaced">
+      <a class="button icon-left ion-clipboard button-balanced" ng-click="addRecipeToCart(recipe)" ng-if="!cartHasRecipe(recipe)">A acheter !</a>
+      <a class="button icon-left ion-clipboard button-assertive" ng-click="removeRecipeFromCart(recipe)" ng-if="cartHasRecipe(recipe)">A supprimer !</a>
+      <a class="button icon-left fa fa-cutlery button-assertive" ui-sref="app.cook({cartId: 'none', recipeId: recipe.id})">Cuisiner !</a>
     </div>
   </ion-footer-bar>
 </ion-view>

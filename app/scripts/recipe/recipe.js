@@ -88,8 +88,8 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   $scope.addRecipeToCart = function(recipe, index){
     PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
-        $rootScope.settings.defaultServings = servings;
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'weekrecipes');
+        $rootScope.settings.defaultServings = servings;
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
         RecipeSrv.addToHistory(recipe);
@@ -108,13 +108,35 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 })
 
-.controller('RecipeCtrl', function($scope, $stateParams, RecipeSrv, LogSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, $window, RecipeSrv, CartSrv, PopupSrv, LogSrv){
   'use strict';
   $scope.recipe = {};
   RecipeSrv.get($stateParams.recipeId).then(function(recipe){
     RecipeSrv.addToHistory(recipe);
     $scope.recipe = recipe;
   });
+
+  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+
+  $scope.cartHasRecipe = function(recipe){
+    return CartSrv.hasRecipe(cart, recipe);
+  };
+  
+  $scope.addRecipeToCart = function(recipe){
+    PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
+      if(servings){
+        LogSrv.trackAddRecipeToCart(recipe.id, servings, null, 'recipe');
+        $rootScope.settings.defaultServings = servings;
+        CartSrv.addRecipe(cart, recipe, servings);
+        $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
+      }
+    });
+  };
+  $scope.removeRecipeFromCart = function(recipe){
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipe');
+    CartSrv.removeRecipe(cart, recipe);
+    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+  };
 })
 
 .controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, PopupSrv, LogSrv, Utils){
