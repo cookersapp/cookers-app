@@ -108,9 +108,7 @@ angular.module('app')
   'use strict';
   var service = {
     clearCache: function(){
-      $localStorage.data.foods = localStorageDefault.data.foods;
-      $localStorage.data.recipes = localStorageDefault.data.recipes;
-      $localStorage.data.recipesOfWeek = localStorageDefault.data.recipesOfWeek;
+      $localStorage.data = localStorageDefault.data;
     },
     clear: function(){
       $localStorage.$reset(localStorageDefault);
