@@ -79,9 +79,16 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, FirebaseSrv, dataList, LogSrv){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, UserSrv, PopupSrv, FirebaseSrv, dataList, LogSrv){
   'use strict';
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+
+  var sUser = UserSrv.get();
+  if(!(sUser && sUser.data && sUser.data.skipCartFeatures)){
+    PopupSrv.tourCartFeatures().then(function(){
+      sUser.data.skipCartFeatures = true;
+    });
+  }
 
   $scope.openedItems = [];
   $scope.customItems = cart.customItems;
@@ -215,7 +222,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
     return cartCookedRecipes.concat(sStandaloneCookedRecipes());
   }
-  
+
   function addStandaloneCookedRecipe(recipe){
     sStandaloneCookedRecipes().push(recipe);
   }

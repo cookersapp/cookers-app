@@ -176,7 +176,8 @@ angular.module('app.utils', [])
     askMail: askMail,
     changeServings: changeServings,
     recipeCooked: recipeCooked,
-    tourCookFeatures: tourCookFeatures
+    tourCookFeatures: tourCookFeatures,
+    tourCartFeatures: tourCartFeatures
   };
 
   function askMail(){
@@ -263,13 +264,24 @@ angular.module('app.utils', [])
       title: 'Man vs Time',
       subTitle: 'Respecte le chrono !!!',
       template: ['<ul style="list-style: circle;">'+
-                 '<li style="margin-left: 15px;">Ne brûle rien, aide toi des timers</li>'+
-                 '<li style="margin-left: 15px;">Ne perds pas ton temps avec le téléphone, l\'écran reste allumé</li>'+
-                 '<li style="margin-left: 15px;">Valide ton chrono en cliquant sur Finir !</li>'+
+                 '<li style="margin: 0px 0 5px 15px;"><i>Ne brûle rien</i>, aide-toi des <b>timers</b></li>'+
+                 '<li style="margin: 0px 0 5px 15px;"><i>Ne perds pas ton temps</i> avec le téléphone, <b>l\'écran reste allumé</b></li>'+
+                 '<li style="margin: 0px 0 5px 15px;"><i>Valide ton chrono</i> en cliquant sur <b>Finir !</b></li>'+
                  '</ul>'].join(''),
       buttons: [{
         text: '<b>Go !</b>',
-        type: 'button-positive'
+        type: 'button-custom'
+      }]
+    });
+  }
+
+  function tourCartFeatures(){
+    return $ionicPopup.show({
+      title: 'Liste de course',
+      template: '<div class="text-align: center;">Fais tes courses pépère,<br>l\'écran ne s\'éteint pas :D</div>',
+      buttons: [{
+        text: '<b>Ok</b>',
+        type: 'button-custom'
       }]
     });
   }

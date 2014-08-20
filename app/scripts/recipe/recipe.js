@@ -145,8 +145,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   // TODO : should stick active timers on top (or bottom?) of screen if you scroll
   var cartId = $stateParams.cartId;
   var recipeId = $stateParams.recipeId;
-  var startTime = Date.now();
-  var timer = null;
+  var startTime, timer = null;
   $scope.timer = 0;
 
   if(cartId === 'none'){
@@ -225,6 +224,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   function startTimer(){
+    startTime = Date.now();
     timer = Utils.clock(function(){
       $scope.timer--;
     });
