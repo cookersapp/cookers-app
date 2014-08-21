@@ -76,4 +76,91 @@
   <body ng-app="app">
     <ion-nav-view></ion-nav-view>
   </body>
+  
+  
+  
+  <!-- preload sidemenu & home (improve initialization time) -->
+  <script type="text/ng-template" id="views/sidemenu.html">
+    <ion-side-menus>
+      <ion-side-menu-content>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+      </ion-side-menu-content>
+
+      <ion-side-menu side="left">
+        <ion-content class="sidemenu">
+          <div class="profile">
+            <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
+            <div menu-close ui-sref="app.profile">
+              <div class="avatar" ng-style="{'background-image': 'url('+user.avatar+')'}"></div>
+              <div class="username">{{user.name}}</div>
+              <div class="role" ng-bind-html="user.score.level.html"></div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="progress">
+              <div class="progress-bar" ng-class="{'progress-bar-info': user.score.value !== user.score.level.next, 'progress-bar-success': user.score.value === user.score.level.next}" role="progressbar" aria-valuenow="{{user.score.value}}" aria-valuemin="0" aria-valuemax="{{user.score.level.next}}" style="width: {{100 * user.score.value / user.score.level.next}}%;">
+              </div>
+            </div>
+          </div>
+          <div class="list">
+            <div class="item item-divider">Cookers</div>
+            <a class="item item-icon-left" menu-close ui-sref="app.home"><i class="icon ion-home"></i> Accueil</a>
+            <a class="item item-icon-left" menu-close ui-sref="app.recipes"><i class="icon ion-lightbulb"></i> La sélection Cookers</a>
+            <a class="item item-icon-left" menu-close ui-sref="app.cart.ingredients"><i class="icon ion-clipboard"></i> Ma liste de courses</a>
+            <a class="item item-icon-left" menu-close ui-sref="app.tocook"><i class="icon ion-clock"></i> Mes recettes à cuisiner</a>
+          </div>
+          <div class="list">
+            <div class="item item-divider">Outils</div>
+            <a class="item item-icon-left" menu-close ui-sref="app.feedback"><i class="icon ion-android-forums"></i> Donne ton avis</a>
+            <a class="item item-icon-left" menu-close ui-sref="intro"><i class="icon ion-log-in"></i> Introduction</a>
+          </div>
+        </ion-content>
+      </ion-side-menu>
+    </ion-side-menus>
+  </script>
+  
+  <script type="text/ng-template" id="views/home.html">
+    <ion-view>
+      <ion-header-bar class="bar-custom">
+        <div class="buttons">
+          <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+        </div>
+        <h1 class="title">Accueil <span ng-if="debug">(debug mode)</span></h1>
+      </ion-header-bar>
+
+      <ion-content class="home">
+        <div class="padding message" ng-repeat="msg in stickyMessages">
+          <div class="alert alert-{{msg.display}} card">
+            <span external-content="msg.content"></span>
+          </div>
+        </div>
+        <div class="padding message" ng-if="standardMessage">
+          <div class="alert alert-{{standardMessage.display}} card">
+            <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
+            <span external-content="standardMessage.content"></span>
+          </div>
+        </div>
+
+        <div class="dashboard">
+          <div class="card row" ui-sref="app.recipes">
+            <div class="col col-25 media"><i class="icon ion-lightbulb"></i></div>
+            <div class="col content">La sélection Cookers</div>
+          </div>
+          <div class="card row" ui-sref="app.cart.ingredients">
+            <div class="col col-25 media"><i class="icon ion-clipboard"></i></div>
+            <div class="col content">Ma liste de courses</div>
+          </div>
+          <div class="card row" ui-sref="app.tocook">
+            <div class="col col-25 media"><i class="icon ion-clock"></i></div>
+            <div class="col content">Mes recettes à cuisiner</div>
+          </div>
+          <div class="card row" ui-sref="app.cooked">
+            <div class="col col-25 media"><i class="icon ion-checkmark"></i></div>
+            <div class="col content">Mes recettes cuisinées</div>
+          </div>
+        </div>
+      </ion-content>
+    </ion-view>
+  </script>
 </html>
