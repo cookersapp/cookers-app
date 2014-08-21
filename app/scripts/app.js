@@ -95,7 +95,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 })
 
 .constant('debug', true)
-.constant('appVersion', '~0.2.0')
+.constant('appVersion', '~0.3.0')
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
