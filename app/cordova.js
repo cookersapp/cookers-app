@@ -21,8 +21,8 @@ window.plugins.toast = {
 
 // for plugin https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git
 window.plugins.insomnia = {
-  keepAwake: function(){console.log('insomnia.keepAwake()');},
-  allowSleepAgain: function(){console.log('insomnia.allowSleepAgain()');}
+  keepAwake: function(){/*console.log('insomnia.keepAwake()');*/},
+  allowSleepAgain: function(){/*console.log('insomnia.allowSleepAgain()');*/}
 };
 
 

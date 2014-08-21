@@ -177,7 +177,6 @@ angular.module('app.auth', ['ui.router'])
 
     // disconnect after 1 sec even if firebase doesn't answer !
     logoutTimeout = $timeout(function(){
-      console.log('logout timeout !');
       sUser().isLogged = false;
       logoutDefer.resolve();
     }, 1000);
@@ -187,7 +186,6 @@ angular.module('app.auth', ['ui.router'])
 
   $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
     if(loginDefer){
-      console.log('user profile', user);
       sUser().isLogged = true;
       sUser().loggedWith = loginMethod;
       sUser().profiles[loginMethod] = user;

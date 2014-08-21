@@ -123,6 +123,7 @@ angular.module('app')
       $state.go('intro');
     } else if(previousVersion === '0.2.0'){
       if(!$localStorage.user.data){$localStorage.user.data = {};}
+      if(!$localStorage.logs.events){$localStorage.logs.events = [];}
     }
   }
 

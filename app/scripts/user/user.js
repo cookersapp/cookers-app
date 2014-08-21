@@ -216,11 +216,13 @@ angular.module('app.user', ['ui.router'])
     var googleProfile = _googleProfile(sUser().profiles.google);
 
     angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+    angular.extend(sUser().more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
 
     if(sUser().email !== gravatarProfile.email){
       _updateGravatar(sUser().email).then(function(){
         var gravatarProfile = _gravatarProfile(sUser().profiles.gravatar);
         angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+        angular.extend(sUser().more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
       });
     }
   }
@@ -270,6 +272,7 @@ angular.module('app.user', ['ui.router'])
       if(d.aboutMe)                       { profile.more.gravatarDescription      = d.aboutMe;                  }
       if(d.hash)                          { profile.more.gravatarHash             = d.hash;                     }
       if(d.profileUrl)                    { profile.more.gravatarProfile          = d.profileUrl;               }
+      if(d.currentLocation)               { profile.more.gravatarLocation         = d.currentLocation;          }
       if(d.name){
         if(d.name.givenName)              { profile.firstName                     = d.name.givenName;           }
         if(d.name.familyName)             { profile.lastName                      = d.name.familyName;          }
@@ -312,7 +315,7 @@ angular.module('app.user', ['ui.router'])
         if(d.profile_background_color)            { profile.background              = '#'+d.profile_background_color;                       }
         if(d.profile_background_image_url_https)  { profile.backgroundCover         = d.profile_background_image_url_https;                 }
         if(d.description)                         { profile.more.twitterDescription = d.description;                                        }
-        if(d.followers_count)                     { profile.more.twitterFollowers   = d.description;                                        }
+        if(d.followers_count)                     { profile.more.twitterFollowers   = d.followers_count;                                    }
       }
     }
     return profile;

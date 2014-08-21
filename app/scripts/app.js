@@ -170,7 +170,8 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   },
   logs: {
     recipesHistory: [],
-    launchs: []
+    launchs: [],
+    events: []
   }
 })
 
