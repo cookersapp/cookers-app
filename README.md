@@ -2,23 +2,15 @@
 
 # TODO
 
-- bugs
-    - liste vide si on a ajouté des ingrédients (pas de prise en compte des ingrédients)
-    - quand on archive une liste et qu'on en crée une nouvelle. Certains ingrédients sont déjà achetés :(
-    - refactorer CartSrv. Ne plus mettre de current mais mettre des closed (true/false). Plusieurs listes peuvent être ouvertes !
-
-- todo
-    - ajouter les listes : recettes à cuisiner et recettes cuisinées
-    - redesign de la liste des recettes
-        - mettre dans des cartes
-    - écran d'accueil : recettes de la semaine, liste de courses, recettes à cuisiner, recettes cuisinées
-
+- performance improvements :
+    - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
+    - prefetching/caching templates
+    - bind once
+    - optimize recipe images
+    
 - todo, plus tard
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - demander une autorisation android pour récupérer le mail de l'utilisateur
-
-- à réfléchir
-    - bouton home en haut à gauche à la place du menu
 
 # Technical
 
