@@ -40,11 +40,11 @@ Your app is now running to your computer. To run it to your android device :
 - org.apache.cordova.device : allow to get phone data (uuid, phone model, android version...)
 - org.apache.cordova.console : not really sure of benefits but it's recommended (to have a better console.log)
 - https://github.com/driftyco/ionic-plugins-keyboard : allow to listen and interract with keyboard
-- org.apache.cordova.geolocation : allow to get precise user position
+- org.apache.cordova.geolocation : allow to get precise user position (android.permission.ACCESS_COARSE_LOCATION et android.permission.ACCESS_FINE_LOCATION)
 - https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
 - org.apache.cordova.inappbrowser : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
 - https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git : prevent screen to sleep
-- org.apache.cordova.media : play sounds (for alarms in cook screen)
+- org.apache.cordova.media : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
 
 ## Release process
 

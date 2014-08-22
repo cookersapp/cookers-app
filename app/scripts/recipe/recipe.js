@@ -381,7 +381,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       timer.media = null;
       timer.scroll = null;
       scope.timer = timer;
-      MediaSrv.loadMedia('sounds/timerEnds.mp3', null, null, restartAlarm).then(function(media){
+      MediaSrv.loadTimerAlarm(restartAlarm).then(function(media){
         timer.media = media;
       });
 

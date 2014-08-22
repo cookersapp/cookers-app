@@ -120,10 +120,12 @@ angular.module('app.utils', [])
   var service = {
     loadMedia: loadMedia,
     getStatusMessage: getStatusMessage,
-    getErrorMessage: getErrorMessage
+    getErrorMessage: getErrorMessage,
+    
+    loadTimerAlarm: function(onStop, onError, onStatus){ return loadMedia('sounds/timerEnds.mp3', onStop, onError, onStatus); }
   };
 
-  function loadMedia(src, onError, onStatus, onStop){
+  function loadMedia(src, onStop, onError, onStatus){
     var defer = $q.defer();
     $ionicPlatform.ready(function(){
       var mediaSuccess = function(){
