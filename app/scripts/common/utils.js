@@ -117,6 +117,7 @@ angular.module('app.utils', [])
 
 // for media plugin : http://plugins.cordova.io/#/package/org.apache.cordova.media
 .factory('MediaSrv', function($q, $ionicPlatform, $window, LogSrv){
+  'use strict';
   var service = {
     loadMedia: loadMedia,
     getStatusMessage: getStatusMessage,
@@ -174,6 +175,7 @@ angular.module('app.utils', [])
 })
 
 .factory('PopupSrv', function($rootScope, $ionicPopup, $window){
+  'use strict';
   var service = {
     askMail: askMail,
     changeServings: changeServings,

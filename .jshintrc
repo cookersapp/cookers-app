@@ -22,7 +22,7 @@
     "window": false,
     "angular": false,
     "ionic": false,
-    "StatusBar": false,
+    "Logger": false,
     "Firebase": false,
     "UserVoice": false,
     "mixpanel": false,

@@ -21,10 +21,10 @@ angular.module('app.logger', [])
   return service;
 })*/
 
-.factory('LogSrv', function($timeout, $window, $localStorage, GamificationSrv, Tracker, Utils, appVersion){
+.factory('LogSrv', function($timeout, $window, $localStorage, GamificationSrv, appVersion){
   'use strict';
   var service = {
-    identify: Tracker.identify,
+    identify: Logger.identify,
     registerUser: registerUser,
     trackInstall: function(user){track('install', {user: user});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
@@ -86,13 +86,7 @@ angular.module('app.logger', [])
 
   function track(event, properties){
     if(!properties){properties = {};}
-    properties.eventId = Utils.createUuid();
-    properties.previousEventId = previousEventId;
-    previousEventId = properties.eventId;
-    properties.time = Date.now()/1000;
-    properties.localtime = Date.now();
     properties.appVersion = appVersion;
-    if(!properties.url && $window.location && $window.location.hash) {properties.url = $window.location.hash;}
     if(!properties.email && sUser() && sUser().email){properties.email = sUser().email;}
     if(sUser() && sUser().device){
       if(!properties.uuid && sUser().device.uuid){properties.uuid = sUser().device.uuid;}
@@ -105,11 +99,7 @@ angular.module('app.logger', [])
       }
     }
 
-    Tracker.add({
-      action: 'track',
-      event: event,
-      properties: properties
-    });
+    Logger.track(event, properties);
     GamificationSrv.sendEvent(event, properties);
   }
 
@@ -133,97 +123,11 @@ angular.module('app.logger', [])
     for(var i in sUser().more){
       userProfile['more.'+i] = sUser().more[i];
     }
-    for(var i in sUser().settings){
-      userProfile['setting.'+i] = sUser().settings[i];
+    for(var j in sUser().settings){
+      userProfile['setting.'+j] = sUser().settings[j];
     }
 
-    Tracker.add({action: 'register', properties: userProfile});
-  }
-
-  return service;
-})
-
-.factory('Tracker', function($q, $interval, $localStorage, Utils, debug){
-  'use strict';
-  var identified = false, eventSender = null;
-  var service = {
-    identify: identify,
-    add: add
-  };
-
-  function sEvents(){return $localStorage.logs.events;}
-
-  function identify(id){
-    if(debug){
-      console.log('>[identify]', id);
-    } else {
-      mixpanel.identify(id);
-      identified = true;
-      if(sEvents() && sEvents().length > 0){ startSendEvents(); }
-    }
-  }
-
-  function add(command){
-    if(debug){
-      console.log('>['+command.action+']'+(command.event?' '+command.event:''), command.properties);
-    } else {
-      command.id = Utils.createUuid();
-      sEvents().push(command);
-      if(identified){ startSendEvents(); }
-    }
-  }
-
-  function startSendEvents(){
-    if(eventSender === null){
-      // TODO : change send interval depending on network connectivity
-      for(var i in sEvents()){
-        sEvents()[i].sending = false;
-      }
-      eventSender = $interval(function(){
-        var events = _.filter(sEvents(), {sending: false});
-        if(events.length > 0){
-          for(var i=0; i<10; i++){
-            var command = events[i];
-            if(command && !command.sending){
-              sendEvent(command).then(function(result){
-                if(result.status !== 'ko'){
-                  _.remove(sEvents(), {id: result.command.id});
-                } else {
-                  result.command.sending = false;
-                }
-              });
-            }
-          }
-        } else {
-          stopSendEvents();
-        }
-      }, 1000);
-    }
-  }
-
-  function stopSendEvents(){
-    if(eventSender !== null){
-      $interval.cancel(eventSender);
-      eventSender = null;
-    }
-  }
-
-  function sendEvent(command){
-    var eventDefer = $q.defer();
-    if(command.action === 'register'){
-      command.sending = true;
-      mixpanel.people.set(command.properties, function(success, people){
-        eventDefer.resolve({status: success ? 'ok' : 'ko', command: command});
-      });
-    } else if(command.action === 'track'){
-      command.sending = true;
-      mixpanel.track(command.event, command.properties, function(success, event){
-        eventDefer.resolve({status: success ? 'ok' : 'ko', command: command});
-      });
-    } else {
-      eventDefer.resolve({status: 'unknown', command: command});
-    }
-    return eventDefer.promise;
+    Logger.setProfile(userProfile);
   }
 
   return service;

@@ -4,13 +4,52 @@
 
 - performance improvements :
     - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
+    - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
     - prefetching/caching templates
     - bind once
+    - DOM caching (http://forum.ionicframework.com/t/lack-of-dom-caching-killing-performance-on-slower-devices/4572)
+    - concathenate templates (http://forum.ionicframework.com/t/compressed-code-is-fast/2225)
     - optimize recipe images
     
-- todo, plus tard
+- TODO
+    - pouvoir aller sur le détail de la recette depuis l'écran des recettes cuisinées (mais ne pas afficher le footer)
+    - cook :
+        - ne pas compter la recette comme cuisinée si temps < 5 min (quite fast, isn't it ?)
+        - quand on clique sur fini, remplacer la popup par une action sheet (http://codepen.io/ionic/pen/jLylA)
+        - mettre une barre de progression correspondante au timer global
+        - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
+        - slide sur une carte : le retourne et montre une photo du résultat attendu
+    - login :
+        - login error : what method ?
+        - put a user voice contact widget on login screen
+        - jcanderle1509@gmail.com logged with facebook but mail was not saved :(
+    - cart ingredients :
+        - problem display when all checked
+        - pouvoir checker les custom items
+    - tracking :
+        - où est ce que les gens s'arrêtent dans les recettes de la semaine
+        - ajouter le mail aux erreurs & exceptions
+    - pouvoir cuisiner plusieurs recettes en même temps (tablette)
+    - mettre en place segment.io
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
-    - demander une autorisation android pour récupérer le mail de l'utilisateur
+    - mail à :
+        - ? connait des persionnes iPhone ?
+            - mathieu segret
+            - matthieu parisot
+            - david wursteisen
+            - etienne folio
+            - yacine regzy
+            - damien cavaillès
+            - xavier carpentier
+            - pierre chapuis
+            - sylvain abélard
+            - florent biville
+            - quang hai
+            - hugo cordier
+            - fred cecilia
+            - thierry lau
+    
+    => home page : track click on social links
 
 # Technical
 
