@@ -22,8 +22,6 @@ Other libs :
 
 Here are the few steps to get things working :
 
-- `git clone git@bitbucket.org:loicknuchel/retail-scan-app-ionic.git` get code on your laptop
-- `cd retail-scan-app-ionic` go to project root folder
 - `npm install` to install all grunt dependencies
 - `bower install` to install all bower dependencies
 - You are ready !!!! \o/
@@ -35,8 +33,7 @@ To run the app, you have many ways :
 - In your android device :
     - `mkdir platforms plugins www` create folders platforms plugins www (essential for cordova)
     - `cordova platform add android` add android platform to the project
-    - `cordova plugin add org.apache.cordova.device` to install [device plugin](https://github.com/apache/cordova-plugin-device/blob/master/doc/index.md)
-    - `cordova plugin add https://github.com/wildabeast/BarcodeScanner.git` to install [barcode scanner plugin](https://github.com/wildabeast/BarcodeScanner)
+    - `cordova plugin add org.apache.cordova.device cordova plugin add https://github.com/wildabeast/BarcodeScanner.git`
     - `grunt build && cordova run android` to run app on your phone
 
 # Grunt commands
