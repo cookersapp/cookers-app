@@ -1,6 +1,8 @@
 *.keystore
 *.sw*
-platforms/^.*
+hooks
+platforms
+plugins
 
 *~
 merges
