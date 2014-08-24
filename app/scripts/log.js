@@ -134,6 +134,7 @@ var Logger = (function(){
       mixpanel.track(event.type, event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
+      if(event.type === 'exception'){window.alert('Error: '+data.message+'\nPlease contact: loicknuchel@gmail.com :(');}
     } else {
       if(callback){callback(event, 'unknown');}
     }
@@ -149,8 +150,6 @@ var Logger = (function(){
     track: track
   };
 })();
-
-
 
 
 // catch exceptions
