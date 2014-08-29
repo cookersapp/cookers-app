@@ -50,6 +50,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     if($window.confirm('Archiver cette liste ?')){
       LogSrv.trackArchiveCart();
       CartSrv.archive($scope.cart);
+      $scope.popover.remove();
       $state.go('app.home');
     }
   };

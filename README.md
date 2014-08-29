@@ -14,8 +14,6 @@
     - optimize recipe images
     
 - TODO
-    - bugs :
-        - quand on archive la liste, le popover ne se referme pas
     - tracking :
         - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - loadgin :
