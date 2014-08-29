@@ -22,10 +22,6 @@
         - mettre une barre de progression correspondante au timer global
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu
-    - login :
-        - login error : what method ?
-        - put a user voice contact widget on login screen
-        - jcanderle1509@gmail.com logged with facebook but mail was not saved :(
     - cart ingredients :
         - problem display when all checked
         - pouvoir checker les custom items
@@ -90,7 +86,7 @@ Your app is now running to your computer. To run it to your android device :
 - change package & name in `config.xml` : `com.cookers.android.dev` => `com.cookers.android` and `dev-Cookers` => `Cookers`
 - remove and add android platform : `cordova platform remove android` and `cordova platform add android` (to sync platform with config.xml)
 - add icons to build : copy `app/res/android` in `platforms/android/res` and `platforms/android/ant-build/res`
-- increment version number and check that `debug` option is false : `app/scripts/app.js`
+- increment version number and check that `debug` option is false : `app/scripts/_config.js`
 - build app : `grunt build && cordova run android`
 - Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
 - Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number

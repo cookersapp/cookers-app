@@ -74,7 +74,7 @@ angular.module('app.auth', ['ui.router'])
       }, function(error){
         LogSrv.trackError('login:'+provider, error);
         $scope.loading[provider] = false;
-        $window.plugins.toast.show(LoginSrv.getMessage(error));
+        $window.plugins.toast.show(error.message);
       });
     } else {
       $scope.loading[provider] = false;
@@ -99,10 +99,7 @@ angular.module('app.auth', ['ui.router'])
     facebookConnect: facebookConnect,
     twitterConnect: twitterConnect,
     googleConnect: googleConnect,
-    logout: logout,
-    getMessage: function(error){
-      return error.message.replace('FirebaseSimpleLogin: ', '');
-    }
+    logout: logout
   };
 
   function sUser(){return $localStorage.user;}
@@ -201,9 +198,11 @@ angular.module('app.auth', ['ui.router'])
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:error', function(event, error){
-    LogSrv.trackError('$firebaseSimpleLogin:error', error);
-    if(loginDefer){loginDefer.reject(error);}
-    if(logoutDefer){logoutDefer.reject(error);}
+    var err = { provider: loginMethod };
+    if(error.code){err.code = error.code;}
+    err.message = error.message ? error.message.replace('FirebaseSimpleLogin: ', '') : '';
+    if(loginDefer){loginDefer.reject(err);}
+    if(logoutDefer){logoutDefer.reject(err);}
   });
 
   return service;

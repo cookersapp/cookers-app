@@ -79,6 +79,9 @@ angular.module('app.user', ['ui.router'])
     LoginSrv.logout().then(function(){
       LogSrv.trackLogout(sUser.device.uuid);
       $state.go('login');
+    }, function(error){
+      LogSrv.trackError('logout', error);
+      $window.plugins.toast.show(error.message);
     });
   };
   $scope.resetApp = function(){
@@ -236,7 +239,6 @@ angular.module('app.user', ['ui.router'])
           g.entry[0].email = email;
         }
         sUser().profiles.gravatar = g;
-        console.log('gravatr profile', g);
       }, function(error){
         sUser().profiles.gravatar = {
           entry: [
