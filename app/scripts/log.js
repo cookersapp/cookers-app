@@ -7,6 +7,7 @@ var Logger = (function(){
     if(!config.events){config.events = [];}
     config.events.push(event);
     saveEvents();
+    if(config.identified){ startSendEvents(); }
   }
   function removeEvent(event){
     if(!config.events){config.events = [];}
@@ -47,7 +48,7 @@ var Logger = (function(){
   function setProfile(profile){
     if(config.debug){
       console.log('$[register]', profile);
-    } else if(config.async) {
+    } else {
       var event = {
         id: createUuid(),
         action: 'register',
@@ -55,7 +56,6 @@ var Logger = (function(){
       };
       if(config.async){
         addEvent(event);
-        if(config.identified){ startSendEvents(); }
       } else {
         sendEvent(event);
       }
@@ -83,7 +83,6 @@ var Logger = (function(){
       };
       if(config.async && type !== 'exception') {
         addEvent(event);
-        if(config.identified){ startSendEvents(); }
       } else {
         sendEvent(event);
       }

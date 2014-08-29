@@ -3,6 +3,8 @@
 # TODO
 
 - performance improvements :
+    - revoir la gestion du local storage
+    - attention à l'utilisation du localstorage :( (grosses serializations)
     - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
     - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
     - prefetching/caching templates
@@ -12,7 +14,10 @@
     - optimize recipe images
     
 - TODO
+    - tracking :
+        - add app version to events
     - pouvoir aller sur le détail de la recette depuis l'écran des recettes cuisinées (mais ne pas afficher le footer)
+    - remove gamification
     - cook :
         - ne pas compter la recette comme cuisinée si temps < 5 min (quite fast, isn't it ?)
         - quand on clique sur fini, remplacer la popup par une action sheet (http://codepen.io/ionic/pen/jLylA)
@@ -27,11 +32,11 @@
         - problem display when all checked
         - pouvoir checker les custom items
     - tracking :
-        - où est ce que les gens s'arrêtent dans les recettes de la semaine
         - ajouter le mail aux erreurs & exceptions
-    - pouvoir cuisiner plusieurs recettes en même temps (tablette)
-    - mettre en place segment.io
+        - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
+    - mettre en place segment.io
+    - pouvoir cuisiner plusieurs recettes en même temps (tablette)
     - mail à :
         - ? connait des persionnes iPhone ?
             - mathieu segret
