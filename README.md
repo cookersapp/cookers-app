@@ -14,12 +14,13 @@
     - optimize recipe images
     
 - TODO
+    - bugs :
+        - quand on archive la liste, le popover ne se referme pas
     - tracking :
         - où est ce que les gens s'arrêtent dans les recettes de la semaine
-    - pouvoir aller sur le détail de la recette depuis l'écran des recettes cuisinées (mais ne pas afficher le footer)
+    - loadgin :
+        - ajouter des loaders comme dans l'admin
     - cook :
-        - ne pas compter la recette comme cuisinée si temps < 5 min (quite fast, isn't it ?)
-        - quand on clique sur fini, remplacer la popup par une action sheet (http://codepen.io/ionic/pen/jLylA)
         - mettre une barre de progression correspondante au timer global
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu

@@ -122,7 +122,7 @@ angular.module('app.utils', [])
     loadMedia: loadMedia,
     getStatusMessage: getStatusMessage,
     getErrorMessage: getErrorMessage,
-    
+
     loadTimerAlarm: function(onStop, onError, onStatus){ return loadMedia('sounds/timerEnds.mp3', onStop, onError, onStatus); }
   };
 
@@ -174,7 +174,7 @@ angular.module('app.utils', [])
   return service;
 })
 
-.factory('PopupSrv', function($rootScope, $ionicPopup, $window){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, $window){
   'use strict';
   var service = {
     askMail: askMail,
@@ -245,7 +245,7 @@ angular.module('app.utils', [])
   }
 
   function recipeCooked(){
-    return $ionicPopup.show({
+    /*return $ionicPopup.show({
       title: 'La recette est maintenant terminée !',
       subTitle: 'Que veux-tu faire ?',
       buttons: [{
@@ -260,7 +260,20 @@ angular.module('app.utils', [])
           return true;
         }
       }]
+    });*/
+    var defer = $q.defer();
+    $ionicActionSheet.show({
+      titleText: 'La recette est maintenant terminée ! Que faire ?',
+      destructiveText: 'Quitter l\'application',
+      destructiveButtonClicked: function() {
+        defer.resolve(true);
+      },
+      cancelText: 'Revenir à l\'accueil',
+      cancel: function() {
+        defer.resolve(false);
+      }
     });
+    return defer.promise;
   }
 
   function tourCookFeatures(){

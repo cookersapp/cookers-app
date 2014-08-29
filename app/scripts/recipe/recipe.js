@@ -139,9 +139,9 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, RecipeSrv, CartSrv, UserSrv, PopupSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, RecipeSrv, CartSrv, UserSrv, PopupSrv, LogSrv, Utils){
   'use strict';
-  // TODO : should go to next step when knock knock (speech recognition)
+  // TODO : vocal commands : should go to next step when knock knock (speech recognition)
   // TODO : should stick active timers on top (or bottom?) of screen if you scroll
   var cartId = $stateParams.cartId;
   var recipeId = $stateParams.recipeId;
@@ -188,40 +188,50 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 
   $scope.done = function(){
+    var fiveMinutes = 300;
     var cookDuration = (Date.now() - startTime)/1000;
-    LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
-    if($scope.recipe && $scope.recipe.cartData){
-      $scope.recipe.cartData.cooked = {
+    if(cookDuration < fiveMinutes){
+      $window.history.back();
+      $window.plugins.toast.show('T\'as pas cuisiné, avoue ! ;)');
+    } else {
+      LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
+      addToCookedRecipes($scope.recipe, $scope.servings, cookDuration);
+
+      PopupSrv.recipeCooked().then(function(shouldExit){
+        if(shouldExit){
+          if(navigator.app){
+            navigator.app.exitApp();
+          } else if(navigator.device){
+            navigator.device.exitApp();
+          }
+        } else {
+          $state.go('app.home');
+        }
+      });
+    }
+  };
+
+  function addToCookedRecipes(recipe, servings, cookDuration){
+    if(recipe && recipe.cartData){
+      recipe.cartData.cooked = {
         time: Date.now(),
         duration: cookDuration
       };
     } else {
-      var recipe = angular.copy($scope.recipe);
-      recipe.cartData = {
+      var recipeToSave = angular.copy(recipe);
+      recipeToSave.cartData = {
         cooked: {
           time: Date.now(),
           duration: cookDuration
         },
         servings: {
-          value: $scope.servings,
-          unit: recipe.servings.unit
+          value: servings,
+          unit: recipeToSave.servings.unit
         }
       };
-      CartSrv.addStandaloneCookedRecipe(recipe);
+      CartSrv.addStandaloneCookedRecipe(recipeToSave);
     }
-
-    PopupSrv.recipeCooked().then(function(shouldExit){
-      if(shouldExit){
-        if(navigator.app){
-          navigator.app.exitApp();
-        } else if(navigator.device){
-          navigator.device.exitApp();
-        }
-      } else {
-        $state.go('app.home');
-      }
-    });
-  };
+  }
 
   function startTimer(){
     startTime = Date.now();
