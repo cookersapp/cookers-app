@@ -10,7 +10,7 @@
     <div class="screen-empty">Toutes les recettes que tu as cuisinées se retrouvent ici. Commence par ajouter des recettes à ta liste de courses !</div>
 
     <div class="screen">
-      <div class="header row card" ng-repeat="recipe in recipes">
+      <div class="header row card" ng-repeat="recipe in recipes" ui-sref="app.recipe({recipeId: recipe.id})">
         <div class="col col-33 picture" ng-if="$index%2 === 0"><img ng-src="{{recipe.images.portrait}}"></div>
         <div class="col text">
           <h1 class="title">{{recipe.name}}</h1>
