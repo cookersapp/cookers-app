@@ -25,7 +25,7 @@
     </div>
 
     <div ng-if="!cart.archived">
-      <div class="list card to-buy" ng-if="items && items.length > 0">
+      <div class="list card to-buy" ng-if="items && items.length > 0 && !allItemsBought()">
         <div class="item item-cart-ingredient {{categoryId(item.food)}}" ng-repeat="item in items" ng-if="!isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="buyItem(item)"></div>

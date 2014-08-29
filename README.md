@@ -14,16 +14,15 @@
     - optimize recipe images
     
 - TODO
+    - loading :
+        - ajouter des loaders comme dans l'admin
     - tracking :
         - où est ce que les gens s'arrêtent dans les recettes de la semaine
-    - loadgin :
-        - ajouter des loaders comme dans l'admin
     - cook :
         - mettre une barre de progression correspondante au timer global
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu
     - cart ingredients :
-        - problem display when all checked
         - pouvoir checker les custom items
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - mettre en place segment.io
