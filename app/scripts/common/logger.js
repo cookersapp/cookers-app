@@ -21,7 +21,7 @@ angular.module('app.logger', [])
   return service;
 })*/
 
-.factory('LogSrv', function($timeout, $window, $localStorage, GamificationSrv, appVersion){
+.factory('LogSrv', function($timeout, $window, $localStorage, appVersion){
   'use strict';
   var service = {
     identify: Logger.identify,
@@ -100,7 +100,6 @@ angular.module('app.logger', [])
     }
 
     Logger.track(event, properties);
-    GamificationSrv.sendEvent(event, properties);
   }
 
   function registerUser(){

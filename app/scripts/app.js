@@ -109,11 +109,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     firstName: '',
     lastName: '',
     more: {},
-    score: {
-      value: 0,
-      level: {},
-      events: []
-    },
     device: {},
     profiles: {},
     carts: [],

@@ -95,14 +95,7 @@
             <div menu-close ui-sref="app.profile">
               <div class="avatar" ng-style="{'background-image': 'url('+user.avatar+')'}"></div>
               <div class="username">{{user.name}}</div>
-              <div class="role" ng-bind-html="user.score.level.html"></div>
               <div class="clearfix"></div>
-            </div>
-          </div>
-          <div class="stats">
-            <div class="progress">
-              <div class="progress-bar" ng-class="{'progress-bar-info': user.score.value !== user.score.level.next, 'progress-bar-success': user.score.value === user.score.level.next}" role="progressbar" aria-valuenow="{{user.score.value}}" aria-valuemin="0" aria-valuemax="{{user.score.level.next}}" style="width: {{100 * user.score.value / user.score.level.next}}%;">
-              </div>
             </div>
           </div>
           <div class="list">

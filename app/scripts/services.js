@@ -7,7 +7,7 @@ angular.module('app')
   };
 
   function sApp(){return $localStorage.app;}
-  
+
   return service;
 })
 
@@ -18,7 +18,7 @@ angular.module('app')
     getStickyMessages: getStickyMessages,
     execMessages: execMessages
   };
-  
+
   function sGlobalmessages(){return $localStorage.data ? $localStorage.data.globalmessages : null;}
 
   function getStandardMessageToDisplay(){
@@ -121,9 +121,13 @@ angular.module('app')
       $localStorage.$reset(localStorageDefault);
       $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
       $state.go('intro');
-    } else if(previousVersion === '0.2.0'){
+    }
+    if(previousVersion === '0.2.0'){
       if(!$localStorage.user.data){$localStorage.user.data = {};}
       if(!$localStorage.logs.events){$localStorage.logs.events = [];}
+    }
+    if(previousVersion === '0.2.0' || previousVersion === '0.3.0'){
+      delete $localStorage.user.score;
     }
   }
 

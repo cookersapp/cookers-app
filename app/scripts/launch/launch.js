@@ -31,7 +31,7 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, GamificationSrv, LogSrv, Utils, firebaseUrl, debug){
+.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, LogSrv, Utils, firebaseUrl, debug){
   'use strict';
   var service = {
     launch: function(){
@@ -46,7 +46,6 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
   function sUser(){return $localStorage.user;}
 
   function firstLaunch(){
-    GamificationSrv.evalLevel();
     $ionicPlatform.ready(function(){
       sUser().device = Utils.getDevice();
       LogSrv.identify(sUser().device.uuid);
