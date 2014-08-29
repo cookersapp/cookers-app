@@ -15,9 +15,8 @@
     
 - TODO
     - tracking :
-        - add app version to events
+        - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - pouvoir aller sur le détail de la recette depuis l'écran des recettes cuisinées (mais ne pas afficher le footer)
-    - remove gamification
     - cook :
         - ne pas compter la recette comme cuisinée si temps < 5 min (quite fast, isn't it ?)
         - quand on clique sur fini, remplacer la popup par une action sheet (http://codepen.io/ionic/pen/jLylA)
@@ -31,9 +30,6 @@
     - cart ingredients :
         - problem display when all checked
         - pouvoir checker les custom items
-    - tracking :
-        - ajouter le mail aux erreurs & exceptions
-        - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - mettre en place segment.io
     - pouvoir cuisiner plusieurs recettes en même temps (tablette)

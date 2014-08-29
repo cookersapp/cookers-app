@@ -2,8 +2,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
-  Logger.setDebug(debug);
-
   // catch exceptions in angular
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){
     return function(exception, cause){
@@ -63,8 +61,8 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   }
 })
 
-.constant('debug', true)
-.constant('appVersion', '~0.3.0')
+.constant('debug', Config.debug)
+.constant('appVersion', Config.appVersion)
 
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')

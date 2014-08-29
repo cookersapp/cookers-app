@@ -1,6 +1,5 @@
-'use strict';
-
 var Logger = (function(){
+  'use strict';
   function loadEvents(){ if(localStorage){ config.events = JSON.parse(localStorage.getItem(config.eventsStorageKey)) || []; } }
   function saveEvents(){ if(localStorage){ localStorage.setItem(config.eventsStorageKey, JSON.stringify(config.events)); } }
   function addEvent(event){
@@ -25,7 +24,7 @@ var Logger = (function(){
   }
 
   var config = {
-    debug: false,
+    debug: Config ? Config.debug : false,
     async: true,
     identified: false,
     eventsStorageKey: 'tracking-events-cache',
@@ -67,6 +66,8 @@ var Logger = (function(){
     if(!data.url && window && window.location){data.url = window.location.href;}
     if(!data.time){data.time = Date.now()/1000;} // special mixpanel property
     if(!data.localtime){data.localtime = Date.now();}
+    if(!data.appVersion && Config){data.appVersion = Config.appVersion;}
+    if(!data.email){data.email = getUserMailIfSetted();}
     if(!data.eventId){data.eventId = createUuid();}
     if(!data.previousEventId){data.previousEventId = config.currentEventId;}
     config.currentEventId = data.eventId;
@@ -139,6 +140,15 @@ var Logger = (function(){
     }
   }
 
+  function getUserMailIfSetted(){
+    if(localStorage){
+      var user = JSON.parse(localStorage.getItem('ngStorage-user'));
+      if(user && user.email){
+        return user.email;
+      }
+    }
+  }
+
   return {
     async: config.async,
     debug: config.debug,
@@ -153,6 +163,7 @@ var Logger = (function(){
 
 // catch exceptions
 window.onerror = function(message, url, line, col, error){
+  'use strict';
   var stopPropagation = Logger.debug ? false : true;
   var data = {
     type: 'javascript'
