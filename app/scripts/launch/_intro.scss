@@ -66,6 +66,16 @@
       border-color: #005C53;
       border-radius: 30px;
       padding: 10px 50px;
+
+      position: absolute;
+      bottom: 50px;
+      width: 270px;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      &:hover {
+        background: lighten(#009989, 5%);
+      }
     }
   }
 }
