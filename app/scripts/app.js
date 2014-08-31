@@ -45,7 +45,7 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
   });
 
   // choose default route depending on application state
-  var user = JSON.parse(localStorage.getItem('ngStorage-user'));
+  var user = JSON.parse(localStorage.getItem('ionic-user'));
   if(user){
     if(user.skipIntro){
       if(user.isLogged){
