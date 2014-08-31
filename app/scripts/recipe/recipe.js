@@ -67,7 +67,7 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, PopupSrv, SelectionSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, PopupSrv, SelectionSrv, StorageSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = {};
@@ -92,7 +92,7 @@ angular.module('app')
         $rootScope.settings.defaultServings = servings;
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
-        RecipeSrv.addToHistory(recipe);
+        StorageSrv.addRecipeToHistory(recipe);
       }
     });
   };
@@ -108,11 +108,11 @@ angular.module('app')
   };
 })
 
-.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, $window, RecipeSrv, CartSrv, PopupSrv, LogSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, $window, RecipeSrv, CartSrv, StorageSrv, PopupSrv, LogSrv){
   'use strict';
   $scope.recipe = {};
-  RecipeSrv.get($stateParams.recipeId).then(function(recipe){
-    RecipeSrv.addToHistory(recipe);
+  BackendSrv.getRecipe($stateParams.recipeId).then(function(recipe){
+    StorageSrv.addRecipeToHistory(recipe);
     $scope.recipe = recipe;
   });
 
@@ -149,7 +149,7 @@ angular.module('app')
   $scope.timer = 0;
 
   if(cartId === 'none'){
-    RecipeSrv.get(recipeId).then(function(recipe){
+    BackendSrv.getRecipe(recipeId).then(function(recipe){
       initData(recipe);
     });
   } else {
@@ -159,7 +159,7 @@ angular.module('app')
   function initData(recipe){
     if(recipe){
       $scope.recipe = recipe;
-      RecipeSrv.addToHistory($scope.recipe);
+      StorageSrv.addRecipeToHistory($scope.recipe);
       $scope.servings = $scope.recipe.cartData ? $scope.recipe.cartData.servings.value : $scope.recipe.servings.value;
       $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
       $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
@@ -276,73 +276,11 @@ angular.module('app')
   });
 })
 
-.factory('RecipeSrv', function($http, $q, StorageSrv, firebaseUrl){
+.factory('SelectionSrv', function(StorageSrv, BackendSrv, debug){
   'use strict';
   var service = {
-    get: getRecipe,
-    addToHistory: StorageSrv.addRecipeToHistory,
-    getHistory: StorageSrv.getRecipeHistory
+    getCurrent: function(){ return BackendSrv.getSelection(moment().week()+(debug ? 1 : 0)); }
   };
-
-  function getRecipe(recipeId){
-    var recipe = StorageSrv.getRecipe(recipeId);
-    if(recipe){
-      return $q.when(recipe);
-    } else {
-      return downloadRecipe(recipeId);
-    }
-  }
-
-  function downloadRecipe(recipeId){
-    // TODO : create BackendSrv !!!
-    return $http.get(firebaseUrl+'/recipes/'+recipeId+'.json').then(function(result){
-      StorageSrv.addRecipe(result.data);
-      return result.data;
-    });
-  }
-
-  return service;
-})
-
-.factory('SelectionSrv', function($http, $q, StorageSrv, firebaseUrl, RecipeSrv, debug){
-  'use strict';
-  var service = {
-    getCurrent: function(){ return getSelection(moment().week()+(debug ? 1 : 0)); }
-  };
-
-  function getSelection(selectionId){
-    var selection = StorageSrv.getSelection(selectionId);
-    if(selection){
-      return $q.when(selection);
-    } else {
-      return downloadSelection(selectionId);
-    }
-  }
-
-  function downloadSelection(selectionId){
-    // TODO : create BackendSrv !!!
-    return $http.get(firebaseUrl+'/selections/'+selectionId+'.json').then(function(result){
-      return fullLoad(result.data);
-    }).then(function(selection){
-      StorageSrv.addSelection(selection);
-      return selection;
-    });
-  }
-
-  function fullLoad(selection){
-    if(selection && selection.recipes){
-      var recipePromises = [];
-      for(var i in selection.recipes){
-        recipePromises.push(RecipeSrv.get(selection.recipes[i].id));
-      }
-      return $q.all(recipePromises).then(function(recipes){
-        selection.recipes = recipes;
-        return selection;
-      });
-    } else {
-      return $q.when(selection);
-    }
-  }
 
   return service;
 })

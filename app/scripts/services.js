@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('GlobalMessageSrv', function($q, $http, StorageSrv, firebaseUrl, debug, appVersion){
+.factory('GlobalMessageSrv', function($q, StorageSrv, BackendSrv, debug, appVersion){
   'use strict';
   var service = {
     getStandardMessageToDisplay: getStandardMessageToDisplay,
@@ -56,8 +56,8 @@ angular.module('app')
 
   function fetchMessages(){
     StorageSrv.getGlobalMessages().lastCall = Date.now();
-    return $http.get(firebaseUrl+'/globalmessages.json').then(function(result){
-      var messages = _.filter(result.data, function(msg){
+    return BackendSrv.getMessages().then(function(allMessages){
+      var messages = _.filter(allMessages, function(msg){
         return msg && (msg.isProd || debug) && msg.targets && msg.targets.indexOf(appVersion) > -1 && !messageExists(msg);
       });
       StorageSrv.getGlobalMessages().messages = StorageSrv.getGlobalMessages().messages.concat(messages);
@@ -76,17 +76,6 @@ angular.module('app')
   function messageExists(message){
     return message && message.created && _.findIndex(StorageSrv.getGlobalMessages().messages, {created: message.created}) > -1;
   }
-
-  return service;
-})
-
-.factory('FirebaseSrv', function(firebaseUrl){
-  'use strict';
-  var service = {
-    push: function(endpoint, data){
-      new Firebase(firebaseUrl+endpoint).push(data);
-    }
-  };
 
   return service;
 })

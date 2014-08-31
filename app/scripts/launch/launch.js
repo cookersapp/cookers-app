@@ -11,13 +11,15 @@ angular.module('app')
   });
 })
 
-.controller('IntroCtrl', function($scope, $state, UserSrv, LoginSrv, LogSrv){
+.controller('IntroCtrl', function($scope, $state, StorageSrv, LoginSrv, LogSrv){
   'use strict';
   var currentSlide = 0;
 
   $scope.startApp = function(){
     LogSrv.trackIntroExit(currentSlide);
-    UserSrv.get().skipIntro = true;
+    var user = StorageSrv.getUser();
+    user.skipIntro = true;
+    StorageSrv.saveUser(user);
     if(LoginSrv.isLogged()){
       $state.go('app.home');
     } else {
@@ -31,7 +33,7 @@ angular.module('app')
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, StorageSrv, LogSrv, Utils, firebaseUrl, debug){
+.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, StorageSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){

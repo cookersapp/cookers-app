@@ -80,7 +80,7 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, FirebaseSrv, dataList, LogSrv){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, LogSrv){
   'use strict';
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 

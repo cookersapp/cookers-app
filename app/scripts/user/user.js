@@ -134,7 +134,7 @@ angular.module('app')
   }
 })
 
-.controller('FeedbackCtrl', function($scope, $stateParams, $window, AppSrv, UserSrv, StorageSrv, EmailSrv, LogSrv){
+.controller('FeedbackCtrl', function($scope, $stateParams, $window, UserSrv, StorageSrv, EmailSrv, LogSrv){
   'use strict';
   var app = StorageSrv.getApp();
   var user = StorageSrv.getUser();
