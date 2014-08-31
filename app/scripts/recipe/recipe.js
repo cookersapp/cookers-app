@@ -86,10 +86,11 @@ angular.module('app')
     recipe.showIngredients = !recipe.showIngredients;
   };
   $scope.addRecipeToCart = function(recipe, index){
-    PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
+    PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'selection');
-        $rootScope.settings.defaultServings = servings;
+        $rootScope.ctx.settings.defaultServings = servings;
+        StorageSrv.saveUserSetting('defaultServings', servings);
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
         StorageSrv.addRecipeToHistory(recipe);
@@ -127,6 +128,7 @@ angular.module('app')
       if(servings){
         LogSrv.trackAddRecipeToCart(recipe.id, servings, null, 'recipe');
         $rootScope.settings.defaultServings = servings;
+        StorageSrv.saveUserSetting('defaultServings', servings);
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
       }
@@ -142,7 +144,7 @@ angular.module('app')
 .controller('CookCtrl', function($scope, $state, $stateParams, $window, RecipeSrv, CartSrv, StorageSrv, PopupSrv, LogSrv, Utils){
   'use strict';
   // TODO : vocal commands : should go to next step when knock knock (speech recognition)
-  // TODO : should stick active timers on top (or bottom?) of screen if you scroll
+  // TODO : visibe timers : should stick active timers on top (or bottom?) of screen if you scroll
   var cartId = $stateParams.cartId;
   var recipeId = $stateParams.recipeId;
   var startTime, timer = null;
@@ -175,7 +177,12 @@ angular.module('app')
         });
       }
     } else {
-      // TODO error !
+      LogSrv.trackError('notFoundCookRecipe', {
+        message: 'Unable to find cook recipe !',
+        cartId: cartId,
+        recipeId: recipeId
+      });
+      $window.alert('Error: forbidden action !\nCan\'t cook recipe from '+cartId+'/'+recipeId+' !\nPlease contact loicknuchel@gmail.com !')
     }
   }
 

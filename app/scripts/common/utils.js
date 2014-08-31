@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('Utils', function($window, $interval, debug){
+.factory('Utils', function($window, $interval, LogSrv, debug){
   'use strict';
   var service = {
     createUuid: createUuid,
@@ -22,14 +22,15 @@ angular.module('app')
     if(initialServings.unit === finalServings.unit){
       q.value = q.value * finalServings.value / initialServings.value;
     } else {
-      if(debug){
-        console.warn('quantity', quantity);
-        console.warn('initialServings', initialServings);
-        console.warn('finalServings', finalServings);
-        $window.alert('Unable to adjustForServings <'+initialServings.unit+'> => <'+finalServings.unit+'>');
-      } else {
-        //TODO track
-      }
+      var err = {
+        message: 'Quantity <'+quantity.unit+'> can\'t be converting from servings <'+initialServings.unit+'> to servings <'+finalServings.unit+'> !',
+        quantity: angular.copy(quantity),
+        initialServings: angular.copy(initialServings),
+        finalServings: angular.copy(finalServings)
+      };
+      console.warn(err.message, err);
+      LogSrv.trackError('adjustForServings', err);
+      if(debug){$window.alert(err.message);}
     }
     return q;
   }
@@ -53,14 +54,15 @@ angular.module('app')
       q.value += q2.value;
       return q;
     } else {
-      if(debug){
-        if(source){console.warn('source', source);}
-        console.warn('quantitiy 1', q1);
-        console.warn('quantitiy 2', q2);
-        $window.alert('Unable to convert <'+q2.unit+'> to <'+q1.unit+'>'+(source && source.food ? ' on <'+source.food.name+'>' : '')+' !!!');
-      } else {
-        //TODO track
-      }
+      var err = {
+        message: 'Can\'t add quantity <'+q1.unit+'> with quantity <'+q2.unit+'>'+(source && source.food ? ' in <'+source.food.name+'>' : '')+' !',
+        quantity1: angular.copy(q1),
+        quantity2: angular.copy(q2),
+        source: angular.copy(source)
+      };
+      console.warn(err.message, err);
+      LogSrv.trackError('addQuantities', err);
+      if(debug){$window.alert(err.message);}
       return null;
     }
   }

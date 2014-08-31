@@ -8,6 +8,11 @@ angular.module('app')
     getApp: function(){return _get('app');},
     getUser: function(){return _get('user');},
     saveUser: function(user){return _set('user', user);},
+    saveUserSetting: function(setting, value){
+      var user = _get('user');
+      user.settings[setting] = value;
+      _set('user', user);
+    },
     getUserProfiles: function(){return _get('userSocialProfiles');},
     getUserProfile: function(provider){return _get('userSocialProfiles')[provider];},
     saveUserProfiles: function(userProfiles){return _set('userSocialProfiles', userProfiles);},

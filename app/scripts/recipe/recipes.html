@@ -19,11 +19,11 @@
 
     <div class="screen">
       <div class="list">
-        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
+        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': ctx.settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
           <img class="portrait" ng-src="{{recipe.images.portrait}}" ng-click="toggleIngredients(recipe)">
           <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">
-            <div class="price" ng-if="settings.showPrices">
+            <div class="price" ng-if="ctx.settings.showPrices">
               <div class="number">{{recipe.price | price:false}}</div>
               <div class="detail" ng-if="recipe.price.unit">/{{recipe.price.unit}}</div>
             </div>

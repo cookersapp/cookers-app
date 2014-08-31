@@ -17,7 +17,7 @@
               <img ng-src="{{recipe.images.thumbnail}}">
             </div>
             <div class="content">
-              <h2 class="pull-right" ng-if="settings.showPrices">{{recipe.price | price:false:recipe.cartData.servings.value}}</h2>
+              <h2 class="pull-right" ng-if="ctx.settings.showPrices">{{recipe.price | price:false:recipe.cartData.servings.value}}</h2>
               <h2 class="title">{{recipe.name}}</h2>
               <div>{{recipe.cartData.servings | servings}}, {{recipe.time | cookTime}}</div>
               <div>

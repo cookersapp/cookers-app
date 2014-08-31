@@ -134,10 +134,11 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
   'use strict';
   StorageSrv.init();
 
-  // TODO : put in ctx object
-  $rootScope.settings = StorageSrv.getUser().settings;
-  $rootScope.debug = debug;
-  $rootScope.appVersion = appVersion;
+  $rootScope.ctx = {
+    settings: StorageSrv.getUser().settings,
+    debug: debug,
+    appVersion: appVersion
+  };
 
   $ionicPlatform.ready(function(){
     LaunchSrv.launch();

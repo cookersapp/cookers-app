@@ -97,18 +97,16 @@ angular.module('app')
     }
   };
 
-  $scope.$watch('settings.showPrices', function(newValue, oldValue){
+  $scope.$watch('ctx.settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
-      user.settings.showPrices = newValue;
-      StorageSrv.saveUser(user);
+      StorageSrv.saveUserSetting('showPrices', newValue);
       LogSrv.trackChangeSetting('showPrices', newValue);
       LogSrv.registerUser();
     }
   });
-  $scope.$watch('settings.bigImages', function(newValue, oldValue){
+  $scope.$watch('ctx.settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
-      user.settings.bigImages = bigImages;
-      StorageSrv.saveUser(user);
+      StorageSrv.saveUserSetting('bigImages', newValue);
       LogSrv.trackChangeSetting('bigImages', newValue);
       LogSrv.registerUser();
     }
