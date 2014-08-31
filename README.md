@@ -14,10 +14,6 @@
     - optimize recipe images
     
 - TODO
-    - adapter à la nouvelle structure de données :
-        - la catégorie d'un ingréident est un object contenant l'id, le nom, un slug et l'ordre (à la place d'une string !)
-    - loading :
-        - ajouter des loaders comme dans l'admin
     - tracking :
         - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - cook :

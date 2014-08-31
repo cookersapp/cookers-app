@@ -77,4 +77,13 @@ angular.module('app')
       }
     }
   };
+})
+
+// from http://tobiasahlin.com/spinkit/
+.directive('loading', function (){
+  'use strict';
+  return {
+    restrict: 'E',
+    template: '<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>'
+  };
 });

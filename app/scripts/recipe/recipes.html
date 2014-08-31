@@ -8,9 +8,7 @@
 
   <ion-content class="recipes-screen" ng-class="{empty: !(recipesOfWeek && recipesOfWeek.recipes && recipesOfWeek.recipes.length > 0)}">
     <div class="screen-empty">
-      <div ng-if="loading">
-        CHARGEMENT ...
-      </div>
+      <loading ng-if="loading"></loading>
       <div ng-if="!loading">
         Aucune recette planifiée cette semaine :(<br>
         Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.

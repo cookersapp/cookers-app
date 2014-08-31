@@ -113,22 +113,23 @@ angular.module('app')
         $state.go('intro');
       }
       if(previousVersion === '0.2.0' || previousVersion === '0.3.0'){
-        if(app)                                   { var sApp                          = angular.copy(app);                                        }
-        if(user)                                  { var sUser                         = angular.copy(user);                                       }
-        if(sUser && !sUser.data)                  { sUser.data = { skipCookFeatures: false, skipCartFeatures: false };                            }
-        if(sUser)                                 { delete sUser.score;                                                                           }
-        if(sUser)                                 { delete sUser.profiles;                                                                        }
-        if(sUser)                                 { delete sUser.carts;                                                                           }
-        if(sUser)                                 { delete sUser.standaloneCookedRecipes;                                                         }
-        if(user && user.profiles)                 { var sUserSocialProfiles           = angular.copy(user.profiles);                              }
-        if(user && user.carts)                    { var sUserCarts                    = { carts: angular.copy(user.carts) };                      }
-        if(user && user.standaloneCookedRecipes)  { var sUserStandaloneCookedRecipes  = { recipes: angular.copy(user.standaloneCookedRecipes) };  }
-        if(logs && logs.recipesHistory)           { var sUserRecipeHistory            = { recipes: angular.copy(logs.recipesHistory) };           }
-        if(data && data.globalmessage)            { var sDataGlobalmessages           = angular.copy(data.globalmessages);                        }
+        var sApp, sUser, sUserSocialProfiles, sUserCarts, sUserStandaloneCookedRecipes, sUserRecipeHistory, sDataGlobalmessages;
+        if(app)                                   { sApp                          = angular.copy(app);                                        }
+        if(user)                                  { sUser                         = angular.copy(user);                                       }
+        if(sUser && !sUser.data)                  { sUser.data = { skipCookFeatures: false, skipCartFeatures: false };                        }
+        if(sUser)                                 { delete sUser.score;                                                                       }
+        if(sUser)                                 { delete sUser.profiles;                                                                    }
+        if(sUser)                                 { delete sUser.carts;                                                                       }
+        if(sUser)                                 { delete sUser.standaloneCookedRecipes;                                                     }
+        if(user && user.profiles)                 { sUserSocialProfiles           = angular.copy(user.profiles);                              }
+        if(user && user.carts)                    { sUserCarts                    = { carts: angular.copy(user.carts) };                      }
+        if(user && user.standaloneCookedRecipes)  { sUserStandaloneCookedRecipes  = { recipes: angular.copy(user.standaloneCookedRecipes) };  }
+        if(logs && logs.recipesHistory)           { sUserRecipeHistory            = { recipes: angular.copy(logs.recipesHistory) };           }
+        if(data && data.globalmessage)            { sDataGlobalmessages           = angular.copy(data.globalmessages);                        }
 
         _reset();
-        for(var i in localStorageDefault){
-          _set(i, localStorageDefault[i]);
+        for(var j in localStorageDefault){
+          _set(j, localStorageDefault[j]);
         }
 
         if(sApp)                          { _set('app', sApp);                                                  }
