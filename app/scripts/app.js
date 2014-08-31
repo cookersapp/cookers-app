@@ -69,15 +69,6 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
 .constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
 .constant('supportTeamEmail', 'loicknuchel@gmail.com')
 
-.constant('dataList', {
-  foodCategories:   ['Viandes & Poissons', 'Fruits & Légumes', 'Pains & Pâtisseries', 'Frais', 'Surgelés', 'Épicerie salée', 'Épicerie sucrée', 'Boissons', 'Bébé', 'Bio', 'Hygiène & Beauté', 'Entretien & Nettoyage', 'Animalerie', 'Bazar & Textile'],
-  recipeCategories: ['Plat principal', 'Entrée', 'Dessert', 'Vin'],
-  currencies:       ['€'],
-  servingUnits:     ['personnes'],
-  timeUnits:        ['minutes', 'secondes'],
-  quantityUnits:    ['g', 'kg', 'cl', 'litre', 'pièce'],
-  foodRoles:        ['essentiel', 'facultatif', 'assaisonnement', 'accompagnement']
-})
 .constant('unitConversion', [
   {ref: 'g', convert: [
     {unit: 'g', factor: 1},

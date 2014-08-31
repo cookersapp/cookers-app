@@ -102,9 +102,6 @@ angular.module('app')
     LogSrv.trackEditCartCustomItems(customItems);
   };
 
-  $scope.categoryId = function(food){
-    return getSlug(food.category);
-  };
   $scope.isOpened = function(item){
     return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
   };
@@ -304,10 +301,14 @@ angular.module('app')
 
   function _sortItemsByCategory(items){
     items.sort(function(a, b){
-      if(a.food.category > b.food.category){return 1;}
-      else if(a.food.category < b.food.category){return -1;}
-      else if(a.name > b.name){return 1;}
-      else if(a.name < b.name){return -1;}
+      var aCategory = a && a.food && a.food.category && a.food.category.order ? a.food.category.order : 50;
+      var bCategory = b && b.food && b.food.category && b.food.category.order ? b.food.category.order : 50;
+      var aName = a && a.name ? a.name.toLowerCase() : '';
+      var bName = b && b.name ? b.name.toLowerCase() : '';
+      if(aCategory > bCategory){return 1;}
+      else if(aCategory < bCategory){return -1;}
+      else if(aName > bName){return 1;}
+      else if(aName < bName){return -1;}
       else {return 0;}
     });
   }
