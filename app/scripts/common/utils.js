@@ -1,4 +1,4 @@
-angular.module('app.utils', [])
+angular.module('app')
 
 .factory('Utils', function($window, $interval, debug){
   'use strict';

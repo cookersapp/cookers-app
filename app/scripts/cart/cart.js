@@ -1,4 +1,4 @@
-angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage'])
+angular.module('app')
 
 .config(function($stateProvider){
   'use strict';
@@ -80,14 +80,15 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, UserSrv, PopupSrv, FirebaseSrv, dataList, LogSrv){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, FirebaseSrv, dataList, LogSrv){
   'use strict';
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
-  var sUser = UserSrv.get();
-  if(!(sUser && sUser.data && sUser.data.skipCartFeatures)){
+  var user = StorageSrv.getUser();
+  if(!(user && user.data && user.data.skipCartFeatures)){
     PopupSrv.tourCartFeatures().then(function(){
-      sUser.data.skipCartFeatures = true;
+      user.data.skipCartFeatures = true;
+      StorageSrv.saveUser(user);
     });
   }
 
@@ -97,6 +98,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   $scope.customItemsEdited = function(customItems){
     cart.customItems = customItems;
+    StorageSrv.saveCart(cart);
     LogSrv.trackEditCartCustomItems(customItems);
   };
 
@@ -136,10 +138,10 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   };
 })
 
-.factory('CartSrv', function($localStorage, _CartBuilder, _CartUtils){
+.factory('CartSrv', function(StorageSrv, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
-    getCarts: sCarts,
+    getCarts: StorageSrv.getCarts,
     hasOpenedCarts: hasOpenedCarts,
     getOpenedCarts: getOpenedCarts,
     getCart: getCart,
@@ -152,7 +154,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     itemsFromOpenedCarts: itemsFromOpenedCarts,
     getRecipesToCook: getRecipesToCook,
     getCookedRecipes: getCookedRecipes,
-    addStandaloneCookedRecipe: addStandaloneCookedRecipe,
+    addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe,
 
     getItems: getItems,
     hasRecipe: hasRecipe,
@@ -165,22 +167,16 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
     boughtPercentage: _CartUtils.boughtPercentage
   };
 
-  function sCarts(){return $localStorage.user.carts;}
-  function sStandaloneCookedRecipes(){
-    if(!$localStorage.user.standaloneCookedRecipes){$localStorage.user.standaloneCookedRecipes = [];}
-    return $localStorage.user.standaloneCookedRecipes;
-  }
-
   function hasOpenedCarts(){
-    return _.findIndex(sCarts(), {archived: false}) > -1;
+    return _.findIndex(StorageSrv.getCarts(), {archived: false}) > -1;
   }
 
   function getOpenedCarts(){
-    return _.filter(sCarts(), {archived: false});
+    return _.filter(StorageSrv.getCarts(), {archived: false});
   }
 
   function getCart(id){
-    return _.find(sCarts(), {id: id});
+    return _.find(StorageSrv.getCarts(), {id: id});
   }
 
   function getCartRecipe(cartId, recipeId){
@@ -190,7 +186,7 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
 
   function createCart(name){
     var cart = _CartBuilder.createCart(name);
-    sCarts().unshift(cart);
+    StorageSrv.addCart(cart);
     return cart;
   }
 
@@ -214,18 +210,14 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   }
 
   function getRecipesToCook(){
-    var recipes = _recipesFromCarts(sCarts());
+    var recipes = _recipesFromCarts(StorageSrv.getCarts());
     return _.filter(recipes, {cartData: {cooked: false}});
   }
 
   function getCookedRecipes(){
-    var recipes = _recipesFromCarts(sCarts());
+    var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
-    return cartCookedRecipes.concat(sStandaloneCookedRecipes());
-  }
-
-  function addStandaloneCookedRecipe(recipe){
-    sStandaloneCookedRecipes().push(recipe);
+    return cartCookedRecipes.concat(StorageSrv.getStandaloneCookedRecipes());
   }
 
   function getItems(cart){
@@ -239,20 +231,24 @@ angular.module('app.cart', ['app.utils', 'app.logger', 'ui.router', 'ngStorage']
   function addRecipe(cart, recipe, servings){
     var r = _CartBuilder.createRecipe(cart, recipe, servings);
     cart.recipes.push(r);
+    StorageSrv.saveCart(cart);
   }
 
   function removeRecipe(cart, recipe){
     _.remove(cart.recipes, {id: recipe.id});
+    StorageSrv.saveCart(cart);
   }
 
   function buyItem(cart, item, bought){
     _.map(item.sources, function(source){
       source.ingredient.bought = bought;
     });
+    StorageSrv.saveCart(cart);
   }
 
   function archive(cart){
     cart.archived = true;
+    StorageSrv.saveCart(cart);
   }
 
   function _recipesFromCarts(carts){

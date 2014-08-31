@@ -1,4 +1,4 @@
-angular.module('app.launch', ['app.utils', 'ui.router'])
+angular.module('app')
 
 .config(function($stateProvider){
   'use strict';
@@ -31,51 +31,39 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $localStorage, $ionicPlatform, LogSrv, Utils, firebaseUrl, debug){
+.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, StorageSrv, LogSrv, Utils, firebaseUrl, debug){
   'use strict';
   var service = {
     launch: function(){
-      if(sUser() && sUser().device && sUser().device.uuid){
+      var user = StorageSrv.getUser();
+      if(user && user.device && user.device.uuid){
         launch();
       } else {
         firstLaunch();
       }
     }
   };
-  
-  function sUser(){return $localStorage.user;}
 
   function firstLaunch(){
     $ionicPlatform.ready(function(){
-      sUser().device = Utils.getDevice();
-      LogSrv.identify(sUser().device.uuid);
+      var user = StorageSrv.getUser();
+      user.device = Utils.getDevice();
+      StorageSrv.saveUser(user);
+      LogSrv.identify(user.device.uuid);
       LogSrv.registerUser();
-      LogSrv.trackInstall(sUser().device.uuid);
+      LogSrv.trackInstall(user.device.uuid);
       launch();
     });
   }
 
   function launch(){
-    LogSrv.identify(sUser().device.uuid);
+    var user = StorageSrv.getUser();
+    LogSrv.identify(user.device.uuid);
 
     // INIT is defined in top of index.html
     var launchTime = Date.now()-INIT;
     if(debug && ionic.Platform.isWebView()){$window.plugins.toast.show('Application started in '+launchTime+' ms');}
-    LogSrv.trackLaunch(sUser().device.uuid, launchTime);
-
-    // manage user presence in firebase
-    var firebaseRef = new Firebase(firebaseUrl+'/connected');
-    var lightUser = angular.copy(sUser());
-    delete lightUser.carts;
-    var userRef = firebaseRef.push(lightUser);
-    userRef.onDisconnect().remove();
-
-    navigator.geolocation.getCurrentPosition(function(position){
-      $localStorage.logs.launchs.unshift(position);
-    }, function(error){
-      error.timestamp = Date.now();
-      $localStorage.logs.launchs.unshift(error);
-    });
+    LogSrv.trackLaunch(user.device.uuid, launchTime);
 
     // track state changes
     var lastStateChange = Date.now();
@@ -115,7 +103,7 @@ angular.module('app.launch', ['app.utils', 'ui.router'])
     // If logged, login state is forbidden !
     // If not logged, all states except intro & login are forbidden !
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-      if(sUser().isLogged){
+      if(StorageSrv.getUser().isLogged){
         if(toState.data && toState.data.restrict && toState.data.restrict === 'notConnected'){
           event.preventDefault();
           console.log('Not allowed to go to '+toState.name+' (you are connected !)');

@@ -1,4 +1,4 @@
-angular.module('app.auth', ['ui.router'])
+angular.module('app')
 
 .config(function($stateProvider){
   'use strict';
@@ -22,11 +22,10 @@ angular.module('app.auth', ['ui.router'])
   });
 })
 
-.controller('LoginCtrl', function($scope, $state, $window, PopupSrv, UserSrv, LoginSrv, WeekrecipeSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, $window, PopupSrv, UserSrv, LoginSrv, SelectionSrv, LogSrv){
   'use strict';
-  WeekrecipeSrv.getCurrent().then(function(recipesOfWeek){
-    // this is only to preload recipes of week at first launch !
-  });
+  // this is only to preload selection of recipes at first launch !
+  SelectionSrv.getCurrent();
 
   $scope.credentials = {
     email: '',
@@ -90,10 +89,10 @@ angular.module('app.auth', ['ui.router'])
   }
 })
 
-.factory('LoginSrv', function($rootScope, $q, $timeout, $localStorage, $firebaseSimpleLogin, UserSrv, LogSrv, firebaseUrl){
+.factory('LoginSrv', function($rootScope, $q, $timeout, StorageSrv, $firebaseSimpleLogin, UserSrv, firebaseUrl){
   'use strict';
   var service = {
-    isLogged: function(){return sUser().isLogged;},
+    isLogged: function(){return StorageSrv.getUser().isLogged;},
     register: register,
     login: login,
     facebookConnect: facebookConnect,
@@ -101,8 +100,6 @@ angular.module('app.auth', ['ui.router'])
     googleConnect: googleConnect,
     logout: logout
   };
-
-  function sUser(){return $localStorage.user;}
 
   var firebaseRef = new Firebase(firebaseUrl);
   var firebaseAuth = $firebaseSimpleLogin(firebaseRef);
@@ -139,8 +136,9 @@ angular.module('app.auth', ['ui.router'])
     var opts = {
       scope: 'email'
     };
-    if(sUser() && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
-      opts.access_token = sUser().profiles[provider].accessToken;
+    var socialProfile = StorageSrv.getUserProfile(provider);
+    if(socialProfile && socialProfile.accessToken){
+      opts.access_token = socialProfile.accessToken;
     }
     return connect(provider, opts);
   }
@@ -148,10 +146,11 @@ angular.module('app.auth', ['ui.router'])
   function twitterConnect(){
     var provider = 'twitter';
     var opts = {};
-    if(sUser() && sUser().profiles && sUser().profiles[provider] && sUser().profiles[provider].accessToken){
-      opts.oauth_token = sUser().profiles[provider].accessToken;
-      opts.oauth_token_secret = sUser().profiles[provider].accessTokenSecret;
-      opts.user_id = sUser().profiles[provider].id;
+    var socialProfile = StorageSrv.getUserProfile(provider);
+    if(socialProfile && socialProfile.accessToken){
+      opts.oauth_token = socialProfile.accessToken;
+      opts.oauth_token_secret = socialProfile.accessTokenSecret;
+      opts.user_id = socialProfile.id;
     }
     return connect(provider, opts);
   }
@@ -174,33 +173,40 @@ angular.module('app.auth', ['ui.router'])
 
     // disconnect after 1 sec even if firebase doesn't answer !
     logoutTimeout = $timeout(function(){
-      sUser().isLogged = false;
+      var user = StorageSrv.getUser();
+      user.isLogged = false;
+      StorageSrv.saveUser(user);
       logoutDefer.resolve();
     }, 1000);
 
     return logoutDefer.promise;
   }
 
-  $rootScope.$on('$firebaseSimpleLogin:login', function(event, user){
+  $rootScope.$on('$firebaseSimpleLogin:login', function(event, userData){
     if(loginDefer){
-      sUser().isLogged = true;
-      sUser().loggedWith = loginMethod;
-      sUser().profiles[loginMethod] = user;
-      UserSrv.updateProfile();
+      var user = StorageSrv.getUser();
+      var userProfiles = StorageSrv.getUserProfiles();
+      user.isLogged = true;
+      user.loggedWith = loginMethod;
+      userProfiles[loginMethod] = userData;
+      StorageSrv.saveUserProfiles(userProfiles);
+      UserSrv.updateUserProfile(user, userProfiles);
       loginDefer.resolve(user);
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:logout', function(event){
     if(logoutDefer){
-      sUser().isLogged = false;
       $timeout.cancel(logoutTimeout);
+      var user = StorageSrv.getUser();
+      user.isLogged = false;
+      StorageSrv.saveUser(user);
       logoutDefer.resolve();
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:error', function(event, error){
     var err = { provider: loginMethod };
     if(error.code){err.code = error.code;}
-    err.message = error.message ? error.message.replace('FirebaseSimpleLogin: ', '') : '';
+    err.message = error.message ? error.message.replace('FirebaseSimpleLogin: ', '') : 'Unexpected error occur :(';
     if(loginDefer){loginDefer.reject(err);}
     if(logoutDefer){logoutDefer.reject(err);}
   });

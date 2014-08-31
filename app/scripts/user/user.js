@@ -1,4 +1,4 @@
-angular.module('app.user', ['ui.router'])
+angular.module('app')
 
 .config(function($stateProvider){
   'use strict';
@@ -32,7 +32,7 @@ angular.module('app.user', ['ui.router'])
 
 .controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, LogSrv){
   'use strict';
-  var sUser = UserSrv.get();
+  var user = StorageSrv.getUser();
 
   var covers = [
     'images/profile-covers/cover01.jpg',
@@ -60,24 +60,25 @@ angular.module('app.user', ['ui.router'])
     'images/profile-covers/cover23.jpg',
     'images/profile-covers/cover24.jpg'
   ];
-  if(!gravatarCoverIsInCovers(sUser, covers) && getGravatarCover(sUser)){ covers.unshift(getGravatarCover(sUser)); }
+  if(!gravatarCoverIsInCovers(user, covers) && getGravatarCover(user)){ covers.unshift(getGravatarCover(user)); }
   var currentCover = -1;
   $scope.changeCover = function(){
     currentCover = (currentCover+1)%covers.length;
-    sUser.backgroundCover = covers[currentCover];
-    LogSrv.trackChangeSetting('profileCover', sUser.backgroundCover);
+    user.backgroundCover = covers[currentCover];
+    StorageSrv.saveUser(user);
+    LogSrv.trackChangeSetting('profileCover', user.backgroundCover);
     LogSrv.registerUser();
   };
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache(sUser.device.uuid);
+      LogSrv.trackClearCache(user.device.uuid);
       StorageSrv.clearCache();
     }
   };
   $scope.logout = function(){
     LoginSrv.logout().then(function(){
-      LogSrv.trackLogout(sUser.device.uuid);
+      LogSrv.trackLogout(user.device.uuid);
       $state.go('login');
     }, function(error){
       LogSrv.trackError('logout', error);
@@ -86,7 +87,7 @@ angular.module('app.user', ['ui.router'])
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp(sUser.device.uuid);
+      LogSrv.trackClearApp(user.device.uuid);
       StorageSrv.clear();
       if(navigator.app){
         navigator.app.exitApp();
@@ -98,12 +99,16 @@ angular.module('app.user', ['ui.router'])
 
   $scope.$watch('settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
+      user.settings.showPrices = newValue;
+      StorageSrv.saveUser(user);
       LogSrv.trackChangeSetting('showPrices', newValue);
       LogSrv.registerUser();
     }
   });
   $scope.$watch('settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
+      user.settings.bigImages = bigImages;
+      StorageSrv.saveUser(user);
       LogSrv.trackChangeSetting('bigImages', newValue);
       LogSrv.registerUser();
     }
@@ -129,12 +134,12 @@ angular.module('app.user', ['ui.router'])
   }
 })
 
-.controller('FeedbackCtrl', function($scope, $stateParams, $window, AppSrv, UserSrv, EmailSrv, LogSrv){
+.controller('FeedbackCtrl', function($scope, $stateParams, $window, AppSrv, UserSrv, StorageSrv, EmailSrv, LogSrv){
   'use strict';
-  var sApp = AppSrv.get();
-  var sUser = UserSrv.get();
+  var app = StorageSrv.getApp();
+  var user = StorageSrv.getUser();
   $scope.feedback = {
-    email: sUser.email,
+    email: user.email,
     content: '',
     sending: false,
     sent: false
@@ -157,7 +162,7 @@ angular.module('app.user', ['ui.router'])
         $window.alert('Echec de l\'envoi du email. Réessayez !');
       }
     });
-    if(sUser.email !== $scope.feedback.email){
+    if(user.email !== $scope.feedback.email){
       LogSrv.trackSetEmail($scope.feedback.email);
       UserSrv.setEmail($scope.feedback.email).then(function(){
         LogSrv.registerUser();
@@ -175,76 +180,81 @@ angular.module('app.user', ['ui.router'])
     trigger_background_color: '#f62'
   }]);
   var identity = {};
-  if(sUser && sUser.email){identity.email = sUser.email;}
-  if(sUser && sUser.name){identity.name = sUser.name;}
-  if(sApp && sApp.firstLaunch){identity.created_at = sApp.firstLaunch/1000;}
-  if(sUser && sUser.device && sUser.device.uuid){identity.id = sUser.device.uuid;}
+  if(user && user.email)                      { identity.email      = user.email;           }
+  if(user && user.name)                       { identity.name       = user.name;            }
+  if(app && app.firstLaunch)                  { identity.created_at = app.firstLaunch/1000; }
+  if(user && user.device && user.device.uuid) { identity.id         = user.device.uuid;     }
   UserVoice.push(['identify', identity]);
   UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
   UserVoice.push(['autoprompt', {}]);
 })
 
-.factory('UserSrv', function($q, $localStorage, $http, localStorageDefault, md5){
+.factory('UserSrv', function($q, StorageSrv, $http, localStorageDefault, md5){
   'use strict';
   var service = {
-    get: sUser,
     hasMail: hasMail,
     setEmail: setEmail,
-    updateProfile: updateProfile
+    updateUserProfile: updateUserProfile
   };
 
-  function sUser(){return $localStorage.user;}
-
   function hasMail(){
-    return sUser() && sUser().email && sUser().email.length > 0;
+    var user = StorageSrv.getUser();
+    return user && user.email && user.email.length > 0;
   }
 
   function setEmail(email){
-    sUser().email = email;
+    var user = StorageSrv.getUser();
+    user.email = email;
+    StorageSrv.saveUser(user);
     if(email){
-      return _updateGravatar(email).then(function(){
-        updateProfile();
-      });
+      return _updateGravatar(email);
     } else {
       return $q.when();
     }
   }
 
-  function updateProfile(){
+  function updateUserProfile(user, userProfiles){
     var defaultProfile = _defaultProfile();
-    var gravatarProfile = _gravatarProfile(sUser().profiles.gravatar);
-    var passwordProfile = _passwordProfile(sUser().profiles.password);
-    var twitterProfile = _twitterProfile(sUser().profiles.twitter);
-    var facebookProfile = _facebookProfile(sUser().profiles.facebook);
-    var googleProfile = _googleProfile(sUser().profiles.google);
+    var gravatarProfile = _gravatarProfile(userProfiles.gravatar);
+    var passwordProfile = _passwordProfile(userProfiles.password);
+    var twitterProfile = _twitterProfile(userProfiles.twitter);
+    var facebookProfile = _facebookProfile(userProfiles.facebook);
+    var googleProfile = _googleProfile(userProfiles.google);
 
-    angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
-    angular.extend(sUser().more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
+    angular.extend(user, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+    angular.extend(user.more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
 
-    if(sUser().email !== gravatarProfile.email){
-      _updateGravatar(sUser().email).then(function(){
-        var gravatarProfile = _gravatarProfile(sUser().profiles.gravatar);
-        angular.extend(sUser(), defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
-        angular.extend(sUser().more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
+    if(user.email !== gravatarProfile.email){
+      _updateGravatar(user.email).then(function(){
+        var gravatarProfile = StorageSrv.getUserProfile('gravatar');
+        angular.extend(user, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
+        angular.extend(user.more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
+        StorageSrv.saveUser(user);
       });
     }
+    StorageSrv.saveUser(user);
   }
 
   function _updateGravatar(email){
     if(email && email.length > 0){
       var hash = md5.createHash(email);
+      var user = StorageSrv.getUser();
+      var userProfiles = StorageSrv.getUserProfiles();
+      userProfiles.gravatar = {
+        entry: [
+          {email: email, hash: hash}
+        ]
+      };
+
       return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
         var g = result.data;
         if(g && g.entry && g.entry.length > 0){
           g.entry[0].email = email;
+          userProfiles.gravatar = g;
         }
-        sUser().profiles.gravatar = g;
-      }, function(error){
-        sUser().profiles.gravatar = {
-          entry: [
-            {email: email, hash: hash}
-          ]
-        };
+      }).then(function(){
+        StorageSrv.saveUserProfiles(userProfiles);
+        updateUserProfile(user, userProfiles);
       });
     } else {
       return $q.when();

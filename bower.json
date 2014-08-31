@@ -33,7 +33,6 @@
     "ionic": "1.0.0-beta.11",
     "ngCordova": "~0.1.2-alpha",
     "font-awesome": "~4.1.0",
-    "ngstorage": "~0.3.0",
     "moment": "~2.7.0",
     "lodash": "~2.4.1",
     "firebase": "~1.0.17",

@@ -3,7 +3,7 @@ angular.module('app')
 .filter('date', function(){
   'use strict';
   return function(timestamp, format){
-    return timestamp ? moment(timestamp).format(format ? format : 'LL') : '<date>';
+    return timestamp ? moment(timestamp).format(format ? format : 'll') : '<date>';
   };
 })
 

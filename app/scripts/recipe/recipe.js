@@ -1,4 +1,4 @@
-angular.module('app.recipe', ['app.utils', 'ui.router'])
+angular.module('app')
 
 .config(function($stateProvider){
   'use strict';
@@ -67,11 +67,11 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, PopupSrv, WeekrecipeSrv, RecipeSrv, CartSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, $window, PopupSrv, SelectionSrv, RecipeSrv, CartSrv, LogSrv){
   'use strict';
   $scope.loading = true;
   $scope.recipesOfWeek = {};
-  WeekrecipeSrv.getCurrent().then(function(recipesOfWeek){
+  SelectionSrv.getCurrent().then(function(recipesOfWeek){
     $scope.recipesOfWeek = recipesOfWeek;
     $scope.loading = false;
   });
@@ -88,7 +88,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   $scope.addRecipeToCart = function(recipe, index){
     PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
-        LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'weekrecipes');
+        LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'selection');
         $rootScope.settings.defaultServings = servings;
         CartSrv.addRecipe(cart, recipe, servings);
         $window.plugins.toast.show('✔ recette ajoutée à la liste de courses');
@@ -97,7 +97,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     });
   };
   $scope.removeRecipeFromCart = function(recipe, index){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'weekrecipes');
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'selection');
     CartSrv.removeRecipe(cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
@@ -139,7 +139,7 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $window, RecipeSrv, CartSrv, UserSrv, PopupSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, RecipeSrv, CartSrv, StorageSrv, PopupSrv, LogSrv, Utils){
   'use strict';
   // TODO : vocal commands : should go to next step when knock knock (speech recognition)
   // TODO : should stick active timers on top (or bottom?) of screen if you scroll
@@ -164,12 +164,13 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
       $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
       $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
 
-      var sUser = UserSrv.get();
-      if(sUser && sUser.data && sUser.data.skipCookFeatures){
+      var user = StorageSrv.getUser();
+      if(user && user.data && user.data.skipCookFeatures){
         startTimer();
       } else {
         PopupSrv.tourCookFeatures().then(function(){
-          sUser.data.skipCookFeatures = true;
+          user.data.skipCookFeatures = true;
+          StorageSrv.saveUser(user);
           startTimer();
         });
       }
@@ -275,20 +276,16 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
   });
 })
 
-.factory('RecipeSrv', function($http, $q, $localStorage, firebaseUrl){
+.factory('RecipeSrv', function($http, $q, StorageSrv, firebaseUrl){
   'use strict';
   var service = {
     get: getRecipe,
-    addToHistory: addToHistory,
-    getHistory: function(){return sRecipesHistory();},
-    store: storeRecipe
+    addToHistory: StorageSrv.addRecipeToHistory,
+    getHistory: StorageSrv.getRecipeHistory
   };
 
-  function sRecipes(){return $localStorage.data.recipes;}
-  function sRecipesHistory(){return $localStorage.logs.recipesHistory;}
-
   function getRecipe(recipeId){
-    var recipe = _.find(sRecipes(), {id: recipeId});
+    var recipe = StorageSrv.getRecipe(recipeId);
     if(recipe){
       return $q.when(recipe);
     } else {
@@ -296,56 +293,55 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
     }
   }
 
-  function addToHistory(recipe){
-    _.remove(sRecipesHistory(), {id: recipe.id});
-    sRecipesHistory().unshift(recipe);
-  }
-
   function downloadRecipe(recipeId){
+    // TODO : create BackendSrv !!!
     return $http.get(firebaseUrl+'/recipes/'+recipeId+'.json').then(function(result){
-      storeRecipe(result.data);
+      StorageSrv.addRecipe(result.data);
       return result.data;
     });
-  }
-
-  function storeRecipe(recipe){
-    sRecipes().push(recipe);
   }
 
   return service;
 })
 
-.factory('WeekrecipeSrv', function($http, $q, $localStorage, firebaseUrl, RecipeSrv, debug){
+.factory('SelectionSrv', function($http, $q, StorageSrv, firebaseUrl, RecipeSrv, debug){
   'use strict';
   var service = {
-    getCurrent: function(){ return getRecipesOfWeek(moment().week()+(debug ? 1 : 0)); },
-    get: getRecipesOfWeek,
-    store: storeRecipesOfWeek
+    getCurrent: function(){ return getSelection(moment().week()+(debug ? 1 : 0)); }
   };
 
-  function sRecipesOfWeek(){return $localStorage.data.recipesOfWeek;}
-
-  function getRecipesOfWeek(week){
-    var weekrecipes = _.find(sRecipesOfWeek(), {id: week.toString()});
-    if(weekrecipes){
-      return $q.when(weekrecipes);
+  function getSelection(selectionId){
+    var selection = StorageSrv.getSelection(selectionId);
+    if(selection){
+      return $q.when(selection);
     } else {
-      return downloadRecipesOfWeek(week);
+      return downloadSelection(selectionId);
     }
   }
 
-  function downloadRecipesOfWeek(week){
-    return $http.get(firebaseUrl+'/weekrecipes/'+week+'.json').then(function(result){
-      storeRecipesOfWeek(result.data);
-      for(var i in result.data.recipes){
-        RecipeSrv.store(result.data.recipes[i]);
-      }
-      return result.data;
+  function downloadSelection(selectionId){
+    // TODO : create BackendSrv !!!
+    return $http.get(firebaseUrl+'/selections/'+selectionId+'.json').then(function(result){
+      return fullLoad(result.data);
+    }).then(function(selection){
+      StorageSrv.addSelection(selection);
+      return selection;
     });
   }
 
-  function storeRecipesOfWeek(weekrecipes){
-    sRecipesOfWeek().push(weekrecipes);
+  function fullLoad(selection){
+    if(selection && selection.recipes){
+      var recipePromises = [];
+      for(var i in selection.recipes){
+        recipePromises.push(RecipeSrv.get(selection.recipes[i].id));
+      }
+      return $q.all(recipePromises).then(function(recipes){
+        selection.recipes = recipes;
+        return selection;
+      });
+    } else {
+      return $q.when(selection);
+    }
   }
 
   return service;
@@ -474,16 +470,10 @@ angular.module('app.recipe', ['app.utils', 'ui.router'])
         }
       }
 
-      function stepNearlyReached(step){ console.log('stepNearlyReached(step)', step); }
-      function stepReached(step){
-        console.log('stepReached(step)', step);
-        playShortAlarm();
-      }
-      function timerNearlyEnds(){ console.log('timerNearlyEnds()'); }
-      function timerEnds(){
-        console.log('timerEnds()');
-        startAlarm();
-      }
+      function stepNearlyReached(step){}
+      function stepReached(step){ playShortAlarm(); }
+      function timerNearlyEnds(){}
+      function timerEnds(){ startAlarm(); }
     }
   };
 });

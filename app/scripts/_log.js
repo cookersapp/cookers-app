@@ -142,7 +142,7 @@ var Logger = (function(){
 
   function getUserMailIfSetted(){
     if(localStorage){
-      var user = JSON.parse(localStorage.getItem('ngStorage-user'));
+      var user = JSON.parse(localStorage.getItem('ionic-user'));
       if(user && user.email){
         return user.email;
       }

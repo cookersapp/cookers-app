@@ -1,25 +1,12 @@
 angular.module('app')
 
-.factory('AppSrv', function($localStorage){
-  'use strict';
-  var service = {
-    get: sApp,
-  };
-
-  function sApp(){return $localStorage.app;}
-
-  return service;
-})
-
-.factory('GlobalMessageSrv', function($q, $http, $localStorage, firebaseUrl, debug, appVersion){
+.factory('GlobalMessageSrv', function($q, $http, StorageSrv, firebaseUrl, debug, appVersion){
   'use strict';
   var service = {
     getStandardMessageToDisplay: getStandardMessageToDisplay,
     getStickyMessages: getStickyMessages,
     execMessages: execMessages
   };
-
-  function sGlobalmessages(){return $localStorage.data ? $localStorage.data.globalmessages : null;}
 
   function getStandardMessageToDisplay(){
     var type = 'standard';
@@ -56,38 +43,38 @@ angular.module('app')
   }
 
   function findMessages(type){
-    return _.filter(sGlobalmessages().messages, function(msg){
+    return _.filter(StorageSrv.getGlobalMessages().messages, function(msg){
       return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function findMessage(type){
-    return _.find(sGlobalmessages().messages, function(msg){
+    return _.find(StorageSrv.getGlobalMessages().messages, function(msg){
       return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
     });
   }
 
   function fetchMessages(){
-    sGlobalmessages().lastCall = Date.now();
+    StorageSrv.getGlobalMessages().lastCall = Date.now();
     return $http.get(firebaseUrl+'/globalmessages.json').then(function(result){
       var messages = _.filter(result.data, function(msg){
         return msg && (msg.isProd || debug) && msg.targets && msg.targets.indexOf(appVersion) > -1 && !messageExists(msg);
       });
-      sGlobalmessages().messages = sGlobalmessages().messages.concat(messages);
+      StorageSrv.getGlobalMessages().messages = StorageSrv.getGlobalMessages().messages.concat(messages);
       // sort chronogically
-      sGlobalmessages().messages.sort(function(a,b){
+      StorageSrv.getGlobalMessages().messages.sort(function(a,b){
         return a.created - b.created;
       });
     });
   }
 
   function execMessage(fn, message){
-    var user = $localStorage.user;
+    var user = StorageSrv.getUser();
     return eval(fn);
   }
 
   function messageExists(message){
-    return message && message.created && _.findIndex(sGlobalmessages().messages, {created: message.created}) > -1;
+    return message && message.created && _.findIndex(StorageSrv.getGlobalMessages().messages, {created: message.created}) > -1;
   }
 
   return service;
@@ -100,36 +87,6 @@ angular.module('app')
       new Firebase(firebaseUrl+endpoint).push(data);
     }
   };
-
-  return service;
-})
-
-.factory('StorageSrv', function($localStorage, $window, $state, localStorageDefault){
-  'use strict';
-  var service = {
-    clearCache: function(){
-      $localStorage.data = localStorageDefault.data;
-    },
-    clear: function(){
-      $localStorage.$reset(localStorageDefault);
-    },
-    migrate: migrate
-  };
-
-  function migrate(previousVersion, nextVersion){
-    if(previousVersion === '0.1.0'){
-      $localStorage.$reset(localStorageDefault);
-      $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
-      $state.go('intro');
-    }
-    if(previousVersion === '0.2.0'){
-      if(!$localStorage.user.data){$localStorage.user.data = {};}
-      if(!$localStorage.logs.events){$localStorage.logs.events = [];}
-    }
-    if(previousVersion === '0.2.0' || previousVersion === '0.3.0'){
-      delete $localStorage.user.score;
-    }
-  }
 
   return service;
 })

@@ -1,6 +1,6 @@
-angular.module('app.logger', [])
+angular.module('app')
 
-.factory('LogSrv', function($timeout, $window, $localStorage, appVersion){
+.factory('LogSrv', function($timeout, $window, StorageSrv, appVersion){
   'use strict';
   var service = {
     identify: Logger.identify,
@@ -35,9 +35,6 @@ angular.module('app.logger', [])
   };
   var previousEventId = null;
 
-  function sApp(){return $localStorage.app;}
-  function sUser(){return $localStorage.user;}
-
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
       var timeoutGeoloc = $timeout(function(){
@@ -64,16 +61,17 @@ angular.module('app.logger', [])
   }
 
   function track(event, properties){
+    var user = StorageSrv.getUser();
     if(!properties){properties = {};}
     properties.appVersion = appVersion;
-    if(!properties.email && sUser() && sUser().email){properties.email = sUser().email;}
-    if(sUser() && sUser().device){
-      if(!properties.uuid && sUser().device.uuid){properties.uuid = sUser().device.uuid;}
-      if(!properties.device && sUser().device.model && sUser().device.platform && sUser().device.version){
+    if(!properties.email && user && user.email){properties.email = user.email;}
+    if(user && user.device){
+      if(!properties.uuid && user.device.uuid){properties.uuid = user.device.uuid;}
+      if(!properties.device && user.device.model && user.device.platform && user.device.version){
         properties.device = {
-          model: sUser().device.model,
-          platform: sUser().device.platform,
-          version: sUser().device.version
+          model: user.device.model,
+          platform: user.device.platform,
+          version: user.device.version
         };
       }
     }
@@ -82,27 +80,28 @@ angular.module('app.logger', [])
   }
 
   function registerUser(){
+    var user = StorageSrv.getUser();
     var userProfile = {
-      $created: moment(sApp().firstLaunch).format('llll'),
-      $email: sUser().email,
-      $first_name: sUser().firstName,
-      $last_name: sUser().lastName,
-      fullName: sUser().name,
-      avatar: sUser().avatar,
-      backgroundCover: sUser().backgroundCover,
+      $created: moment(StorageSrv.getApp().firstLaunch).format('llll'),
+      $email: user.email,
+      $first_name: user.firstName,
+      $last_name: user.lastName,
+      fullName: user.name,
+      avatar: user.avatar,
+      backgroundCover: user.backgroundCover,
       appVersion: appVersion
     };
-    if(sUser().device){
-      if(sUser().device.uuid)     { userProfile['device.uuid']       = sUser().device.uuid;      }
-      if(sUser().device.model)    { userProfile['device.model']      = sUser().device.model;     }
-      if(sUser().device.platform) { userProfile['device.platform']   = sUser().device.platform;  }
-      if(sUser().device.version)  { userProfile['device.version']    = sUser().device.version;   }
+    if(user.device){
+      if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
+      if(user.device.model)    { userProfile['device.model']      = user.device.model;     }
+      if(user.device.platform) { userProfile['device.platform']   = user.device.platform;  }
+      if(user.device.version)  { userProfile['device.version']    = user.device.version;   }
     }
-    for(var i in sUser().more){
-      userProfile['more.'+i] = sUser().more[i];
+    for(var i in user.more){
+      userProfile['more.'+i] = user.more[i];
     }
-    for(var j in sUser().settings){
-      userProfile['setting.'+j] = sUser().settings[j];
+    for(var j in user.settings){
+      userProfile['setting.'+j] = user.settings[j];
     }
 
     Logger.setProfile(userProfile);

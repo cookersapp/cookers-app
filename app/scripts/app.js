@@ -1,4 +1,4 @@
-angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.user', 'ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'ngStorage', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'angular-md5', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide, debug){
   'use strict';
@@ -76,8 +76,7 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
   servingUnits:     ['personnes'],
   timeUnits:        ['minutes', 'secondes'],
   quantityUnits:    ['g', 'kg', 'cl', 'litre', 'pièce'],
-  foodRoles:        ['essentiel', 'secondaire', 'accompagnement', 'facultatif'],
-  days:             ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+  foodRoles:        ['essentiel', 'facultatif', 'assaisonnement', 'accompagnement']
 })
 .constant('unitConversion', [
   {ref: 'g', convert: [
@@ -108,9 +107,6 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
     lastName: '',
     more: {},
     device: {},
-    profiles: {},
-    carts: [],
-    standaloneCookedRecipes: [],
     settings: {
       defaultServings: 2,
       showPrices: false,
@@ -121,37 +117,25 @@ angular.module('app', ['app.launch', 'app.auth', 'app.cart', 'app.recipe', 'app.
       skipCartFeatures: false
     }
   },
-  data: {
-    foods: [],
-    recipes: [],
-    recipesOfWeek: [],
-    globalmessages: {
-      lastCall: null,
-      messages: []
-    }
-  },
-  logs: {
-    recipesHistory: [],
-    launchs: [],
-    events: []
+  userSocialProfiles: {},
+  userCarts: { carts: [] },
+  userStandaloneCookedRecipes: { recipes: [] },
+  userRecipeHistory: { recipes: [] },
+  dataFoods: { foods: {} },
+  dataRecipes: { recipes: {} },
+  dataSelections: { selections: {} },
+  dataGlobalmessages: {
+    lastCall: null,
+    messages: []
   }
 })
 
-.run(function($rootScope, $location, $localStorage, $ionicPlatform, localStorageDefault, LaunchSrv, StorageSrv, appVersion, debug){
+.run(function($rootScope, $location, $ionicPlatform, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
-  if(!$localStorage.app){$localStorage.app = localStorageDefault.app;}
-  if(!$localStorage.user){$localStorage.user = localStorageDefault.user;}
-  if(!$localStorage.data){$localStorage.data = localStorageDefault.data;}
-  if(!$localStorage.logs){$localStorage.logs = localStorageDefault.logs;}
+  StorageSrv.init();
 
-  if($localStorage.app.version === ''){
-    $localStorage.app.version = appVersion;
-  } else if($localStorage.app.version !== appVersion){
-    StorageSrv.migrate($localStorage.app.version, appVersion);
-    $localStorage.app.version = appVersion;
-  }
-
-  $rootScope.settings = $localStorage.user.settings;
+  // TODO : put in ctx object
+  $rootScope.settings = StorageSrv.getUser().settings;
   $rootScope.debug = debug;
   $rootScope.appVersion = appVersion;
 
