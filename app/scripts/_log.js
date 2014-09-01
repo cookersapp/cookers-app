@@ -24,7 +24,7 @@ var Logger = (function(){
   }
 
   var config = {
-    debug: Config ? Config.debug : false,
+    noTrack: false,
     async: true,
     identified: false,
     eventsStorageKey: 'tracking-events-cache',
@@ -35,7 +35,7 @@ var Logger = (function(){
   loadEvents();
 
   function identify(id){
-    if(config.debug){
+    if(config.noTrack){
       console.log('$[identify]', id);
     } else {
       mixpanel.identify(id);
@@ -45,7 +45,7 @@ var Logger = (function(){
   }
 
   function setProfile(profile){
-    if(config.debug){
+    if(config.noTrack){
       console.log('$[register]', profile);
     } else {
       var event = {
@@ -72,7 +72,7 @@ var Logger = (function(){
     if(!data.previousEventId){data.previousEventId = config.currentEventId;}
     config.currentEventId = data.eventId;
 
-    if(config.debug){
+    if(config.noTrack){
       console.log('$[track] '+type, data);
       if(type === 'exception'){window.alert('Error: '+data.message);}
     } else {
@@ -127,10 +127,12 @@ var Logger = (function(){
 
   function sendEvent(event, callback){
     if(event.action === 'register'){
+      console.log('>[register]', event.data);
       mixpanel.people.set(event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
     } else if(event.action === 'track'){
+      console.log('>[track] '+event.type, event.data);
       mixpanel.track(event.type, event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
@@ -151,9 +153,9 @@ var Logger = (function(){
 
   return {
     async: config.async,
-    debug: config.debug,
+    noTrack: config.noTrack,
     setAsync: function(a){ config.async = a; },
-    setDebug: function(d){ config.debug = d; },
+    setNoTrack: function(d){ config.noTrack = d; },
     identify: identify,
     setProfile: setProfile,
     track: track
@@ -164,7 +166,7 @@ var Logger = (function(){
 // catch exceptions
 window.onerror = function(message, url, line, col, error){
   'use strict';
-  var stopPropagation = Logger.debug ? false : true;
+  var stopPropagation = false;
   var data = {
     type: 'javascript'
   };

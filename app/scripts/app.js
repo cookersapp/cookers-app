@@ -1,6 +1,6 @@
 angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'angular-md5', 'monospaced.elastic'])
 
-.config(function($stateProvider, $urlRouterProvider, $provide, debug){
+.config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
   // catch exceptions in angular
   $provide.decorator('$exceptionHandler', ['$delegate', function($delegate){

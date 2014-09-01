@@ -3,8 +3,6 @@
 # TODO
 
 - performance improvements :
-    - revoir la gestion du local storage
-    - attention à l'utilisation du localstorage :( (grosses serializations)
     - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
     - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
     - prefetching/caching templates

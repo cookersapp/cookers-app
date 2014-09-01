@@ -265,7 +265,7 @@ angular.module('app')
 
 
 // this service should be used only on other services in this file !!!
-.factory('_CartUtils', function($window, _CartBuilder, debug){
+.factory('_CartUtils', function($window, _CartBuilder){
   'use strict';
   var service = {
     recipesToItems: recipesToItems,
