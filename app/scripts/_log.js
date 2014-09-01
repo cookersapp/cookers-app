@@ -127,12 +127,10 @@ var Logger = (function(){
 
   function sendEvent(event, callback){
     if(event.action === 'register'){
-      console.log('>[register]', event.data);
       mixpanel.people.set(event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
     } else if(event.action === 'track'){
-      console.log('>[track] '+event.type, event.data);
       mixpanel.track(event.type, event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
