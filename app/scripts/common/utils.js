@@ -5,6 +5,7 @@ angular.module('app')
   var service = {
     createUuid: createUuid,
     extendDeep: extendDeep,
+    isEmail: isEmail,
     endsWith: endsWith,
     clock: addClock,
     cancelClock: removeClock,
@@ -29,6 +30,11 @@ angular.module('app')
       }
     });
     return dest;
+  }
+
+  function isEmail(str){
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(str);
   }
 
   function endsWith(str, suffix){

@@ -12,6 +12,11 @@ angular.module('app')
       user.settings[setting] = value;
       _LocalStorageSrv.setUser(user);
     },
+    saveUserData: function(data, value){
+      var user = _LocalStorageSrv.getUser();
+      user.data[data] = value;
+      _LocalStorageSrv.setUser(user);
+    },
     getUserProfiles: _LocalStorageSrv.getUserProfiles,
     getUserProfile: function(provider){return _LocalStorageSrv.getUserProfiles()[provider];},
     saveUserProfiles: _LocalStorageSrv.setUserProfiles,
