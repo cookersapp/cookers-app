@@ -5,6 +5,7 @@ angular.module('app')
   var service = {
     createUuid: createUuid,
     extendDeep: extendDeep,
+    endsWith: endsWith,
     clock: addClock,
     cancelClock: removeClock,
     getDevice: getDevice
@@ -28,6 +29,10 @@ angular.module('app')
       }
     });
     return dest;
+  }
+
+  function endsWith(str, suffix){
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
   var clockElts = [];

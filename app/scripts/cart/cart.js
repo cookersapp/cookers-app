@@ -78,13 +78,13 @@ angular.module('app')
     CartSrv.removeRecipe($scope.cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
   };
-  
+
   $scope.updateServings = function(recipe, servingsValue){
     StorageSrv.saveCart($scope.cart);
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, LogSrv){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, LogSrv, Utils){
   'use strict';
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
@@ -96,16 +96,76 @@ angular.module('app')
     });
   }
 
-  $scope.openedItems = [];
+  // for compatibility
+  if(!Array.isArray(cart.customItems)){
+    cart.customItems = customItemsToList(cart.customItems);
+    StorageSrv.saveCart(cart);
+  }
   $scope.customItems = cart.customItems;
   $scope.items = CartSrv.getItems(cart);
 
-  $scope.customItemsEdited = function(customItems){
-    cart.customItems = customItems;
+  $scope.editingCustomItems = false;
+  $scope.customItemsText = '';
+  $scope.editCustomItems = function(){
+    if(!$scope.editingCustomItems){
+      $scope.editingCustomItems = true;
+      $scope.customItemsText = customItemsToText(cart.customItems);
+    }
+  };
+  $scope.cancelCustomItems = function(){
+    $scope.customItemsText = '';
+    $scope.editingCustomItems = false;
+  };
+  $scope.saveCustomItems = function(){
+    cart.customItems = customItemsToList($scope.customItemsText);
+    $scope.customItems = cart.customItems;
     StorageSrv.saveCart(cart);
-    LogSrv.trackEditCartCustomItems(customItems);
+    $scope.customItemsText = '';
+    $scope.editingCustomItems = false;
+    LogSrv.trackEditCartCustomItems(cart.customItems);
+  };
+  $scope.buyCustomItem = function(item){
+    item.bought = true;
+    StorageSrv.saveCart(cart);
+  };
+  $scope.unbuyCustomItem = function(item){
+    item.bought = false;
+    StorageSrv.saveCart(cart);
   };
 
+  function customItemsToList(customItems){
+    if(typeof customItems === 'string'){
+      return _.filter(_.map(customItems.split('\n'), function(item){
+        var name = item.trim();
+        if(name.length > 0){
+          if(Utils.endsWith(name, ' ok')){
+            return {bought: true, name: name.replace(/ ok/g, '')};
+          } else {
+            return {bought: false, name: name};
+          }
+        }
+      }), function(item){
+        return item && item.name && item.name.length > 0;
+      });
+    } else if(Array.isArray(customItems)){
+      return angular.copy(customItems.trim());
+    } else {
+      console.warn('Can\'t parse customItems', customItems);
+    }
+  }
+  function customItemsToText(customItems){
+    if(typeof customItems === 'string'){
+      return angular.copy(customItems.trim());
+    } else if(Array.isArray(customItems)){
+      return _.map(customItems, function(item){
+        return item.name+(item.bought ? ' ok' : '');
+      }).join('\n');
+    } else {
+      console.warn('Can\'t parse customItems', customItems);
+    }
+  }
+
+  $scope.openedItems = [];
   $scope.isOpened = function(item){
     return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
   };
@@ -116,11 +176,20 @@ angular.module('app')
     else {$scope.openedItems.push(item);}
   };
 
-  $scope.allItemsBought = function(){
-    var boughtItems = _.filter($scope.items, function(item){
-      return $scope.isBought(item);
+  $scope.cartHasItems = function(){
+    return $scope.items.length > 0 || $scope.customItems.length > 0;
+  };
+  $scope.cartHasItemsToBuy = function(){
+    var itemsToBuy = _.filter($scope.items, function(item){
+      return !$scope.isBought(item);
     });
-    return $scope.items.length > 0 && $scope.items.length === boughtItems.length;
+    return itemsToBuy.length > 0;
+  };
+  $scope.cartHasCustomItemsToBuy = function(){
+    var itemsToBuy = _.filter($scope.customItems, function(item){
+      return !item.bought;
+    });
+    return itemsToBuy.length > 0;
   };
   $scope.isBought = function(item){
     var bought = true;
@@ -290,6 +359,7 @@ angular.module('app')
   }
 
   function boughtPercentage(recipe){
+    // TODO : calc boughtPc once when items are bought or unbought !!!
     if(recipe && recipe.cartData && recipe.ingredients && recipe.ingredients.length > 0){
       var ingredientBought = 0;
       for(var i in recipe.ingredients){
@@ -338,7 +408,7 @@ angular.module('app')
       archived: false,
       name: name ? name : 'Liste du '+moment().format('LL'),
       recipes: [],
-      customItems: ''
+      customItems: []
     };
   }
 
@@ -359,19 +429,17 @@ angular.module('app')
   function createItem(ingredient, recipe){
     var item = angular.copy(ingredient);
     var source = _createItemSource(ingredient, recipe);
-    item.price = ingredient.bought ? null : source.price;
-    item.quantity = ingredient.bought ? null : source.quantity;
+    item.price = source.price;
+    item.quantity = source.quantity;
     item.sources = [source];
     return item;
   }
 
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
-    if(!ingredient.bought){
-      var ing = IngredientUtils.sum([item, source]);
-      item.price = ing.price;
-      item.quantity = ing.quantity;
-    }
+    var ing = IngredientUtils.sum([item, source]);
+    item.price = ing.price;
+    item.quantity = ing.quantity;
     item.sources.push(source);
   }
 

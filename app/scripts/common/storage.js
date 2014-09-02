@@ -124,7 +124,7 @@ angular.module('app')
         if(user && user.standaloneCookedRecipes)  { sUserStandaloneCookedRecipes  = { recipes: angular.copy(user.standaloneCookedRecipes) };  }
         if(logs && logs.recipesHistory)           { sUserRecipeHistory            = { recipes: angular.copy(logs.recipesHistory) };           }
         if(data && data.globalmessage)            { sDataGlobalmessages           = angular.copy(data.globalmessages);                        }
-
+        
         _LocalStorageSrv.reset();
         for(var j in localStorageDefault){
           _LocalStorageSrv.set(j, localStorageDefault[j]);

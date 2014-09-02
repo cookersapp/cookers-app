@@ -1,8 +1,20 @@
 <div>
   <div class="list card add-product">
-    <div class="item">
-      <textarea msd-elastic blur-on-keyboard-out ng-blur="customItemsEdited(customItems)" ng-model="customItems" 
+    <div class="item item-input">
+      <textarea msd-elastic blur-on-keyboard-out ng-model="customItemsText" ng-click="editCustomItems()"
                 rows="1" placeholder="Penser à acheter ..." ng-disabled="cart.archived"></textarea>
+    </div>
+    <div class="item" ng-if="editingCustomItems">
+      <button class="button button-small pull-right button-positive" ng-click="saveCustomItems()">Enregistrer</button>
+      <button class="button button-small" ng-click="cancelCustomItems()">Annuler</button>
+    </div>
+    <div class="list to-buy" ng-if="!editingCustomItems && customItems && customItems.length > 0 && cartHasCustomItemsToBuy()">
+      <div class="item item-cart-ingredient" ng-repeat="item in customItems" ng-if="!item.bought">
+        <div class="check pull-right">
+          <div class="box" ng-click="buyCustomItem(item)"></div>
+        </div>
+        <div class="text">{{item.name}}</div>
+      </div>
     </div>
   </div>
   <div class="screen-empty">
@@ -15,7 +27,7 @@
       Aucune recette ajoutée à la liste de course.
       <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
     </div>
-    <div class="no-items-to-buy" ng-if="allItemsBought() && !cart.archived">
+    <div class="no-items-to-buy" ng-if="cartHasItems() && !cartHasItemsToBuy() && !cartHasCustomItemsToBuy() && !cart.archived">
       Bravo ! Tu as tout acheté !!!<br>
       <br>
       <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>
@@ -25,7 +37,7 @@
     </div>
 
     <div ng-if="!cart.archived">
-      <div class="list card to-buy" ng-if="items && items.length > 0 && !allItemsBought()">
+      <div class="list card to-buy" ng-if="items && items.length > 0 && cartHasItemsToBuy()">
         <div class="item item-cart-ingredient {{item.food.category.slug}}" ng-repeat="item in items" ng-if="!isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="buyItem(item)"></div>
@@ -33,7 +45,7 @@
           <div class="text" ng-click="toggleItem(item)">{{item | ingredient}}</div>
 
           <div class="details" ng-if="isOpened(item)">
-            <div class="source" ng-repeat="source in item.sources">
+            <div class="source" ng-class="{'source-bought': source.ingredient.bought}" ng-repeat="source in item.sources">
               <div class="quantity pull-right">
                 {{source.quantity | quantity}}
               </div>
@@ -43,6 +55,14 @@
         </div>
       </div>
 
+      <div class="list bought">
+        <div class="item item-cart-ingredient" ng-repeat="item in customItems" ng-if="item.bought">
+          <div class="check pull-right">
+            <div class="box" ng-click="unbuyCustomItem(item)">✔</div>
+          </div>
+          <div class="text">{{item.name}}</div>
+        </div>
+      </div>
       <div class="list bought">
         <div class="item item-cart-ingredient" ng-repeat="item in items" ng-if="isBought(item)">
           <div class="check pull-right">
