@@ -27,7 +27,7 @@
       Aucune recette ajoutée à la liste de course.
       <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
     </div>
-    <div class="no-items-to-buy" ng-if="cartHasItems() && !cartHasItemsToBuy() && !cartHasCustomItemsToBuy() && !cart.archived">
+    <div class="no-items-to-buy" ng-if="cartHasItems() && !cartHasItemsToBuy() && !cartHasCustomItemsToBuy() && cart.recipes && cart.recipes.length > 0 && !cart.archived">
       Bravo ! Tu as tout acheté !!!<br>
       <br>
       <button class="button button-stable" ng-click="archiveCart()">Archiver cette liste de courses</button>

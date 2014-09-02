@@ -9,7 +9,7 @@
       <button class="button button-icon ion-archive" ng-if="cart && cart.archived"></button>
     </div>
   </ion-header-bar>
-  <ion-content class="cart-screen" ng-class="{empty: !(cart && ((cart.recipes && cart.recipes.length > 0) || (cart.customItems && cart.customItems.length > 0)))}">
+  <ion-content class="cart-screen" ng-class="{empty: isCartEmpty()}">
     <div class="cart-chooser padding hide-on-keyboard-open">
       <div class="button-bar bar-light">
         <a class="button" ng-class="{active: isActive('.*recipes')}" ui-sref="app.cart.recipes">Recettes</a>

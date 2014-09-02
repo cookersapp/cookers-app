@@ -45,6 +45,11 @@ angular.module('app')
   }).then(function(popover){
     $scope.popover = popover;
   });
+  
+  $scope.isCartEmpty = function(){
+    console.log('isCartEmpty', $scope.cart);
+    return !($scope.cart && (($scope.cart.recipes && $scope.cart.recipes.length > 0) || ($scope.cart.customItems && $scope.cart.customItems.length > 0)));
+  };
 
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){
@@ -58,7 +63,6 @@ angular.module('app')
 
 .controller('CartRecipesCtrl', function($scope, $window, CartSrv, StorageSrv, LogSrv){
   'use strict';
-  $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   $scope.selectedRecipe = null;
 
   $scope.toggleRecipe = function(recipe){
@@ -84,8 +88,6 @@ angular.module('app')
 
 .controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, LogSrv, Utils){
   'use strict';
-  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-
   var user = StorageSrv.getUser();
   if(!(user && user.data && user.data.skipCartFeatures)){
     PopupSrv.tourCartFeatures().then(function(){
@@ -95,19 +97,19 @@ angular.module('app')
   }
 
   // for compatibility
-  if(!Array.isArray(cart.customItems)){
-    cart.customItems = customItemsToList(cart.customItems);
-    StorageSrv.saveCart(cart);
+  if(!Array.isArray($scope.cart.customItems)){
+    $scope.cart.customItems = customItemsToList($scope.cart.customItems);
+    StorageSrv.saveCart($scope.cart);
   }
-  $scope.customItems = cart.customItems;
-  $scope.items = CartSrv.getItems(cart);
+  $scope.customItems = $scope.cart.customItems;
+  $scope.items = CartSrv.getItems($scope.cart);
 
   $scope.editingCustomItems = false;
   $scope.customItemsText = '';
   $scope.editCustomItems = function(){
     if(!$scope.editingCustomItems){
       $scope.editingCustomItems = true;
-      $scope.customItemsText = customItemsToText(cart.customItems);
+      $scope.customItemsText = customItemsToText($scope.cart.customItems);
     }
   };
   $scope.cancelCustomItems = function(){
@@ -115,20 +117,20 @@ angular.module('app')
     $scope.editingCustomItems = false;
   };
   $scope.saveCustomItems = function(){
-    cart.customItems = customItemsToList($scope.customItemsText);
-    $scope.customItems = cart.customItems;
-    StorageSrv.saveCart(cart);
+    $scope.cart.customItems = customItemsToList($scope.customItemsText);
+    $scope.customItems = $scope.cart.customItems;
+    StorageSrv.saveCart($scope.cart);
     $scope.customItemsText = '';
     $scope.editingCustomItems = false;
-    LogSrv.trackEditCartCustomItems(cart.customItems);
+    LogSrv.trackEditCartCustomItems($scope.cart.customItems);
   };
   $scope.buyCustomItem = function(item){
     item.bought = true;
-    StorageSrv.saveCart(cart);
+    StorageSrv.saveCart($scope.cart);
   };
   $scope.unbuyCustomItem = function(item){
     item.bought = false;
-    StorageSrv.saveCart(cart);
+    StorageSrv.saveCart($scope.cart);
   };
 
   function customItemsToList(customItems){
@@ -148,7 +150,10 @@ angular.module('app')
     } else if(Array.isArray(customItems)){
       return angular.copy(customItems.trim());
     } else {
-      console.warn('Can\'t parse customItems', customItems);
+      LogSrv.trackError('cartCustomItemsError', {
+        message: 'Can\'t parse customItems',
+        customItems: angular.copy(customItems)
+      });
     }
   }
   function customItemsToText(customItems){
@@ -159,7 +164,10 @@ angular.module('app')
         return item.name+(item.bought ? ' ok' : '');
       }).join('\n');
     } else {
-      console.warn('Can\'t parse customItems', customItems);
+      LogSrv.trackError('cartCustomItemsError', {
+        message: 'Can\'t parse customItems',
+        customItems: angular.copy(customItems)
+      });
     }
   }
 
@@ -198,11 +206,11 @@ angular.module('app')
   };
   $scope.buyItem = function(item){
     LogSrv.trackBuyItem(item.food.id);
-    CartSrv.buyItem(cart, item);
+    CartSrv.buyItem($scope.cart, item);
   };
   $scope.unbuyItem = function(item){
     LogSrv.trackUnbuyItem(item.food.id);
-    CartSrv.unbuyItem(cart, item);
+    CartSrv.unbuyItem($scope.cart, item);
   };
 })
 
