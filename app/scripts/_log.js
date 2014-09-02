@@ -36,9 +36,7 @@ var Logger = (function(){
   loadEvents();
 
   function identify(id){
-    if(config.debug){
-      console.log('$[identify]', id);
-    }
+    if(config.debug){ console.log('$[identify]', id); }
     if(!config.noTrack){
       mixpanel.identify(id);
       config.identified = true;
@@ -47,9 +45,7 @@ var Logger = (function(){
   }
 
   function setProfile(profile){
-    if(config.debug){
-      console.log('$[register]', profile);
-    }
+    if(config.debug){ console.log('$[register]', profile); }
     if(!config.noTrack){
       var event = {
         id: createUuid(),
@@ -75,9 +71,7 @@ var Logger = (function(){
     if(!data.previousEventId){data.previousEventId = config.currentEventId;}
     config.currentEventId = data.eventId;
 
-    if(config.debug){
-      console.log('$[track] '+type, data);
-    }
+    if(config.debug){ console.log('$[track] '+type, data); }
     if(!config.noTrack){
       var event = {
         id: createUuid(),
@@ -91,8 +85,6 @@ var Logger = (function(){
         sendEvent(event);
       }
     }
-    if(type === 'error'){window.alert('Error: '+data.error.message);}
-    if(type === 'exception'){window.alert('Exception: '+data.message);}
   }
 
   function startSendEvents(){
@@ -139,7 +131,8 @@ var Logger = (function(){
       mixpanel.track(event.type, event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
-      if(event.type === 'exception'){window.alert('Error: '+event.data.message+'\nPlease contact: loicknuchel@gmail.com :(');}
+      if(event.type === 'error' && config.debug){window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');}
+      if(event.type === 'exception'){window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');}
     } else {
       if(callback){callback(event, 'unknown');}
     }
