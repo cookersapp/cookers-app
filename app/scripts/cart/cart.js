@@ -61,8 +61,6 @@ angular.module('app')
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   $scope.selectedRecipe = null;
 
-  $scope.boughtPercentage = CartSrv.boughtPercentage;
-
   $scope.toggleRecipe = function(recipe){
     if($scope.selectedRecipe === recipe){
       LogSrv.trackCartRecipeDetails(recipe.id, 'hide');
@@ -232,9 +230,7 @@ angular.module('app')
     removeRecipe: removeRecipe,
     buyItem: function(cart, item){buyItem(cart, item, true);},
     unbuyItem: function(cart, item){buyItem(cart, item, false);},
-    archive: archive,
-
-    boughtPercentage: _CartUtils.boughtPercentage
+    archive: archive
   };
 
   function hasOpenedCarts(){
@@ -313,6 +309,10 @@ angular.module('app')
     _.map(item.sources, function(source){
       source.ingredient.bought = bought;
     });
+    for(var i in item.sources){
+      var recipeSrc = item.sources[i].recipe;
+      recipeSrc.cartData.boughtPc = _CartUtils.boughtPercentage(recipeSrc);
+    }
     StorageSrv.saveCart(cart);
   }
 
@@ -359,7 +359,6 @@ angular.module('app')
   }
 
   function boughtPercentage(recipe){
-    // TODO : calc boughtPc once when items are bought or unbought !!!
     if(recipe && recipe.cartData && recipe.ingredients && recipe.ingredients.length > 0){
       var ingredientBought = 0;
       for(var i in recipe.ingredients){
@@ -417,6 +416,7 @@ angular.module('app')
     r.cartData = {
       cart: cart.id,
       created: Date.now(),
+      boughtPc: 0,
       cooked: false,
       servings: {
         value: servings,

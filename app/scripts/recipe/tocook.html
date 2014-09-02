@@ -16,8 +16,8 @@
           <a class="cart-link" ui-sref="app.cart.ingredients"><i class="icon ion-clipboard"></i></a>
           <h1 class="title">{{recipe.name}}</h1>
           <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="{{boughtPercentage(recipe)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{boughtPercentage(recipe)}}%;">
-              {{boughtPercentage(recipe) | mynumber:0}}%
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{recipe.cartData.boughtPc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{recipe.cartData.boughtPc}}%;">
+              {{recipe.cartData.boughtPc | mynumber:0}}% acheté
             </div>
           </div>
           <button class="button" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})">Cuisiner</button>

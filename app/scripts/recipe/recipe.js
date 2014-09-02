@@ -260,11 +260,9 @@ angular.module('app')
   'use strict';
   $scope.recipes = CartSrv.getRecipesToCook();
   $scope.recipes.sort(function(a, b){
-    var ret = -(CartSrv.boughtPercentage(a) - CartSrv.boughtPercentage(b));
+    var ret = -(a.cartData.boughtPc - b.cartData.boughtPc);
     return ret === 0 ? -(a.cartData.created - b.cartData.created) : ret;
   });
-
-  $scope.boughtPercentage = CartSrv.boughtPercentage;
 
   $scope.changeServings = function(recipe){
     PopupSrv.changeServings($scope.servings).then(function(servings){
