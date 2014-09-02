@@ -1,75 +1,74 @@
 angular.module('app')
 
-.factory('StorageSrv', function($window, $state, localStorageDefault, appVersion){
+.factory('StorageSrv', function($window, $state, _LocalStorageSrv, LogSrv, Utils, localStorageDefault, appVersion){
   'use strict';
-  var localStorageCache = {};
   var service = {
     init: init,
-    getApp: function(){return _get('app');},
-    getUser: function(){return _get('user');},
-    saveUser: function(user){return _set('user', user);},
+    getApp: _LocalStorageSrv.getApp,
+    getUser: _LocalStorageSrv.getUser,
+    saveUser: _LocalStorageSrv.setUser,
     saveUserSetting: function(setting, value){
-      var user = _get('user');
+      var user = _LocalStorageSrv.getUser();
       user.settings[setting] = value;
-      _set('user', user);
+      _LocalStorageSrv.setUser(user);
     },
-    getUserProfiles: function(){return _get('userSocialProfiles');},
-    getUserProfile: function(provider){return _get('userSocialProfiles')[provider];},
-    saveUserProfiles: function(userProfiles){return _set('userSocialProfiles', userProfiles);},
-    getFood: function(id){return _get('dataFoods').foods[id];},
+    getUserProfiles: _LocalStorageSrv.getUserProfiles,
+    getUserProfile: function(provider){return _LocalStorageSrv.getUserProfiles()[provider];},
+    saveUserProfiles: _LocalStorageSrv.setUserProfiles,
+    getFood: function(id){return _LocalStorageSrv.getFoods().foods[id];},
     addFood: function(food){
       if(food && food.id){
-        var dataFoods = _get('dataFoods');
+        var dataFoods = _LocalStorageSrv.getFoods();
         dataFoods.foods[food.id] = food;
-        _set('dataFoods', dataFoods);
+        _LocalStorageSrv.setFoods(dataFoods);
       }
     },
-    getRecipe: function(id){return _get('dataRecipes').recipes[id];},
+    getRecipe: function(id){return _LocalStorageSrv.getRecipes().recipes[id];},
     addRecipe: function(recipe){
       if(recipe && recipe.id){
-        var dataRecipes = _get('dataRecipes');
+        var dataRecipes = _LocalStorageSrv.getRecipes();
         dataRecipes.recipes[recipe.id] = recipe;
-        _set('dataRecipes', dataRecipes);
+        _LocalStorageSrv.setRecipes(dataRecipes);
       }
     },
-    getSelection: function(id){return _get('dataSelections').selections[id];},
+    getSelection: function(id){return _LocalStorageSrv.getSelections().selections[id];},
     addSelection: function(selection){
       if(selection && selection.id){
-        var dataSelections = _get('dataSelections');
+        var dataSelections = _LocalStorageSrv.getSelections();
         dataSelections.selections[selection.id] = selection;
-        _set('dataSelections', dataSelections);
+        _LocalStorageSrv.setSelections(dataSelections);
       }
     },
-    getRecipeHistory: function(){return _get('userRecipeHistory').recipes;},
+    getRecipeHistory: function(){return _LocalStorageSrv.getRecipeHistory().recipes;},
     addRecipeToHistory: function(recipe){
       if(recipe && recipe.id){
-        var userRecipeHistory = _get('userRecipeHistory');
+        var userRecipeHistory = _LocalStorageSrv.getRecipeHistory();
         _.remove(userRecipeHistory.recipes, {id: recipe.id});
         userRecipeHistory.recipes.unshift(recipe);
-        _set('userRecipeHistory', userRecipeHistory);
+        _LocalStorageSrv.setRecipeHistory(userRecipeHistory);
       }
     },
-    getCarts: function(){return _get('userCarts').carts;},
-    saveCart: function(cart){_updateStorageArray('userCarts', 'carts', cart);},
+    getCarts: function(){return _LocalStorageSrv.getCarts().carts;},
+    saveCart: function(cart){_LocalStorageSrv.updateCarts('carts', cart);},
     addCart: function(cart){
-      var userCarts = _get('userCarts');
+      var userCarts = _LocalStorageSrv.getCarts();
       userCarts.carts.unshift(cart);
-      _set('userCarts', userCarts);
+      _LocalStorageSrv.setCarts(userCarts);
     },
-    getStandaloneCookedRecipes: function(){return _get('userStandaloneCookedRecipes').recipes;},
+    getStandaloneCookedRecipes: function(){return _LocalStorageSrv.getStandaloneCookedRecipes().recipes;},
     addStandaloneCookedRecipe: function(recipe){
-      var userStandaloneCookedRecipes = _get('userStandaloneCookedRecipes');
+      var userStandaloneCookedRecipes = _LocalStorageSrv.getStandaloneCookedRecipes();
       userStandaloneCookedRecipes.recipes.push(recipe);
-      _set('userStandaloneCookedRecipes', userStandaloneCookedRecipes);
+      _LocalStorageSrv.setStandaloneCookedRecipes(userStandaloneCookedRecipes);
     },
-    getGlobalMessages: function(){return _get('dataGlobalmessages');},
+    getGlobalMessages: function(){return _LocalStorageSrv.getGlobalmessages();},
     clearCache: function(){
-      _set('dataFoods', localStorageDefault.dataFoods);
-      _set('dataRecipes', localStorageDefault.dataRecipes);
-      _set('dataSelections', localStorageDefault.dataSelections);
+      _LocalStorageSrv.setFoods(localStorageDefault.dataFoods);
+      _LocalStorageSrv.setRecipes(localStorageDefault.dataRecipes);
+      _LocalStorageSrv.setSelections(localStorageDefault.dataSelections);
     },
     clear: function(){
-      _reset();
+      _LocalStorageSrv.reset();
     }
   };
 
@@ -77,42 +76,41 @@ angular.module('app')
     for(var i in localStorageDefault){
       var key = i;
       var defaultValue = localStorageDefault[key] || {};
-      var storageValue = _get(key) || {};
-      var extendedValue = _extendDeep({}, defaultValue, storageValue);
-      _set(key, extendedValue);
+      var storageValue = _LocalStorageSrv.get(key) || {};
+      var extendedValue = Utils.extendDeep({}, defaultValue, storageValue);
+      _LocalStorageSrv.set(key, extendedValue);
     }
 
     var app = JSON.parse(localStorage.getItem('ngStorage-app'));
-    if(!app){app = _get('app');}
+    if(!app){app = _LocalStorageSrv.getApp();}
     if(app.version === ''){
       app.version = appVersion;
-      _set('app', app);
+      _LocalStorageSrv.setApp(app);
     } else if(app.version !== appVersion){
       _migrate(app.version, appVersion);
-      app = _get('app');
+      app = _LocalStorageSrv.getApp();
       app.version = appVersion;
-      _set('app', app);
+      _LocalStorageSrv.setApp(app);
     }
   }
 
   function _migrate(previousVersion, nextVersion){
-    console.log('migrate from '+previousVersion+' to '+nextVersion);
+    LogSrv.trackUpgrade(previousVersion, nextVersion);
     if(localStorage){
-      var app = JSON.parse(localStorage.getItem('ngStorage-app'));
-      var user = JSON.parse(localStorage.getItem('ngStorage-user'));
-      var data = JSON.parse(localStorage.getItem('ngStorage-data'));
-      var logs = JSON.parse(localStorage.getItem('ngStorage-logs'));
-
-      _reset();
-      for(var i in localStorageDefault){
-        _set(i, localStorageDefault[i]);
-      }
-
       if(previousVersion === '0.1.0'){
+        _LocalStorageSrv.reset();
+        for(var i in localStorageDefault){
+          _LocalStorageSrv.set(i, localStorageDefault[i]);
+        }
         $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
         $state.go('intro');
       }
       if(previousVersion === '0.2.0' || previousVersion === '0.3.0'){
+        var app = JSON.parse(localStorage.getItem('ngStorage-app'));
+        var user = JSON.parse(localStorage.getItem('ngStorage-user'));
+        var data = JSON.parse(localStorage.getItem('ngStorage-data'));
+        var logs = JSON.parse(localStorage.getItem('ngStorage-logs'));
+
         var sApp, sUser, sUserSocialProfiles, sUserCarts, sUserStandaloneCookedRecipes, sUserRecipeHistory, sDataGlobalmessages;
         if(app)                                   { sApp                          = angular.copy(app);                                        }
         if(user)                                  { sUser                         = angular.copy(user);                                       }
@@ -127,19 +125,70 @@ angular.module('app')
         if(logs && logs.recipesHistory)           { sUserRecipeHistory            = { recipes: angular.copy(logs.recipesHistory) };           }
         if(data && data.globalmessage)            { sDataGlobalmessages           = angular.copy(data.globalmessages);                        }
 
-        _reset();
+        _LocalStorageSrv.reset();
         for(var j in localStorageDefault){
-          _set(j, localStorageDefault[j]);
+          _LocalStorageSrv.set(j, localStorageDefault[j]);
         }
 
-        if(sApp)                          { _set('app', sApp);                                                  }
-        if(sUser)                         { _set('user', sUser);                                                }
-        if(sUserSocialProfiles)           { _set('userSocialProfiles', sUserSocialProfiles);                    }
-        if(sUserCarts)                    { _set('userCarts', sUserCarts);                                      }
-        if(sUserStandaloneCookedRecipes)  { _set('userStandaloneCookedRecipes', sUserStandaloneCookedRecipes);  }
-        if(sUserRecipeHistory)            { _set('userRecipeHistory', sUserRecipeHistory);                      }
-        if(sDataGlobalmessages)           { _set('dataGlobalmessages', sDataGlobalmessages);                    }
+        if(sApp)                          { _LocalStorageSrv.setApp(sApp);                                             }
+        if(sUser)                         { _LocalStorageSrv.setUser(sUser);                                           }
+        if(sUserSocialProfiles)           { _LocalStorageSrv.setUserProfiles(sUserSocialProfiles);                     }
+        if(sUserCarts)                    { _LocalStorageSrv.setCarts(sUserCarts);                                     }
+        if(sUserStandaloneCookedRecipes)  { _LocalStorageSrv.setStandaloneCookedRecipes(sUserStandaloneCookedRecipes); }
+        if(sUserRecipeHistory)            { _LocalStorageSrv.setRecipeHistory(sUserRecipeHistory);                     }
+        if(sDataGlobalmessages)           { _LocalStorageSrv.setGlobalmessages(sDataGlobalmessages);                   }
       }
+    }
+  }
+
+  return service;
+})
+
+.factory('_LocalStorageSrv', function($window){
+  'use strict';
+  var localStorageCache = {};
+  var service = {
+    getApp: function(){return _get('app');},
+    setApp: function(app){return _set('app', app);},
+    getUser: function(){return _get('user');},
+    setUser: function(user){return _set('user', user);},
+    getUserProfiles: function(){return _get('userSocialProfiles');},
+    setUserProfiles: function(userProfiles){return _set('userSocialProfiles', userProfiles);},
+    getFoods: function(){return _get('dataFoods');},
+    setFoods: function(foods){return _set('dataFoods', foods);},
+    getRecipes: function(){return _get('dataRecipes');},
+    setRecipes: function(recipes){return _set('dataRecipes', recipes);},
+    getSelections: function(){return _get('dataSelections');},
+    setSelections: function(selections){return _set('dataSelections', selections);},
+    getRecipeHistory: function(){return _get('userRecipeHistory');},
+    setRecipeHistory: function(recipes){return _set('userRecipeHistory', recipes);},
+    getCarts: function(){return _get('userCarts');},
+    setCarts: function(carts){return _set('userCarts', carts);},
+    updateCarts: function(key, value){return _updateStorageArray('userCarts', key, value);},
+    getStandaloneCookedRecipes: function(){return _get('userStandaloneCookedRecipes');},
+    setStandaloneCookedRecipes: function(recipes){return _set('userStandaloneCookedRecipes', recipes);},
+    getGlobalmessages: function(){return _get('dataGlobalmessages');},
+    setGlobalmessages: function(messages){return _set('dataGlobalmessages', messages);},
+    get: _get,
+    set: _set,
+    reset: _reset
+  };
+
+  function _get(key){
+    if(!localStorageCache[key] && $window.localStorage){
+      localStorageCache[key] = JSON.parse($window.localStorage.getItem('ionic-'+key));
+    }
+    return angular.copy(localStorageCache[key]);
+  }
+
+  function _set(key, value){
+    if(!angular.equals(localStorageCache[key], value)){
+      localStorageCache[key] = angular.copy(value);
+      if($window.localStorage){
+        $window.localStorage.setItem('ionic-'+key, JSON.stringify(value));
+      }
+    } else {
+      console.debug('Don\'t save <'+key+'> because values are equals !');
     }
   }
 
@@ -160,22 +209,6 @@ angular.module('app')
     }
   }
 
-  function _get(key){
-    if(!localStorageCache[key] && $window.localStorage){
-      localStorageCache[key] = JSON.parse($window.localStorage.getItem('ionic-'+key));
-    }
-    return angular.copy(localStorageCache[key]);
-  }
-
-  function _set(key, value){
-    if(!angular.equals(localStorageCache[key], value)){
-      localStorageCache[key] = value;
-      if($window.localStorage){
-        $window.localStorage.setItem('ionic-'+key, JSON.stringify(value));
-      }
-    }
-  }
-
   function _reset(){
     if($window.localStorage){
       localStorageCache = {};
@@ -183,21 +216,6 @@ angular.module('app')
         $window.localStorage.removeItem(i);
       }
     }
-  }
-
-  function _extendDeep(dest){
-    angular.forEach(arguments, function(arg){
-      if(arg !== dest){
-        angular.forEach(arg, function(value, key){
-          if(dest[key] && typeof dest[key] === 'object'){
-            _extendDeep(dest[key], value);
-          } else {
-            dest[key] = angular.copy(value);
-          }
-        });
-      }
-    });
-    return dest;
   }
 
   return service;

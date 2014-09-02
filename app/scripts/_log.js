@@ -24,6 +24,7 @@ var Logger = (function(){
   }
 
   var config = {
+    debug: Config ? Config.debug : true,
     noTrack: false,
     async: true,
     identified: false,
@@ -35,9 +36,10 @@ var Logger = (function(){
   loadEvents();
 
   function identify(id){
-    if(config.noTrack){
+    if(config.debug){
       console.log('$[identify]', id);
-    } else {
+    }
+    if(!config.noTrack){
       mixpanel.identify(id);
       config.identified = true;
       if(config.events.length > 0){ startSendEvents(); }
@@ -45,9 +47,10 @@ var Logger = (function(){
   }
 
   function setProfile(profile){
-    if(config.noTrack){
+    if(config.debug){
       console.log('$[register]', profile);
-    } else {
+    }
+    if(!config.noTrack){
       var event = {
         id: createUuid(),
         action: 'register',
@@ -72,10 +75,10 @@ var Logger = (function(){
     if(!data.previousEventId){data.previousEventId = config.currentEventId;}
     config.currentEventId = data.eventId;
 
-    if(config.noTrack){
+    if(config.debug){
       console.log('$[track] '+type, data);
-      if(type === 'exception'){window.alert('Error: '+data.message);}
-    } else {
+    }
+    if(!config.noTrack){
       var event = {
         id: createUuid(),
         action: 'track',
@@ -88,6 +91,8 @@ var Logger = (function(){
         sendEvent(event);
       }
     }
+    if(type === 'error'){window.alert('Error: '+data.error.message);}
+    if(type === 'exception'){window.alert('Exception: '+data.message);}
   }
 
   function startSendEvents(){

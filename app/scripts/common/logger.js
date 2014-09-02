@@ -1,11 +1,12 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, $window, StorageSrv, appVersion){
+.factory('LogSrv', function($timeout, $window, _LocalStorageSrv, appVersion){
   'use strict';
   var service = {
     identify: Logger.identify,
     registerUser: registerUser,
     trackInstall: function(user){track('install', {user: user});},
+    trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
     trackLogin: function(provider, data){track('login', {provider: provider, data: data});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
@@ -38,6 +39,7 @@ angular.module('app')
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
       var timeoutGeoloc = $timeout(function(){
+        console.log('position timeout !');
         track(event, params);
       }, 3000);
       navigator.geolocation.getCurrentPosition(function(position){
@@ -61,7 +63,7 @@ angular.module('app')
   }
 
   function track(event, properties){
-    var user = StorageSrv.getUser();
+    var user = _LocalStorageSrv.getUser();
     if(!properties){properties = {};}
     properties.appVersion = appVersion;
     if(!properties.email && user && user.email){properties.email = user.email;}
@@ -80,9 +82,9 @@ angular.module('app')
   }
 
   function registerUser(){
-    var user = StorageSrv.getUser();
+    var user = _LocalStorageSrv.getUser();
     var userProfile = {
-      $created: moment(StorageSrv.getApp().firstLaunch).format('llll'),
+      $created: moment(_LocalStorageSrv.getApp().firstLaunch).format('llll'),
       $email: user.email,
       $first_name: user.firstName,
       $last_name: user.lastName,

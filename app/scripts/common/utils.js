@@ -1,15 +1,13 @@
 angular.module('app')
 
-.factory('Utils', function($window, $interval, LogSrv, debug){
+.factory('Utils', function($window, $interval){
   'use strict';
   var service = {
     createUuid: createUuid,
-    adjustForServings: adjustForServings,
-    addQuantities: addQuantities,
-    addPrices: addPrices,
-    getDevice: getDevice,
+    extendDeep: extendDeep,
     clock: addClock,
-    cancelClock: removeClock
+    cancelClock: removeClock,
+    getDevice: getDevice
   };
 
   function createUuid(){
@@ -17,71 +15,46 @@ angular.module('app')
     return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0,3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
   }
 
-  function adjustForServings(quantity, initialServings, finalServings){
-    var q = angular.copy(quantity);
-    if(initialServings.unit === finalServings.unit){
-      q.value = q.value * finalServings.value / initialServings.value;
-    } else {
-      var err = {
-        message: 'Quantity <'+quantity.unit+'> can\'t be converting from servings <'+initialServings.unit+'> to servings <'+finalServings.unit+'> !',
-        quantity: angular.copy(quantity),
-        initialServings: angular.copy(initialServings),
-        finalServings: angular.copy(finalServings)
-      };
-      console.warn(err.message, err);
-      LogSrv.trackError('adjustForServings', err);
-      if(debug){$window.alert(err.message);}
-    }
-    return q;
-  }
-
-  function addQuantities(q1, q2, source){
-    return _add(q1, q2, source);
-  }
-
-  function addPrices(p1, p2, source){
-    var q1 = p1 ? {unit: p1.currency, value: p1.value} : null;
-    var q2 = p2 ? {unit: p2.currency, value: p2.value} : null;
-    var q = _add(q1, q2, source);
-    return q ? {currency: q.unit, value: q.value} : null;
-  }
-
-  function _add(q1, q2, source){
-    if(!q1){ return q2; }
-    else if(!q2) { return q1; }
-    else if(q1.unit === q2.unit){
-      var q = angular.copy(q1);
-      q.value += q2.value;
-      return q;
-    } else {
-      var err = {
-        message: 'Can\'t add quantity <'+q1.unit+'> with quantity <'+q2.unit+'>'+(source && source.food ? ' in <'+source.food.name+'>' : '')+' !',
-        quantity1: angular.copy(q1),
-        quantity2: angular.copy(q2),
-        source: angular.copy(source)
-      };
-      console.warn(err.message, err);
-      LogSrv.trackError('addQuantities', err);
-      if(debug){$window.alert(err.message);}
-      return null;
-    }
+  function extendDeep(dest){
+    angular.forEach(arguments, function(arg){
+      if(arg !== dest){
+        angular.forEach(arg, function(value, key){
+          if(dest[key] && typeof dest[key] === 'object'){
+            extendDeep(dest[key], value);
+          } else {
+            dest[key] = angular.copy(value);
+          }
+        });
+      }
+    });
+    return dest;
   }
 
   var clockElts = [];
   var clockTimer = null;
+  var clockCpt = 0;
   function addClock(fn){
-    if(clockElts.length === 0){ startClock(); }
-    return clockElts.push(fn) - 1;
+    var elt = {
+      id: clockCpt++,
+      fn: fn
+    };
+    clockElts.push(elt);
+    if(clockElts.length === 1){ startClock(); }
+    return elt.id;
   }
-  function removeClock(index){
-    if(0 <= index && index < clockElts.length){clockElts.splice(index, 1);}
+  function removeClock(id){
+    for(var i in clockElts){
+      if(clockElts[i].id === id){
+        clockElts.splice(i, 1);
+      }
+    }
     if(clockElts.length === 0){ stopClock(); }
   }
   function startClock(){
     if(clockTimer === null){
       clockTimer = $interval(function(){
         for(var i in clockElts){
-          clockElts[i]();
+          clockElts[i].fn();
         }
       }, 1000);
     }

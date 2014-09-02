@@ -123,14 +123,13 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
 
 .run(function($rootScope, $location, $ionicPlatform, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
-  StorageSrv.init();
-
   $rootScope.ctx = {
     settings: StorageSrv.getUser().settings,
     debug: debug,
     appVersion: appVersion
   };
 
+  StorageSrv.init();
   $ionicPlatform.ready(function(){
     LaunchSrv.launch();
   });

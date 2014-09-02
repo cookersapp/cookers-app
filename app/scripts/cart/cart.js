@@ -56,7 +56,7 @@ angular.module('app')
   };
 })
 
-.controller('CartRecipesCtrl', function($scope, $window, CartSrv, LogSrv){
+.controller('CartRecipesCtrl', function($scope, $window, CartSrv, StorageSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   $scope.selectedRecipe = null;
@@ -77,6 +77,10 @@ angular.module('app')
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartSrv.removeRecipe($scope.cart, recipe);
     $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+  };
+  
+  $scope.updateServings = function(recipe, servingsValue){
+    StorageSrv.saveCart($scope.cart);
   };
 })
 
@@ -318,7 +322,7 @@ angular.module('app')
 
 
 // this service should be used only on other services in this file !!!
-.factory('_CartBuilder', function(Utils){
+.factory('_CartBuilder', function(IngredientUtils, Utils){
   'use strict';
   var service = {
     createCart: createCart,
@@ -363,15 +367,18 @@ angular.module('app')
 
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
-    if(!ingredient.bought){item.price = Utils.addPrices(item.price, source.price, item);}
-    if(!ingredient.bought){item.quantity = Utils.addQuantities(item.quantity, source.quantity, item);}
+    if(!ingredient.bought){
+      var ing = IngredientUtils.sum([item, source]);
+      item.price = ing.price;
+      item.quantity = ing.quantity;
+    }
     item.sources.push(source);
   }
 
   function _createItemSource(ingredient, recipe){
     return {
-      price: Utils.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
-      quantity: Utils.adjustForServings(ingredient.quantity, recipe.servings, recipe.cartData.servings),
+      price: IngredientUtils.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
+      quantity: IngredientUtils.adjustForServings(ingredient.quantity, recipe.servings, recipe.cartData.servings),
       ingredient: ingredient,
       recipe: recipe
     };
