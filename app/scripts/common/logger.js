@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, $window, _LocalStorageSrv, appVersion){
+.factory('LogSrv', function($timeout, $window, Utils, _LocalStorageSrv, appVersion){
   'use strict';
   var service = {
     identify: Logger.identify,
@@ -82,17 +82,17 @@ angular.module('app')
   }
 
   function registerUser(){
+    var app = _LocalStorageSrv.getApp();
     var user = _LocalStorageSrv.getUser();
-    var userProfile = {
-      $created: moment(_LocalStorageSrv.getApp().firstLaunch).format('llll'),
-      $email: user.email,
-      $first_name: user.firstName,
-      $last_name: user.lastName,
-      fullName: user.name,
-      avatar: user.avatar,
-      backgroundCover: user.backgroundCover,
-      appVersion: appVersion
-    };
+    var userProfile = {};
+    if(app.firstLaunch){userProfile.$created = app.firstLaunch.format('llll');}
+    if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
+    if(app.firstName){userProfile.$first_name = app.firstName;}
+    if(app.lastName){userProfile.$last_name = app.lastName;}
+    if(app.name){userProfile.fullName = app.name;}
+    if(app.avatar){userProfile.avatar = app.avatar;}
+    if(app.backgroundCover){userProfile.backgroundCover = app.backgroundCover;}
+    if(appVersion){userProfile.appVersion = appVersion;}
     if(user.device){
       if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
       if(user.device.model)    { userProfile['device.model']      = user.device.model;     }

@@ -141,7 +141,7 @@ var Logger = (function(){
   function getUserMailIfSetted(){
     if(localStorage){
       var user = JSON.parse(localStorage.getItem('ionic-user'));
-      if(user && user.email){
+      if(user && user.email && typeof user.email === 'string' && user.email.contains('@')){
         return user.email;
       }
     }
