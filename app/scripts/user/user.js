@@ -205,13 +205,18 @@ angular.module('app')
     user.email = email;
     StorageSrv.saveUser(user);
     if(email){
-      return _updateGravatar(email);
+      return _updateGravatar(email).then(function(){
+        return updateUserProfile();
+      });
     } else {
       return $q.when();
     }
   }
 
-  function updateUserProfile(user, userProfiles){
+  function updateUserProfile(){
+    var user = StorageSrv.getUser();
+    var userProfiles = StorageSrv.getUserProfiles();
+
     var defaultProfile = _defaultProfile();
     var gravatarProfile = _gravatarProfile(userProfiles.gravatar);
     var passwordProfile = _passwordProfile(userProfiles.password);
@@ -223,36 +228,43 @@ angular.module('app')
     angular.extend(user.more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
 
     if(user.email !== gravatarProfile.email){
-      _updateGravatar(user.email).then(function(){
-        var gravatarProfile = StorageSrv.getUserProfile('gravatar');
+      return _updateGravatar(user.email).then(function(gravatarData){
+        gravatarProfile = _gravatarProfile(gravatarData);
         angular.extend(user, defaultProfile, gravatarProfile, passwordProfile, twitterProfile, facebookProfile, googleProfile);
         angular.extend(user.more, defaultProfile.more, gravatarProfile.more, passwordProfile.more, twitterProfile.more, facebookProfile.more, googleProfile.more);
         StorageSrv.saveUser(user);
       });
+    } else {
+      StorageSrv.saveUser(user);
+      return $q.when(user);
     }
-    StorageSrv.saveUser(user);
   }
 
   function _updateGravatar(email){
     if(email && email.length > 0){
       var hash = md5.createHash(email);
       var user = StorageSrv.getUser();
-      var userProfiles = StorageSrv.getUserProfiles();
-      userProfiles.gravatar = {
+      var defaultGravatarData = {
         entry: [
           {email: email, hash: hash}
         ]
       };
 
       return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
-        var g = result.data;
-        if(g && g.entry && g.entry.length > 0){
-          g.entry[0].email = email;
-          userProfiles.gravatar = g;
+        if(result && result.data){
+          var g = result.data;
+          if(g && g.entry && g.entry.length > 0){
+            g.entry[0].email = email;
+          }
+          return g;
+        } else {
+          return defaultGravatarData;
         }
-      }).then(function(){
+      }).then(function(gravatarData){
+        var userProfiles = StorageSrv.getUserProfiles();
+        userProfiles.gravatar = gravatarData;
         StorageSrv.saveUserProfiles(userProfiles);
-        updateUserProfile(user, userProfiles);
+        return gravatarData;
       });
     } else {
       return $q.when();

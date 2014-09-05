@@ -192,14 +192,16 @@ angular.module('app')
 
   $rootScope.$on('$firebaseSimpleLogin:login', function(event, userData){
     if(loginDefer){
-      var user = StorageSrv.getUser();
       var userProfiles = StorageSrv.getUserProfiles();
-      user.isLogged = true;
-      user.loggedWith = loginMethod;
       userProfiles[loginMethod] = userData;
       StorageSrv.saveUserProfiles(userProfiles);
-      UserSrv.updateUserProfile(user, userProfiles);
-      loginDefer.resolve(user);
+      UserSrv.updateUserProfile().then(function(){
+        var user = StorageSrv.getUser();
+        user.isLogged = true;
+        user.loggedWith = loginMethod;
+        StorageSrv.saveUser(user);
+        loginDefer.resolve(user);
+      });
     }
   });
   $rootScope.$on('$firebaseSimpleLogin:logout', function(event){
