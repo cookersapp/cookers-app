@@ -23,12 +23,6 @@ angular.module('app')
   'use strict';
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
-  
-  ToastSrv.show('TEST', 'short', 'top', function(a){
-    console.log('success', a);
-  }, function(err){
-    console.log('error', err);
-  });
 
   var user = StorageSrv.getUser();
   if(user.email && Utils.isEmail(user.email) && !user.data.welcomeMailSent){
