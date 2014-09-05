@@ -33,7 +33,7 @@ angular.module('app')
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, StorageSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, $ionicLoading, StorageSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){
@@ -129,6 +129,14 @@ angular.module('app')
           $window.plugins.insomnia.allowSleepAgain();
         }
       }
+    });
+    
+    // show loadings
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+      $ionicLoading.show();
+    });
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+      $ionicLoading.hide();
     });
   }
 

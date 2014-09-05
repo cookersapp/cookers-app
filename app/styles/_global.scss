@@ -37,12 +37,15 @@ i {
     font-size: 20px;
     line-height: 25px;
     color: #aaa;
+    .spinner {
+      margin-top: 150px;
+    }
   }
 }
 
 // from http://tobiasahlin.com/spinkit/
 .spinner {
-  margin: 100px auto;
+  margin: auto;
   width: 40px;
   height: 40px;
   position: relative;

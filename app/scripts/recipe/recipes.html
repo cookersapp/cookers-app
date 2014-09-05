@@ -17,7 +17,7 @@
 
     <div class="screen">
       <div class="list">
-        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': ctx.settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes" ng-cloak>
+        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe.showIngredients, 'big-image': ctx.settings.bigImages}" ng-repeat="recipe in recipesOfWeek.recipes">
           <img class="portrait" ng-src="{{recipe.images.portrait}}" ng-click="toggleIngredients(recipe)">
           <img class="landing" ng-src="{{recipe.images.landing}}" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">

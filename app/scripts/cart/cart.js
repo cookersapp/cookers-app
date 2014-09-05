@@ -47,7 +47,6 @@ angular.module('app')
   });
   
   $scope.isCartEmpty = function(){
-    console.log('isCartEmpty', $scope.cart);
     return !($scope.cart && (($scope.cart.recipes && $scope.cart.recipes.length > 0) || ($scope.cart.customItems && $scope.cart.customItems.length > 0)));
   };
 

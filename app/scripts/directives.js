@@ -84,6 +84,18 @@ angular.module('app')
   'use strict';
   return {
     restrict: 'E',
-    template: '<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>'
+    scope: {
+      color: '@'
+    },
+    template: '<div class="spinner"><div class="dot1" ng-style="style"></div><div class="dot2" ng-style="style"></div></div>',
+    link: function(scope, element, attrs){
+      if(scope.color){
+        scope.style = {
+          'background-color': scope.color
+        };
+      } else {
+        scope.style = {};
+      }
+    }
   };
 });

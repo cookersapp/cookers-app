@@ -69,16 +69,10 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
 .constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
 .constant('supportTeamEmail', 'loicknuchel@gmail.com')
 
-.constant('unitConversion', [
-  {ref: 'g', convert: [
-    {unit: 'g', factor: 1},
-    {unit: 'kg', factor: 1000}
-  ]},
-  {ref: 'ml', convert: [
-    {unit: 'cl', factor: 10},
-    {unit: 'litre', factor: 1000}
-  ]}
-])
+.constant('$ionicLoadingConfig', {
+  template: '<loading color="rgba(255,255,255,0.7)"></loading>',
+  noBackdrop: true
+})
 
 .value('localStorageDefault', {
   app: {
@@ -125,7 +119,7 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
 .run(function($rootScope, $location, $ionicPlatform, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
   StorageSrv.init();
-  
+
   $rootScope.ctx = {
     settings: StorageSrv.getUser().settings,
     debug: debug,
