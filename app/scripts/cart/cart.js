@@ -60,7 +60,7 @@ angular.module('app')
   };
 })
 
-.controller('CartRecipesCtrl', function($scope, $window, CartSrv, StorageSrv, LogSrv){
+.controller('CartRecipesCtrl', function($scope, CartSrv, StorageSrv, ToastSrv, LogSrv){
   'use strict';
   $scope.selectedRecipe = null;
 
@@ -77,7 +77,7 @@ angular.module('app')
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartSrv.removeRecipe($scope.cart, recipe);
-    $window.plugins.toast.show('✔ recette supprimée de la liste de courses');
+    ToastSrv.show('✔ recette supprimée de la liste de courses');
   };
 
   $scope.updateServings = function(recipe, servingsValue){
@@ -345,7 +345,7 @@ angular.module('app')
 
 
 // this service should be used only on other services in this file !!!
-.factory('_CartUtils', function($window, _CartBuilder){
+.factory('_CartUtils', function(_CartBuilder){
   'use strict';
   var service = {
     recipesToItems: recipesToItems,

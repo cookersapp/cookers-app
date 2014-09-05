@@ -30,7 +30,7 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, ToastSrv, LogSrv){
   'use strict';
   var user = StorageSrv.getUser();
 
@@ -82,7 +82,7 @@ angular.module('app')
       $state.go('login');
     }, function(error){
       LogSrv.trackError('logout', error);
-      $window.plugins.toast.show(error.message);
+      ToastSrv.show(error.message);
     });
   };
   $scope.resetApp = function(){
@@ -369,7 +369,7 @@ angular.module('app')
           if(d.age_range.max)     { profile.more.maxAge           = d.age_range.max;                                  }
         }
         if(d.picture && d.picture.data){
-          if(d.picture.data.url)  { profile.avatar                = d.picture.data.url.replace('p50x50', 'p100x100'); }
+          if(d.picture.data.url)  { profile.avatar                = d.picture.data.url;                               }
         }
       }
     }

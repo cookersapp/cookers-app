@@ -116,7 +116,7 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
   }
 })
 
-.run(function($rootScope, $location, $ionicPlatform, LaunchSrv, StorageSrv, appVersion, debug){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, appVersion, debug){
   'use strict';
   StorageSrv.init();
 
@@ -126,9 +126,7 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
     appVersion: appVersion
   };
 
-  $ionicPlatform.ready(function(){
-    LaunchSrv.launch();
-  });
+  LaunchSrv.launch();
 
   // utils methods
   $rootScope.isActive = function(viewLocation){

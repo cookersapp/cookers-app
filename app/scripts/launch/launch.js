@@ -33,29 +33,29 @@ angular.module('app')
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $window, $state, $ionicPlatform, $ionicLoading, StorageSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){
-      var user = StorageSrv.getUser();
-      if(user && user.device && user.device.uuid){
-        launch();
-      } else {
-        firstLaunch();
-      }
+      $ionicPlatform.ready(function(){
+        var user = StorageSrv.getUser();
+        if(user && user.device && user.device.uuid){
+          launch();
+        } else {
+          firstLaunch();
+        }
+      });
     }
   };
 
   function firstLaunch(){
-    $ionicPlatform.ready(function(){
-      var user = StorageSrv.getUser();
-      user.device = Utils.getDevice();
-      StorageSrv.saveUser(user);
-      LogSrv.identify(user.device.uuid);
-      LogSrv.registerUser();
-      LogSrv.trackInstall(user.device.uuid);
-      launch();
-    });
+    var user = StorageSrv.getUser();
+    user.device = Utils.getDevice();
+    StorageSrv.saveUser(user);
+    LogSrv.identify(user.device.uuid);
+    LogSrv.registerUser();
+    LogSrv.trackInstall(user.device.uuid);
+    launch();
   }
 
   function launch(){
@@ -64,7 +64,7 @@ angular.module('app')
 
     // INIT is defined in top of index.html
     var launchTime = Date.now()-INIT;
-    if(debug && ionic.Platform.isWebView()){$window.plugins.toast.show('Application started in '+launchTime+' ms');}
+    if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(user.device.uuid, launchTime);
 
     // track state changes
@@ -122,15 +122,13 @@ angular.module('app')
 
     // phone will not sleep on states with attribute 'noSleep'
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-      if($window.plugins && $window.plugins.insomnia){
-        if(toState && toState.data && toState.data.noSleep){
-          $window.plugins.insomnia.keepAwake();
-        } else {
-          $window.plugins.insomnia.allowSleepAgain();
-        }
+      if(toState && toState.data && toState.data.noSleep){
+        InsomniaSrv.keepAwake();
+      } else {
+        InsomniaSrv.allowSleepAgain();
       }
     });
-    
+
     // show loadings
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $ionicLoading.show();

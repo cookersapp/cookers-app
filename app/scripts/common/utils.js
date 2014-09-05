@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('Utils', function($window, $interval){
+.factory('Utils', function($interval){
   'use strict';
   var service = {
     createUuid: createUuid,
@@ -101,66 +101,7 @@ angular.module('app')
   return service;
 })
 
-// for media plugin : http://plugins.cordova.io/#/package/org.apache.cordova.media
-.factory('MediaSrv', function($q, $ionicPlatform, $window, LogSrv){
-  'use strict';
-  var service = {
-    loadMedia: loadMedia,
-    getStatusMessage: getStatusMessage,
-    getErrorMessage: getErrorMessage,
-
-    loadTimerAlarm: function(onStop, onError, onStatus){ return loadMedia('sounds/timerEnds.mp3', onStop, onError, onStatus); }
-  };
-
-  function loadMedia(src, onStop, onError, onStatus){
-    var defer = $q.defer();
-    $ionicPlatform.ready(function(){
-      var mediaSuccess = function(){
-        if(onStop){onStop();}
-      };
-      var mediaError = function(err){
-        _logError(src, err);
-        if(onError){onError(err);}
-      };
-      var mediaStatus = function(status){
-        if(onStatus){onStatus(status);}
-      };
-
-      if($ionicPlatform.is('android')){src = '/android_asset/www/' + src;}
-      defer.resolve(new $window.Media(src, mediaSuccess, mediaError, mediaStatus));
-    });
-    return defer.promise;
-  }
-
-  function _logError(src, err){
-    LogSrv.trackError('media', {
-      src: src,
-      code: err.code,
-      message: getErrorMessage(err.code)
-    });
-  }
-
-  function getStatusMessage(status){
-    if(status === 0){return 'Media.MEDIA_NONE';}
-    else if(status === 1){return 'Media.MEDIA_STARTING';}
-    else if(status === 2){return 'Media.MEDIA_RUNNING';}
-    else if(status === 3){return 'Media.MEDIA_PAUSED';}
-    else if(status === 4){return 'Media.MEDIA_STOPPED';}
-    else {return 'Unknown status <'+status+'>';}
-  }
-
-  function getErrorMessage(code){
-    if(code === 1){return 'MediaError.MEDIA_ERR_ABORTED';}
-    else if(code === 2){return 'MediaError.MEDIA_ERR_NETWORK';}
-    else if(code === 3){return 'MediaError.MEDIA_ERR_DECODE';}
-    else if(code === 4){return 'MediaError.MEDIA_ERR_NONE_SUPPORTED';}
-    else {return 'Unknown code <'+code+'>';}
-  }
-
-  return service;
-})
-
-.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, $window){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet){
   'use strict';
   var service = {
     askMail: askMail,
@@ -185,7 +126,7 @@ angular.module('app')
       buttons: [
         { text: 'Non !', onTap: function(e){
           if($scope.data.shouldInsist){
-            $window.plugins.toast.show('S\'il-te-plaît ...');
+            ToastSrv.show('S\'il-te-plaît ...');
             $scope.data.shouldInsist = false;
             e.preventDefault();
           } else {
@@ -194,7 +135,7 @@ angular.module('app')
         }},
         { text: '<b>Voilà !</b>', type: 'button-positive', onTap: function(e){
           if($scope.data.email){
-            $window.plugins.toast.show('Merci :D');
+            ToastSrv.show('Merci :D');
             return $scope.data.email;
           } else {
             e.preventDefault();

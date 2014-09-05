@@ -19,10 +19,16 @@ angular.module('app')
   });
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, LogSrv, Utils){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
+  
+  ToastSrv.show('TEST', 'short', 'top', function(a){
+    console.log('success', a);
+  }, function(err){
+    console.log('error', err);
+  });
 
   var user = StorageSrv.getUser();
   if(user.email && Utils.isEmail(user.email) && !user.data.welcomeMailSent){

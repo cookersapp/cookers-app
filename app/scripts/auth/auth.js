@@ -22,7 +22,7 @@ angular.module('app')
   });
 })
 
-.controller('LoginCtrl', function($scope, $state, $window, PopupSrv, UserSrv, LoginSrv, SelectionSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, PopupSrv, UserSrv, LoginSrv, SelectionSrv, ToastSrv, LogSrv){
   'use strict';
   // this is only to preload selection of recipes at first launch !
   SelectionSrv.getCurrent();
@@ -77,7 +77,7 @@ angular.module('app')
       }, function(error){
         LogSrv.trackError('login:'+provider, error);
         $scope.loading[provider] = false;
-        $window.plugins.toast.show(error.message);
+        ToastSrv.show(error.message);
         $scope.state.hasError = true;
         $scope.credentials.password = '';
       });

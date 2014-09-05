@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, $window, Utils, _LocalStorageSrv, appVersion){
+.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
   'use strict';
   var service = {
     identify: Logger.identify,
