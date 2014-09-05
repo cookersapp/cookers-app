@@ -65,14 +65,15 @@ Your app is now running to your computer. To run it to your android device :
 
 ## Cordova plugin description
 
-- org.apache.cordova.device : allow to get phone data (uuid, phone model, android version...)
-- org.apache.cordova.console : not really sure of benefits but it's recommended (to have a better console.log)
-- https://github.com/driftyco/ionic-plugins-keyboard : allow to listen and interract with keyboard
-- org.apache.cordova.geolocation : allow to get precise user position (android.permission.ACCESS_COARSE_LOCATION et android.permission.ACCESS_FINE_LOCATION)
-- https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git : allow to show toast messages
-- org.apache.cordova.inappbrowser : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
-- https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git : prevent screen to sleep
-- org.apache.cordova.media : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
+- org.apache.cordova.device (0.2.11) : allow to get phone data (uuid, phone model, android version...)
+- org.apache.cordova.console (0.2.10) : not really sure of benefits but it's recommended (to have a better console.log)
+- https://github.com/driftyco/ionic-plugins-keyboard (1.0.3) : allow to listen and interract with keyboard
+- org.apache.cordova.geolocation (0.3.9) : allow to get precise user position (android.permission.ACCESS_COARSE_LOCATION et android.permission.ACCESS_FINE_LOCATION)
+- https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git (2.0.1) : allow to show toast messages
+- org.apache.cordova.inappbrowser (0.5.1) : allow to open some links outside the app ([explanation](http://intown.biz/2014/03/30/cordova-ionic-links-in-browser/))
+- https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git (4.0.1) : prevent screen to sleep
+- org.apache.cordova.media (0.2.12) : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
+- org.apache.cordova.file (1.3.0) : required by media plugin
 
 ## Release process
 
