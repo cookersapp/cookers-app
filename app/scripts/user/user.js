@@ -250,7 +250,9 @@ angular.module('app')
         ]
       };
 
-      return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
+      // remove gravatar because it does not return valid json if user is unknown :(
+      // to re-enable it, I should create a proxy server which wraps "not found" string in valid json !
+      /*return $http.jsonp('http://www.gravatar.com/'+hash+'.json?callback=JSON_CALLBACK').then(function(result){
         if(result && result.data){
           var g = result.data;
           if(g && g.entry && g.entry.length > 0){
@@ -261,6 +263,13 @@ angular.module('app')
           return defaultGravatarData;
         }
       }).then(function(gravatarData){
+        var userProfiles = StorageSrv.getUserProfiles();
+        userProfiles.gravatar = gravatarData;
+        StorageSrv.saveUserProfiles(userProfiles);
+        return gravatarData;
+      });*/
+      
+      return $q.when(defaultGravatarData).then(function(gravatarData){
         var userProfiles = StorageSrv.getUserProfiles();
         userProfiles.gravatar = gravatarData;
         StorageSrv.saveUserProfiles(userProfiles);

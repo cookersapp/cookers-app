@@ -32,7 +32,7 @@ angular.module('app')
     trackLogout: function(user){track('logout', {user: user});},
     trackClearCache: function(user){track('clear-cache', {user: user});},
     trackClearApp: function(user){track('clear-app', {user: user});},
-    trackError: function(type, data){track('error', {type: type, data: data});}
+    trackError: function(type, error){track('error', {type: type, error: error});}
   };
   var previousEventId = null;
 

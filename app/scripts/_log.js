@@ -131,7 +131,7 @@ var Logger = (function(){
       mixpanel.track(event.type, event.data, function(success, data){
         if(callback){callback(event, success ? 'ok' : 'ko');}
       });
-      if(event.type === 'error' && config.debug){window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');}
+      if(event.type === 'error' && config.debug && event.data.error){window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');}
       if(event.type === 'exception'){window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');}
     } else {
       if(callback){callback(event, 'unknown');}
