@@ -38,6 +38,10 @@ angular.module('app')
     google: false,
     email: false
   };
+  
+  $scope.state = {
+    hasError: false
+  };
 
   $scope.goIntro = function(){
     UserSrv.get().skipIntro = false;
@@ -74,6 +78,8 @@ angular.module('app')
         LogSrv.trackError('login:'+provider, error);
         $scope.loading[provider] = false;
         $window.plugins.toast.show(error.message);
+        $scope.state.hasError = true;
+        $scope.credentials.password = '';
       });
     } else {
       $scope.loading[provider] = false;

@@ -13,6 +13,11 @@
       <div class="col" ng-class="{active: tab !== 'login'}" ng-click="tab = 'register'">S'inscrire</div>
     </div>
 
+    <div class="alert alert-info card" ng-if="state.hasError">
+      Un problème ?<br>
+      N'hésite pas à me contacter, <a href="mailto:loic@cookers.io">loic@cookers.io</a>
+    </div>
+
     <form ng-submit="emailConnect(tab)">
       <div class="list list-inset">
         <label class="item item-input">

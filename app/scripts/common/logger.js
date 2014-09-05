@@ -32,7 +32,7 @@ angular.module('app')
     trackLogout: function(user){track('logout', {user: user});},
     trackClearCache: function(user){track('clear-cache', {user: user});},
     trackClearApp: function(user){track('clear-app', {user: user});},
-    trackError: function(id, error){track('error', {id: id, error: error});}
+    trackError: function(type, data){track('error', {type: type, data: data});}
   };
   var previousEventId = null;
 
@@ -85,7 +85,7 @@ angular.module('app')
     var app = _LocalStorageSrv.getApp();
     var user = _LocalStorageSrv.getUser();
     var userProfile = {};
-    if(app.firstLaunch){userProfile.$created = app.firstLaunch.format('llll');}
+    if(app.firstLaunch){userProfile.$created = new Date(app.firstLaunch);}
     if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
     if(app.firstName){userProfile.$first_name = app.firstName;}
     if(app.lastName){userProfile.$last_name = app.lastName;}

@@ -1,3 +1,4 @@
+    <!-- Inspiration : http://www.pinterest.com/pin/31103053652300431/ -->
 <ion-view class="login-screen">
   <ion-header-bar>
     <div class="buttons">
@@ -7,8 +8,12 @@
   </ion-header-bar>
 
   <ion-content>
-    <!-- Inspiration : http://www.pinterest.com/pin/31103053652300431/ -->
-    <h1 class="handwritten">La cuisine rapide !</h1>
+    <div class="alert alert-info card" ng-if="state.hasError">
+      Un problème ?<br>
+      N'hésite pas à me contacter, <a href="mailto:loic@cookers.io">loic@cookers.io</a>
+    </div>
+
+    <h1 class="handwritten" ng-if="!state.hasError">La cuisine rapide !</h1>
 
     <button class="connect-btn facebook" ng-click="facebookConnect()" ng-disabled="loading.facebook">
       <span class="icon">
