@@ -124,10 +124,10 @@ angular.module('app')
   };
 
   $scope.addRecipeToCart = function(recipe){
-    PopupSrv.changeServings($rootScope.settings.defaultServings, recipe.name).then(function(servings){
+    PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
         LogSrv.trackAddRecipeToCart(recipe.id, servings, null, 'recipe');
-        $rootScope.settings.defaultServings = servings;
+        $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
         CartSrv.addRecipe(cart, recipe, servings);
         ToastSrv.show('✔ recette ajoutée à la liste de courses');
