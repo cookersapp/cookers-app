@@ -109,7 +109,7 @@ angular.module('app')
   };
 })
 
-.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, LogSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
   'use strict';
   $scope.recipe = {};
   BackendSrv.getRecipe($stateParams.recipeId).then(function(recipe){
@@ -141,7 +141,7 @@ angular.module('app')
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, BackendSrv, PopupSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   // TODO : vocal commands : should go to next step when knock knock (speech recognition)
   // TODO : visibe timers : should stick active timers on top (or bottom?) of screen if you scroll

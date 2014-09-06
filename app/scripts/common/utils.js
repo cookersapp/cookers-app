@@ -101,7 +101,7 @@ angular.module('app')
   return service;
 })
 
-.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv){
   'use strict';
   var service = {
     askMail: askMail,
