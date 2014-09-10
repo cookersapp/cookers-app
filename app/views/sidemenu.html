@@ -5,11 +5,11 @@
 
   <ion-side-menu side="left">
     <ion-content class="sidemenu">
-      <div class="profile">
-        <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
+      <div class="profile" bindonce="user">
+        <div class="cover" bo-style="{'background-image': 'url('+imageCover+')'}"></div>
         <div menu-close ui-sref="app.profile">
-          <div class="avatar" ng-style="{'background-image': 'url('+user.avatar+')'}"></div>
-          <div class="username">{{user.name}}</div>
+          <div class="avatar" bo-style="{'background-image': 'url('+user.avatar+')'}"></div>
+          <div class="username" bo-text="user.name"></div>
           <div class="clearfix"></div>
         </div>
       </div>

@@ -3,18 +3,18 @@
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
-    <h1 class="title">Accueil <span ng-if="ctx.debug">(debug mode)</span></h1>
+    <h1 bindonce="ctx" class="title">Accueil <span bo-if="ctx.debug">(debug mode)</span></h1>
   </ion-header-bar>
 
   <ion-content class="home">
     <!-- contextual message -->
-    <div class="padding message" ng-repeat="msg in stickyMessages">
-      <div class="alert alert-{{msg.display}} card">
-        <span external-content="msg.content"></span>
+    <div class="padding message" bindonce ng-repeat="msg in stickyMessages">
+      <div class="alert card" bo-class="'alert-'+msg.display">
+        <span bo-html="msg.content"></span>
       </div>
     </div>
     <div class="padding message" ng-if="standardMessage">
-      <div class="alert alert-{{standardMessage.display}} card">
+      <div class="alert card" ng-class="'alert-'+standardMessage.display">
         <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
         <span external-content="standardMessage.content"></span>
       </div>
@@ -38,28 +38,5 @@
         <div class="col content">Mes recettes cuisinées</div>
       </div>
     </div>
-
-
-    <!--<div class="dashboard-card cart-infos">
-<div class="heading" ui-sref="app.cart.ingredients">Liste de courses</div>
-<div class="row" ng-if="recipesInCart.length > 0">
-<div class="col" ui-sref="app.cart.recipes"><strong>{{recipesInCart.length}}</strong><span>recettes</span></div>
-<div class="col" ui-sref="app.cart.ingredients"><strong>{{itemsInCart.length}}</strong><span>ingrédients</span></div>
-</div>
-<div class="row" ng-if="!(recipesInCart.length > 0)">
-<div class="col">
-<span>
-Votre liste actuelle est vide.<br>
-<button class="button button-block button-stable" ui-sref="app.recipes">Voir les recettes de la semaine</button>
-</span>
-</div>
-</div>
-</div>
-<div class="dashboard-card recipes-infos">
-<div class="heading" ui-sref="app.recipes">Recettes</div>
-<div class="row">
-<div class="col" ui-sref="app.recipes"><strong>{{recipesOfWeek.recipes.length}}</strong><span>cette semaine</span></div>
-</div>
-</div>-->
   </ion-content>
 </ion-view>

@@ -1,4 +1,4 @@
-angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'angular-md5', 'monospaced.elastic'])
+angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'angular-md5', 'monospaced.elastic', 'pasvaz.bindonce'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
@@ -116,10 +116,9 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
   }
 })
 
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, appVersion, debug){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, appVersion, debug, PerfSrv){
   'use strict';
   StorageSrv.init();
-
   $rootScope.ctx = {
     settings: StorageSrv.getUser().settings,
     debug: debug,
@@ -143,4 +142,16 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
       this.$apply(fn);
     }
   };
+
+  // perfs :
+  var body = angular.element(document.getElementsByTagName('body'));
+  var digests = 0;
+  $rootScope.$watch(function() {
+    digests++;
+    var watchers = PerfSrv.getWatchesForElement(body);
+    console.log(digests + ' calls ('+watchers.length+' watches)');
+    /*for(var i in watchers){
+      console.log('   watcher '+i, watchers[i]);
+    }*/
+  });
 });

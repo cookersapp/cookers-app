@@ -3,6 +3,11 @@
 # TODO
 
 - performance improvements :
+    - sources : http://blog.revolunet.com/angular-for-mobile/, http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck, http://www.tricedesigns.com/2013/03/11/performance-ux-considerations-for-successful-phonegap-apps/
+        - bindone everywhere : https://github.com/Pasvaz/bindonce
+        - uses fastclick : https://github.com/ftlabs/fastclick
+        - preload views using https://github.com/karlgoldstein/grunt-html2js
+        - destroy everything in directives (http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck#/20)
     - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
     - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
     - prefetching/caching templates
@@ -12,6 +17,7 @@
     - optimize recipe images
     
 - TODO
+    - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
     - tracking :
         - mettre en place segment.io
         - où est ce que les gens s'arrêtent dans les recettes de la semaine

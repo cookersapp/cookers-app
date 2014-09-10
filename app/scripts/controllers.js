@@ -2,6 +2,7 @@ angular.module('app')
 
 .controller('AppCtrl', function($scope, $interval, $ionicPlatform, $ionicSideMenuDelegate, StorageSrv){
   'use strict';
+
   $ionicPlatform.ready(function(){
     $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
     $scope.imageCover = $scope.defaultCovers[0];
