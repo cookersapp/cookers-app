@@ -30,7 +30,7 @@
     "angular-animate": "~1.2.21",
     "angular-touch": "~1.2.21",
     "angular-ui-router": "~0.2.10",
-    "ionic": "1.0.0-beta.11",
+    "ionic": "1.0.0-beta.12",
     "ngCordova": "~0.1.2-alpha",
     "font-awesome": "~4.1.0",
     "moment": "~2.7.0",
