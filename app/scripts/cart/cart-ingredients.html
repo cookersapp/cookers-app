@@ -9,11 +9,11 @@
       <button class="button button-small" ng-click="cancelCustomItems()">Annuler</button>
     </div>
     <div class="list to-buy" ng-if="!editingCustomItems && customItems && customItems.length > 0 && cartHasCustomItemsToBuy()">
-      <div class="item item-cart-ingredient" ng-repeat="item in customItems" ng-if="!item.bought">
+      <div class="item item-cart-ingredient" bindonce ng-repeat="item in customItems" ng-if="!item.bought">
         <div class="check pull-right">
           <div class="box" ng-click="buyCustomItem(item)"></div>
         </div>
-        <div class="text">{{item.name}}</div>
+        <div class="text" bo-bind="item.name"></div>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
   </div>
 
   <div class="screen">
-    <div class="no-items-to-buy" ng-if="!(cart && cart.recipes && cart.recipes.length > 0)">
+    <div class="no-items-to-buy" bo-if="!(cart && cart.recipes && cart.recipes.length > 0)">
       Aucune recette ajoutée à la liste de course.
       <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
     </div>
@@ -37,38 +37,36 @@
     </div>
 
     <div ng-if="!cart.archived">
-      <div class="list card to-buy" ng-if="items && items.length > 0 && cartHasItemsToBuy()">
-        <div class="item item-cart-ingredient {{item.food.category.slug}}" ng-repeat="item in items" ng-if="!isBought(item)">
+      <div class="list card to-buy" ng-if="cartHasItemsToBuy()">
+        <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in items" ng-if="!isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="buyItem(item)"></div>
           </div>
-          <div class="text" ng-click="toggleItem(item)">{{item | ingredient}}</div>
+          <div class="text" ng-click="toggleItem(item)" bo-bind="item | ingredient"></div>
 
           <div class="details" ng-if="isOpened(item)">
-            <div class="source" ng-class="{'source-bought': source.ingredient.bought}" ng-repeat="source in item.sources">
-              <div class="quantity pull-right">
-                {{source.quantity | quantity}}
-              </div>
-              <div class="text">{{source.recipe.name}} ({{source.recipe.cartData.servings | servings}})</div>
+            <div class="source" ng-class="{'source-bought': source.ingredient.bought}" bindonce ng-repeat="source in item.sources">
+              <div class="quantity pull-right" bo-bind="source.quantity | quantity"></div>
+              <div class="text" bo-bind="source.recipe.name+' ('+(source.recipe.cartData.servings | servings)+')'"></div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="list bought">
-        <div class="item item-cart-ingredient" ng-repeat="item in customItems" ng-if="item.bought">
+        <div class="item item-cart-ingredient" bindonce ng-repeat="item in customItems" ng-if="item.bought">
           <div class="check pull-right">
             <div class="box" ng-click="unbuyCustomItem(item)">✔</div>
           </div>
-          <div class="text">{{item.name}}</div>
+          <div class="text" bo-bind="item.name"></div>
         </div>
       </div>
       <div class="list bought">
-        <div class="item item-cart-ingredient" ng-repeat="item in items" ng-if="isBought(item)">
+        <div class="item item-cart-ingredient" bindonce ng-repeat="item in items" ng-if="isBought(item)">
           <div class="check pull-right">
             <div class="box" ng-click="unbuyItem(item)">✔</div>
           </div>
-          <div class="text">{{item | ingredient}}</div>
+          <div class="text" bo-bind="item | ingredient"></div>
         </div>
       </div>
     </div>

@@ -1,13 +1,12 @@
+<!-- Inspiration : http://www.pinterest.com/pin/31103053652300405/ -->
 <ion-view class="login-screen alt">
   <ion-header-bar>
     <div class="buttons">
-      <!--<button class="button button-icon ion-arrow-left-c" ng-click="goIntro()"></button>-->
       <h1 class="title"><img src="images/cookers-white.png"></h1>
     </div>
   </ion-header-bar>
 
   <ion-content>
-    <!-- Inspiration : http://www.pinterest.com/pin/31103053652300405/ -->
     <div class="row email-tabs" ng-init="tab = 'register'">
       <div class="col" ng-class="{active: tab === 'login'}" ng-click="tab = 'login'">Se connecter</div>
       <div class="col" ng-class="{active: tab !== 'login'}" ng-click="tab = 'register'">S'inscrire</div>
@@ -29,7 +28,7 @@
           <input type="password" ng-model="credentials.password" blur-on-keyboard-out required>
         </label>
         <button type="submit" class="button button-full button-custom" ng-disabled="loading.email">
-          <i class="fa fa-spinner fa-spin" ng-if="loading.email"></i>
+          <i class="fa fa-spinner fa-spin loading" ng-if="loading.email"></i>
           <span ng-show="tab === 'login'">Se connecter</span>
           <span ng-show="tab !== 'login'">S'inscrire</span>
         </button>

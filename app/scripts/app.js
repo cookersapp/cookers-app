@@ -142,16 +142,4 @@ angular.module('app', ['ionic', 'ionic.contrib.ui.cards', 'ngSanitize', 'ngAnima
       this.$apply(fn);
     }
   };
-
-  // perfs :
-  var body = angular.element(document.getElementsByTagName('body'));
-  var digests = 0;
-  $rootScope.$watch(function() {
-    digests++;
-    var watchers = PerfSrv.getWatchesForElement(body);
-    console.log(digests + ' calls ('+watchers.length+' watches)');
-    /*for(var i in watchers){
-      console.log('   watcher '+i, watchers[i]);
-    }*/
-  });
 });

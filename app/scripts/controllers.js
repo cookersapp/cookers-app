@@ -6,15 +6,15 @@ angular.module('app')
   $scope.imageCover = $scope.defaultCovers[0];
   $scope.user = StorageSrv.getUser();
 
-  /*$interval(function(){
-      var recipesHistory = StorageSrv.getRecipeHistory();
-      var historyLength = recipesHistory ? recipesHistory.length : 0;
-      if(historyLength > 0 && Math.random() > (historyLength/$scope.defaultCovers.length)){
-        $scope.imageCover = recipesHistory[Math.floor(Math.random() * historyLength)].images.landing;
-      } else {
-        $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
-      }
-    }, 10000);*/
+  $interval(function(){
+    var recipesHistory = StorageSrv.getRecipeHistory();
+    var historyLength = recipesHistory ? recipesHistory.length : 0;
+    if(historyLength > 0 && Math.random() > (historyLength/$scope.defaultCovers.length)){
+      $scope.imageCover = recipesHistory[Math.floor(Math.random() * historyLength)].images.landing;
+    } else {
+      $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
+    }
+  }, 10000);
 })
 
 .controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils){

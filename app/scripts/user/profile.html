@@ -6,20 +6,19 @@
     <h1 class="title">Mon profil</h1>
   </ion-header-bar>
 
-  <ion-content class="profile-screen">
+  <ion-content class="profile-screen" bindonce="user">
     <div class="profile" ng-click="changeCover()"
-         style="background-color: {{user.background}};"
+         bo-style="{'background-color': user.background}"
          ng-style="{'background-image': 'url('+user.backgroundCover+')'}">
       <div>&nbsp;</div>
       <div class="avatar">
-        <div class="hexagon" ng-style="{'background-image': 'url('+user.avatar+')'}">
+        <div class="hexagon" bo-style="{'background-image': 'url('+user.avatar+')'}">
           <div class="hexTop"></div>
           <div class="hexBottom"></div>
         </div>
       </div>
-      <div class="name">{{user.name}}</div>
+      <div class="name" bo-bind="user.name"></div>
     </div>
-    <div class="gravatar-helper">Modifiez votre profil sur <a href="http://gravatar.com">gravatar.com</a></div>
 
     <div class="settings">
       <div class="list card">
@@ -28,18 +27,14 @@
           Afficher le prix des recettes
           <label class="toggle toggle-custom">
             <input type="checkbox" ng-model="ctx.settings.showPrices">
-            <div class="track">
-              <div class="handle"></div>
-            </div>
+            <div class="track"><div class="handle"></div></div>
           </label>
         </div>
         <div class="item item-toggle">
           Grandes images de recette
           <label class="toggle toggle-custom">
             <input type="checkbox" ng-model="ctx.settings.bigImages">
-            <div class="track">
-              <div class="handle"></div>
-            </div>
+            <div class="track"><div class="handle"></div></div>
           </label>
         </div>
       </div>
@@ -47,7 +42,7 @@
     <div class="settings">
       <div class="list card">
         <div class="item item-divider">Application</div>
-        <div class="item">Version de l'application <span class="badge badge-positive">{{ctx.appVersion}}</span></div>
+        <div class="item">Version de l'application <span class="badge badge-positive" bo-bind="ctx.appVersion"></span></div>
         <a class="item item-icon-right" href="http://cookers.io/">A propos <i class="icon ion-chevron-right icon-accessory"></i></a>
         <div class="item item-icon-right" ng-click="clearCache()">Vider le cache <i class="icon ion-chevron-right icon-accessory"></i></div>
         <div class="item item-icon-right" ng-click="logout()">Se déconnecter <i class="icon ion-chevron-right icon-accessory"></i></div>

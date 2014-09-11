@@ -39,16 +39,14 @@ angular.module('app')
 .controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, LogSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  if(!$scope.cart.$formated){$scope.cart.$formated = {};}
+  $scope.cart.$formated.isEmpty = isEmpty($scope.cart);
 
   $ionicPopover.fromTemplateUrl('scripts/cart/cart-popover.html', {
     scope: $scope
   }).then(function(popover){
     $scope.popover = popover;
   });
-  
-  $scope.isCartEmpty = function(){
-    return !($scope.cart && (($scope.cart.recipes && $scope.cart.recipes.length > 0) || ($scope.cart.customItems && $scope.cart.customItems.length > 0)));
-  };
 
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){
@@ -58,6 +56,10 @@ angular.module('app')
       $state.go('app.home');
     }
   };
+  
+  function isEmpty(cart){
+    return !(cart && ((cart.recipes && cart.recipes.length > 0) || (cart.customItems && cart.customItems.length > 0)));
+  }
 })
 
 .controller('CartRecipesCtrl', function($scope, CartSrv, StorageSrv, ToastSrv, LogSrv){

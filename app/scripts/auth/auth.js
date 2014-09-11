@@ -43,11 +43,6 @@ angular.module('app')
     hasError: false
   };
 
-  $scope.goIntro = function(){
-    UserSrv.get().skipIntro = false;
-    $state.go('intro');
-  };
-
   $scope.facebookConnect = function(){ connect('facebook'); };
   $scope.twitterConnect = function(){ connect('twitter'); };
   $scope.googleConnect = function(){ connect('google'); };
