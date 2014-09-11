@@ -32,7 +32,7 @@ angular.module('app')
 
 .controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, ToastSrv, LogSrv){
   'use strict';
-  var user = StorageSrv.getUser();
+  $scope.user = StorageSrv.getUser();
 
   var covers = [
     'images/profile-covers/cover01.jpg',
@@ -60,25 +60,26 @@ angular.module('app')
     'images/profile-covers/cover23.jpg',
     'images/profile-covers/cover24.jpg'
   ];
-  if(!gravatarCoverIsInCovers(user, covers) && getGravatarCover(user)){ covers.unshift(getGravatarCover(user)); }
+  if(!gravatarCoverIsInCovers($scope.user, covers) && getGravatarCover($scope.user)){ covers.unshift(getGravatarCover($scope.user)); }
   var currentCover = -1;
   $scope.changeCover = function(){
+    console.log('changeCover')
     currentCover = (currentCover+1)%covers.length;
-    user.backgroundCover = covers[currentCover];
-    StorageSrv.saveUser(user);
-    LogSrv.trackChangeSetting('profileCover', user.backgroundCover);
+    $scope.user.backgroundCover = covers[currentCover];
+    StorageSrv.saveUser($scope.user);
+    LogSrv.trackChangeSetting('profileCover', $scope.user.backgroundCover);
     LogSrv.registerUser();
   };
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache(user.device.uuid);
+      LogSrv.trackClearCache($scope.user.device.uuid);
       StorageSrv.clearCache();
     }
   };
   $scope.logout = function(){
     LoginSrv.logout().then(function(){
-      LogSrv.trackLogout(user.device.uuid);
+      LogSrv.trackLogout($scope.user.device.uuid);
       $state.go('login');
     }, function(error){
       LogSrv.trackError('logout', error);
@@ -87,7 +88,7 @@ angular.module('app')
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp(user.device.uuid);
+      LogSrv.trackClearApp($scope.user.device.uuid);
       StorageSrv.clear();
       if(navigator.app){
         navigator.app.exitApp();
