@@ -190,7 +190,7 @@ angular.module('app')
     if(!angular.equals(localStorageCache[key], value)){
       localStorageCache[key] = angular.copy(value);
       if($window.localStorage){
-        $window.localStorage.setItem('ionic-'+key, JSON.stringify(value));
+        $window.localStorage.setItem('ionic-'+key, JSON.stringify(localStorageCache[key]));
       }
     } else {
       console.debug('Don\'t save <'+key+'> because values are equals !');

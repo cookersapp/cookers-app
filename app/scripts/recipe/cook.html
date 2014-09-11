@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view bindonce="recipe">
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
@@ -9,19 +9,19 @@
     </div>
   </ion-header-bar>
 
-  <ion-content class="cook-screen" ng-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
+  <ion-content class="cook-screen" bo-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
     <div class="screen" ng-cloack>
       <div class="header row card">
         <div class="col col-33 picture">
-          <img ng-src="{{recipe.images.portrait}}">
+          <img bo-src="recipe.images.portrait">
         </div>
         <div class="col text">
-          <h1 class="title">{{recipe.name}}</h1>
+          <h1 class="title" bo-bind="recipe.name"></h1>
           <div class="tags">
-            <span ng-click="changeServings()">{{recipe.servings | servings:servingsAdjust}}</span>
-            <span>{{recipe.time | cookTime}}</span>
+            <span ng-click="changeServings()" ng-bind="recipe.servings | servings:servingsAdjust"></span>
+            <span bo-bind="recipe.time | cookTime"></span>
           </div>
         </div>
       </div>
@@ -29,30 +29,30 @@
         <div class="col">
           <h2 class="title">Ingrédients</h2>
           <ul>
-            <li ng-repeat="ingredient in recipe.ingredients" class="{{ingredient.role}}">{{ingredient | ingredient:servingsAdjust}}</li>
+            <li bindonce ng-repeat="ingredient in recipe.ingredients" bo-class="ingredient.role" ng-bind="ingredient | ingredient:servingsAdjust"></li>
           </ul>
         </div>
         <div class="col">
           <h2 class="title">Ustensiles</h2>
           <ul>
-            <li ng-repeat="tool in recipe.tools" class="title">{{tool | tool}}</li>
+            <li bindonce ng-repeat="tool in recipe.tools" class="title" bo-bind="tool | tool"></li>
           </ul>
         </div>
       </div>
       <div class="cooking">
         <h2 class="title">Préparation</h2>
-        <div ng-repeat="instruction in recipe.instructions">
+        <div bindonce ng-repeat="instruction in recipe.instructions">
           <div class="step card">
-            <h3 ng-if="instruction.title" ng-bind-html="instruction.title"></h3>
-            <div ng-bind-html="instruction.content"></div>
+            <h3 bo-if="instruction.title" bo-html="instruction.title"></h3>
+            <div bo-html="instruction.content"></div>
           </div>
-          <div class="timers" ng-if="instruction.timers">
+          <div class="timers" bo-if="instruction.timers">
             <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
           </div>
         </div>
       </div>
       <div class="cooked">
-        <img ng-src="{{recipe.images.landing}}">
+        <img bo-src="recipe.images.landing">
         <div class="content">
           <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
           <h1 class="title handwritten">

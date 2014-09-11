@@ -1,11 +1,11 @@
-<div class="timer {{timer.color}}" ng-class="{active: timer.clock, alarm: timer.alarm}" ng-click="timerClick()" ng-if="timer.duration > 0">
-  <div class="label" ng-if="timer.label" ng-bind-html="timer.label"></div>
-  <div class="time">{{timer.duration - time | duration}}</div>
+<div class="timer" bo-class="timer.color" ng-class="{active: timer.clock, alarm: timer.alarm}" ng-click="timerClick()" ng-if="timer.duration > 0">
+  <div class="label" bo-if="timer.label" bo-html="timer.label"></div>
+  <div class="time" ng-bind="timer.duration - time | duration"></div>
   <ul class="steps">
-    <li class="step" ng-class="{selected: isSelected(step), unselected: isUnselected(step)}" ng-repeat="step in timer.steps">
-      <div class="date">{{step.time | duration}}</div>
+    <li class="step" ng-class="{selected: isSelected(step), unselected: isUnselected(step)}" bindonce ng-repeat="step in timer.steps">
+      <div class="date" bo-bind="step.time | duration"></div>
       <div class="circle"></div>
-      <div class="label">{{step.label}}</div>
+      <div class="label" bo-bind="step.label"></div>
     </li>
   </ul>
 </div>

@@ -2,13 +2,11 @@ angular.module('app')
 
 .controller('AppCtrl', function($scope, $interval, $ionicPlatform, $ionicSideMenuDelegate, StorageSrv){
   'use strict';
+  $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
+  $scope.imageCover = $scope.defaultCovers[0];
+  $scope.user = StorageSrv.getUser();
 
-  $ionicPlatform.ready(function(){
-    $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
-    $scope.imageCover = $scope.defaultCovers[0];
-    $scope.user = StorageSrv.getUser();
-
-    $interval(function(){
+  /*$interval(function(){
       var recipesHistory = StorageSrv.getRecipeHistory();
       var historyLength = recipesHistory ? recipesHistory.length : 0;
       if(historyLength > 0 && Math.random() > (historyLength/$scope.defaultCovers.length)){
@@ -16,8 +14,7 @@ angular.module('app')
       } else {
         $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
       }
-    }, 10000);
-  });
+    }, 10000);*/
 })
 
 .controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils){

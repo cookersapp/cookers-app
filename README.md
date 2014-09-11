@@ -5,6 +5,7 @@
 - performance improvements :
     - sources : http://blog.revolunet.com/angular-for-mobile/, http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck, http://www.tricedesigns.com/2013/03/11/performance-ux-considerations-for-successful-phonegap-apps/
         - bindone everywhere : https://github.com/Pasvaz/bindonce
+        - collection repeat for week recipes ?
         - uses fastclick : https://github.com/ftlabs/fastclick
         - preload views using https://github.com/karlgoldstein/grunt-html2js
         - destroy everything in directives (http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck#/20)
@@ -12,12 +13,16 @@
     - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
     - prefetching/caching templates
     - bind once
+        - ui-sref holds a watcher, how to avoid that ? (bo-href ???)
     - DOM caching (http://forum.ionicframework.com/t/lack-of-dom-caching-killing-performance-on-slower-devices/4572)
     - concathenate templates (http://forum.ionicframework.com/t/compressed-code-is-fast/2225)
     - optimize recipe images
     
 - TODO
     - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
+    - see :
+        - http://forum.ionicframework.com/t/using-imagecache-in-ionic/4646
+        - http://forum.ionicframework.com/t/how-to-login-with-facebook-now/9305
     - tracking :
         - mettre en place segment.io
         - où est ce que les gens s'arrêtent dans les recettes de la semaine

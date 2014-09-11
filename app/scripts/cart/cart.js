@@ -282,15 +282,23 @@ angular.module('app')
     return _CartUtils.recipesToItems(recipes);
   }
 
-  function getRecipesToCook(){
+  function getRecipesToCook(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
-    return _.filter(recipes, {cartData: {cooked: false}});
+    var ret = _.filter(recipes, {cartData: {cooked: false}});
+    if(order && typeof order === 'function' && ret && Array.isArray(ret)){
+      ret.sort(order);
+    }
+    return ret;
   }
 
-  function getCookedRecipes(){
+  function getCookedRecipes(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
-    return cartCookedRecipes.concat(StorageSrv.getStandaloneCookedRecipes());
+    var ret = cartCookedRecipes.concat(StorageSrv.getStandaloneCookedRecipes());
+    if(order && typeof order === 'function' && ret && Array.isArray(ret)){
+      ret.sort(order);
+    }
+    return ret;
   }
 
   function getItems(cart){
