@@ -17,7 +17,7 @@
 
     <div class="screen">
       <div class="list">
-        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes" bo-class="{'big-image': ctx.settings.bigImages}">
+        <div class="item item-recipe-img-full card" bo-class="{'big-image': ctx.settings.bigImages}" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
           <img class="portrait" bo-src="recipe.images.portrait" ng-click="toggleIngredients(recipe)">
           <img class="landing" bo-src="recipe.images.landing" ng-click="toggleIngredients(recipe)">
           <div class="legend-top">
@@ -30,7 +30,7 @@
             <div class="list">
               <div class="item item-divider" bo-bind="'Ingrédients pour '+(recipe.servings | servings)"></div>
               <div bindonce ng-repeat="ingredient in recipe.ingredients" class="item ingredient" bo-class="ingredient.role" bo-bind="ingredient | ingredient"></div>
-              <a class="fa-stack fa-lg calm details" ui-sref="app.recipe({recipeId: recipe.id})">
+              <a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id">
                 <i class="fa fa-circle-thin fa-stack-2x"></i>
                 <i class="fa fa-info fa-stack-1x"></i>
               </a>
@@ -56,10 +56,10 @@
       </div>
 
       <div class="list card feedback">
-        <div class="item item-text-wrap" ui-sref="app.feedback">
+        <a class="item item-text-wrap" href="#/app/feedback">
           C'était notre sélection de la semaine !<br>
           Tu valides ?
-        </div>
+        </a>
         <div class="item row">
           <div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>
           <div class="col" ng-click="recipeFeedback(2)"><img src="images/great.png"></div>

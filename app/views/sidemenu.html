@@ -6,7 +6,7 @@
   <ion-side-menu side="left">
     <ion-content class="sidemenu">
       <div class="profile" bindonce="user">
-        <div class="cover" bo-style="{'background-image': 'url('+imageCover+')'}"></div>
+        <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
         <div menu-close ui-sref="app.profile">
           <div class="avatar" bo-style="{'background-image': 'url('+user.avatar+')'}"></div>
           <div class="username" bo-text="user.name"></div>
@@ -15,15 +15,15 @@
       </div>
       <div class="list">
         <div class="item item-divider">Cookers</div>
-        <a class="item item-icon-left" menu-close ui-sref="app.home"><i class="icon ion-home"></i> Accueil</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.recipes"><i class="icon ion-lightbulb"></i> La sélection Cookers</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.cart.ingredients"><i class="icon ion-clipboard"></i> Ma liste de courses</a>
-        <a class="item item-icon-left" menu-close ui-sref="app.tocook"><i class="icon ion-clock"></i> Mes recettes à cuisiner</a>
+        <a class="item item-icon-left" menu-close href="#/app/home"><i class="icon ion-home"></i> Accueil</a>
+        <a class="item item-icon-left" menu-close href="#/app/recipes"><i class="icon ion-lightbulb"></i> La sélection Cookers</a>
+        <a class="item item-icon-left" menu-close href="#/app/cart/ingredients"><i class="icon ion-clipboard"></i> Ma liste de courses</a>
+        <a class="item item-icon-left" menu-close href="#/app/tocook"><i class="icon ion-clock"></i> Mes recettes à cuisiner</a>
       </div>
       <div class="list">
         <div class="item item-divider">Outils</div>
-        <a class="item item-icon-left" menu-close ui-sref="app.feedback"><i class="icon ion-android-forums"></i> Donne ton avis</a>
-        <a class="item item-icon-left" menu-close ui-sref="intro"><i class="icon ion-log-in"></i> Introduction</a>
+        <a class="item item-icon-left" menu-close href="#/app/feedback"><i class="icon ion-android-forums"></i> Donne ton avis</a>
+        <a class="item item-icon-left" menu-close href="#/intro"><i class="icon ion-log-in"></i> Introduction</a>
       </div>
     </ion-content>
   </ion-side-menu>

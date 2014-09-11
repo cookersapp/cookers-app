@@ -142,6 +142,7 @@ angular.module('app')
         if(sUserStandaloneCookedRecipes)  { _LocalStorageSrv.setStandaloneCookedRecipes(sUserStandaloneCookedRecipes); }
         if(sUserRecipeHistory)            { _LocalStorageSrv.setRecipeHistory(sUserRecipeHistory);                     }
         if(sDataGlobalmessages)           { _LocalStorageSrv.setGlobalmessages(sDataGlobalmessages);                   }
+        LogSrv.registerUser();
       }
     }
   }

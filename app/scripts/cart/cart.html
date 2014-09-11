@@ -8,11 +8,11 @@
       <button class="button button-icon ion-more" ng-click="popover.show($event)"></button>
     </div>
   </ion-header-bar>
-  <ion-content class="cart-screen" bo-class="{empty: cart.$formated.isEmpty}">
+  <ion-content class="cart-screen" ng-class="{empty: cart.$formated.isEmpty}">
     <div class="cart-chooser padding hide-on-keyboard-open">
       <div class="button-bar bar-light">
-        <a class="button" ng-class="{active: isActive('.*recipes')}" ui-sref="app.cart.recipes">Recettes</a>
-        <a class="button" ng-class="{active: isActive('.*ingredients')}" ui-sref="app.cart.ingredients">Ingrédients</a>
+        <a class="button" href="#/app/cart/recipes" ng-class="{active: isActive('.*recipes')}">Recettes</a>
+        <a class="button" href="#/app/cart/ingredients" ng-class="{active: isActive('.*ingredients')}">Ingrédients</a>
       </div>
     </div>
     <ui-view></ui-view>

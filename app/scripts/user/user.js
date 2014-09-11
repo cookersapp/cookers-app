@@ -63,7 +63,6 @@ angular.module('app')
   if(!gravatarCoverIsInCovers($scope.user, covers) && getGravatarCover($scope.user)){ covers.unshift(getGravatarCover($scope.user)); }
   var currentCover = -1;
   $scope.changeCover = function(){
-    console.log('changeCover')
     currentCover = (currentCover+1)%covers.length;
     $scope.user.backgroundCover = covers[currentCover];
     StorageSrv.saveUser($scope.user);

@@ -13,13 +13,13 @@
       <div class="row card" bindonce ng-repeat="recipe in recipes">
         <div class="col col-33 picture" bo-if="$index%2 === 0"><img bo-src="recipe.images.portrait"></div>
         <div class="col text">
-          <a class="cart-link" ui-sref="app.cart.ingredients"><i class="icon ion-clipboard"></i></a>
+          <a class="cart-link" href="#/app/cart/ingredients"><i class="icon ion-clipboard"></i></a>
           <h1 class="title" bo-bind="recipe.name"></h1>
           <div class="progress">
             <div class="progress-bar" bo-class="{empty: recipe.cartData.boughtPc === 0}" bo-style="{width: recipe.cartData.boughtPc+'%'}"
                  bo-bind="(recipe.cartData.boughtPc | mynumber:0)+'% acheté'"></div>
           </div>
-          <button class="button" ui-sref="app.cook({cartId: recipe.cartData.cart, recipeId: recipe.id})">Cuisiner</button>
+          <a class="button" bo-href="'#/app/cook/'+recipe.cartData.cart+'/'+recipe.id">Cuisiner</a>
           <div class="tags">
             <span ng-click="changeServings(recipe)" ng-bind="recipe.cartData.servings | servings"></span>
             <span bo-bind="recipe.time | cookTime"></span>

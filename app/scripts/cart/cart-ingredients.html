@@ -19,13 +19,13 @@
   </div>
   <div class="screen-empty">
     La liste de courses est vide :(
-    <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute une recette !</button>
+    <a class="button button-block button-balanced" href="#/app/recipes">Ajoute une recette !</a>
   </div>
 
   <div class="screen">
     <div class="no-items-to-buy" bo-if="!(cart && cart.recipes && cart.recipes.length > 0)">
       Aucune recette ajoutée à la liste de course.
-      <button class="button button-block button-balanced" ui-sref="app.recipes">Ajoute la première recette !</button>
+      <a class="button button-block button-balanced" href="#/app/recipes">Ajoute la première recette !</a>
     </div>
     <div class="no-items-to-buy" ng-if="cartHasItems() && !cartHasItemsToBuy() && !cartHasCustomItemsToBuy() && cart.recipes && cart.recipes.length > 0 && !cart.archived">
       Bravo ! Tu as tout acheté !!!<br>

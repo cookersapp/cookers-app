@@ -111,7 +111,7 @@ var Logger = (function(){
         } else {
           stopSendEvents();
         }
-      }, 1000);
+      }, 3000);
     }
   }
 

@@ -366,6 +366,7 @@ angular.module('app')
 
       // clean alarms if leave view
       scope.$on('$destroy', function(){
+        stopTimer();
         stopAlarm();
       });
 
