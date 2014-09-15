@@ -85,6 +85,7 @@ angular.module('app')
     var app = _LocalStorageSrv.getApp();
     var user = _LocalStorageSrv.getUser();
     var userProfile = {};
+    if(app.loggedWith){userProfile.loggedWith = app.loggedWith;}
     if(app.firstLaunch){userProfile.$created = new Date(app.firstLaunch);}
     if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
     if(app.firstName){userProfile.$first_name = app.firstName;}
