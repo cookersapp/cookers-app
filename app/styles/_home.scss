@@ -29,7 +29,9 @@
         text-align: center;
       }
       .content {
-        padding: 33px 10px;
+        display: flex;
+        align-items: center; /* align vertical */
+        padding: 10px 10px;
         color: #aaa;
         font-size: 14px;
         text-transform: uppercase;
@@ -53,8 +55,9 @@
       .media { background: #EDB92E; }
     }
   }
+}
 
-
+.home {
   // old versions
   .dashboard-card {
     border: 1px solid #d4d4d4;

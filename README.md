@@ -115,6 +115,10 @@ Inspirationnal apps :
 - [Secret](https://play.google.com/store/apps/details?id=ly.secret.android)
 - [Jelly](https://play.google.com/store/apps/details?id=com.jellyhq.starfish)
 
+Tailles d'écran :
+
+- iPhone 5 : 320x568
+
 ## Tools 
 
 - images : [croppola](http://www.croppola.com/) (corp), [fixpicture](http://www.fixpicture.org/) (resize) and [kraken](https://kraken.io/web-interface) (optimize)
@@ -125,6 +129,10 @@ Inspirationnal apps :
 - cordova plugins : http://plugreg.com/plugins and http://plugins.cordova.io/
 
 # Changelog
+
+## v0.3.2
+
+- prix pour la liste de courses
 
 ## v0.3.0
 
