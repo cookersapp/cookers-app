@@ -26,7 +26,7 @@
     "Logger": false,
     "Firebase": false,
     "UserVoice": false,
-    "mixpanel": false,
+    "analytics": false,
     "moment": false,
     "getSlug": false,
     "_": false

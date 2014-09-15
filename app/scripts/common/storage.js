@@ -142,8 +142,14 @@ angular.module('app')
         if(sUserStandaloneCookedRecipes)  { _LocalStorageSrv.setStandaloneCookedRecipes(sUserStandaloneCookedRecipes); }
         if(sUserRecipeHistory)            { _LocalStorageSrv.setRecipeHistory(sUserRecipeHistory);                     }
         if(sDataGlobalmessages)           { _LocalStorageSrv.setGlobalmessages(sDataGlobalmessages);                   }
-        LogSrv.registerUser();
+        previousVersion = '0.3.1';
       }
+      if(previousVersion === '0.3.1'){
+        var sUser = _LocalStorageSrv.getUser();
+        if(!sUser.id && sUser.device && sUser.device.uuid){sUser.id = sUser.device.uuid;}
+        _LocalStorageSrv.setUser(sUser);
+      }
+      LogSrv.registerUser();
     }
   }
 

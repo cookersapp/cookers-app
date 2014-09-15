@@ -83,6 +83,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
     skipIntro: false,
     isLogged: false,
     loggedWith: null,
+    id: null,
     email: '',
     name: 'Anonymous',
     avatar: 'images/user.jpg',

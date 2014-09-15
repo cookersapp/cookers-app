@@ -72,13 +72,13 @@ angular.module('app')
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache($scope.user.device.uuid);
+      LogSrv.trackClearCache($scope.user.id);
       StorageSrv.clearCache();
     }
   };
   $scope.logout = function(){
     LoginSrv.logout().then(function(){
-      LogSrv.trackLogout($scope.user.device.uuid);
+      LogSrv.trackLogout($scope.user.id);
       $state.go('login');
     }, function(error){
       LogSrv.trackError('logout', error);
@@ -87,7 +87,7 @@ angular.module('app')
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp($scope.user.device.uuid);
+      LogSrv.trackClearApp($scope.user.id);
       StorageSrv.clear();
       if(navigator.app){
         navigator.app.exitApp();
@@ -178,10 +178,10 @@ angular.module('app')
     trigger_background_color: '#f62'
   }]);
   var identity = {};
+  if(user && user.id)                         { identity.id         = user.id;              }
   if(user && user.email)                      { identity.email      = user.email;           }
   if(user && user.name)                       { identity.name       = user.name;            }
   if(app && app.firstLaunch)                  { identity.created_at = app.firstLaunch/1000; }
-  if(user && user.device && user.device.uuid) { identity.id         = user.device.uuid;     }
   UserVoice.push(['identify', identity]);
   UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
   UserVoice.push(['autoprompt', {}]);

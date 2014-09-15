@@ -1,8 +1,44 @@
+// segment.io snippet
+window.analytics = window.analytics || [];
+window.analytics.methods = ['identify', 'group', 'track', 'page', 'pageview', 'alias', 'ready', 'on', 'once', 'off', 'trackLink', 'trackForm', 'trackClick', 'trackSubmit'];
+window.analytics.factory = function(method){
+  return function(){
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift(method);
+    window.analytics.push(args);
+    return window.analytics;
+  };
+};
+for (var i = 0; i < window.analytics.methods.length; i++) {
+  var key = window.analytics.methods[i];
+  window.analytics[key] = window.analytics.factory(key);
+}
+window.analytics.load = function(key){
+  if (document.getElementById('analytics-js')) return;
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.id = 'analytics-js';
+  script.async = true;
+  script.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + 'cdn.segment.io/analytics.js/v1/' + key + '/analytics.min.js';
+  var first = document.getElementsByTagName('script')[0];
+  first.parentNode.insertBefore(script, first);
+};
+window.analytics.SNIPPET_VERSION = '2.0.9';
+
+var trackingKeyDebug = 'as680lc0yh';
+var trackingKey = '6q7w3pd32u';
+window.analytics.load(Config.debug ? trackingKeyDebug : trackingKey);
+window.analytics.page();
+
+
+
+// Define Logger
 var Logger = (function(){
   'use strict';
   function loadEvents(){ if(localStorage){ config.events = JSON.parse(localStorage.getItem(config.eventsStorageKey)) || []; } }
   function saveEvents(){ if(localStorage){ localStorage.setItem(config.eventsStorageKey, JSON.stringify(config.events)); } }
   function addEvent(event){
+    if(!event.id){event.id = createUuid();}
     if(!config.events){config.events = [];}
     config.events.push(event);
     saveEvents();
@@ -24,8 +60,9 @@ var Logger = (function(){
   }
 
   var config = {
+    verbose: Config ? Config.verbose : true,
     debug: Config ? Config.debug : true,
-    noTrack: false,
+    track: Config ? Config.track : true,
     async: true,
     identified: false,
     eventsStorageKey: 'tracking-events-cache',
@@ -35,24 +72,16 @@ var Logger = (function(){
   };
   loadEvents();
 
-  function identify(id){
-    if(config.debug){ console.log('$[identify]', id); }
-    if(!config.noTrack){
-      mixpanel.identify(id);
-      config.identified = true;
-      if(config.events.length > 0){ startSendEvents(); }
-    }
-  }
-
-  function setProfile(profile){
-    if(config.debug){ console.log('$[register]', profile); }
-    if(!config.noTrack){
+  function identify(id, data, async){
+    if(config.verbose){ console.log('$[identify] ' + id, data); }
+    if(config.track){
       var event = {
         id: createUuid(),
-        action: 'register',
-        data: profile
+        userId: id,
+        action: 'identify',
+        data: data
       };
-      if(config.async){
+      if(async && config.async){
         addEvent(event);
       } else {
         sendEvent(event);
@@ -71,8 +100,8 @@ var Logger = (function(){
     if(!data.previousEventId){data.previousEventId = config.currentEventId;}
     config.currentEventId = data.eventId;
 
-    if(config.debug){ console.log('$[track] '+type, data); }
-    if(!config.noTrack){
+    if(config.verbose){ console.log('$[track] '+type, data); }
+    if(config.track){
       var event = {
         id: createUuid(),
         action: 'track',
@@ -123,13 +152,15 @@ var Logger = (function(){
   }
 
   function sendEvent(event, callback){
-    if(event.action === 'register'){
-      mixpanel.people.set(event.data, function(success, data){
-        if(callback){callback(event, success ? 'ok' : 'ko');}
+    if(event.action === 'identify'){
+      analytics.identify(event.userId, event.data, function(){
+        config.identified = true;
+        if(config.events.length > 0){ startSendEvents(); }
+        if(callback){callback(event, 'ok');}
       });
     } else if(event.action === 'track'){
-      mixpanel.track(event.type, event.data, function(success, data){
-        if(callback){callback(event, success ? 'ok' : 'ko');}
+      analytics.track(event.type, event.data, function(){
+        if(callback){callback(event, 'ok');}
       });
       if(event.type === 'error' && config.debug && event.data.error){window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');}
       if(event.type === 'exception'){window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');}
@@ -147,16 +178,14 @@ var Logger = (function(){
     }
   }
 
+  // TODO : create alias on login...
+
   return {
-    async: config.async,
-    noTrack: config.noTrack,
-    setAsync: function(a){ config.async = a; },
-    setNoTrack: function(d){ config.noTrack = d; },
     identify: identify,
-    setProfile: setProfile,
     track: track
   };
 })();
+
 
 
 // catch exceptions

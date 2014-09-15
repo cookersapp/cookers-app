@@ -2,9 +2,11 @@ angular.module('app')
 
 .factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
   'use strict';
+  // rename events with a past-tense verb and a noun.
+  // ex: app installed, page viewed, feedback sent...
   var service = {
-    identify: Logger.identify,
-    registerUser: registerUser,
+    identify: function(){registerUser(false);},
+    registerUser: function(){registerUser(true);},
     trackInstall: function(user){track('install', {user: user});},
     trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
@@ -66,11 +68,12 @@ angular.module('app')
     var user = _LocalStorageSrv.getUser();
     if(!properties){properties = {};}
     properties.appVersion = appVersion;
-    if(!properties.email && user && user.email){properties.email = user.email;}
+    if(!properties.id && user && user.id)       {properties.userId  = user.id;    }
+    if(!properties.email && user && user.email) {properties.email   = user.email; }
     if(user && user.device){
-      if(!properties.uuid && user.device.uuid){properties.uuid = user.device.uuid;}
-      if(!properties.device && user.device.model && user.device.platform && user.device.version){
+      if(!properties.device && user.device.uuid && user.device.model && user.device.platform && user.device.version){
         properties.device = {
+          uuid: user.device.uuid,
           model: user.device.model,
           platform: user.device.platform,
           version: user.device.version
@@ -81,19 +84,20 @@ angular.module('app')
     Logger.track(event, properties);
   }
 
-  function registerUser(){
+  function registerUser(async){
     var app = _LocalStorageSrv.getApp();
     var user = _LocalStorageSrv.getUser();
     var userProfile = {};
-    if(app.loggedWith){userProfile.loggedWith = app.loggedWith;}
     if(app.firstLaunch){userProfile.$created = new Date(app.firstLaunch);}
-    if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
-    if(app.firstName){userProfile.$first_name = app.firstName;}
-    if(app.lastName){userProfile.$last_name = app.lastName;}
-    if(app.name){userProfile.fullName = app.name;}
-    if(app.avatar){userProfile.avatar = app.avatar;}
-    if(app.backgroundCover){userProfile.backgroundCover = app.backgroundCover;}
     if(appVersion){userProfile.appVersion = appVersion;}
+    if(user.id){userProfile.id = user.id;}
+    if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
+    if(user.firstName){userProfile.$first_name = user.firstName;}
+    if(user.lastName){userProfile.$last_name = user.lastName;}
+    if(user.name){userProfile.fullName = user.name;}
+    if(user.avatar){userProfile.avatar = user.avatar;}
+    if(user.backgroundCover){userProfile.backgroundCover = user.backgroundCover;}
+    if(user.loggedWith){userProfile.loggedWith = user.loggedWith;}
     if(user.device){
       if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
       if(user.device.model)    { userProfile['device.model']      = user.device.model;     }
@@ -107,7 +111,7 @@ angular.module('app')
       userProfile['setting.'+j] = user.settings[j];
     }
 
-    Logger.setProfile(userProfile);
+    Logger.identify(user.id, userProfile, async);
   }
 
   return service;

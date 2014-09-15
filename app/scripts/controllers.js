@@ -17,7 +17,7 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils, BackendSrv){
   'use strict';
   $scope.standardMessage = null;
   $scope.stickyMessages = [];

@@ -39,7 +39,7 @@ angular.module('app')
     launch: function(){
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
-        if(user && user.device && user.device.uuid){
+        if(user && user.id){
           launch();
         } else {
           firstLaunch();
@@ -51,21 +51,20 @@ angular.module('app')
   function firstLaunch(){
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
+    user.id = user.device.uuid; // TODO : get user id server side and only send events when user is known !
     StorageSrv.saveUser(user);
-    LogSrv.identify(user.device.uuid);
-    LogSrv.registerUser();
-    LogSrv.trackInstall(user.device.uuid);
+    LogSrv.trackInstall(user.id);
     launch();
   }
 
   function launch(){
     var user = StorageSrv.getUser();
-    LogSrv.identify(user.device.uuid);
+    LogSrv.identify();
 
     // INIT is defined in top of index.html
     var launchTime = Date.now()-INIT;
     if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
-    LogSrv.trackLaunch(user.device.uuid, launchTime);
+    LogSrv.trackLaunch(user.id, launchTime);
 
     // track state changes
     var lastStateChange = Date.now();
