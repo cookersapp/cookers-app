@@ -11,6 +11,12 @@
 
     <div class="screen" ng-cloack>
       <img bo-src="recipe.images.landing" style="width: 100%">
+      <div class="legend-top">
+        <div class="price" bo-if="ctx.settings.showPrices">
+          <div class="number" bo-bind="recipe.price | price:false"></div>
+          <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
+        </div>
+      </div>
       <div class="row recipe-meta card">
         <div class="col"><i class="fa fa-tag"></i> <span bo-bind="recipe.category"></span></div>
         <div class="col"><i class="fa fa-clock-o"></i> <span bo-bind="recipe.time | cookTime"></span></div>
