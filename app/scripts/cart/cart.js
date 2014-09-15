@@ -312,6 +312,12 @@ angular.module('app')
     return _CartUtils.recipesToItems(recipes);
   }
 
+  /*
+   * if recipe.cartData.cooked is :
+   *  - false                         : recipe should be cooked (tocook screen)
+   *  - 'none'                        : recipe is abandonned
+   *  - {time: 123, duration: 123.2}  : recipe is cooked
+   */
   function getRecipesToCook(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var ret = _.filter(recipes, {cartData: {cooked: false}});
@@ -323,7 +329,9 @@ angular.module('app')
 
   function getCookedRecipes(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
-    var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
+    var cartCookedRecipes = _.filter(recipes, function(recipe){
+     return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
+    });
     var standaloneCookedRecipes = StorageSrv.getStandaloneCookedRecipes();
     var ret = cartCookedRecipes.concat(standaloneCookedRecipes);
     if(order && typeof order === 'function' && ret && Array.isArray(ret)){

@@ -229,7 +229,7 @@ angular.module('app')
   });
 
   function addToCookedRecipes(cartId, recipe, servings, cookDuration){
-    if(cartId && cartId !== 'none'){
+    if(recipe && recipe.cartData){
       recipe.cartData.cooked = {
         time: Date.now(),
         duration: cookDuration
@@ -268,7 +268,7 @@ angular.module('app')
   }
 })
 
-.controller('TocookCtrl', function($scope, PopupSrv, CartSrv){
+.controller('TocookCtrl', function($scope, $window, PopupSrv, CartSrv){
   'use strict';
   $scope.recipes = CartSrv.getRecipesToCook(function(a, b){
     var ret = -(a.cartData.boughtPc - b.cartData.boughtPc);
@@ -282,6 +282,14 @@ angular.module('app')
         CartSrv.updateCartRecipe(recipe);
       }
     });
+  };
+
+  $scope.remove = function(recipe){
+    if($window.confirm('Ne plus cuisiner cette recette ?')){
+      recipe.cartData.cooked = 'none';
+      CartSrv.updateCartRecipe(recipe);
+      $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
+    }
   };
 })
 
