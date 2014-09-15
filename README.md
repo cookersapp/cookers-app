@@ -3,12 +3,10 @@
 # TODO
 
 - next release :
-    - le recettes ne se mettent pas dans cuisiné :()
-    - problème largeur recettes à cuisiner (mail arthur)
     - prix global de la liste de courses
-    - toast quand on coche un ingrédient (liste de courses)
-    - login social natif
+    - problème largeur recettes à cuisiner (mail arthur)
     - segment.io
+    - login social natif
 
 - performance improvements :
     - sources : http://blog.revolunet.com/angular-for-mobile/, http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck, http://www.tricedesigns.com/2013/03/11/performance-ux-considerations-for-successful-phonegap-apps/

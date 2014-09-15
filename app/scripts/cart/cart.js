@@ -87,7 +87,7 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   var user = StorageSrv.getUser();
   if(!(user && user.data && user.data.skipCartFeatures)){
@@ -128,6 +128,7 @@ angular.module('app')
   $scope.buyCustomItem = function(item){
     item.bought = true;
     StorageSrv.saveCart($scope.cart);
+    ToastSrv.show('✔ '+item.name+' acheté !');
   };
   $scope.unbuyCustomItem = function(item){
     item.bought = false;
@@ -208,6 +209,7 @@ angular.module('app')
   $scope.buyItem = function(item){
     LogSrv.trackBuyItem(item.food.id);
     CartSrv.buyItem($scope.cart, item);
+    ToastSrv.show('✔ '+item.food.name+' acheté !');
   };
   $scope.unbuyItem = function(item){
     LogSrv.trackUnbuyItem(item.food.id);
