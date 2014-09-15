@@ -222,8 +222,10 @@ angular.module('app')
     hasOpenedCarts: hasOpenedCarts,
     getOpenedCarts: getOpenedCarts,
     getCart: getCart,
+    getRecipeFromCart: getRecipeFromCart,
     getCartRecipe: getCartRecipe,
     createCart: createCart,
+    updateCart: updateCart,
     /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
     isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
 
@@ -253,16 +255,24 @@ angular.module('app')
   function getCart(id){
     return _.find(StorageSrv.getCarts(), {id: id});
   }
+  
+  function getRecipeFromCart(cart, recipeId){
+    return cart ? _.find(cart.recipes, {id: recipeId}) : null;
+  }
 
   function getCartRecipe(cartId, recipeId){
     var cart = getCart(cartId);
-    return cart ? _.find(cart.recipes, {id: recipeId}) : null;
+    return getRecipeFromCart(cart, recipeId);
   }
 
   function createCart(name){
     var cart = _CartBuilder.createCart(name);
     StorageSrv.addCart(cart);
     return cart;
+  }
+
+  function updateCart(cart){
+    StorageSrv.saveCart(cart);
   }
 
   /*function isRecipeExistInOpenedCart(recipe){
@@ -296,7 +306,8 @@ angular.module('app')
   function getCookedRecipes(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var cartCookedRecipes = _.reject(recipes, {cartData: {cooked: false}});
-    var ret = cartCookedRecipes.concat(StorageSrv.getStandaloneCookedRecipes());
+    var standaloneCookedRecipes = StorageSrv.getStandaloneCookedRecipes();
+    var ret = cartCookedRecipes.concat(standaloneCookedRecipes);
     if(order && typeof order === 'function' && ret && Array.isArray(ret)){
       ret.sort(order);
     }

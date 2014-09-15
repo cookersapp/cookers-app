@@ -142,4 +142,13 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
       this.$apply(fn);
     }
   };
+
+  // perfs :
+  /*var body = angular.element(document.getElementsByTagName('body'));
+  var digests = 0;
+  $rootScope.$watch(function() {
+    digests++;
+    var watchers = PerfSrv.getWatchesForElement(body);
+    console.log(digests + ' calls ('+watchers.length+' watches)');
+  });*/
 });

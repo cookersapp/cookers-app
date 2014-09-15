@@ -201,14 +201,14 @@ angular.module('app')
 
   $scope.done = function(){
     stopTimer();
-    var fiveMinutes = 300;
+    var minCookDuration = 60;
     var cookDuration = (Date.now() - startTime)/1000;
-    if(cookDuration < fiveMinutes){
+    if(cookDuration < minCookDuration){
       $window.history.back();
       ToastSrv.show('T\'as pas cuisiné, avoue ! ;)');
     } else {
       LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
-      addToCookedRecipes($scope.recipe, $scope.servings, cookDuration);
+      addToCookedRecipes(cartId, $scope.recipe, $scope.servings, cookDuration);
 
       PopupSrv.recipeCooked().then(function(shouldExit){
         if(shouldExit){
@@ -228,12 +228,15 @@ angular.module('app')
     stopTimer();
   });
 
-  function addToCookedRecipes(recipe, servings, cookDuration){
-    if(recipe && recipe.cartData){
-      recipe.cartData.cooked = {
+  function addToCookedRecipes(cartId, recipe, servings, cookDuration){
+    if(cartId && cartId !== 'none'){
+      var cart = CartSrv.getCart(cartId);
+      var cartRecipe = CartSrv.getRecipeFromCart(cart, recipe.id);
+      cartRecipe.cartData.cooked = {
         time: Date.now(),
         duration: cookDuration
       };
+      CartSrv.updateCart(cart);
     } else {
       var recipeToSave = angular.copy(recipe);
       recipeToSave.cartData = {
