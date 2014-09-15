@@ -56,7 +56,7 @@ angular.module('app')
       $state.go('app.home');
     }
   };
-  
+
   function isEmpty(cart){
     return !(cart && ((cart.recipes && cart.recipes.length > 0) || (cart.customItems && cart.customItems.length > 0)));
   }
@@ -65,6 +65,7 @@ angular.module('app')
 .controller('CartRecipesCtrl', function($scope, CartSrv, StorageSrv, ToastSrv, LogSrv){
   'use strict';
   $scope.selectedRecipe = null;
+  $scope.totalPrice = CartSrv.getPrice($scope.cart);
 
   $scope.toggleRecipe = function(recipe){
     if($scope.selectedRecipe === recipe){
@@ -84,11 +85,13 @@ angular.module('app')
 
   $scope.updateServings = function(recipe, servingsValue){
     StorageSrv.saveCart($scope.cart);
+    $scope.totalPrice = CartSrv.getPrice($scope.cart);
   };
 })
 
 .controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
+  $scope.totalPrice = CartSrv.getPrice($scope.cart);
   var user = StorageSrv.getUser();
   if(!(user && user.data && user.data.skipCartFeatures)){
     PopupSrv.tourCartFeatures().then(function(){
@@ -217,7 +220,7 @@ angular.module('app')
   };
 })
 
-.factory('CartSrv', function(StorageSrv, _CartBuilder, _CartUtils){
+.factory('CartSrv', function(StorageSrv, PriceCalculator, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
     getCarts: StorageSrv.getCarts,
@@ -237,6 +240,7 @@ angular.module('app')
     getCookedRecipes: getCookedRecipes,
     addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe,
 
+    getPrice: getPrice,
     getItems: getItems,
     hasRecipe: hasRecipe,
     addRecipe: addRecipe,
@@ -257,7 +261,7 @@ angular.module('app')
   function getCart(id){
     return _.find(StorageSrv.getCarts(), {id: id});
   }
-  
+
   function getRecipeFromCart(cart, recipeId){
     return cart ? _.find(cart.recipes, {id: recipeId}) : null;
   }
@@ -314,6 +318,22 @@ angular.module('app')
       ret.sort(order);
     }
     return ret;
+  }
+
+  function getPrice(cart){
+    if(cart && cart.recipes && Array.isArray(cart.recipes)){
+      var totalPrice = null;
+      for(var i=0; i<cart.recipes.length; i++){
+        var recipe = cart.recipes[i];
+        var recipePrice = PriceCalculator.getForServings(recipe.price, recipe.cartData.servings);
+        if(i === 0){
+          totalPrice = recipePrice;
+        } else {
+          totalPrice = PriceCalculator.add(totalPrice, recipePrice);
+        }
+      }
+      return totalPrice;
+    }
   }
 
   function getItems(cart){
@@ -421,7 +441,7 @@ angular.module('app')
 
 
 // this service should be used only on other services in this file !!!
-.factory('_CartBuilder', function(IngredientUtils, Utils){
+.factory('_CartBuilder', function(PriceCalculator, QuantityCalculator, Utils){
   'use strict';
   var service = {
     createCart: createCart,
@@ -467,16 +487,16 @@ angular.module('app')
 
   function addSourceToItem(item, ingredient, recipe){
     var source = _createItemSource(ingredient, recipe);
-    var ing = IngredientUtils.sum([item, source]);
-    item.price = ing.price;
-    item.quantity = ing.quantity;
     item.sources.push(source);
+    var _ctx = {ingredient: item};
+    item.price = PriceCalculator.sum(_.map(item.sources, 'price'), _ctx);
+    item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'), _ctx);
   }
 
   function _createItemSource(ingredient, recipe){
     return {
-      price: IngredientUtils.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
-      quantity: IngredientUtils.adjustForServings(ingredient.quantity, recipe.servings, recipe.cartData.servings),
+      price: PriceCalculator.adjustForServings(ingredient.price, recipe.servings, recipe.cartData.servings),
+      quantity: QuantityCalculator.adjustForServings(ingredient.quantity, recipe.servings, recipe.cartData.servings),
       ingredient: ingredient,
       recipe: recipe
     };

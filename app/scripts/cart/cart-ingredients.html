@@ -36,6 +36,7 @@
       Liste archivée !
     </div>
 
+    <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{totalPrice | price}}</div>
     <div ng-if="!cart.archived">
       <div class="list card to-buy" ng-if="cartHasItemsToBuy()">
         <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in items" ng-if="!isBought(item)">

@@ -3,8 +3,8 @@
 # TODO
 
 - next release :
-    - prix global de la liste de courses
-    - problème largeur recettes à cuisiner (mail arthur)
+    - afficher le prix sur l'écran détail de la recette
+    - problème largeur recettes à cuisiner / recettes cuisinées / écran cuisine (mail arthur)
     - segment.io
     - login social natif
 

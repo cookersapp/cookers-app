@@ -10,6 +10,7 @@
       <a class="button button-block button-balanced" href="#/app/recipes">Ajoute la première recette !</a>
     </div>
     <ion-list>
+      <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{totalPrice | price}}</div>
       <div class="item-cart-recipe card" bindonce ng-repeat="recipe in cart.recipes">
         <ion-item ng-click="toggleRecipe(recipe)">
           <div>
@@ -17,9 +18,9 @@
               <img bo-src="recipe.images.thumbnail">
             </div>
             <div class="content">
-              <h2 class="pull-right" bo-if="ctx.settings.showPrices" bo-bind="recipe.price | price:false:recipe.cartData.servings.value"></h2>
+              <h2 class="pull-right" bo-if="ctx.settings.showPrices" ng-bind="recipe.price | price:false:recipe.cartData.servings.value"></h2>
               <h2 class="title" bo-bind="recipe.name"></h2>
-              <div bo-bind="(recipe.cartData.servings | servings)+', '+(recipe.time | cookTime)"></div>
+              <div ng-bind="(recipe.cartData.servings | servings)+', '+(recipe.time | cookTime)"></div>
               <div>
                 <div class="progress">
                   <div class="progress-bar"
