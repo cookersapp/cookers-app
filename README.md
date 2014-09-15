@@ -97,6 +97,8 @@ Your app is now running to your computer. To run it to your android device :
 
 ## Installer l'application
 
+Android :
+
 - aller dans les Paramètres > Sécurité > Sources inconnues
 - Télécharger l'application
 - L'installer
@@ -132,6 +134,9 @@ Tailles d'écran :
 ## v0.3.2
 
 - prix pour la liste de courses
+- optimisation de performance
+- meilleur rendu sur les écrans étroits
+- correction de quelques bug
 
 ## v0.3.0
 
