@@ -15,8 +15,10 @@
         <div class="col text">
           <h1 class="title" bo-bind="recipe.name"></h1>
           <div class="content">
-            Cuisiné le <b bo-bind="recipe.cartData.cooked.time | date"></b><br>
-            en <b bo-bind="recipe.cartData.cooked.duration | duration:true"></b>
+            <span>
+              Cuisiné le <b bo-bind="recipe.cartData.cooked.time | date"></b><br>
+              en <b bo-bind="recipe.cartData.cooked.duration | duration:true"></b>
+            </span>
           </div>
           <div class="tags">
             <span bo-bind="recipe.cartData.servings | servings"></span>

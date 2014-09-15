@@ -230,13 +230,11 @@ angular.module('app')
 
   function addToCookedRecipes(cartId, recipe, servings, cookDuration){
     if(cartId && cartId !== 'none'){
-      var cart = CartSrv.getCart(cartId);
-      var cartRecipe = CartSrv.getRecipeFromCart(cart, recipe.id);
-      cartRecipe.cartData.cooked = {
+      recipe.cartData.cooked = {
         time: Date.now(),
         duration: cookDuration
       };
-      CartSrv.updateCart(cart);
+      CartSrv.updateCartRecipe(recipe);
     } else {
       var recipeToSave = angular.copy(recipe);
       recipeToSave.cartData = {
@@ -281,6 +279,7 @@ angular.module('app')
     PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
         recipe.cartData.servings.value = servings;
+        CartSrv.updateCartRecipe(recipe);
       }
     });
   };

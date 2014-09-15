@@ -108,6 +108,11 @@
 .recipe-screen {
   .recipe-meta {
     background: #eee;
+    .col {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .header {
     background-color: #f5f5f5;
@@ -202,7 +207,7 @@
         bottom: 0px;
         span {
           color: #fff;
-          padding: 4px 10px;
+          padding: 3px 6px;
           background: rgba(0,0,0,0.2);
           border-radius: 12px;
         }
@@ -321,10 +326,12 @@
       h1 {
         font-size: 18px;
         color: #fff;
-        min-height: 42px;
         margin-top: 0px;
         margin-right: 10px;
         margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .progress {
         margin-bottom: 10px;
@@ -348,7 +355,7 @@
         bottom: 0px;
         span {
           color: #fff;
-          padding: 4px 10px;
+          padding: 3px 6px;
           background: rgba(0,0,0,0.2);
           border-radius: 12px;
         }
@@ -379,14 +386,15 @@
         color: #fff;
       }
       .content {
-        padding-top: 20px;
+        display: flex;
+        align-items: center; /* align vertical */
       }
       .tags {
         position: absolute;
         bottom: 0px;
         span {
           color: #fff;
-          padding: 4px 10px;
+          padding: 3px 6px;
           background: rgba(0,0,0,0.2);
           border-radius: 12px;
         }

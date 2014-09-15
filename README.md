@@ -3,7 +3,6 @@
 # TODO
 
 - next release :
-    - problème largeur recettes à cuisiner / recettes cuisinées / écran cuisine (mail arthur)
     - segment.io
     - login social natif
 

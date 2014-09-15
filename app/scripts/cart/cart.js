@@ -231,6 +231,7 @@ angular.module('app')
     getCartRecipe: getCartRecipe,
     createCart: createCart,
     updateCart: updateCart,
+    updateCartRecipe: updateCartRecipe,
     /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
     isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
 
@@ -279,6 +280,17 @@ angular.module('app')
 
   function updateCart(cart){
     StorageSrv.saveCart(cart);
+  }
+
+  function updateCartRecipe(recipe){
+    if(recipe && recipe.cartData && recipe.cartData.cart){
+      var cart = getCart(recipe.cartData.cart);
+      var cartRecipe = getRecipeFromCart(cart, recipe.id);
+      if(cartRecipe){
+        angular.copy(recipe, cartRecipe);
+        updateCart(cart);
+      }
+    }
   }
 
   /*function isRecipeExistInOpenedCart(recipe){

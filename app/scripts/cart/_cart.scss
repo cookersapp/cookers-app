@@ -81,6 +81,9 @@
     .text {
       border-left: 4px solid white;
       padding: 3px 5px;
+      margin-right: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &:first-letter {
         text-transform: uppercase;
       }
