@@ -83,7 +83,6 @@ angular.module('app')
 
   function loginSuccess(provider, user){
     BackendUserSrv.getUserId(user).then(function(userId){
-      console.log('getUserId', userId);
       if(userId)  {
         LogSrv.alias(userId);
       } else {

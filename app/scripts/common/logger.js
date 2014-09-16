@@ -42,7 +42,6 @@ angular.module('app')
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
       var timeoutGeoloc = $timeout(function(){
-        console.log('position timeout !');
         track(event, params);
       }, 3000);
       navigator.geolocation.getCurrentPosition(function(position){
@@ -119,8 +118,9 @@ angular.module('app')
   function alias(newId){
     var sUser = _LocalStorageSrv.getUser();
     Logger.alias(newId);
-    BackendUserSrv.aliasUser(sUser, newId).then(function(){
-      sUser.id = newId;
+    var oldId = sUser.id;
+    sUser.id = newId;
+    BackendUserSrv.aliasUser(sUser, oldId).then(function(){
       _LocalStorageSrv.setUser(sUser);
     });
   }

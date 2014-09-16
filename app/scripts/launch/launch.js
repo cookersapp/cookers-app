@@ -52,7 +52,6 @@ angular.module('app')
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
     BackendUserSrv.getUserId(user).then(function(userId){
-      console.log('getUserId', userId);
       if(userId)  { user.id = userId;             }
       else        { user.id = Utils.createUuid(); }
     }).then(function(){
