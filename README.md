@@ -87,7 +87,7 @@ Your app is now running to your computer. To run it to your android device :
 
 - change package & name in `config.xml` : `com.cookers.android.dev` => `com.cookers.android` and `dev-Cookers` => `Cookers`
 - remove and add android platform : `cordova platform remove android` and `cordova platform add android` (to sync platform with config.xml)
-- add icons to build : copy `app/res/android` in `platforms/android/res` and `platforms/android/ant-build/res`
+- add icons to build : copy `app/res/android` in `platforms/android/res` and `platforms/android/res`
 - increment version number and check that `debug` option is false : `app/scripts/_config.js`
 - build app : `grunt build && cordova run android`
 - Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
@@ -127,6 +127,39 @@ Tailles d'écran :
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
 - newsletter : [customer.io](http://customer.io/)
 - cordova plugins : http://plugreg.com/plugins and http://plugins.cordova.io/
+
+Tracking with segment.io :
+
+- Advertising
+    - http://www.alexa.com/ : Actionable Analytics for the Web
+    - http://www.comscore.com/ : Analytics for a Digital World
+    - https://www.google.com/tagmanager/ : Le marketing numérique devient (nettement) plus facile
+    - https://www.quantcast.com/
+    - http://spinnakr.com/ : Spinnakr is analytics that takes action for you.
+    - https://www.hellobar.com/
+- Analytics
+    - https://keen.io/ : Custom analytics shouldn't be a pain in the backend.
+    - https://mixpanel.com/ : Actions speak louder than page views.
+    - http://trak.io/ : Increase Paid Conversions & Fight Churn, See Who Is Using Your Product And Send Automated Emails Based On Their Behaviour
+    - http://usercycle.com/ : Growth Platform on Steroids for SaaS Products
+    - http://www.google.com/analytics/ : Solution professionnelle d'analyse d'audience Internet
+    - http://clicky.com/ : Real Time Web Analytics
+    - https://count.ly/ : Meet the next generation mobile analytics platform
+    - http://www.flurry.com/
+    - http://get.gaug.es/ : Website Analytics you can Actually Understand
+    - https://heapanalytics.com/ : Instant and retroactive analytics for web and iOS.
+    - http://www.iron.io/
+    - http://piwik.org/ : Liberating Web Analytics
+    - https://metrika.yandex.com/
+- Customer Relationships
+    - http://trak.io/ : Increase Paid Conversions & Fight Churn, See Who Is Using Your Product And Send Automated Emails Based On Their Behaviour
+    - http://luckyorange.com/ : See How your Visitors Actually Use your Website
+- Ecommerce
+    - http://www.mojn.com/
+- Email Marketing
+- Error Reporting
+    - https://www.pingdom.com/ : Uptime and performance monitoring made easy
+- User Testing
 
 # Changelog
 
