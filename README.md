@@ -61,7 +61,7 @@ Your app is now running to your computer. To run it to your android device :
 
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
-- copy `app/res/android` in `platforms/android/res` (and `platforms/android/ant-build/res` if needed) ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
+- copy `app/res/android` in `platforms/android/res` ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
 - `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
@@ -86,9 +86,9 @@ Your app is now running to your computer. To run it to your android device :
 ## Release process
 
 - change package & name in `config.xml` : `com.cookers.android.dev` => `com.cookers.android` and `dev-Cookers` => `Cookers`
+- increment version number and check that `debug` option is false : `app/scripts/_config.js`
 - remove and add android platform : `cordova platform remove android` and `cordova platform add android` (to sync platform with config.xml)
 - add icons to build : copy `app/res/android` in `platforms/android/res` and `platforms/android/res`
-- increment version number and check that `debug` option is false : `app/scripts/_config.js`
 - build app : `grunt build && cordova run android`
 - Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
 - Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number (git tag v0.3.1 && git push --tags)
