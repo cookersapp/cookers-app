@@ -1,5 +1,55 @@
 angular.module('app')
 
+.factory('BackendUserSrv', function($q, $http, firebaseUrl){
+  'use strict';
+  var service = {
+    getUserId: getUserId,
+    updateUser: updateUser,
+    aliasUser: aliasUser
+  };
+
+  function getUserId(user){
+    console.log('getUserId', user);
+    var email = encodeURI(user.email).replace(/\./g, '');
+    if(email.length > 0){
+      return $http.get(firebaseUrl+'/userrefs/'+email+'.json').then(function(result){
+        console.log('getUserId result', result);
+        if(result.data !== 'null'){
+          return result.data.id;
+        }
+      });
+    } else {
+      return $q.when();
+    }
+  }
+
+  function updateUser(user){
+    var userId = user.id;
+    if(userId){
+      var email = encodeURI(user.email).replace(/\./g, '');
+
+      var emailRefPromise = email.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+email+'.json', {id: userId}) : $q.when();
+      var userPromise = $http.put(firebaseUrl+'/users/'+userId+'.json', user);
+
+      return $q.all([emailRefPromise, userPromise]);
+    } else {
+      return $q.when();
+    }
+  }
+
+  function aliasUser(user, newId){
+    var email = encodeURI(user.email).replace(/\./g, '');
+
+    var addEmailRefPromise = email.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+email+'.json', {id: newId}) : $q.when();
+    var addUserPromise = $http.put(firebaseUrl+'/users/'+newId+'.json', user);
+    var removeUserPromise = user.id ? $http.delete(firebaseUrl+'/users/'+user.id+'.json') : $q.when();
+
+    return $q.all([addEmailRefPromise, addUserPromise, removeUserPromise]);
+  }
+
+  return service;
+})
+
 .factory('BackendSrv', function($q, $http, StorageSrv, firebaseUrl){
   'use strict';
   var service = {

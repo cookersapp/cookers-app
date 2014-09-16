@@ -22,7 +22,7 @@ angular.module('app')
   });
 })
 
-.controller('LoginCtrl', function($scope, $state, PopupSrv, UserSrv, LoginSrv, SelectionSrv, ToastSrv, LogSrv){
+.controller('LoginCtrl', function($scope, $state, PopupSrv, UserSrv, LoginSrv, SelectionSrv, StorageSrv, BackendUserSrv, ToastSrv, LogSrv){
   'use strict';
   // this is only to preload selection of recipes at first launch !
   SelectionSrv.getCurrent();
@@ -38,7 +38,7 @@ angular.module('app')
     google: false,
     email: false
   };
-  
+
   $scope.state = {
     hasError: false
   };
@@ -82,10 +82,17 @@ angular.module('app')
   }
 
   function loginSuccess(provider, user){
-    $scope.loading[provider] = false;
-    // TODO : send welcome mail if first time !
-    LogSrv.trackLogin(provider, user);
-    LogSrv.registerUser();
-    $state.go('app.home');
+    BackendUserSrv.getUserId(user).then(function(userId){
+      console.log('getUserId', userId);
+      if(userId)  {
+        LogSrv.alias(userId);
+      } else {
+        LogSrv.registerUser();
+      }
+    }).then(function(){
+      LogSrv.trackLogin(provider, user);
+      $scope.loading[provider] = false;
+      $state.go('app.home');
+    });
   }
 });

@@ -159,6 +159,7 @@ angular.module('app')
 .factory('_LocalStorageSrv', function($window){
   'use strict';
   var localStorageCache = {};
+  var localStoragePrefix = 'ionic-';
   var service = {
     getApp: function(){return _get('app');},
     setApp: function(app){return _set('app', app);},
@@ -188,7 +189,7 @@ angular.module('app')
 
   function _get(key){
     if(!localStorageCache[key] && $window.localStorage){
-      localStorageCache[key] = JSON.parse($window.localStorage.getItem('ionic-'+key));
+      localStorageCache[key] = JSON.parse($window.localStorage.getItem(localStoragePrefix+key));
     }
     return angular.copy(localStorageCache[key]);
   }
@@ -197,7 +198,7 @@ angular.module('app')
     if(!angular.equals(localStorageCache[key], value)){
       localStorageCache[key] = angular.copy(value);
       if($window.localStorage){
-        $window.localStorage.setItem('ionic-'+key, JSON.stringify(localStorageCache[key]));
+        $window.localStorage.setItem(localStoragePrefix+key, JSON.stringify(localStorageCache[key]));
       }
     } else {
       console.debug('Don\'t save <'+key+'> because values are equals !');

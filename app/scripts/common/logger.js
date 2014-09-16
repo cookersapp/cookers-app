@@ -1,12 +1,13 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
+.factory('LogSrv', function($timeout, BackendUserSrv, Utils, _LocalStorageSrv, appVersion){
   'use strict';
   // rename events with a past-tense verb and a noun.
   // ex: app installed, page viewed, feedback sent...
   var service = {
     identify: function(){registerUser(false);},
     registerUser: function(){registerUser(true);},
+    alias: alias,
     trackInstall: function(user){track('install', {user: user});},
     trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
@@ -112,6 +113,16 @@ angular.module('app')
     }
 
     Logger.identify(user.id, userProfile, async);
+    BackendUserSrv.updateUser(user);
+  }
+
+  function alias(newId){
+    var sUser = _LocalStorageSrv.getUser();
+    Logger.alias(newId);
+    BackendUserSrv.aliasUser(sUser, newId).then(function(){
+      sUser.id = newId;
+      _LocalStorageSrv.setUser(sUser);
+    });
   }
 
   return service;

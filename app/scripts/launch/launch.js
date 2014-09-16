@@ -33,7 +33,7 @@ angular.module('app')
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){
@@ -51,10 +51,15 @@ angular.module('app')
   function firstLaunch(){
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
-    user.id = user.device.uuid; // TODO : get user id server side and only send events when user is known !
-    StorageSrv.saveUser(user);
-    LogSrv.trackInstall(user.id);
-    launch();
+    BackendUserSrv.getUserId(user).then(function(userId){
+      console.log('getUserId', userId);
+      if(userId)  { user.id = userId;             }
+      else        { user.id = Utils.createUuid(); }
+    }).then(function(){
+      StorageSrv.saveUser(user);
+      LogSrv.trackInstall(user.id);
+      launch();
+    });
   }
 
   function launch(){

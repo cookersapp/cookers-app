@@ -330,7 +330,7 @@ angular.module('app')
   function getCookedRecipes(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var cartCookedRecipes = _.filter(recipes, function(recipe){
-     return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
+      return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
     });
     var standaloneCookedRecipes = StorageSrv.getStandaloneCookedRecipes();
     var ret = cartCookedRecipes.concat(standaloneCookedRecipes);

@@ -3,9 +3,6 @@
 # TODO
 
 - next release :
-    - créer des ID pour les utilisateurs (indépendants du device ou du mail)
-    - stocker le profil utilisateur sur le serveur
-    - segment.io
     - login social natif
 
 - performance improvements :
