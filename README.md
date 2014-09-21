@@ -3,48 +3,26 @@
 # TODO
 
 - next release :
-    - login social natif
-
-- performance improvements :
-    - sources : http://blog.revolunet.com/angular-for-mobile/, http://slides.com/jamiesutherland/creating-hybrid-apps-that-dont-suck, http://www.tricedesigns.com/2013/03/11/performance-ux-considerations-for-successful-phonegap-apps/
-        - uses fastclick : https://github.com/ftlabs/fastclick
-        - preload views using https://github.com/karlgoldstein/grunt-html2js
-    - http://forum.ionicframework.com/t/angularjs-webinspector-extension-for-chrome-performance-debugging/6106
-    - http://www.mikedellanoce.com/2012/09/10-tips-for-getting-that-native-ios.html
-    - DOM caching (http://forum.ionicframework.com/t/lack-of-dom-caching-killing-performance-on-slower-devices/4572)
-    - concathenate templates (http://forum.ionicframework.com/t/compressed-code-is-fast/2225)
-    - optimize recipe images
+    - récupérer le mail du téléphone et supprimer le login
+    - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
+    - notifications pour ne pas oublier l'application !
+    - créer un workflow de mail (côté serveur) et fonction des événements de tracking
+    - espace blanc en bas de l'écran cuisine :(
+    - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
     
 - TODO
+    - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
     - see :
         - http://forum.ionicframework.com/t/using-imagecache-in-ionic/4646
         - http://forum.ionicframework.com/t/how-to-login-with-facebook-now/9305
     - tracking :
-        - mettre en place segment.io
         - où est ce que les gens s'arrêtent dans les recettes de la semaine
-    - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - cook :
         - mettre une barre de progression correspondante au timer global
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu
     - pouvoir cuisiner plusieurs recettes en même temps (tablette)
-    - mail à :
-        - ? connait des persionnes iPhone ?
-            - mathieu segret
-            - matthieu parisot
-            - david wursteisen
-            - etienne folio
-            - yacine regzy
-            - damien cavaillès
-            - xavier carpentier
-            - pierre chapuis
-            - sylvain abélard
-            - florent biville
-            - quang hai
-            - hugo cordier
-            - fred cecilia
-            - thierry lau
     
     => home page : track click on social links
 
@@ -82,6 +60,13 @@ Your app is now running to your computer. To run it to your android device :
 - https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git (4.0.1) : prevent screen to sleep
 - org.apache.cordova.media (0.2.12) : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
 - org.apache.cordova.file (1.3.0) : required by media plugin
+
+Interesting plugins :
+- Get email :
+    - https://github.com/sebastien-roch/cordova-device-emails
+    - https://github.com/seltzlab/AccountList-Phonegap-Android-Plugin
+    - https://github.com/bvarga/GetAccountsPlugin
+- Access contacts : https://github.com/apache/cordova-plugin-contacts
 
 ## Release process
 
@@ -124,6 +109,22 @@ Inspirationnal apps :
 - [Airbnb](https://play.google.com/store/apps/details?id=com.airbnb.android)
 - [Secret](https://play.google.com/store/apps/details?id=ly.secret.android)
 - [Jelly](https://play.google.com/store/apps/details?id=com.jellyhq.starfish)
+
+Screenshot gallery inspiration :
+
+- [Hot or Not](https://play.google.com/store/apps/details?id=com.hotornot.app)
+- [hello sms](https://play.google.com/store/apps/details?id=com.hellotext.hello)
+- [TwoGrand](https://play.google.com/store/apps/details?id=com.twogrand.twogrand)
+- [SnapDish Food Camera](https://play.google.com/store/apps/details?id=com.vuzz.snapdish)
+- [Meal Planning and Grocery List](https://play.google.com/store/apps/details?id=com.foodonthetable.mobile)
+- [Meal Planning and Grocery List](https://play.google.com/store/apps/details?id=com.emeals)
+- [Uber](https://play.google.com/store/apps/details?id=com.ubercab)
+- [Twitter](https://play.google.com/store/apps/details?id=com.twitter.android)
+- [Photo Meal](https://play.google.com/store/apps/details?id=com.jp.mealphoto)
+- [Contacts +](https://play.google.com/store/apps/details?id=com.contapps.android)
+- [QuizUp](https://play.google.com/store/apps/details?id=com.quizup.core)
+- [Tictoc](https://play.google.com/store/apps/details?id=kr.co.tictocplus)
+- [Cymera-Appareil photo/éditeur](https://play.google.com/store/apps/details?id=com.cyworld.camera)
 
 Tailles d'écran :
 
