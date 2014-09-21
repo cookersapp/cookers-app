@@ -85,9 +85,8 @@ angular.module('app')
     BackendUserSrv.getUserId(user).then(function(userId){
       if(userId)  {
         LogSrv.alias(userId);
-      } else {
-        LogSrv.registerUser();
       }
+      LogSrv.registerUser();
     }).then(function(){
       LogSrv.trackLogin(provider, user);
       $scope.loading[provider] = false;
