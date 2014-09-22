@@ -110,7 +110,7 @@ angular.module('app')
   };
 
   $scope.recipeFeedback = function(feedback){
-    LogSrv.trackRecipesFeedback($scope.recipesOfWeek.week, feedback);
+    LogSrv.trackRecipesFeedback($scope.selection.week, feedback);
     $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
   };
 })
