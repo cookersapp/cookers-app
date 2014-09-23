@@ -9,7 +9,16 @@
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - espace blanc en bas de l'écran cuisine :(
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
-    
+
+- téléphones posant problème :
+    - galaxy note 2             / Adrien Henry
+    - wiko ozzy (4.2.2)         / Marion Pierlas
+    - galaxy scl                / Perrine Pierlas
+    - GT-I9305 (4.1.2)          / Isabelle Souty
+    - Galaxy s3                 / Julien Aubriet, Samir Bouaked
+    - galaxy tab 2 gt- p3113    / Benoit Reboul-salze
+    - galaxy Ace                / Benoit Reboul-salze
+
 - TODO
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
