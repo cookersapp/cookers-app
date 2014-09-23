@@ -86,8 +86,7 @@ angular.module('app')
       _LocalStorageSrv.set(key, extendedValue);
     }
 
-    var app = JSON.parse(localStorage.getItem('ngStorage-app'));
-    if(!app){app = _LocalStorageSrv.getApp();}
+    var app = _LocalStorageSrv.getApp();
     if(app.version === ''){
       app.version = appVersion;
       _LocalStorageSrv.setApp(app);
@@ -102,55 +101,9 @@ angular.module('app')
   function _migrate(previousVersion, nextVersion){
     LogSrv.trackUpgrade(previousVersion, nextVersion);
     if(localStorage){
-      if(previousVersion === '0.1.0'){
-        _LocalStorageSrv.reset();
-        for(var i in localStorageDefault){
-          _LocalStorageSrv.set(i, localStorageDefault[i]);
-        }
-        $window.alert('For this upgrade, all data is reseted ! Sorry for the incovenience :(');
-        $state.go('intro');
-      }
-      if(previousVersion === '0.2.0' || previousVersion === '0.3.0'){
-        var app = JSON.parse(localStorage.getItem('ngStorage-app'));
-        var user = JSON.parse(localStorage.getItem('ngStorage-user'));
-        var data = JSON.parse(localStorage.getItem('ngStorage-data'));
-        var logs = JSON.parse(localStorage.getItem('ngStorage-logs'));
-
-        var sApp, sUser, sUserSocialProfiles, sUserCarts, sUserStandaloneCookedRecipes, sUserRecipeHistory, sDataGlobalmessages;
-        if(app)                                   { sApp                          = angular.copy(app);                                        }
-        if(user)                                  { sUser                         = angular.copy(user);                                       }
-        if(sUser && !sUser.data)                  { sUser.data = { skipCookFeatures: false, skipCartFeatures: false };                        }
-        if(sUser)                                 { delete sUser.score;                                                                       }
-        if(sUser)                                 { delete sUser.profiles;                                                                    }
-        if(sUser)                                 { delete sUser.carts;                                                                       }
-        if(sUser)                                 { delete sUser.standaloneCookedRecipes;                                                     }
-        if(user && user.profiles)                 { sUserSocialProfiles           = angular.copy(user.profiles);                              }
-        if(user && user.carts)                    { sUserCarts                    = { carts: angular.copy(user.carts) };                      }
-        if(user && user.standaloneCookedRecipes)  { sUserStandaloneCookedRecipes  = { recipes: angular.copy(user.standaloneCookedRecipes) };  }
-        if(logs && logs.recipesHistory)           { sUserRecipeHistory            = { recipes: angular.copy(logs.recipesHistory) };           }
-        if(data && data.globalmessage)            { sDataGlobalmessages           = angular.copy(data.globalmessages);                        }
-        
-        _LocalStorageSrv.reset();
-        for(var j in localStorageDefault){
-          _LocalStorageSrv.set(j, localStorageDefault[j]);
-        }
-
-        if(sApp)                          { _LocalStorageSrv.setApp(sApp);                                             }
-        if(sUser)                         { _LocalStorageSrv.setUser(sUser);                                           }
-        if(sUserSocialProfiles)           { _LocalStorageSrv.setUserProfiles(sUserSocialProfiles);                     }
-        if(sUserCarts)                    { _LocalStorageSrv.setCarts(sUserCarts);                                     }
-        if(sUserStandaloneCookedRecipes)  { _LocalStorageSrv.setStandaloneCookedRecipes(sUserStandaloneCookedRecipes); }
-        if(sUserRecipeHistory)            { _LocalStorageSrv.setRecipeHistory(sUserRecipeHistory);                     }
-        if(sDataGlobalmessages)           { _LocalStorageSrv.setGlobalmessages(sDataGlobalmessages);                   }
-        previousVersion = '0.3.1';
-      }
-      if(previousVersion === '0.3.1'){
-        var sUser = _LocalStorageSrv.getUser();
-        if(!sUser.id && sUser.device && sUser.device.uuid){sUser.id = sUser.device.uuid;}
-        _LocalStorageSrv.setUser(sUser);
-      }
-      LogSrv.registerUser();
+      // migrate
     }
+    LogSrv.registerUser();
   }
 
   return service;
