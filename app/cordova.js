@@ -64,3 +64,11 @@ window.Media = function(src, mediaSuccess, mediaError, mediaStatus){
     stop: function(){ sound.pause(); if(mediaSuccess){mediaSuccess();} } // TODO
   };
 };
+
+// for plugin https://github.com/loicknuchel/cordova-device-accounts.git
+window.plugins.DeviceAccounts = {
+  get: function(onSuccess, onFail){ onSuccess([]); },
+  getByType: function(type, onSuccess, onFail){ onSuccess([]); },
+  getEmails: function(onSuccess, onFail){ onSuccess([]); },
+  getEmail: function(onSuccess, onFail){ onSuccess(); }
+};

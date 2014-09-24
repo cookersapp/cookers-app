@@ -3,12 +3,15 @@
 # TODO
 
 - next release :
-    - récupérer le mail du téléphone et supprimer le login
+    - récupérer le mail du téléphone
+    - supprimer le login et l'intro
+    - problème scroll écran feedback (mail Julien Richarte)
     - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - notifications pour ne pas oublier l'application !
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - espace blanc en bas de l'écran cuisine :(
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
+    - accéder aux listes de courses archivées
 
 - téléphones posant problème :
     - galaxy note 2             / Adrien Henry
@@ -18,6 +21,7 @@
     - Galaxy s3                 / Julien Aubriet, Samir Bouaked
     - galaxy tab 2 gt- p3113    / Benoit Reboul-salze
     - galaxy Ace                / Benoit Reboul-salze
+    - LG-D802 (4.2.2)           / Alexis De Valence (problème affichage slides intro)
 
 - TODO
     - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
@@ -49,7 +53,7 @@ Your app is now running to your computer. To run it to your android device :
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands
@@ -69,12 +73,9 @@ Your app is now running to your computer. To run it to your android device :
 - https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git (4.0.1) : prevent screen to sleep
 - org.apache.cordova.media (0.2.12) : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
 - org.apache.cordova.file (1.3.0) : required by media plugin
+- https://github.com/loicknuchel/cordova-device-accounts.git (0.0.1) : to get user email (android.permission.GET_ACCOUNTS)
 
 Interesting plugins :
-- Get email :
-    - https://github.com/sebastien-roch/cordova-device-emails
-    - https://github.com/seltzlab/AccountList-Phonegap-Android-Plugin
-    - https://github.com/bvarga/GetAccountsPlugin
 - Access contacts : https://github.com/apache/cordova-plugin-contacts
 
 ## Release process
@@ -89,7 +90,7 @@ Interesting plugins :
 - Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number (git tag v0.3.1 && git push --tags)
 - Then, rollback your changes ;) (sampe process)
 
-Publishing to market : http://ionicframework.com/docs/guide/publishing.html.
+Publishing to market : http://ionicframework.com/docs/guide/publishing.html
 Run comands :
 
 - `cordova build --release android` that will create the release app in `platforms/android/ant-build/Cookers-release-unsigned.apk`
@@ -97,6 +98,8 @@ Run comands :
 - `jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore Cookers-release-unsigned.apk alias_name` (you will need keystore password...)
 - `zipalign -v 4 Cookers-release-unsigned.apk Cookers.apk`
 - Your apk is ready : `Cookers.apk` ! You can now delete `Cookers-release-unsigned.apk`
+
+Or, run script `build-release.sh`...
 
 ## Installer l'application
 

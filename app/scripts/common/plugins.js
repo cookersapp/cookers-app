@@ -18,9 +18,15 @@ angular.module('app')
     if(!position)   { position  = 'bottom';           } // possible values : 'top', 'center', 'bottom'
     if(!successCb)  { successCb = function(status){}; }
     if(!errorCb)    { errorCb   = function(error){};  }
+    pluginReady(function(){
+      $window.plugins.toast.show(message, duration, position, successCb, errorCb);
+    });
+  }
+
+  function pluginReady(fn){
     $ionicPlatform.ready(function(){
       if($window.plugins && $window.plugins.toast){
-        $window.plugins.toast.show(message, duration, position, successCb, errorCb);
+        fn();
       } else {
         LogSrv.trackError('pluginNotFound:Toast');
       }
@@ -43,7 +49,7 @@ angular.module('app')
 
   function loadMedia(src, onStop, onError, onStatus){
     var defer = $q.defer();
-    $ionicPlatform.ready(function(){
+    pluginReady(function(){
       var mediaSuccess = function(){
         if(onStop){onStop();}
       };
@@ -57,7 +63,7 @@ angular.module('app')
 
       if($ionicPlatform.is('android')){src = '/android_asset/www/' + src;}
       defer.resolve(new $window.Media(src, mediaSuccess, mediaError, mediaStatus));
-    });
+    }, defer);
     return defer.promise;
   }
 
@@ -86,6 +92,17 @@ angular.module('app')
     else {return 'Unknown code <'+code+'>';}
   }
 
+  function pluginReady(fn, defer){
+    $ionicPlatform.ready(function(){
+      if($window.Media){
+        fn();
+      } else {
+        LogSrv.trackError('pluginNotFound:Media');
+        defer.reject('pluginNotFound:Media');
+      }
+    });
+  }
+
   return service;
 })
 
@@ -98,21 +115,56 @@ angular.module('app')
   };
 
   function keepAwake(){
+    pluginReady(function(){
+      $window.plugins.insomnia.keepAwake();
+    });
+  }
+
+  function allowSleepAgain(){
+    pluginReady(function(){
+      $window.plugins.insomnia.allowSleepAgain();
+    });
+  }
+
+  function pluginReady(fn){
     $ionicPlatform.ready(function(){
       if($window.plugins && $window.plugins.insomnia){
-        $window.plugins.insomnia.keepAwake();
+        fn();
       } else {
         LogSrv.trackError('pluginNotFound:Insomnia');
       }
     });
   }
 
-  function allowSleepAgain(){
+  return service;
+})
+
+// for Accounts plugin : hhttps://github.com/loicknuchel/cordova-device-accounts
+.factory('AccountsSrv', function($window, $ionicPlatform, LogSrv){
+  'use strict';
+  var service = {
+    getAccounts: getAccounts,
+    getEmail: getEmail
+  };
+
+  function getAccounts(onSuccess, onFail){
+    pluginReady(function(){
+      $window.plugins.DeviceAccounts.get(onSuccess, onFail);
+    });
+  }
+
+  function getEmail(onSuccess, onFail){
+    pluginReady(function(){
+      $window.plugins.DeviceAccounts.getEmail(onSuccess, onFail);
+    });
+  }
+
+  function pluginReady(fn){
     $ionicPlatform.ready(function(){
-      if($window.plugins && $window.plugins.insomnia){
-        $window.plugins.insomnia.allowSleepAgain();
+      if($window.plugins && $window.plugins.DeviceAccounts){
+        fn();
       } else {
-        LogSrv.trackError('pluginNotFound:Insomnia');
+        LogSrv.trackError('pluginNotFound:DeviceAccounts');
       }
     });
   }
