@@ -1,31 +1,5 @@
 angular.module('app')
 
-.config(function($stateProvider){
-  'use strict';
-
-  $stateProvider
-  .state('intro', {
-    url: '/intro',
-    templateUrl: 'scripts/launch/intro.html',
-    controller: 'IntroCtrl'
-  });
-})
-
-.controller('IntroCtrl', function($scope, $state, StorageSrv, LogSrv){
-  'use strict';
-  var currentSlide = 0;
-
-  $scope.startApp = function(){
-    LogSrv.trackIntroExit(currentSlide);
-    $state.go('app.home');
-  };
-
-  $scope.slideChanged = function(index){
-    LogSrv.trackIntroChangeSlide(currentSlide, index);
-    currentSlide = index;
-  };
-})
-
 .factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {

@@ -10,8 +10,6 @@ angular.module('app')
     trackInstall: function(user){track('install', {user: user});},
     trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
-    trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
-    trackIntroExit: function(slide){track('intro-exit', {slide: slide});},
     trackState: function(params){track('state', params);},
     trackStateError: function(params){track('state-error', params);},
     trackStateNotFound: function(params){track('state-not-found', params);},
