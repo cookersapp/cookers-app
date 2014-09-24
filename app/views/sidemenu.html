@@ -5,13 +5,8 @@
 
   <ion-side-menu side="left">
     <ion-content class="sidemenu">
-      <div class="profile" bindonce="user">
+      <div class="profile">
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
-        <div menu-close ui-sref="app.profile">
-          <div class="avatar" bo-style="{'background-image': 'url('+user.avatar+')'}"></div>
-          <div class="username" bo-text="user.name"></div>
-          <div class="clearfix"></div>
-        </div>
       </div>
       <div class="list">
         <div class="item item-divider">Cookers</div>
@@ -23,6 +18,7 @@
       <div class="list">
         <div class="item item-divider">Outils</div>
         <a class="item item-icon-left" menu-close href="#/app/feedback"><i class="icon ion-android-forums"></i> Donne ton avis</a>
+        <a class="item item-icon-left" menu-close href="#/app/profile"><i class="icon ion-toggle"></i> Mes options</a>
         <a class="item item-icon-left" menu-close href="#/intro"><i class="icon ion-log-in"></i> Introduction</a>
       </div>
     </ion-content>

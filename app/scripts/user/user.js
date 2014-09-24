@@ -24,55 +24,19 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, ToastSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $window, StorageSrv, LogSrv){
   'use strict';
-  $scope.user = StorageSrv.getUser();
-
-  var covers = [
-    'images/profile-covers/cover01.jpg',
-    'images/profile-covers/cover02.jpg',
-    'images/profile-covers/cover03.jpg',
-    'images/profile-covers/cover04.jpg',
-    'images/profile-covers/cover05.jpg',
-    'images/profile-covers/cover06.jpg',
-    'images/profile-covers/cover07.jpg',
-    'images/profile-covers/cover08.jpg',
-    'images/profile-covers/cover09.jpg',
-    'images/profile-covers/cover10.jpg',
-    'images/profile-covers/cover11.jpg',
-    'images/profile-covers/cover12.jpg',
-    'images/profile-covers/cover13.jpg',
-    'images/profile-covers/cover14.jpg',
-    'images/profile-covers/cover15.jpg',
-    'images/profile-covers/cover16.jpg',
-    'images/profile-covers/cover17.jpg',
-    'images/profile-covers/cover18.jpg',
-    'images/profile-covers/cover19.jpg',
-    'images/profile-covers/cover20.jpg',
-    'images/profile-covers/cover21.jpg',
-    'images/profile-covers/cover22.jpg',
-    'images/profile-covers/cover23.jpg',
-    'images/profile-covers/cover24.jpg'
-  ];
-  if(!gravatarCoverIsInCovers($scope.user, covers) && getGravatarCover($scope.user)){ covers.unshift(getGravatarCover($scope.user)); }
-  var currentCover = -1;
-  $scope.changeCover = function(){
-    currentCover = (currentCover+1)%covers.length;
-    $scope.user.backgroundCover = covers[currentCover];
-    StorageSrv.saveUser($scope.user);
-    LogSrv.trackChangeSetting('profileCover', $scope.user.backgroundCover);
-    LogSrv.registerUser();
-  };
+  var user = StorageSrv.getUser();
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache($scope.user.id);
+      LogSrv.trackClearCache(user.id);
       StorageSrv.clearCache();
     }
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp($scope.user.id);
+      LogSrv.trackClearApp(user.id);
       StorageSrv.clear();
       if(navigator.app){
         navigator.app.exitApp();
@@ -96,25 +60,6 @@ angular.module('app')
       LogSrv.registerUser();
     }
   });
-
-  function gravatarCoverIsInCovers(user, covers){
-    var gravatarCover = getGravatarCover(user);
-    if(gravatarCover && _.find(covers, function(cover){return cover === gravatarCover;}) !== undefined){
-      return true;
-    }
-    return false;
-  }
-  function getGravatarCover(user){
-    if(user &&
-       user.profiles &&
-       user.profiles.gravatar &&
-       user.profiles.gravatar.entry &&
-       user.profiles.gravatar.entry.length > 0 &&
-       user.profiles.gravatar.entry[0].profileBackground &&
-       user.profiles.gravatar.entry[0].profileBackground.url){
-      return user.profiles.gravatar.entry[0].profileBackground.url;
-    }
-  }
 })
 
 .controller('FeedbackCtrl', function($scope, $stateParams, $window, UserSrv, StorageSrv, EmailSrv, LogSrv){

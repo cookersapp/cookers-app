@@ -1,10 +1,9 @@
 angular.module('app')
 
-.controller('AppCtrl', function($scope, $interval, $ionicPlatform, $ionicSideMenuDelegate, StorageSrv){
+.controller('AppCtrl', function($scope, $interval, StorageSrv){
   'use strict';
   $scope.defaultCovers = ['images/sidemenu-covers/cover1.jpg','images/sidemenu-covers/cover2.jpg','images/sidemenu-covers/cover3.jpg','images/sidemenu-covers/cover4.png','images/sidemenu-covers/cover5.jpg','images/sidemenu-covers/cover6.jpg'];
   $scope.imageCover = $scope.defaultCovers[0];
-  $scope.user = StorageSrv.getUser();
 
   $interval(function(){
     var recipesHistory = StorageSrv.getRecipeHistory();

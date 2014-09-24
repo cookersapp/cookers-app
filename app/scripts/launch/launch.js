@@ -17,9 +17,6 @@ angular.module('app')
 
   $scope.startApp = function(){
     LogSrv.trackIntroExit(currentSlide);
-    var user = StorageSrv.getUser();
-    user.skipIntro = true;
-    StorageSrv.saveUser(user);
     $state.go('app.home');
   };
 
