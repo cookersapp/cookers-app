@@ -1,4 +1,4 @@
-angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'firebase', 'angular-md5', 'monospaced.elastic', 'pasvaz.bindonce'])
+angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'angular-md5', 'monospaced.elastic', 'pasvaz.bindonce'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
@@ -26,10 +26,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
     url: '/app',
     abstract: true,
     templateUrl: 'views/sidemenu.html',
-    controller: 'AppCtrl',
-    data: {
-      restrict: 'connected'
-    }
+    controller: 'AppCtrl'
   })
   .state('app.home', {
     url: '/home',
@@ -38,27 +35,11 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
         templateUrl: 'views/home.html',
         controller: 'HomeCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   });
 
-  // choose default route depending on application state
-  var user = JSON.parse(localStorage.getItem('ionic-user'));
-  if(user){
-    if(user.skipIntro){
-      if(user.isLogged){
-        $urlRouterProvider.otherwise('/app/home');
-      } else {
-        $urlRouterProvider.otherwise('/login');
-      }
-    } else {
-      $urlRouterProvider.otherwise('/intro');
-    }
-  } else {
-    $urlRouterProvider.otherwise('/intro');
-  }
+  // set default route
+  $urlRouterProvider.otherwise('/app/home');
 })
 
 .constant('debug', Config.debug)
@@ -80,9 +61,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
     firstLaunch: Date.now()
   },
   user: {
-    skipIntro: false,
-    isLogged: false,
-    loggedWith: null,
     id: null,
     email: '',
     name: 'Anonymous',

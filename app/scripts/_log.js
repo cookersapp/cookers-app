@@ -188,8 +188,6 @@ var Logger = (function(){
     }
   }
 
-  // TODO : create alias on login...
-
   return {
     identify: identify,
     alias: alias,

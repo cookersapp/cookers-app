@@ -11,9 +11,6 @@ angular.module('app')
         templateUrl: 'scripts/recipe/recipes.html',
         controller: 'RecipesCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   })
   .state('app.recipe', {
@@ -23,9 +20,6 @@ angular.module('app')
         templateUrl: 'scripts/recipe/recipe.html',
         controller: 'RecipeCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   })
   .state('app.cook', {
@@ -37,8 +31,7 @@ angular.module('app')
       }
     },
     data: {
-      noSleep: true,
-      restrict: 'connected'
+      noSleep: true
     }
   })
   .state('app.tocook', {
@@ -48,9 +41,6 @@ angular.module('app')
         templateUrl: 'scripts/recipe/tocook.html',
         controller: 'TocookCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   })
   .state('app.cooked', {
@@ -60,9 +50,6 @@ angular.module('app')
         templateUrl: 'scripts/recipe/cooked.html',
         controller: 'CookedCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   });
 })

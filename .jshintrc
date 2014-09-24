@@ -24,7 +24,6 @@
     "ionic": false,
     "Config": false,
     "Logger": false,
-    "Firebase": false,
     "UserVoice": false,
     "analytics": false,
     "moment": false,

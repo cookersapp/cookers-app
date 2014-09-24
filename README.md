@@ -12,13 +12,14 @@
     - espace blanc en bas de l'écran cuisine :(
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
     - accéder aux listes de courses archivées
+    - tracking : http://www.google.com/analytics/, https://keen.io/, http://trak.io/
 
 - téléphones posant problème :
-    - galaxy note 2             / Adrien Henry
+    - GT-N7105 / galaxy note 2  / Adrien Henry
     - wiko ozzy (4.2.2)         / Marion Pierlas
     - galaxy scl                / Perrine Pierlas
     - GT-I9305 (4.1.2)          / Isabelle Souty
-    - Galaxy s3                 / Julien Aubriet, Samir Bouaked
+    - Galaxy s3                 / Julien Aubriet, Samir Bouaked, Isabelle Souty, Nicolas Nucci
     - galaxy tab 2 gt- p3113    / Benoit Reboul-salze
     - galaxy Ace                / Benoit Reboul-salze
     - LG-D802 (4.2.2)           / Alexis De Valence (problème affichage slides intro)

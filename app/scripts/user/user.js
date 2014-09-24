@@ -11,9 +11,6 @@ angular.module('app')
         templateUrl: 'scripts/user/profile.html',
         controller: 'ProfileCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   })
   .state('app.feedback', {
@@ -23,14 +20,11 @@ angular.module('app')
         templateUrl: 'scripts/user/feedback.html',
         controller: 'FeedbackCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   });
 })
 
-.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, LoginSrv, ToastSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $state, $window, StorageSrv, UserSrv, ToastSrv, LogSrv){
   'use strict';
   $scope.user = StorageSrv.getUser();
 
@@ -75,15 +69,6 @@ angular.module('app')
       LogSrv.trackClearCache($scope.user.id);
       StorageSrv.clearCache();
     }
-  };
-  $scope.logout = function(){
-    LoginSrv.logout().then(function(){
-      LogSrv.trackLogout($scope.user.id);
-      $state.go('login');
-    }, function(error){
-      LogSrv.trackError('logout', error);
-      ToastSrv.show(error.message);
-    });
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){

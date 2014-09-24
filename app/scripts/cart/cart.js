@@ -12,26 +12,19 @@ angular.module('app')
         templateUrl: 'scripts/cart/cart.html',
         controller: 'CartCtrl'
       }
-    },
-    data: {
-      restrict: 'connected'
     }
   })
   .state('app.cart.recipes', {
     url: '/recipes',
     templateUrl: 'scripts/cart/cart-recipes.html',
-    controller: 'CartRecipesCtrl',
-    data: {
-      restrict: 'connected'
-    }
+    controller: 'CartRecipesCtrl'
   })
   .state('app.cart.ingredients', {
     url: '/ingredients',
     templateUrl: 'scripts/cart/cart-ingredients.html',
     controller: 'CartIngredientsCtrl',
     data: {
-      noSleep: true,
-      restrict: 'connected'
+      noSleep: true
     }
   });
 })

@@ -11,7 +11,6 @@ angular.module('app')
     trackInstall: function(user){track('install', {user: user});},
     trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
-    trackLogin: function(provider, data){track('login', {provider: provider, data: data});},
     trackIntroChangeSlide: function(from, to){track('intro-change-slide', {from: from, to: to});},
     trackIntroExit: function(slide){track('intro-exit', {slide: slide});},
     trackState: function(params){track('state', params);},
@@ -32,7 +31,6 @@ angular.module('app')
     trackSendFeedback: function(email){track('send-feedback', {email: email});},
     trackOpenUservoice: function(){track('open-uservoice');},
     trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
-    trackLogout: function(user){track('logout', {user: user});},
     trackClearCache: function(user){track('clear-cache', {user: user});},
     trackClearApp: function(user){track('clear-app', {user: user});},
     trackError: function(type, error){track('error', {type: type, error: error});}
@@ -97,7 +95,6 @@ angular.module('app')
     if(user.name){userProfile.fullName = user.name;}
     if(user.avatar){userProfile.avatar = user.avatar;}
     if(user.backgroundCover){userProfile.backgroundCover = user.backgroundCover;}
-    if(user.loggedWith){userProfile.loggedWith = user.loggedWith;}
     if(user.device){
       if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
       if(user.device.model)    { userProfile['device.model']      = user.device.model;     }
