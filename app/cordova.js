@@ -67,8 +67,8 @@ window.Media = function(src, mediaSuccess, mediaError, mediaStatus){
 
 // for plugin https://github.com/loicknuchel/cordova-device-accounts.git
 window.plugins.DeviceAccounts = {
-  get: function(onSuccess, onFail){ onSuccess([]); },
-  getByType: function(type, onSuccess, onFail){ onSuccess([]); },
-  getEmails: function(onSuccess, onFail){ onSuccess([]); },
-  getEmail: function(onSuccess, onFail){ onSuccess(); }
+  get: function(onSuccess, onFail){ onSuccess([{type:'com.google', name:'test@example.com'}]); },
+  getByType: function(type, onSuccess, onFail){ onSuccess([{type:'com.google', name:'test@example.com'}]); },
+  getEmails: function(onSuccess, onFail){ onSuccess(['test@example.com']); },
+  getEmail: function(onSuccess, onFail){ onSuccess('test@example.com'); }
 };

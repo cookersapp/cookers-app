@@ -4,14 +4,14 @@ angular.module('app')
   'use strict';
   var service = {
     getUserId: getUserId,
-    updateUser: updateUser,
-    aliasUser: aliasUser
+    getUser: getUser,
+    saveUser: saveUser
   };
 
-  function getUserId(user){
-    var email = encodeURI(user.email).replace(/\./g, '');
-    if(email.length > 0){
-      return $http.get(firebaseUrl+'/userrefs/'+email+'.json').then(function(result){
+  function getUserId(email){
+    var emailUri = _mailUri(email);
+    if(emailUri.length > 0){
+      return $http.get(firebaseUrl+'/userrefs/'+emailUri+'.json').then(function(result){
         if(result.data !== 'null'){
           return result.data.id;
         }
@@ -21,12 +21,24 @@ angular.module('app')
     }
   }
 
-  function updateUser(user){
-    var userId = user.id;
-    if(userId){
-      var email = encodeURI(user.email).replace(/\./g, '');
+  function getUser(id){
+    if(id && id.length > 0){
+      return $http.get(firebaseUrl+'/users/'+id+'.json').then(function(result){
+        if(result.data !== 'null'){
+          return result.data;
+        }
+      });
+    } else {
+      return $q.when();
+    }
+  }
 
-      var emailRefPromise = email.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+email+'.json', {id: userId}) : $q.when();
+  function saveUser(user){
+    var userId = user.id;
+    if(userId && userId.length > 0){
+      var emailUri = _mailUri(user.email);
+
+      var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
       var userPromise = $http.put(firebaseUrl+'/users/'+userId+'.json', user);
 
       return $q.all([emailRefPromise, userPromise]);
@@ -34,19 +46,9 @@ angular.module('app')
       return $q.when();
     }
   }
-
-  function aliasUser(user, oldId){
-    if(user.id){
-      var email = encodeURI(user.email).replace(/\./g, '');
-
-      var addEmailRefPromise = email.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+email+'.json', {id: user.id}) : $q.when();
-      var addUserPromise = $http.put(firebaseUrl+'/users/'+user.id+'.json', user);
-      var removeUserPromise = user.id !== oldId ? $http.delete(firebaseUrl+'/users/'+oldId+'.json') : $q.when();
-
-      return $q.all([addEmailRefPromise, addUserPromise, removeUserPromise]);
-    } else {
-      return $q.when();
-    }
+  
+  function _mailUri(email){
+    return encodeURI(email).replace(/\./g, '');
   }
 
   return service;

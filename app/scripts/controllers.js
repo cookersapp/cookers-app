@@ -23,10 +23,7 @@ angular.module('app')
 
   var user = StorageSrv.getUser();
   if(user.email && Utils.isEmail(user.email) && !user.data.welcomeMailSent){
-    var name = '';
-    if(user.firstName){name = user.firstName;}
-    else if(user.name && user.name !== 'Anonymous'){name = user.name;}
-    EmailSrv.sendWelcome(name, user.email).then(function(){
+    EmailSrv.sendWelcome(user.email).then(function(){
       StorageSrv.saveUserData('welcomeMailSent', true);
     });
   }

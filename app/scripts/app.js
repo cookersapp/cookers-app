@@ -48,7 +48,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
 .constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
-.constant('supportTeamEmail', 'loicknuchel@gmail.com')
+.constant('supportTeamEmail', 'loic@cookers.io')
 
 .constant('$ionicLoadingConfig', {
   template: '<loading color="rgba(255,255,255,0.7)"></loading>',
@@ -63,13 +63,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
   user: {
     id: null,
     email: '',
-    name: 'Anonymous',
-    avatar: 'images/user.jpg',
-    background: '#6f5499',
-    backgroundCover: 'images/profile-covers/cover01.jpg',
-    firstName: '',
-    lastName: '',
-    more: {},
     device: {},
     settings: {
       defaultServings: 2,
@@ -82,7 +75,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
       welcomeMailSent: false
     }
   },
-  userSocialProfiles: {},
   userCarts: { carts: [] },
   userStandaloneCookedRecipes: { recipes: [] },
   userRecipeHistory: { recipes: [] },

@@ -92,13 +92,6 @@ var Logger = (function(){
     }
   }
 
-  function alias(newId){
-    if(config.verbose){ console.log('$[alias]', newId); }
-    if(config.track){
-      analytics.alias(newId);
-    }
-  }
-
   function track(type, data){
     if(!data){data = {};}
     if(!data.url && window && window.location){data.url = window.location.href;}
@@ -190,7 +183,6 @@ var Logger = (function(){
 
   return {
     identify: identify,
-    alias: alias,
     track: track
   };
 })();

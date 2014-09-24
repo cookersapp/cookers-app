@@ -37,8 +37,6 @@
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu
     - pouvoir cuisiner plusieurs recettes en même temps (tablette)
-    
-    => home page : track click on social links
 
 # Technical
 

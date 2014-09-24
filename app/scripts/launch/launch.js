@@ -26,12 +26,13 @@ angular.module('app')
   };
 })
 
-.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
+        console.log('user', user);
         if(user && user.id){
           launch();
         } else {
@@ -44,13 +45,31 @@ angular.module('app')
   function firstLaunch(){
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
-    BackendUserSrv.getUserId(user).then(function(userId){
-      if(userId)  { user.id = userId;             }
-      else        { user.id = Utils.createUuid(); }
-    }).then(function(){
-      StorageSrv.saveUser(user);
-      LogSrv.trackInstall(user.id);
-      launch();
+    AccountsSrv.getEmail(function(email){
+      BackendUserSrv.getUserId(email).then(function(userId){
+        user.email = email;
+        if(userId)  {
+          user.id = userId;
+          return BackendUserSrv.getUser(userId);
+        } else {
+          user.id = Utils.createUuid();
+          return $q.when(user);
+        }
+      }).then(function(backendUser){
+        angular.extend(user.data, backendUser.data);
+        angular.extend(user.settings, backendUser.settings);
+        StorageSrv.saveUser(user);
+        LogSrv.trackInstall(user.id);
+        launch();
+      }, function(error){
+        if(!error){error = {};}
+        else if(typeof error === 'string'){error = {message: error};}
+        error.email = email;
+        LogSrv.trackError('network:userNotFound', error);
+
+        StorageSrv.saveUser(user);
+        launch();
+      });
     });
   }
 

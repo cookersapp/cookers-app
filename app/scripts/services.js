@@ -139,7 +139,7 @@ angular.module('app')
     });
   }
 
-  function sendWelcome(name, email){
+  function sendWelcome(email){
     return $http.post(mandrillUrl+'/messages/send-template.json', {
       key: mandrillKey,
       template_name: 'welcome',
@@ -151,7 +151,7 @@ angular.module('app')
         track_opens: true,
         preserve_recipients: true,
         global_merge_vars: [
-          {name: 'FNAME', content: name}
+          {name: 'FNAME', content: ''}
         ],
         tags: ['app', 'welcome']
       }

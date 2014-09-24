@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('StorageSrv', function($window, $state, _LocalStorageSrv, LogSrv, Utils, localStorageDefault, appVersion){
+.factory('StorageSrv', function($window, $state, _LocalStorageSrv, LogSrv, AccountsSrv, Utils, localStorageDefault, appVersion){
   'use strict';
   var service = {
     init: init,
@@ -17,9 +17,6 @@ angular.module('app')
       user.data[data] = value;
       _LocalStorageSrv.setUser(user);
     },
-    getUserProfiles: _LocalStorageSrv.getUserProfiles,
-    getUserProfile: function(provider){return _LocalStorageSrv.getUserProfiles()[provider];},
-    saveUserProfiles: _LocalStorageSrv.setUserProfiles,
     getFood: function(id){return _LocalStorageSrv.getFoods().foods[id];},
     addFood: function(food){
       if(food && food.id){
@@ -101,9 +98,25 @@ angular.module('app')
   function _migrate(previousVersion, nextVersion){
     LogSrv.trackUpgrade(previousVersion, nextVersion);
     if(localStorage){
-      // migrate
+      AccountsSrv.getEmail(function(email){
+        if(email){
+          var user = _LocalStorageSrv.getUser();
+          user.email = email;
+          delete user.skipIntro;
+          delete user.isLogged;
+          delete user.loggedWith;
+          delete user.name;
+          delete user.avatar;
+          delete user.background;
+          delete user.backgroundCover;
+          delete user.firstName;
+          delete user.lastName;
+          delete user.more;
+          _LocalStorageSrv.saveUser(user);
+          LogSrv.registerUser();
+        }
+      });
     }
-    LogSrv.registerUser();
   }
 
   return service;
@@ -118,8 +131,6 @@ angular.module('app')
     setApp: function(app){return _set('app', app);},
     getUser: function(){return _get('user');},
     setUser: function(user){return _set('user', user);},
-    getUserProfiles: function(){return _get('userSocialProfiles');},
-    setUserProfiles: function(userProfiles){return _set('userSocialProfiles', userProfiles);},
     getFoods: function(){return _get('dataFoods');},
     setFoods: function(foods){return _set('dataFoods', foods);},
     getRecipes: function(){return _get('dataRecipes');},

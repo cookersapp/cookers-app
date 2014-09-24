@@ -7,7 +7,6 @@ angular.module('app')
   var service = {
     identify: function(){registerUser(false);},
     registerUser: function(){registerUser(true);},
-    alias: alias,
     trackInstall: function(user){track('install', {user: user});},
     trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
     trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
@@ -65,9 +64,9 @@ angular.module('app')
   function track(event, properties){
     var user = _LocalStorageSrv.getUser();
     if(!properties){properties = {};}
-    properties.appVersion = appVersion;
-    if(!properties.id && user && user.id)       {properties.userId  = user.id;    }
-    if(!properties.email && user && user.email) {properties.email   = user.email; }
+    if(!properties.appVersion)                  { properties.appVersion  = appVersion;  }
+    if(!properties.id && user && user.id)       { properties.userId  = user.id;         }
+    if(!properties.email && user && user.email) { properties.email   = user.email;      }
     if(user && user.device){
       if(!properties.device && user.device.uuid && user.device.model && user.device.platform && user.device.version){
         properties.device = {
@@ -90,36 +89,18 @@ angular.module('app')
     if(appVersion){userProfile.appVersion = appVersion;}
     if(user.id){userProfile.id = user.id;}
     if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
-    if(user.firstName){userProfile.$first_name = user.firstName;}
-    if(user.lastName){userProfile.$last_name = user.lastName;}
-    if(user.name){userProfile.fullName = user.name;}
-    if(user.avatar){userProfile.avatar = user.avatar;}
-    if(user.backgroundCover){userProfile.backgroundCover = user.backgroundCover;}
     if(user.device){
       if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
       if(user.device.model)    { userProfile['device.model']      = user.device.model;     }
       if(user.device.platform) { userProfile['device.platform']   = user.device.platform;  }
       if(user.device.version)  { userProfile['device.version']    = user.device.version;   }
     }
-    for(var i in user.more){
-      userProfile['more.'+i] = user.more[i];
-    }
     for(var j in user.settings){
       userProfile['setting.'+j] = user.settings[j];
     }
 
     Logger.identify(user.id, userProfile, async);
-    BackendUserSrv.updateUser(user);
-  }
-
-  function alias(newId){
-    var sUser = _LocalStorageSrv.getUser();
-    Logger.alias(newId);
-    var oldId = sUser.id;
-    sUser.id = newId;
-    BackendUserSrv.aliasUser(sUser, oldId).then(function(){
-      _LocalStorageSrv.setUser(sUser);
-    });
+    BackendUserSrv.saveUser(user);
   }
 
   return service;
