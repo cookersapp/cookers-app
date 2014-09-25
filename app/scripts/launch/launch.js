@@ -4,6 +4,7 @@ angular.module('app')
   'use strict';
   var service = {
     launch: function(){
+      // TODO : refactor ! No firstLaunch anymore...
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
         console.log('user', user);
@@ -19,7 +20,7 @@ angular.module('app')
   function firstLaunch(){
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
-    AccountsSrv.getEmail().then(function(email){
+    AccountsSrv.getEmailOrAsk().then(function(email){
       BackendUserSrv.getUserId(email).then(function(userId){
         user.email = email;
         if(userId)  {
@@ -30,8 +31,7 @@ angular.module('app')
           return $q.when(user);
         }
       }).then(function(backendUser){
-        angular.extend(user.data, backendUser.data);
-        angular.extend(user.settings, backendUser.settings);
+        angular.extend(user, backendUser);
         StorageSrv.saveUser(user);
         LogSrv.trackInstall(user.id);
         launch();
@@ -42,6 +42,7 @@ angular.module('app')
         LogSrv.trackError('network:userNotFound', error);
 
         StorageSrv.saveUser(user);
+        LogSrv.trackInstall(user.id);
         launch();
       });
     });

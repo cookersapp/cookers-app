@@ -92,8 +92,7 @@ angular.module('app')
     });
     if(user.email !== $scope.feedback.email){
       LogSrv.trackSetEmail($scope.feedback.email);
-      user.email = $scope.feedback.email;
-      StorageSrv.saveUser(user);
+      StorageSrv.saveUserEmail($scope.feedback.email);
       LogSrv.registerUser();
     }
   };

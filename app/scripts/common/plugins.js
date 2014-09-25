@@ -144,7 +144,8 @@ angular.module('app')
   'use strict';
   var service = {
     getAccounts: getAccounts,
-    getEmail: getEmail
+    getEmail: getEmail,
+    getEmailOrAsk: getEmailOrAsk
   };
 
   function getAccounts(){
@@ -160,6 +161,19 @@ angular.module('app')
   }
 
   function getEmail(){
+    var defer = $q.defer();
+    pluginReady(function(){
+      $window.plugins.DeviceAccounts.getEmail(function(email){
+        defer.resolve(email);
+      }, function(error){
+        defer.reject(error);
+      });
+    });
+    return defer.promise;
+  }
+
+  // TODO
+  function getEmailOrAsk(){
     var defer = $q.defer();
     pluginReady(function(){
       $window.plugins.DeviceAccounts.getEmail(function(email){

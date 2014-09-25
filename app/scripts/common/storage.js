@@ -1,22 +1,15 @@
 angular.module('app')
 
-.factory('StorageSrv', function($window, $state, _LocalStorageSrv, LogSrv, AccountsSrv, Utils, localStorageDefault, appVersion){
+.factory('StorageSrv', function($window, $state, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault, appVersion){
   'use strict';
   var service = {
     init: init,
     getApp: _LocalStorageSrv.getApp,
     getUser: _LocalStorageSrv.getUser,
-    saveUser: _LocalStorageSrv.setUser,
-    saveUserSetting: function(setting, value){
-      var user = _LocalStorageSrv.getUser();
-      user.settings[setting] = value;
-      _LocalStorageSrv.setUser(user);
-    },
-    saveUserData: function(data, value){
-      var user = _LocalStorageSrv.getUser();
-      user.data[data] = value;
-      _LocalStorageSrv.setUser(user);
-    },
+    saveUser: saveUser,
+    saveUserEmail: saveUserEmail,
+    saveUserSetting: saveUserSetting,
+    saveUserData: saveUserData,
     getFood: function(id){return _LocalStorageSrv.getFoods().foods[id];},
     addFood: function(food){
       if(food && food.id){
@@ -74,6 +67,29 @@ angular.module('app')
     }
   };
 
+  function saveUser(user){
+    _LocalStorageSrv.setUser(user);
+    return BackendUserSrv.saveUser(user);
+  }
+  function saveUserEmail(email){
+    var user = _LocalStorageSrv.getUser();
+    user.email = email;
+    _LocalStorageSrv.setUser(user);
+    return BackendUserSrv.saveUserEmail(user.id, email);
+  }
+  function saveUserSetting(setting, value){
+    var user = _LocalStorageSrv.getUser();
+    user.settings[setting] = value;
+    _LocalStorageSrv.setUser(user);
+    return BackendUserSrv.saveUserSetting(user.id, setting, value);
+  }
+  function saveUserData(data, value){
+    var user = _LocalStorageSrv.getUser();
+    user.data[data] = value;
+    _LocalStorageSrv.setUser(user);
+    return BackendUserSrv.saveUserData(user.id, data, value);
+  }
+
   function init(){
     for(var i in localStorageDefault){
       var key = i;
@@ -113,6 +129,7 @@ angular.module('app')
           delete user.lastName;
           delete user.more;
           _LocalStorageSrv.saveUser(user);
+          BackendUserSrv.saveUser(user);
           LogSrv.registerUser();
         }
       });

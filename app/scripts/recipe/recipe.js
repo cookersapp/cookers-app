@@ -162,8 +162,7 @@ angular.module('app')
         startTimer();
       } else {
         PopupSrv.tourCookFeatures().then(function(){
-          user.data.skipCookFeatures = true;
-          StorageSrv.saveUser(user);
+          StorageSrv.saveUserData('skipCookFeatures', true);
           startTimer();
         });
       }

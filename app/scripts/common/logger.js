@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, BackendUserSrv, Utils, _LocalStorageSrv, appVersion){
+.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
   'use strict';
   // rename events with a past-tense verb and a noun.
   // ex: app installed, page viewed, feedback sent...
@@ -98,7 +98,6 @@ angular.module('app')
     }
 
     Logger.identify(user.id, userProfile, async);
-    BackendUserSrv.saveUser(user);
   }
 
   return service;

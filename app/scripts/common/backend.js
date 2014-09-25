@@ -46,7 +46,34 @@ angular.module('app')
       return $q.when();
     }
   }
-  
+
+  function saveUserEmail(userId, email){
+    if(userId && userId.length > 0){
+      var emailUri = _mailUri(user.email);
+
+      var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
+      var userPromise = $http.put(firebaseUrl+'/users/'+userId+'/email.json', email);
+
+      return $q.all([emailRefPromise, userPromise]);
+    } else {
+      return $q.when();
+    }
+  }
+  function saveUserSetting(userId, setting, value){
+    if(userId && userId.length > 0){
+      return $http.put(firebaseUrl+'/users/'+userId+'/settings/'+setting+'.json', value);
+    } else {
+      return $q.when();
+    }
+  }
+  function saveUserData(userId, data, value){
+    if(userId && userId.length > 0){
+      return $http.put(firebaseUrl+'/users/'+userId+'/data/'+data+'.json', value);
+    } else {
+      return $q.when();
+    }
+  }
+
   function _mailUri(email){
     return encodeURI(email).replace(/\./g, '');
   }
