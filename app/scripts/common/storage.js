@@ -98,7 +98,7 @@ angular.module('app')
   function _migrate(previousVersion, nextVersion){
     LogSrv.trackUpgrade(previousVersion, nextVersion);
     if(localStorage){
-      AccountsSrv.getEmail(function(email){
+      AccountsSrv.getEmail().then(function(email){
         if(email){
           var user = _LocalStorageSrv.getUser();
           user.email = email;

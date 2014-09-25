@@ -1,10 +1,6 @@
 $avatar-size: 80px;
 .sidemenu {
-  background: #6f5499;
-  color: #fff;
-  .scroll {
-    background: url(../images/menu_bg.png);
-  }
+  background: #6f5499 url(../images/menu_bg.png);
   .profile {
     margin-bottom: 20px;
     .cover {

@@ -140,23 +140,35 @@ angular.module('app')
 })
 
 // for Accounts plugin : hhttps://github.com/loicknuchel/cordova-device-accounts
-.factory('AccountsSrv', function($window, $ionicPlatform, LogSrv){
+.factory('AccountsSrv', function($q, $window, $ionicPlatform, LogSrv){
   'use strict';
   var service = {
     getAccounts: getAccounts,
     getEmail: getEmail
   };
 
-  function getAccounts(onSuccess, onFail){
+  function getAccounts(){
+    var defer = $q.defer();
     pluginReady(function(){
-      $window.plugins.DeviceAccounts.get(onSuccess, onFail);
+      $window.plugins.DeviceAccounts.get(function(accounts){
+        defer.resolve(accounts);
+      }, function(error){
+        defer.reject(error);
+      });
     });
+    return defer.promise;
   }
 
-  function getEmail(onSuccess, onFail){
+  function getEmail(){
+    var defer = $q.defer();
     pluginReady(function(){
-      $window.plugins.DeviceAccounts.getEmail(onSuccess, onFail);
+      $window.plugins.DeviceAccounts.getEmail(function(email){
+        defer.resolve(email);
+      }, function(error){
+        defer.reject(error);
+      });
     });
+    return defer.promise;
   }
 
   function pluginReady(fn){

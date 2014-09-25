@@ -19,7 +19,7 @@ angular.module('app')
   function firstLaunch(){
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
-    AccountsSrv.getEmail(function(email){
+    AccountsSrv.getEmail().then(function(email){
       BackendUserSrv.getUserId(email).then(function(userId){
         user.email = email;
         if(userId)  {

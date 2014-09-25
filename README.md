@@ -3,13 +3,13 @@
 # TODO
 
 - next release :
-    - récupérer le mail du téléphone
-    - supprimer le login et l'intro
+    - splash screen
     - problème scroll écran feedback (mail Julien Richarte)
+    - espace blanc en bas de l'écran cuisine :(
+    
     - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - notifications pour ne pas oublier l'application !
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
-    - espace blanc en bas de l'écran cuisine :(
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
     - accéder aux listes de courses archivées
     - tracking : http://www.google.com/analytics/, https://keen.io/, http://trak.io/
@@ -25,18 +25,25 @@
     - LG-D802 (4.2.2)           / Alexis De Valence (problème affichage slides intro)
 
 - TODO
-    - mettre un plugin phonegap pour se connecter "nativement" à facebook, twitter, google
     - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
     - see :
         - http://forum.ionicframework.com/t/using-imagecache-in-ionic/4646
         - http://forum.ionicframework.com/t/how-to-login-with-facebook-now/9305
-    - tracking :
-        - où est ce que les gens s'arrêtent dans les recettes de la semaine
     - cook :
         - mettre une barre de progression correspondante au timer global
         - mettre des tips (différents badges en fonction de la tip) cliquables qui s'ouvrent pour montrer l'astuce
         - slide sur une carte : le retourne et montre une photo du résultat attendu
     - pouvoir cuisiner plusieurs recettes en même temps (tablette)
+
+- Tracking :
+    - utilisteurs uniques, par jour / semaine
+    - popularité des recettes, pour une semaine
+        - affichage des ingrédients
+        - détails de la recettes
+        - ajout de la recette
+        - écran cuisine de la recette
+        - recette cuisinée
+    - ingrédients achetés
 
 # Technical
 
