@@ -139,7 +139,7 @@ angular.module('app')
   return service;
 })
 
-// for Accounts plugin : hhttps://github.com/loicknuchel/cordova-device-accounts
+// for Accounts plugin : https://github.com/loicknuchel/cordova-device-accounts
 .factory('AccountsSrv', function($q, $window, $ionicPlatform, LogSrv){
   'use strict';
   var service = {

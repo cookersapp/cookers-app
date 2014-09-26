@@ -41,7 +41,7 @@ angular.module('app')
       var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
       var userPromise = $http.put(firebaseUrl+'/users/'+userId+'.json', user);
 
-      return $q.all([emailRefPromise, userPromise]);
+      return $q.all([emailRefPromise, userPromise]).then(function(results){});
     } else {
       return $q.when();
     }

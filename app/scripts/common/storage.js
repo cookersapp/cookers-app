@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('StorageSrv', function($window, $state, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault, appVersion){
+.factory('StorageSrv', function($window, $state, $q, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault, appVersion){
   'use strict';
   var service = {
     init: init,
@@ -67,9 +67,13 @@ angular.module('app')
     }
   };
 
-  function saveUser(user){
+  function saveUser(user, onlyLocal){
     _LocalStorageSrv.setUser(user);
-    return BackendUserSrv.saveUser(user);
+    if(onlyLocal){
+      return $q.when();
+    } else {
+      return BackendUserSrv.saveUser(user);
+    }
   }
   function saveUserEmail(email){
     var user = _LocalStorageSrv.getUser();

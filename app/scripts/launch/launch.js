@@ -1,13 +1,11 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $state, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
   'use strict';
   var service = {
     launch: function(){
-      // TODO : refactor ! No firstLaunch anymore...
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
-        console.log('user', user);
         if(user && user.id){
           launch();
         } else {
@@ -21,8 +19,8 @@ angular.module('app')
     var user = StorageSrv.getUser();
     user.device = Utils.getDevice();
     AccountsSrv.getEmailOrAsk().then(function(email){
+      user.email = email;
       BackendUserSrv.getUserId(email).then(function(userId){
-        user.email = email;
         if(userId)  {
           user.id = userId;
           return BackendUserSrv.getUser(userId);
@@ -49,14 +47,31 @@ angular.module('app')
   }
 
   function launch(){
-    var user = StorageSrv.getUser();
     LogSrv.identify();
+    _trackLaunch();
+    _updateUser();
+    _initTrackStates();
+    _initNoSleepMode();
+    _initAutomaticLoadingIndicators();
+  }
 
+  function _trackLaunch(){
     // INIT is defined in top of index.html
+    var user = StorageSrv.getUser();
     var launchTime = Date.now()-INIT;
     if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(user.id, launchTime);
+  }
 
+  function _updateUser(){
+    var user = StorageSrv.getUser();
+    BackendUserSrv.getUser(user.id).then(function(backendUser){
+      angular.extend(user, backendUser);
+      StorageSrv.saveUser(user, true);
+    });
+  }
+
+  function _initTrackStates(){
     // track state changes
     var lastStateChange = Date.now();
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
@@ -81,7 +96,7 @@ angular.module('app')
       if(toState && toState.name)                           {params.to = toState.name;}
       if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
       if(error && !isEmpty(error))                          {params.error = error;}
-      LogSrv.trackStateError(params);
+      LogSrv.trackError('stateChangeError', params);
     });
     $rootScope.$on('$stateNotFound', function(event, unfoundState, fromState, fromParams){
       var params = {};
@@ -89,9 +104,11 @@ angular.module('app')
       if(fromParams && !isEmpty(fromParams))                                        {params.fromParams = fromParams;}
       if(unfoundState && unfoundState.to)                                           {params.to = unfoundState.to;}
       if(unfoundState && unfoundState.toParams && !isEmpty(unfoundState.toParams))  {params.toParams = unfoundState.toParams;}
-      LogSrv.trackStateNotFound(params);
+      LogSrv.trackError('stateNotFound', params);
     });
+  }
 
+  function _initNoSleepMode(){
     // phone will not sleep on states with attribute 'noSleep'
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
       if(toState && toState.data && toState.data.noSleep){
@@ -100,8 +117,9 @@ angular.module('app')
         InsomniaSrv.allowSleepAgain();
       }
     });
+  }
 
-    // show loadings
+  function _initAutomaticLoadingIndicators(){
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       $ionicLoading.show();
     });
