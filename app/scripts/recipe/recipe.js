@@ -14,7 +14,7 @@ angular.module('app')
     }
   })
   .state('app.recipe', {
-    url: '/recipe/:recipeId',
+    url: '/recipe/:recipeId?recipeIndex',
     views: {
       'menuContent': {
         templateUrl: 'scripts/recipe/recipe.html',
@@ -73,14 +73,17 @@ angular.module('app')
     $scope.loading = false;
   });
 
-  $scope.toggleIngredients = function(recipe){
+  $scope.toggleIngredients = function(recipe, index){
     if($scope.recipeShowIngredients === recipe){$scope.recipeShowIngredients = null;}
-    else {$scope.recipeShowIngredients = recipe;}
+    else {
+      $scope.recipeShowIngredients = recipe;
+      LogSrv.trackShowRecipeIngredients(recipe.id, index);
+    }
   };
   $scope.addRecipeToCart = function(recipe, index){
     PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
-        LogSrv.trackAddRecipeToCart(recipe.id, servings, index, 'selection');
+        LogSrv.trackAddRecipeToCart(recipe.id, index);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
         CartSrv.addRecipe(cart, recipe, servings);
@@ -113,8 +116,11 @@ angular.module('app')
 
 .controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
   'use strict';
+  var recipeId = $stateParams.recipeId;
+  var recipeIndex = $stateParams.recipeIndex;
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-  BackendSrv.getRecipe($stateParams.recipeId).then(function(recipe){
+  LogSrv.trackShowRecipeDetails(recipeId, recipeIndex);
+  BackendSrv.getRecipe(recipeId).then(function(recipe){
     StorageSrv.addRecipeToHistory(recipe);
     if(!recipe.$formated){recipe.$formated = {};}
     recipe.$formated.isInCart = CartSrv.hasRecipe(cart, recipe);
@@ -124,7 +130,7 @@ angular.module('app')
   $scope.addRecipeToCart = function(recipe){
     PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
-        LogSrv.trackAddRecipeToCart(recipe.id, servings, null, 'recipe');
+        LogSrv.trackAddRecipeToCart(recipe.id, recipeIndex);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
         CartSrv.addRecipe(cart, recipe, servings);
@@ -149,6 +155,7 @@ angular.module('app')
   var recipeId = $stateParams.recipeId;
   var startTime, timer = null;
   $scope.timer = 0;
+  LogSrv.trackShowRecipeCook(recipeId);
 
   if(cartId === 'none'){
     BackendSrv.getRecipe(recipeId).then(function(recipe){

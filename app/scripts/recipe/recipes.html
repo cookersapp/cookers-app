@@ -18,19 +18,19 @@
     <div class="screen">
       <div class="list">
         <div class="item item-recipe-img-full card" bo-class="{'big-image': ctx.settings.bigImages}" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
-          <img class="portrait" bo-src="recipe.images.portrait" ng-click="toggleIngredients(recipe)">
-          <img class="landing" bo-src="recipe.images.landing" ng-click="toggleIngredients(recipe)">
+          <img class="portrait" bo-src="recipe.images.portrait" ng-click="toggleIngredients(recipe, $index)">
+          <img class="landing" bo-src="recipe.images.landing" ng-click="toggleIngredients(recipe, $index)">
           <div class="legend-top">
             <div class="price" bo-if="ctx.settings.showPrices">
               <div class="number" bo-bind="recipe.price | price:false"></div>
               <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
             </div>
           </div>
-          <div class="ingredients-overlay" ng-click="toggleIngredients(recipe)">
+          <div class="ingredients-overlay" ng-click="toggleIngredients(recipe, $index)">
             <div class="list">
               <div class="item item-divider" bo-bind="'Ingrédients pour '+(recipe.servings | servings)"></div>
               <div bindonce ng-repeat="ingredient in recipe.ingredients" class="item ingredient" bo-class="ingredient.role" bo-bind="ingredient | ingredient"></div>
-              <a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id">
+              <a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id+'?recipeIndex='+$index">
                 <i class="fa fa-circle-thin fa-stack-2x"></i>
                 <i class="fa fa-info fa-stack-1x"></i>
               </a>
@@ -47,7 +47,7 @@
                 <i class="fa fa-minus fa-stack-1x"></i>
               </span>
             </div>
-            <div class="content" ng-click="toggleIngredients(recipe)">
+            <div class="content" ng-click="toggleIngredients(recipe, $index)">
               <div class="title" bo-bind="recipe.name"></div>
               <div class="subtitle" bo-bind="(recipe.time | cookTime)+', '+recipe.ingredients.length+' ingrédients'"></div>
             </div>

@@ -29,7 +29,7 @@ angular.module('app')
   });
 })
 
-.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, LogSrv){
+.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   if(!$scope.cart.$formated){$scope.cart.$formated = {};}
@@ -43,7 +43,6 @@ angular.module('app')
 
   $scope.archiveCart = function(){
     if($window.confirm('Archiver cette liste ?')){
-      LogSrv.trackArchiveCart();
       CartSrv.archive($scope.cart);
       $scope.popover.remove();
       $state.go('app.home');
@@ -62,10 +61,9 @@ angular.module('app')
 
   $scope.toggleRecipe = function(recipe){
     if($scope.selectedRecipe === recipe){
-      LogSrv.trackCartRecipeDetails(recipe.id, 'hide');
       $scope.selectedRecipe = null;
     } else {
-      LogSrv.trackCartRecipeDetails(recipe.id, 'show');
+      LogSrv.trackCartRecipeDetails(recipe.id);
       $scope.selectedRecipe = recipe;
     }
   };
@@ -174,9 +172,12 @@ angular.module('app')
   };
   $scope.toggleItem = function(item){
     var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
-    LogSrv.trackCartItemDetails(item.food.id, index > -1 ? 'hide' : 'show');
-    if(index > -1){$scope.openedItems.splice(index, 1);}
-    else {$scope.openedItems.push(item);}
+    if(index > -1){
+      $scope.openedItems.splice(index, 1);
+    } else {
+      $scope.openedItems.push(item);
+      LogSrv.trackShowCartItemDetails(item.food.id);
+    }
   };
 
   $scope.cartHasItems = function(){

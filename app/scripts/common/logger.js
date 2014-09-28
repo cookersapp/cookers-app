@@ -2,34 +2,34 @@ angular.module('app')
 
 .factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
   'use strict';
-  // rename events with a past-tense verb and a noun.
-  // ex: app installed, page viewed, feedback sent...
   var service = {
-    identify: function(){registerUser(false);},
-    registerUser: function(){registerUser(true);},
-    trackInstall: function(user){track('install', {user: user});},
-    trackUpgrade: function(from, to){track('upgrade', {from: from, to: to});},
-    trackLaunch: function(user, launchTime){track('launch', {user: user, launchTime: launchTime});},
-    trackState: function(params){track('state', params);},
-    trackSetEmail: function(email){track('set-email', {email: email});},
-    trackHideMessage: function(message){track('hide-message', {message: message});},
-    trackRecipesFeedback: function(week, feedback){track('recipes-feedback', {week: week, feedback: feedback});},
-    trackAddRecipeToCart: function(recipe, servings, index, from){track('add-recipe-to-cart', {recipe: recipe, servings: servings, index: index, from: from});},
-    trackRemoveRecipeFromCart: function(recipe, index, from){track('remove-recipe-from-cart', {recipe: recipe, index: index, from: from});},
-    trackEditCartCustomItems: function(customItems){track('edit-cart-custom-items', {customItems: customItems});},
-    trackCartRecipeDetails: function(recipe, action){track('cart-recipe-details', {recipe: recipe, action: action});},
-    trackCartItemDetails: function(item, action){track('cart-item-details', {item: item, action: action});},
-    trackBuyItem: function(item){trackWithPosition('buy-item', {item: item});},
-    trackUnbuyItem: function(item){track('unbuy-item', {item: item});},
-    trackArchiveCart: function(){track('archive-cart');},
-    trackRecipeCooked: function(recipe, cookDuration){track('recipe-cooked', {recipe: recipe, cookDuration: cookDuration});},
-    trackSendFeedback: function(email){track('send-feedback', {email: email});},
-    trackOpenUservoice: function(){track('open-uservoice');},
-    trackChangeSetting: function(setting, value){track('change-setting', {setting: setting, value: value});},
-    trackClearCache: function(user){track('clear-cache', {user: user});},
-    trackClearApp: function(user){track('clear-app', {user: user});},
-    trackError: function(type, error){track('error', {type: type, error: error});}
+    registerUser:               function()                      { registerUser(true);                                                   },
+    trackInstall:               function(user)                  { track('app-installed', {user: user});                                 },
+    trackUpgrade:               function(from, to)              { track('app-upgraded', {from: from, to: to});                          },
+    trackLaunch:                function(user, launchTime)      { track('app-launched', {user: user, launchTime: launchTime});          },
+
+    trackShowRecipeIngredients: function(recipe, index)         { track('recipe-ingredients-showed', {recipe: recipe, index: index});   },
+    trackShowRecipeDetails:     function(recipe, index)         { track('recipe-details-showed', {recipe: recipe, index: index});       },
+    trackAddRecipeToCart:       function(recipe, index)         { track('recipe-added-to-cart', {recipe: recipe, index: index});        },
+    trackRemoveRecipeFromCart:  function(recipe, index)         { track('recipe-removed-from-cart', {recipe: recipe, index: index});    },
+    trackShowRecipeCook:        function(recipe)                { track('recipe-cook-showed', {recipe: recipe});                        },
+    trackRecipeCooked:          function(recipe, cookDuration)  { track('recipe-cooked', {recipe: recipe, cookDuration: cookDuration}); },
+    trackRecipesFeedback:       function(week, feedback)        { track('recipes-feedback-sent', {week: week, feedback: feedback});     },
+
+    trackBuyItem:               function(item)                  { trackWithPosition('item-bought', {item: item});                       },
+    trackUnbuyItem:             function(item)                  { track('item-unbought', {item: item});                                 },
+
+    trackEditCartCustomItems:   function(customItems)           { track('cart-custom-items-edited', {customItems: customItems});        },
+    trackCartRecipeDetails:     function(recipe)                { track('cart-recipe-details-showed', {recipe: recipe});                },
+    trackShowCartItemDetails:   function(item)                  { track('cart-item-details-showed', {item: item});                      },
+
+    trackClearCache:            function(user)                  { track('cache-cleared', {user: user});                                 },
+    trackClearApp:              function(user)                  { track('app-cleared', {user: user});                                   },
+    trackOpenUservoice:         function()                      { track('uservoice-opened');                                            },
+
+    trackError:                 function(type, error)           { track('error', {type: type, error: error});                           }
   };
+  var identified = false;
   var previousEventId = null;
 
   function trackWithPosition(event, params){
@@ -58,6 +58,10 @@ angular.module('app')
   }
 
   function track(event, properties){
+    if(!identified){
+      registerUser(false);
+      identified = true;
+    }
     var user = _LocalStorageSrv.getUser();
     if(!properties){properties = {};}
     if(!properties.appVersion)                  { properties.appVersion  = appVersion;  }

@@ -49,15 +49,11 @@ angular.module('app')
   $scope.$watch('ctx.settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
       StorageSrv.saveUserSetting('showPrices', newValue);
-      LogSrv.trackChangeSetting('showPrices', newValue);
-      LogSrv.registerUser();
     }
   });
   $scope.$watch('ctx.settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
       StorageSrv.saveUserSetting('bigImages', newValue);
-      LogSrv.trackChangeSetting('bigImages', newValue);
-      LogSrv.registerUser();
     }
   });
 })
@@ -81,7 +77,6 @@ angular.module('app')
 
   $scope.sendFeedback = function(){
     $scope.feedback.sending = true;
-    LogSrv.trackSendFeedback($scope.feedback.email);
     EmailSrv.sendFeedback($scope.feedback.email, $scope.feedback.content).then(function(sent){
       $scope.feedback.sending = false;
       if(sent){
@@ -91,9 +86,7 @@ angular.module('app')
       }
     });
     if(user.email !== $scope.feedback.email){
-      LogSrv.trackSetEmail($scope.feedback.email);
       StorageSrv.saveUserEmail($scope.feedback.email);
-      LogSrv.registerUser();
     }
   };
   $scope.openUservoice = function(){

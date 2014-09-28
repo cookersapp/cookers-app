@@ -141,7 +141,6 @@ angular.module('app')
           delete user.more;
           _LocalStorageSrv.saveUser(user);
           BackendUserSrv.saveUser(user);
-          LogSrv.registerUser();
         }
       });
     }

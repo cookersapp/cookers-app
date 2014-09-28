@@ -47,10 +47,9 @@ angular.module('app')
   }
 
   function launch(){
-    LogSrv.identify();
     _trackLaunch();
     _updateUser();
-    _initTrackStates();
+    _initTrackStateErrors();
     _initNoSleepMode();
     _initAutomaticLoadingIndicators();
   }
@@ -71,24 +70,7 @@ angular.module('app')
     });
   }
 
-  function _initTrackStates(){
-    // track state changes
-    var lastStateChange = Date.now();
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-      var params = {};
-      if(fromState && fromState.name)                       {params.fromUrl = $state.href(fromState.name, fromParams);}
-      if(fromState && fromState.name)                       {params.from = fromState.name;}
-      if(fromParams && !isEmpty(fromParams))                {params.fromParams = fromParams;}
-      if(toState && toState.name)                           {params.toUrl = $state.href(toState.name, toParams);}
-      if(toState && toState.name)                           {params.to = toState.name;}
-      if(toParams && !isEmpty(toParams))                    {params.toParams = toParams;}
-      if(lastStateChange) {
-        var now = Date.now();
-        params.timePassed = now - lastStateChange;
-        lastStateChange = now;
-      }
-      LogSrv.trackState(params);
-    });
+  function _initTrackStateErrors(){
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
       var params = {};
       if(fromState && fromState.name)                       {params.from = fromState.name;}

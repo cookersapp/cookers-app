@@ -16,7 +16,7 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, LogSrv, Utils){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, Utils){
   'use strict';
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
@@ -37,7 +37,6 @@ angular.module('app')
   GlobalMessageSrv.execMessages();
 
   $scope.hideStandardMessage = function(){
-    LogSrv.trackHideMessage($scope.standardMessage.id);
     $scope.standardMessage.hide = true;
     $scope.standardMessage = null;
     // wait 3 sec before show new message

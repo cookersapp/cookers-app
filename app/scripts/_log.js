@@ -93,29 +93,23 @@ var Logger = (function(){
   }
 
   function track(type, data){
-    if(!data){data = {};}
-    if(!data.url && window && window.location){data.url = window.location.href;}
-    if(!data.time){data.time = Date.now()/1000;} // special mixpanel property
-    if(!data.localtime){data.localtime = Date.now();}
-    if(!data.appVersion && Config){data.appVersion = Config.appVersion;}
-    if(!data.email){data.email = getUserMailIfSetted();}
-    if(!data.eventId){data.eventId = createUuid();}
-    if(!data.previousEventId){data.previousEventId = config.currentEventId;}
+    if(!data)                                   { data = {};                                    }
+    if(!data.url && window && window.location)  { data.url = window.location.href;              }
+    if(!data.time)                              { data.time = Date.now()/1000;                  }
+    if(!data.localtime)                         { data.localtime = Date.now();                  }
+    if(!data.appVersion && Config)              { data.appVersion = Config.appVersion;          }
+    if(!data.debug && Config)                   { data.debug = Config.debug;                    }
+    if(!data.email)                             { data.email = getUserMailIfSetted();           }
+    if(!data.eventId)                           { data.eventId = createUuid();                  }
+    if(!data.previousEventId)                   { data.previousEventId = config.currentEventId; }
     config.currentEventId = data.eventId;
 
     if(config.verbose){ console.log('$[track] '+type, data); }
     if(config.track){
-      var event = {
-        id: createUuid(),
-        action: 'track',
-        type: type,
-        data: data
-      };
-      if(config.async && type !== 'exception') {
-        addEvent(event);
-      } else {
-        sendEvent(event);
-      }
+      var event = {id: createUuid(), action: 'track', type: type, data: data};
+
+      if(config.async && type !== 'exception') { addEvent(event); }
+      else { sendEvent(event); }
     }
   }
 
