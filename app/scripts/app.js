@@ -1,4 +1,4 @@
-angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'angular-md5', 'monospaced.elastic', 'pasvaz.bindonce'])
+angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'monospaced.elastic', 'pasvaz.bindonce'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
