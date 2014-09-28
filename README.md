@@ -36,6 +36,7 @@
     - pouvoir cuisiner plusieurs recettes en même temps (tablette)
 
 - Tracking :
+    - Liste des utilisateurs avec : email / created / last seen
     - utilisteurs uniques, par jour / semaine
     - popularité des recettes, pour une semaine
         - affichage des ingrédients

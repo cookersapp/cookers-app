@@ -46,7 +46,7 @@
           font-size: 14px;
           border: none;
           padding-left: 15px;
-          &.accompagnement, &.facultatif {
+          &.assaisonnement, &.facultatif {
             color: rgba(68, 68, 68, 0.7);
             font-style: italic;
           }
@@ -131,14 +131,14 @@
   }
   .requirements {
     ul {
-      .accompagnement, .facultatif {
+      .assaisonnement, .facultatif {
         float: left;
         padding-right: 5px;
         color: rgba(0,0,0,0.7);
         white-space: nowrap;
       }
-      .accompagnement:after, .facultatif:after { content: ','; }
-      .accompagnement:last-child:after, .facultatif:last-child:after { content: ''; }
+      .assaisonnement:after, .facultatif:after { content: ','; }
+      .assaisonnement:last-child:after, .facultatif:last-child:after { content: ''; }
     }
   }
   .instruction {
@@ -218,14 +218,14 @@
     color: #fff;
     background: #26C0B8;
     ul {
-      .accompagnement, .facultatif {
+      .assaisonnement, .facultatif {
         float: left;
         padding-right: 5px;
         color: rgba(255,255,255,0.7);
         white-space: nowrap;
       }
-      .accompagnement:after, .facultatif:after { content: ','; }
-      .accompagnement:last-child:after, .facultatif:last-child:after { content: ''; }
+      .assaisonnement:after, .facultatif:after { content: ','; }
+      .assaisonnement:last-child:after, .facultatif:last-child:after { content: ''; }
     }
   }
   .cooking {

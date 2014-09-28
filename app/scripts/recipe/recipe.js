@@ -67,6 +67,7 @@ angular.module('app')
         if(!recipe.$formated){recipe.$formated = {};}
         recipe.$formated.isInCart = CartSrv.hasRecipe(cart, recipe);
       }
+      userShiftRecipes(selection.recipes, StorageSrv.getUserSetting('recipeShiftOffset'));
     }
     $scope.selection = selection;
     $scope.loading = false;
@@ -100,6 +101,14 @@ angular.module('app')
     LogSrv.trackRecipesFeedback($scope.selection.week, feedback);
     $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
   };
+
+  function userShiftRecipes(recipes, shiftOffset){
+    if(Array.isArray(recipes)){
+      for(var i=0; i<shiftOffset; i++){
+        recipes.push(recipes.shift());
+      }
+    }
+  }
 })
 
 .controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){

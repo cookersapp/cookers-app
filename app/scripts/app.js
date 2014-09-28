@@ -65,6 +65,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
     email: '',
     device: {},
     settings: {
+      recipeShiftOffset: Math.floor(Math.random()*10),
       defaultServings: 2,
       showPrices: false,
       bigImages: true

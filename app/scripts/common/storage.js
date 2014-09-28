@@ -6,6 +6,7 @@ angular.module('app')
     init: init,
     getApp: _LocalStorageSrv.getApp,
     getUser: _LocalStorageSrv.getUser,
+    getUserSetting: getUserSetting,
     saveUser: saveUser,
     saveUserEmail: saveUserEmail,
     saveUserSetting: saveUserSetting,
@@ -67,6 +68,11 @@ angular.module('app')
     }
   };
 
+  function getUserSetting(setting){
+    var user = _LocalStorageSrv.getUser();
+    return user.settings[setting];
+  }
+
   function saveUser(user, onlyLocal){
     _LocalStorageSrv.setUser(user);
     if(onlyLocal){
@@ -122,6 +128,7 @@ angular.module('app')
         if(email){
           var user = _LocalStorageSrv.getUser();
           user.email = email;
+          user.settings.recipeShiftOffset = Utils.randInt(0, 9);
           delete user.skipIntro;
           delete user.isLogged;
           delete user.loggedWith;

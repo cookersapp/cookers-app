@@ -5,7 +5,10 @@ angular.module('app')
   var service = {
     getUserId: getUserId,
     getUser: getUser,
-    saveUser: saveUser
+    saveUser: saveUser,
+    saveUserEmail: saveUserEmail,
+    saveUserSetting: saveUserSetting,
+    saveUserData: saveUserData
   };
 
   function getUserId(email){
