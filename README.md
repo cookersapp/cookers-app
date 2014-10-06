@@ -3,7 +3,9 @@
 # TODO
 
 - next release :
-    - splash screen
+    - chargement des recettes quand on a pas de réseau
+    - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
+    - ajouter le numéro de semaine aux événements sur les recettes
     - problème scroll écran feedback (mail Julien Richarte)
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
@@ -24,6 +26,7 @@
     - galaxy tab 2 gt- p3113    / Benoit Reboul-salze
     - galaxy Ace                / Benoit Reboul-salze
     - LG-D802 (4.2.2)           / Alexis De Valence (problème affichage slides intro)
+    - galaxy s2                 / Jean-Baptiste Gabellieri
 
 - TODO
     - gestion des messages à afficher (et la persistence des messages à ne plus afficher : controllers.js:53)
@@ -46,6 +49,11 @@
         - écran cuisine de la recette
         - recette cuisinée
     - ingrédients achetés
+
+- Backend features :
+    - redimentionner les images à la taille du téléphone
+    - track api
+    - user profiles
 
 # Technical
 
@@ -146,10 +154,6 @@ Screenshot gallery inspiration :
 - [Tictoc](https://play.google.com/store/apps/details?id=kr.co.tictocplus)
 - [Cymera-Appareil photo/éditeur](https://play.google.com/store/apps/details?id=com.cyworld.camera)
 
-Tailles d'écran :
-
-- iPhone 5 : 320x568
-
 ## Tools 
 
 - images : [croppola](http://www.croppola.com/) (corp), [fixpicture](http://www.fixpicture.org/) (resize) and [kraken](https://kraken.io/web-interface) (optimize)
@@ -158,39 +162,6 @@ Tailles d'écran :
 - Landing page : [strikingly](http://www.strikingly.com/) + [optimizely](https://www.optimizely.fr/)
 - newsletter : [customer.io](http://customer.io/)
 - cordova plugins : http://plugreg.com/plugins and http://plugins.cordova.io/
-
-Tracking with segment.io :
-
-- Advertising
-    - http://www.alexa.com/ : Actionable Analytics for the Web
-    - http://www.comscore.com/ : Analytics for a Digital World
-    - https://www.google.com/tagmanager/ : Le marketing numérique devient (nettement) plus facile
-    - https://www.quantcast.com/
-    - http://spinnakr.com/ : Spinnakr is analytics that takes action for you.
-    - https://www.hellobar.com/
-- Analytics
-    - https://keen.io/ : Custom analytics shouldn't be a pain in the backend.
-    - https://mixpanel.com/ : Actions speak louder than page views.
-    - http://trak.io/ : Increase Paid Conversions & Fight Churn, See Who Is Using Your Product And Send Automated Emails Based On Their Behaviour
-    - http://usercycle.com/ : Growth Platform on Steroids for SaaS Products
-    - http://www.google.com/analytics/ : Solution professionnelle d'analyse d'audience Internet
-    - http://clicky.com/ : Real Time Web Analytics
-    - https://count.ly/ : Meet the next generation mobile analytics platform
-    - http://www.flurry.com/
-    - http://get.gaug.es/ : Website Analytics you can Actually Understand
-    - https://heapanalytics.com/ : Instant and retroactive analytics for web and iOS.
-    - http://www.iron.io/
-    - http://piwik.org/ : Liberating Web Analytics
-    - https://metrika.yandex.com/
-- Customer Relationships
-    - http://trak.io/ : Increase Paid Conversions & Fight Churn, See Who Is Using Your Product And Send Automated Emails Based On Their Behaviour
-    - http://luckyorange.com/ : See How your Visitors Actually Use your Website
-- Ecommerce
-    - http://www.mojn.com/
-- Email Marketing
-- Error Reporting
-    - https://www.pingdom.com/ : Uptime and performance monitoring made easy
-- User Testing
 
 # Changelog
 

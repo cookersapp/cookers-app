@@ -54,7 +54,7 @@ angular.module('app')
   function saveUserEmail(userId, email){
     LogSrv.registerUser();
     if(userId && userId.length > 0){
-      var emailUri = _mailUri(user.email);
+      var emailUri = _mailUri(email);
 
       var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
       var userPromise = $http.put(firebaseUrl+'/users/'+userId+'/email.json', email);

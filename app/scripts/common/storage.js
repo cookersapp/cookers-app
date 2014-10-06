@@ -139,7 +139,7 @@ angular.module('app')
           delete user.firstName;
           delete user.lastName;
           delete user.more;
-          _LocalStorageSrv.saveUser(user);
+          _LocalStorageSrv.setUser(user);
           BackendUserSrv.saveUser(user);
         }
       });
