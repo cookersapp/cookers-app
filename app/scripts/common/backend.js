@@ -38,7 +38,6 @@ angular.module('app')
 
   function saveUser(user){
     var userId = user.id;
-    LogSrv.registerUser();
     if(userId && userId.length > 0){
       var emailUri = _mailUri(user.email);
 
@@ -52,7 +51,6 @@ angular.module('app')
   }
 
   function saveUserEmail(userId, email){
-    LogSrv.registerUser();
     if(userId && userId.length > 0){
       var emailUri = _mailUri(email);
 
@@ -65,7 +63,6 @@ angular.module('app')
     }
   }
   function saveUserSetting(userId, setting, value){
-    LogSrv.registerUser();
     if(userId && userId.length > 0){
       return $http.put(firebaseUrl+'/users/'+userId+'/settings/'+setting+'.json', value);
     } else {
@@ -73,7 +70,6 @@ angular.module('app')
     }
   }
   function saveUserData(userId, data, value){
-    LogSrv.registerUser();
     if(userId && userId.length > 0){
       return $http.put(firebaseUrl+'/users/'+userId+'/data/'+data+'.json', value);
     } else {

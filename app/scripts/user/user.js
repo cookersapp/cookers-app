@@ -30,13 +30,13 @@ angular.module('app')
 
   $scope.clearCache = function(){
     if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache(user.id);
+      LogSrv.trackClearCache();
       StorageSrv.clearCache();
     }
   };
   $scope.resetApp = function(){
     if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp(user.id);
+      LogSrv.trackClearApp();
       StorageSrv.clear();
       if(navigator.app){
         navigator.app.exitApp();

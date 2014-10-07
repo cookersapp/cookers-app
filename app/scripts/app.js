@@ -17,7 +17,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
         if(exception.stack)   { data.stack    = exception.stack;    }
       }
 
-      Logger.track('exception', data);
+      Logger.track('exception', {data: data});
     };
   }]);
 

@@ -31,7 +31,7 @@ angular.module('app')
       }).then(function(backendUser){
         angular.extend(user, backendUser);
         StorageSrv.saveUser(user);
-        LogSrv.trackInstall(user.id);
+        LogSrv.trackInstall();
         launch();
       }, function(error){
         if(!error){error = {};}
@@ -40,7 +40,7 @@ angular.module('app')
         LogSrv.trackError('network:userNotFound', error);
 
         StorageSrv.saveUser(user);
-        LogSrv.trackInstall(user.id);
+        LogSrv.trackInstall();
         launch();
       });
     });
@@ -59,7 +59,7 @@ angular.module('app')
     var user = StorageSrv.getUser();
     var launchTime = Date.now()-INIT;
     if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
-    LogSrv.trackLaunch(user.id, launchTime);
+    LogSrv.trackLaunch(launchTime);
   }
 
   function _updateUser(){

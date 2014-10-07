@@ -1,182 +1,155 @@
-// segment.io snippet
-(function(){
-  'use strict';
-  window.analytics = window.analytics || [];
-  window.analytics.methods = ['identify', 'group', 'track', 'page', 'pageview', 'alias', 'ready', 'on', 'once', 'off', 'trackLink', 'trackForm', 'trackClick', 'trackSubmit'];
-  window.analytics.factory = function(method){
-    return function(){
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift(method);
-      window.analytics.push(args);
-      return window.analytics;
-    };
-  };
-  for (var i = 0; i < window.analytics.methods.length; i++) {
-    var key = window.analytics.methods[i];
-    window.analytics[key] = window.analytics.factory(key);
-  }
-  window.analytics.load = function(key){
-    if (document.getElementById('analytics-js')){ return; }
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.id = 'analytics-js';
-    script.async = true;
-    script.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + 'cdn.segment.io/analytics.js/v1/' + key + '/analytics.min.js';
-    var first = document.getElementsByTagName('script')[0];
-    first.parentNode.insertBefore(script, first);
-  };
-  window.analytics.SNIPPET_VERSION = '2.0.9';
-
-  var trackingKeyDebug = 'as680lc0yh'; // segment.io key for cookers/app-debug
-  var trackingKey = '6q7w3pd32u'; // segment.io key for cookers/app
-  window.analytics.load(Config.debug ? trackingKeyDebug : trackingKey);
-  window.analytics.page();
-})();
-
-
-
 // Define Logger
 var Logger = (function(){
   'use strict';
-  function loadEvents(){ if(localStorage){ config.events = JSON.parse(localStorage.getItem(config.eventsStorageKey)) || []; } }
-  function saveEvents(){ if(localStorage){ localStorage.setItem(config.eventsStorageKey, JSON.stringify(config.events)); } }
-  function addEvent(event){
-    if(!event.id){event.id = createUuid();}
-    if(!config.events){config.events = [];}
-    config.events.push(event);
-    saveEvents();
-    if(config.identified){ startSendEvents(); }
-  }
-  function removeEvent(event){
-    if(!config.events){config.events = [];}
-    for(var i=0; i<config.events.length; i++){
-      if(config.events[i].id === event.id){
-        config.events.splice(i, 1);
-        break;
-      }
-    }
-    saveEvents();
-  }
   function createUuid(){
     function S4(){ return (((1+Math.random())*0x10000)|0).toString(16).substring(1); }
     return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0,3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase();
   }
 
+  var Scheduler = (function(){
+    var events = [];
+    var eventSender = null;
+
+    function init(){
+      if(localStorage){
+        events = _getEvents() || [];
+        if(events.length > 0){ _startScheduler(); }
+      }
+    }
+
+    function schedule(event){
+      _addEvent(event);
+      _startScheduler();
+    }
+
+    function send(event, callback){
+      $.ajax({
+        type: 'POST',
+        url: config.backendUrl+'/api/v1/track/event',
+        data: JSON.stringify(event),
+        contentType: 'application/json'
+      })
+      .done(function(data, textStatus, jqXHR)       { if(callback){callback('ok');} })
+      .fail(function(jqXHR, textStatus, errorThrown){ if(callback){callback('ko');} });
+    }
+
+    function sendAll(events, callback){
+      $.ajax({
+        type: 'POST',
+        url: config.backendUrl+'/api/v1/track/events',
+        data: JSON.stringify(events),
+        contentType: 'application/json'
+      })
+      .done(function(data, textStatus, jqXHR)       { if(callback){callback('ok');} })
+      .fail(function(jqXHR, textStatus, errorThrown){ if(callback){callback('ko');} });
+    }
+
+    function _startScheduler(){
+      if(eventSender === null && events.length > 0){
+        // when scheduler starts, all events are not sending !
+        for(var i=0; i<events.length; i++){
+          events[i].sending = false;
+        }
+        eventSender = window.setInterval(function(){
+          if(events.length === 0){
+            _stopScheduler();
+          } else if(events.length === 1){
+            var event = events[0];
+            _resetEvents();
+            send(event, function(status){
+              if(status === 'ko'){ _addEvent(event); }
+            });
+          } else {
+            var toSend = events;
+            _resetEvents();
+            sendAll(toSend, function(status){
+              if(status === 'ko'){ _addEvents(toSend); }
+            });
+          }
+        }, config.scheduler.interval);
+      }
+    }
+
+    function _stopScheduler(){
+      if(eventSender !== null){
+        window.clearInterval(eventSender);
+        eventSender = null;
+      }
+    }
+
+    function _addEvent(event){
+      events.push(event);
+      _setEvents(events);
+    }
+    function _addEvents(eventsToAdd){
+      events = events.concat(eventsToAdd);
+      _setEvents(events);
+    }
+    function _resetEvents(){
+      events = [];
+      _setEvents(events);
+    }
+
+    function _setEvents(events){ if(localStorage){ localStorage.setItem(config.scheduler.storageKey, JSON.stringify(events)); } }
+    function _getEvents(){ if(localStorage){ return JSON.parse(localStorage.getItem(config.scheduler.storageKey)); } }
+
+    return {
+      init: init,
+      schedule: schedule,
+      send: send
+    };
+  })();
+
   var config = {
+    backendUrl: Config ? Config.backendUrl : '',
     verbose: Config ? Config.verbose : true,
     debug: Config ? Config.debug : true,
     track: Config ? Config.track : true,
     async: true,
-    identified: false,
-    eventsStorageKey: 'tracking-events-cache',
-    events: [],
-    eventSender: null,
-    currentEventId: null
+    scheduler: {
+      storageKey: 'tracking-events-cache',
+      interval: 3000
+    }
   };
-  loadEvents();
+  var currentEventId = null;
+  Scheduler.init();
 
-  function identify(id, data, async){
-    if(config.verbose){ console.log('$[identify] ' + id, data); }
+  function track(name, event){
+    if(!event.name)               { event.name = name;                           }
+    if(!event.time)               { event.time = Date.now();                     }
+    if(!event.userId)             { event.userId = _getUserId();                 }
+    if(!event.source)             { event.source = {};                           }
+    if(window && window.location) { event.source.url = window.location.href;     }
+    if(Config)                    { event.source.appVersion = Config.appVersion; }
+    if(Config)                    { event.debug = Config.debug;                  }
+    event.eventId = createUuid();
+    event.previousEventId = currentEventId;
+    currentEventId = event.eventId;
+
+    if(config.verbose){ console.log('$[track] '+name, event); }
     if(config.track){
-      var event = {
-        id: createUuid(),
-        userId: id,
-        action: 'identify',
-        data: data
-      };
-      if(async && config.async){
-        addEvent(event);
+      if(config.async && event.name !== 'exception'){
+        Scheduler.schedule(event);
       } else {
-        sendEvent(event);
+        Scheduler.send(event, function(status){
+          if(status === 'ko'){Scheduler.schedule(event);}
+        });
       }
     }
+    if(name === 'error' && config.debug && event.data.error)  { window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');  }
+    if(name === 'exception')                                  { window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');    }
   }
 
-  function track(type, data){
-    if(!data)                                   { data = {};                                    }
-    if(!data.url && window && window.location)  { data.url = window.location.href;              }
-    if(!data.time)                              { data.time = Date.now()/1000;                  }
-    if(!data.localtime)                         { data.localtime = Date.now();                  }
-    if(!data.appVersion && Config)              { data.appVersion = Config.appVersion;          }
-    if(!data.debug && Config)                   { data.debug = Config.debug;                    }
-    if(!data.email)                             { data.email = getUserMailIfSetted();           }
-    if(!data.eventId)                           { data.eventId = createUuid();                  }
-    if(!data.previousEventId)                   { data.previousEventId = config.currentEventId; }
-    config.currentEventId = data.eventId;
-
-    if(config.verbose){ console.log('$[track] '+type, data); }
-    if(config.track){
-      var event = {id: createUuid(), action: 'track', type: type, data: data};
-
-      if(config.async && type !== 'exception') { addEvent(event); }
-      else { sendEvent(event); }
-    }
-  }
-
-  function startSendEvents(){
-    if(config.eventSender === null){
-      for(var i=0; i<config.events.length; i++){
-        config.events[i].sending = false;
-      }
-      config.eventSender = window.setInterval(function(){
-        var eventsToSend = [];
-        for(var j=0; j<config.events.length; j++){
-          if(!config.events[j].sending && eventsToSend.length < 10){
-            config.events[j].sending = true;
-            eventsToSend.push(config.events[j]);
-          }
-        }
-        if(eventsToSend.length > 0){
-          var callback = function(event, status){
-            if(status !== 'ko'){ removeEvent(event); }
-            else { event.sending = false; }
-          };
-          for(var k=0; k<eventsToSend.length; k++){
-            sendEvent(eventsToSend[k], callback);
-          }
-        } else {
-          stopSendEvents();
-        }
-      }, 3000);
-    }
-  }
-
-  function stopSendEvents(){
-    if(config.eventSender !== null){
-      window.clearInterval(config.eventSender);
-      config.eventSender = null;
-    }
-  }
-
-  function sendEvent(event, callback){
-    if(event.action === 'identify'){
-      analytics.identify(event.userId, event.data, function(){
-        config.identified = true;
-        if(config.events.length > 0){ startSendEvents(); }
-        if(callback){callback(event, 'ok');}
-      });
-    } else if(event.action === 'track'){
-      analytics.track(event.type, event.data, function(){
-        if(callback){callback(event, 'ok');}
-      });
-      if(event.type === 'error' && config.debug && event.data.error){window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');}
-      if(event.type === 'exception'){window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');}
-    } else {
-      if(callback){callback(event, 'unknown');}
-    }
-  }
-
-  function getUserMailIfSetted(){
+  function _getUserId(){
     if(localStorage){
       var user = JSON.parse(localStorage.getItem('ionic-user'));
-      if(user && user.email && typeof user.email === 'string' && user.email.indexOf('@') > -1){
-        return user.email;
+      if(user && user.id){
+        return user.id;
       }
     }
   }
 
   return {
-    identify: identify,
     track: track
   };
 })();
@@ -208,6 +181,6 @@ window.onerror = function(message, url, line, col, error){
     if(navigator.product)     { data['navigator.product']       = navigator.product;      }
   }
 
-  Logger.track('exception', data);
+  Logger.track('exception', {data: data});
   return stopPropagation;
 };

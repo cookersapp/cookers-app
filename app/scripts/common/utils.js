@@ -88,9 +88,6 @@ angular.module('app')
     device.environment = _getEnvironment();
     device.grade = ionic.Platform.grade;
     device.platforms = ionic.Platform.platforms;
-    if(!device.uuid){
-      device.uuid = createUuid();
-    }
     return device;
   }
 

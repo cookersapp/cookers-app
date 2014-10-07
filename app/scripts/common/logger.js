@@ -3,10 +3,9 @@ angular.module('app')
 .factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
   'use strict';
   var service = {
-    registerUser:               function()                      { registerUser(true);                                                   },
-    trackInstall:               function(user)                  { track('app-installed', {user: user});                                 },
+    trackInstall:               function()                      { track('app-installed');                                               },
     trackUpgrade:               function(from, to)              { track('app-upgraded', {from: from, to: to});                          },
-    trackLaunch:                function(user, launchTime)      { track('app-launched', {user: user, launchTime: launchTime});          },
+    trackLaunch:                function(launchTime)            { track('app-launched', {launchTime: launchTime});                      },
 
     trackShowRecipeIngredients: function(recipe, index)         { track('recipe-ingredients-showed', {recipe: recipe, index: index});   },
     trackShowRecipeDetails:     function(recipe, index)         { track('recipe-details-showed', {recipe: recipe, index: index});       },
@@ -23,14 +22,12 @@ angular.module('app')
     trackCartRecipeDetails:     function(recipe)                { track('cart-recipe-details-showed', {recipe: recipe});                },
     trackShowCartItemDetails:   function(item)                  { track('cart-item-details-showed', {item: item});                      },
 
-    trackClearCache:            function(user)                  { track('cache-cleared', {user: user});                                 },
-    trackClearApp:              function(user)                  { track('app-cleared', {user: user});                                   },
+    trackClearCache:            function()                      { track('cache-cleared');                                               },
+    trackClearApp:              function()                      { track('app-cleared');                                                 },
     trackOpenUservoice:         function()                      { track('uservoice-opened');                                            },
 
     trackError:                 function(type, error)           { track('error', {type: type, error: error});                           }
   };
-  var identified = false;
-  var previousEventId = null;
 
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
@@ -57,49 +54,17 @@ angular.module('app')
     }
   }
 
-  function track(event, properties){
-    if(!identified){
-      registerUser(false);
-      identified = true;
-    }
+  function track(name, data){
     var user = _LocalStorageSrv.getUser();
-    if(!properties){properties = {};}
-    if(!properties.appVersion)                  { properties.appVersion  = appVersion;  }
-    if(!properties.id && user && user.id)       { properties.userId  = user.id;         }
-    if(!properties.email && user && user.email) { properties.email   = user.email;      }
+    var event = {};
+    if(data)            { event.data = data;       }
+    if(user && user.id) { event.userId = user.id;  }
     if(user && user.device){
-      if(!properties.device && user.device.uuid && user.device.model && user.device.platform && user.device.version){
-        properties.device = {
-          uuid: user.device.uuid,
-          model: user.device.model,
-          platform: user.device.platform,
-          version: user.device.version
-        };
-      }
+      event.source = {};
+      event.source.device = angular.copy(user.device);
     }
 
-    Logger.track(event, properties);
-  }
-
-  function registerUser(async){
-    var app = _LocalStorageSrv.getApp();
-    var user = _LocalStorageSrv.getUser();
-    var userProfile = {};
-    if(app.firstLaunch){userProfile.$created = new Date(app.firstLaunch);}
-    if(appVersion){userProfile.appVersion = appVersion;}
-    if(user.id){userProfile.id = user.id;}
-    if(user.email && Utils.isEmail(user.email)){userProfile.$email = user.email;}
-    if(user.device){
-      if(user.device.uuid)     { userProfile['device.uuid']       = user.device.uuid;      }
-      if(user.device.model)    { userProfile['device.model']      = user.device.model;     }
-      if(user.device.platform) { userProfile['device.platform']   = user.device.platform;  }
-      if(user.device.version)  { userProfile['device.version']    = user.device.version;   }
-    }
-    for(var j in user.settings){
-      userProfile['setting.'+j] = user.settings[j];
-    }
-
-    Logger.identify(user.id, userProfile, async);
+    Logger.track(name, event);
   }
 
   return service;
