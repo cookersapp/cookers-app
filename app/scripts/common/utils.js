@@ -106,11 +106,35 @@ angular.module('app')
 .factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv){
   'use strict';
   var service = {
+    forceAskEmail: forceAskEmail,
     changeServings: changeServings,
     recipeCooked: recipeCooked,
     tourCookFeatures: tourCookFeatures,
     tourCartFeatures: tourCartFeatures
   };
+
+  function forceAskEmail(){
+    var $scope = $rootScope.$new(true);
+    $scope.data = {email: ''};
+    return $ionicPopup.show({
+      template: '<input type="email" placeholder="Email" ng-model="data.email">',
+      title: 'Restons en contact !<br>Lâche ton email <i class="fa fa-smile-o">',
+      subTitle: 'Aucun spam garanti !',
+      scope: $scope,
+      buttons: [{
+        text: '<b>Continuer</b>',
+        type: 'button-positive',
+        onTap: function(e) {
+          if(!$scope.data.email){
+            e.preventDefault();
+            ToastSrv.show('Please, enter you email !');
+          } else {
+            return $scope.data.email;
+          }
+        }
+      }]
+    });
+  }
 
   function changeServings(defaultServings, title){
     var $scope = $rootScope.$new(true);

@@ -140,7 +140,7 @@ angular.module('app')
 })
 
 // for Accounts plugin : https://github.com/loicknuchel/cordova-device-accounts
-.factory('AccountsSrv', function($q, $window, $ionicPlatform, LogSrv){
+.factory('AccountsSrv', function($q, $window, $ionicPlatform, PopupSrv, LogSrv){
   'use strict';
   var service = {
     getAccounts: getAccounts,
@@ -177,9 +177,17 @@ angular.module('app')
     var defer = $q.defer();
     pluginReady(function(){
       $window.plugins.DeviceAccounts.getEmail(function(email){
-        defer.resolve(email);
+        if(email){
+          defer.resolve(email);
+        } else {
+          PopupSrv.forceAskEmail().then(function(email){
+            defer.resolve(email);
+          });
+        }
       }, function(error){
-        defer.reject(error);
+        PopupSrv.forceAskEmail().then(function(email){
+          defer.resolve(email);
+        });
       });
     });
     return defer.promise;
