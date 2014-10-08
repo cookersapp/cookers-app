@@ -24,7 +24,7 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $window, StorageSrv, LogSrv){
+.controller('ProfileCtrl', function($scope, $window, StorageSrv, LogSrv, Utils){
   'use strict';
   var user = StorageSrv.getUser();
 
@@ -38,11 +38,7 @@ angular.module('app')
     if($window.confirm('Réinitialiser complètement l\'application ?')){
       LogSrv.trackClearApp();
       StorageSrv.clear();
-      if(navigator.app){
-        navigator.app.exitApp();
-      } else if(navigator.device){
-        navigator.device.exitApp();
-      }
+      Utils.exitApp();
     }
   };
 
@@ -85,9 +81,6 @@ angular.module('app')
         $window.alert('Echec de l\'envoi du email :(\nContactez '+supportTeamEmail+' si vous le souhaitez !');
       }
     });
-    if(user.email !== $scope.feedback.email){
-      StorageSrv.saveUserEmail($scope.feedback.email);
-    }
   };
   $scope.openUservoice = function(){
     LogSrv.trackOpenUservoice();

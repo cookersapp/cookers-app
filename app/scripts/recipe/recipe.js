@@ -178,7 +178,7 @@ angular.module('app')
         startTimer();
       } else {
         PopupSrv.tourCookFeatures().then(function(){
-          StorageSrv.saveUserData('skipCookFeatures', true);
+          StorageSrv.saveUserSetting('skipCookFeatures', true);
           startTimer();
         });
       }
@@ -214,11 +214,7 @@ angular.module('app')
 
       PopupSrv.recipeCooked().then(function(shouldExit){
         if(shouldExit){
-          if(navigator.app){
-            navigator.app.exitApp();
-          } else if(navigator.device){
-            navigator.device.exitApp();
-          }
+          Utils.exitApp();
         } else {
           $state.go('app.home');
         }

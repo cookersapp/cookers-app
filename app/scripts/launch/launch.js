@@ -1,58 +1,55 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, debug){
+.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, _LocalStorageSrv, localStorageDefault, appVersion, debug){
   'use strict';
   var service = {
     launch: function(){
+      var defer = $q.defer();
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
         if(user && user.id){
-          launch();
+          launch().then(function(){
+            defer.resolve();
+          });
         } else {
-          firstLaunch();
+          firstLaunch().then(function(){
+            defer.resolve();
+          });
         }
       });
+      return defer.promise;
     }
   };
 
   function firstLaunch(){
-    var user = StorageSrv.getUser();
-    user.device = Utils.getDevice();
-    AccountsSrv.getEmailOrAsk().then(function(email){
-      user.email = email;
-      BackendUserSrv.getUserId(email).then(function(userId){
-        if(userId)  {
-          user.id = userId;
-          return BackendUserSrv.getUser(userId);
-        } else {
-          user.id = Utils.createUuid();
-          return $q.when(user);
-        }
-      }).then(function(backendUser){
-        angular.extend(user, backendUser);
-        StorageSrv.saveUser(user);
-        LogSrv.trackInstall();
-        launch();
-      }, function(error){
-        if(!error){error = {};}
-        else if(typeof error === 'string'){error = {message: error};}
-        error.email = email;
-        LogSrv.trackError('network:userNotFound', error);
-
-        StorageSrv.saveUser(user);
-        LogSrv.trackInstall();
-        launch();
-      });
+    var promise = AccountsSrv.getEmailOrAsk().then(function(email){
+      return BackendUserSrv.findUser(email);
+    }).then(function(user){
+      StorageSrv.saveUser(user);
+      BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+    }, function(error){
+      if(!error){error = {};}
+      else if(typeof error === 'string'){error = {message: error};}
+      LogSrv.trackError('network:userNotFound', error);
     });
+
+    promise['finally'](function(){
+      LogSrv.trackInstall();
+      launch();
+    });
+    return promise;
   }
 
   function launch(){
     _trackLaunch();
     _updateUser();
+    _initStorage();
     _initTrackStateErrors();
     _initNoSleepMode();
     _initAutomaticLoadingIndicators();
+    return $q.when();
   }
+
 
   function _trackLaunch(){
     // INIT is defined in top of index.html
@@ -65,9 +62,37 @@ angular.module('app')
   function _updateUser(){
     var user = StorageSrv.getUser();
     BackendUserSrv.getUser(user.id).then(function(backendUser){
-      angular.extend(user, backendUser);
-      StorageSrv.saveUser(user, true);
+      StorageSrv.saveUser(backendUser);
     });
+  }
+
+  function _initStorage(){
+    var app = _LocalStorageSrv.getApp();
+    if(app.version !== appVersion){
+      for(var i in localStorageDefault){
+        var key = i;
+        var defaultValue = localStorageDefault[key] || {};
+        var storageValue = _LocalStorageSrv.get(key) || {};
+        var extendedValue = Utils.extendDeep({}, defaultValue, storageValue);
+        _LocalStorageSrv.set(key, extendedValue);
+      }
+
+      if(app.version !== ''){
+        LogSrv.trackUpgrade(app.version, appVersion);
+        /* Migration code */
+        AccountsSrv.getEmailOrAsk().then(function(email){
+          return BackendUserSrv.findUser(email);
+        }).then(function(user){
+          StorageSrv.saveUser(user);
+          BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+        });
+        /* End migration code */
+      }
+
+      app = _LocalStorageSrv.getApp();
+      app.version = appVersion;
+      _LocalStorageSrv.setApp(app);
+    }
   }
 
   function _initTrackStateErrors(){

@@ -86,7 +86,7 @@ angular.module('app')
   var user = StorageSrv.getUser();
   if(!(user && user.data && user.data.skipCartFeatures)){
     PopupSrv.tourCartFeatures().then(function(){
-      StorageSrv.saveUserData('skipCartFeatures', true);
+      StorageSrv.saveUserSetting('skipCartFeatures', true);
     });
   }
 

@@ -21,13 +21,6 @@ angular.module('app')
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
 
-  var user = StorageSrv.getUser();
-  if(user.email && Utils.isEmail(user.email) && !user.data.welcomeMailSent){
-    EmailSrv.sendWelcome(user.email).then(function(){
-      StorageSrv.saveUserData('welcomeMailSent', true);
-    });
-  }
-
   GlobalMessageSrv.getStandardMessageToDisplay().then(function(message){
     $scope.standardMessage = message;
   });

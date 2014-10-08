@@ -20,6 +20,7 @@
   "smarttabs": true,
   "globals": {
     "window": false,
+    "$": false,
     "angular": false,
     "ionic": false,
     "Config": false,

@@ -1,84 +1,32 @@
 angular.module('app')
 
-.factory('BackendUserSrv', function($q, $http, LogSrv, firebaseUrl){
+.factory('BackendUserSrv', function($q, $http, LogSrv, firebaseUrl, backendUrl){
   'use strict';
   var service = {
-    getUserId: getUserId,
     getUser: getUser,
-    saveUser: saveUser,
-    saveUserEmail: saveUserEmail,
-    saveUserSetting: saveUserSetting,
-    saveUserData: saveUserData
+    findUser: findUser,
+    updateUserSetting: updateUserSetting,
+    setUserDevice: setUserDevice
   };
 
-  function getUserId(email){
-    var emailUri = _mailUri(email);
-    if(emailUri.length > 0){
-      return $http.get(firebaseUrl+'/userrefs/'+emailUri+'.json').then(function(result){
-        if(result.data !== 'null'){
-          return result.data.id;
-        }
-      });
-    } else {
-      return $q.when();
-    }
-  }
-
   function getUser(id){
-    if(id && id.length > 0){
-      return $http.get(firebaseUrl+'/users/'+id+'.json').then(function(result){
-        if(result.data !== 'null'){
-          return result.data;
-        }
-      });
-    } else {
-      return $q.when();
-    }
+    return $http.get(backendUrl+'/api/v1/users/'+id).then(function(result){
+      return result.data;
+    });
   }
 
-  function saveUser(user){
-    var userId = user.id;
-    if(userId && userId.length > 0){
-      var emailUri = _mailUri(user.email);
-
-      var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
-      var userPromise = $http.put(firebaseUrl+'/users/'+userId+'.json', user);
-
-      return $q.all([emailRefPromise, userPromise]).then(function(results){});
-    } else {
-      return $q.when();
-    }
+  function findUser(email){
+    return $http.get(backendUrl+'/api/v1/users/find?email='+email).then(function(result){
+      return result.data;
+    });
   }
 
-  function saveUserEmail(userId, email){
-    if(userId && userId.length > 0){
-      var emailUri = _mailUri(email);
-
-      var emailRefPromise = emailUri.length > 0 ? $http.put(firebaseUrl+'/userrefs/'+emailUri+'.json', {id: userId}) : $q.when();
-      var userPromise = $http.put(firebaseUrl+'/users/'+userId+'/email.json', email);
-
-      return $q.all([emailRefPromise, userPromise]);
-    } else {
-      return $q.when();
-    }
+  function updateUserSetting(userId, setting, value){
+    return $http.put(backendUrl+'/api/v1/users/'+userId+'/settings/'+setting, value);
   }
-  function saveUserSetting(userId, setting, value){
-    if(userId && userId.length > 0){
-      return $http.put(firebaseUrl+'/users/'+userId+'/settings/'+setting+'.json', value);
-    } else {
-      return $q.when();
-    }
-  }
-  function saveUserData(userId, data, value){
-    if(userId && userId.length > 0){
-      return $http.put(firebaseUrl+'/users/'+userId+'/data/'+data+'.json', value);
-    } else {
-      return $q.when();
-    }
-  }
-
-  function _mailUri(email){
-    return encodeURI(email).replace(/\./g, '');
+  
+  function setUserDevice(userId, device){
+    return $http.put(backendUrl+'/api/v1/users/'+userId+'/device', device);
   }
 
   return service;

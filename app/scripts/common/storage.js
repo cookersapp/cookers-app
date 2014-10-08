@@ -3,14 +3,11 @@ angular.module('app')
 .factory('StorageSrv', function($window, $state, $q, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault, appVersion){
   'use strict';
   var service = {
-    init: init,
     getApp: _LocalStorageSrv.getApp,
     getUser: _LocalStorageSrv.getUser,
     getUserSetting: getUserSetting,
-    saveUser: saveUser,
-    saveUserEmail: saveUserEmail,
+    saveUser: _LocalStorageSrv.setUser,
     saveUserSetting: saveUserSetting,
-    saveUserData: saveUserData,
     getFood: function(id){return _LocalStorageSrv.getFoods().foods[id];},
     addFood: function(food){
       if(food && food.id){
@@ -73,77 +70,11 @@ angular.module('app')
     return user.settings[setting];
   }
 
-  function saveUser(user, onlyLocal){
-    _LocalStorageSrv.setUser(user);
-    if(onlyLocal){
-      return $q.when();
-    } else {
-      return BackendUserSrv.saveUser(user);
-    }
-  }
-  function saveUserEmail(email){
-    var user = _LocalStorageSrv.getUser();
-    user.email = email;
-    _LocalStorageSrv.setUser(user);
-    return BackendUserSrv.saveUserEmail(user.id, email);
-  }
   function saveUserSetting(setting, value){
     var user = _LocalStorageSrv.getUser();
     user.settings[setting] = value;
     _LocalStorageSrv.setUser(user);
-    return BackendUserSrv.saveUserSetting(user.id, setting, value);
-  }
-  function saveUserData(data, value){
-    var user = _LocalStorageSrv.getUser();
-    user.data[data] = value;
-    _LocalStorageSrv.setUser(user);
-    return BackendUserSrv.saveUserData(user.id, data, value);
-  }
-
-  function init(){
-    for(var i in localStorageDefault){
-      var key = i;
-      var defaultValue = localStorageDefault[key] || {};
-      var storageValue = _LocalStorageSrv.get(key) || {};
-      var extendedValue = Utils.extendDeep({}, defaultValue, storageValue);
-      _LocalStorageSrv.set(key, extendedValue);
-    }
-
-    var app = _LocalStorageSrv.getApp();
-    if(app.version === ''){
-      app.version = appVersion;
-      _LocalStorageSrv.setApp(app);
-    } else if(app.version !== appVersion){
-      _migrate(app.version, appVersion);
-      app = _LocalStorageSrv.getApp();
-      app.version = appVersion;
-      _LocalStorageSrv.setApp(app);
-    }
-  }
-
-  function _migrate(previousVersion, nextVersion){
-    LogSrv.trackUpgrade(previousVersion, nextVersion);
-    if(localStorage){
-      AccountsSrv.getEmail().then(function(email){
-        if(email){
-          var user = _LocalStorageSrv.getUser();
-          user.email = email;
-          user.settings.recipeShiftOffset = Utils.randInt(0, 9);
-          delete user.skipIntro;
-          delete user.isLogged;
-          delete user.loggedWith;
-          delete user.name;
-          delete user.avatar;
-          delete user.background;
-          delete user.backgroundCover;
-          delete user.firstName;
-          delete user.lastName;
-          delete user.more;
-          _LocalStorageSrv.setUser(user);
-          BackendUserSrv.saveUser(user);
-        }
-      });
-    }
+    return BackendUserSrv.updateUserSetting(user.id, setting, value);
   }
 
   return service;

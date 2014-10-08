@@ -106,8 +106,7 @@ angular.module('app')
 .factory('EmailSrv', function($http, $q, mandrillUrl, mandrillKey, supportTeamEmail){
   'use strict';
   var service = {
-    sendFeedback: sendFeedback,
-    sendWelcome: sendWelcome
+    sendFeedback: sendFeedback
   };
 
   function sendFeedback(email, feedback){
@@ -139,7 +138,7 @@ angular.module('app')
     });
   }
 
-  function sendWelcome(email){
+  /*function sendWelcome(email){
     return $http.post(mandrillUrl+'/messages/send-template.json', {
       key: mandrillKey,
       template_name: 'welcome',
@@ -156,7 +155,7 @@ angular.module('app')
         tags: ['app', 'welcome']
       }
     });
-  }
+  }*/
 
   return service;
 });

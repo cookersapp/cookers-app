@@ -10,7 +10,8 @@ angular.module('app')
     randInt: randInt,
     clock: addClock,
     cancelClock: removeClock,
-    getDevice: getDevice
+    getDevice: getDevice,
+    exitApp: exitApp
   };
 
   function createUuid(){
@@ -98,6 +99,14 @@ angular.module('app')
     else if(ionic.Platform.isAndroid()){return 'Android';}
     else if(ionic.Platform.isWindowsPhone()){return 'WindowsPhone';}
     else {return 'Unknown';}
+  }
+
+  function exitApp(){
+    if(navigator.app){
+      navigator.app.exitApp();
+    } else if(navigator.device){
+      navigator.device.exitApp();
+    }
   }
 
   return service;

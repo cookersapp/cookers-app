@@ -45,6 +45,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
 .constant('debug', Config.debug)
 .constant('appVersion', Config.appVersion)
 
+.constant('backendUrl', Config.backendUrl)
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
 .constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
@@ -60,22 +61,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
     version: '',
     firstLaunch: Date.now()
   },
-  user: {
-    id: null,
-    email: '',
-    device: {},
-    settings: {
-      recipeShiftOffset: Math.floor(Math.random()*10),
-      defaultServings: 2,
-      showPrices: false,
-      bigImages: true
-    },
-    data: {
-      skipCookFeatures: false,
-      skipCartFeatures: false,
-      welcomeMailSent: false
-    }
-  },
   userCarts: { carts: [] },
   userStandaloneCookedRecipes: { recipes: [] },
   userRecipeHistory: { recipes: [] },
@@ -90,14 +75,13 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
 
 .run(function($rootScope, $location, LaunchSrv, StorageSrv, appVersion, debug, PerfSrv){
   'use strict';
-  StorageSrv.init();
-  $rootScope.ctx = {
-    settings: StorageSrv.getUser().settings,
-    debug: debug,
-    appVersion: appVersion
-  };
-
-  LaunchSrv.launch();
+  LaunchSrv.launch().then(function(){
+    $rootScope.ctx = {
+      settings: StorageSrv.getUser().settings,
+      debug: debug,
+      appVersion: appVersion
+    };
+  });
 
   // utils methods
   $rootScope.isActive = function(viewLocation){
