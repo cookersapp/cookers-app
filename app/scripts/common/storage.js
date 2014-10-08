@@ -32,7 +32,10 @@ angular.module('app')
         _LocalStorageSrv.setSelections(dataSelections);
       }
     },
-    getRecipeHistory: function(){return _LocalStorageSrv.getRecipeHistory().recipes;},
+    getRecipeHistory: function(){
+      var history = _LocalStorageSrv.getRecipeHistory();
+      return history ? history.recipes : null;
+    },
     addRecipeToHistory: function(recipe){
       if(recipe && recipe.id){
         var userRecipeHistory = _LocalStorageSrv.getRecipeHistory();

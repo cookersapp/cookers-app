@@ -5,6 +5,7 @@ angular.module('app')
   var service = {
     launch: function(){
       var defer = $q.defer();
+      _initStorage();
       $ionicPlatform.ready(function(){
         var user = StorageSrv.getUser();
         if(user && user.id){
@@ -43,32 +44,15 @@ angular.module('app')
   function launch(){
     _trackLaunch();
     _updateUser();
-    _initStorage();
     _initTrackStateErrors();
     _initNoSleepMode();
     _initAutomaticLoadingIndicators();
     return $q.when();
   }
 
-
-  function _trackLaunch(){
-    // INIT is defined in top of index.html
-    var user = StorageSrv.getUser();
-    var launchTime = Date.now()-INIT;
-    if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
-    LogSrv.trackLaunch(launchTime);
-  }
-
-  function _updateUser(){
-    var user = StorageSrv.getUser();
-    BackendUserSrv.getUser(user.id).then(function(backendUser){
-      StorageSrv.saveUser(backendUser);
-    });
-  }
-
   function _initStorage(){
     var app = _LocalStorageSrv.getApp();
-    if(app.version !== appVersion){
+    if(!app || app.version !== appVersion){
       for(var i in localStorageDefault){
         var key = i;
         var defaultValue = localStorageDefault[key] || {};
@@ -77,6 +61,7 @@ angular.module('app')
         _LocalStorageSrv.set(key, extendedValue);
       }
 
+      app = _LocalStorageSrv.getApp();
       if(app.version !== ''){
         LogSrv.trackUpgrade(app.version, appVersion);
         /* Migration code */
@@ -93,6 +78,22 @@ angular.module('app')
       app.version = appVersion;
       _LocalStorageSrv.setApp(app);
     }
+  }
+
+
+  function _trackLaunch(){
+    // INIT is defined in top of index.html
+    var user = StorageSrv.getUser();
+    var launchTime = Date.now()-INIT;
+    if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
+    LogSrv.trackLaunch(launchTime);
+  }
+
+  function _updateUser(){
+    var user = StorageSrv.getUser();
+    BackendUserSrv.getUser(user.id).then(function(backendUser){
+      StorageSrv.saveUser(backendUser);
+    });
   }
 
   function _initTrackStateErrors(){
