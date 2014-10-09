@@ -31,7 +31,7 @@ angular.module('app')
     }, function(error){
       if(!error){error = {};}
       else if(typeof error === 'string'){error = {message: error};}
-      LogSrv.trackError('network:userNotFound', error);
+      LogSrv.trackError('userNotFound', error);
     });
 
     promise['finally'](function(){

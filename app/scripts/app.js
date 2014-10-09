@@ -93,7 +93,8 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     appVersion: appVersion
   };
   LaunchSrv.launch().then(function(){
-    $rootScope.ctx.settings = StorageSrv.getUser().settings;
+    user = StorageSrv.getUser();
+    $rootScope.ctx.settings = user ? user.settings : null;
   });
 
   // utils methods

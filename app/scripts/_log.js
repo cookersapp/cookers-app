@@ -57,13 +57,19 @@ var Logger = (function(){
             var event = events[0];
             _resetEvents();
             send(event, function(status){
-              if(status === 'ko'){ _addEvent(event); }
+              if(status === 'ko'){
+                _addEvent(event);
+                _stopScheduler();
+              }
             });
           } else {
             var toSend = events;
             _resetEvents();
             sendAll(toSend, function(status){
-              if(status === 'ko'){ _addEvents(toSend); }
+              if(status === 'ko'){
+                _addEvents(toSend);
+                _stopScheduler();
+              }
             });
           }
         }, config.scheduler.interval);
@@ -136,7 +142,7 @@ var Logger = (function(){
         });
       }
     }
-    if(name === 'error' && config.debug && event.data.error)  { window.alert('Error: '+event.data.error.message+'\nPlease contact: loic@cookers.io');  }
+    if(name === 'error' && config.debug && event.data.error)  { window.alert('Error: '+event.data.type+'\n'+event.data.error.message+'\nPlease contact: loic@cookers.io');  }
     if(name === 'exception')                                  { window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');    }
   }
 
