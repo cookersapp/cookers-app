@@ -56,22 +56,29 @@ angular.module('app')
 
 .controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, StorageSrv, CartSrv, ToastSrv, LogSrv){
   'use strict';
-  $scope.loading = true;
+  $scope.loadSelection = function(){
+    $scope.status = 'loading';
+    SelectionSrv.getCurrent().then(function(selection){
+      if(selection && selection.recipes){
+        for(var i in selection.recipes){
+          var recipe = selection.recipes[i];
+          if(!recipe.$formated){recipe.$formated = {};}
+          recipe.$formated.isInCart = CartSrv.hasRecipe(cart, recipe);
+        }
+        userShiftRecipes(selection.recipes, StorageSrv.getUserSetting('recipeShiftOffset'));
+      }
+      $scope.selection = selection;
+      $scope.status = 'loaded';
+    }, function(error){
+      $scope.status = 'error';
+    });
+  };
+
+  $scope.loadSelection();
   $scope.recipeShowIngredients = null;
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
 
-  SelectionSrv.getCurrent().then(function(selection){
-    if(selection && selection.recipes){
-      for(var i in selection.recipes){
-        var recipe = selection.recipes[i];
-        if(!recipe.$formated){recipe.$formated = {};}
-        recipe.$formated.isInCart = CartSrv.hasRecipe(cart, recipe);
-      }
-      userShiftRecipes(selection.recipes, StorageSrv.getUserSetting('recipeShiftOffset'));
-    }
-    $scope.selection = selection;
-    $scope.loading = false;
-  });
+
 
   $scope.toggleIngredients = function(recipe, index){
     if($scope.recipeShowIngredients === recipe){$scope.recipeShowIngredients = null;}

@@ -8,10 +8,15 @@
 
   <ion-content class="recipes-screen" ng-class="{empty: !(selection && selection.recipes && selection.recipes.length > 0)}">
     <div class="screen-empty">
-      <loading ng-if="loading"></loading>
-      <div ng-if="!loading">
+      <loading ng-if="status === 'loading'"></loading>
+      <div ng-if="status === 'loaded'">
         Aucune recette planifiée cette semaine :(<br>
         Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
+      </div>
+      <div ng-if="status === 'error'">
+        Impossible de charger les recettes :(<br>
+        Vérifie que tu as accès à internet et 
+        <button class="button button-block button-stable" ng-click="loadSelection()">Charge à nouveau la sélection</button>
       </div>
     </div>
 
