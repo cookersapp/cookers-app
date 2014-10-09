@@ -4,7 +4,6 @@
 
 - next release :
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
-    - problème scroll écran feedback (mail Julien Richarte)
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
     
