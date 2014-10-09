@@ -128,6 +128,15 @@ var Logger = (function(){
     if(window && window.location) { event.source.url = window.location.href;     }
     if(Config)                    { event.source.appVersion = Config.appVersion; }
     if(Config)                    { event.debug = Config.debug;                  }
+    if(!event.dateinfo){
+      event.dateinfo = {
+        year: moment().year(),
+        month: moment().month(),
+        week: moment().week(),
+        dayOfYear: moment().dayOfYear(),
+        dayOfWeek: moment().weekday()
+      };
+    }
     event.eventId = createUuid();
     event.previousEventId = currentEventId;
     currentEventId = event.eventId;

@@ -24,14 +24,18 @@ angular.module('app')
 
   function firstLaunch(){
     var promise = AccountsSrv.getEmailOrAsk().then(function(email){
-      return BackendUserSrv.findUser(email);
-    }).then(function(user){
-      StorageSrv.saveUser(user);
-      BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
-    }, function(error){
-      if(!error){error = {};}
-      else if(typeof error === 'string'){error = {message: error};}
-      LogSrv.trackError('userNotFound', error);
+      return BackendUserSrv.findUser(email).then(function(user){
+        StorageSrv.saveUser(user);
+        BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+      }, function(error){
+        if(!error){error = {};}
+        else if(typeof error === 'string'){error = {message: error};}
+        LogSrv.trackError('userNotFound', error);
+        StorageSrv.saveUser({
+          email: email,
+          settings: {}
+        });
+      });
     });
 
     promise['finally'](function(){
@@ -91,9 +95,11 @@ angular.module('app')
 
   function _updateUser(){
     var user = StorageSrv.getUser();
-    BackendUserSrv.getUser(user.id).then(function(backendUser){
-      StorageSrv.saveUser(backendUser);
-    });
+    if(user && user.id){
+      BackendUserSrv.getUser(user.id).then(function(backendUser){
+        StorageSrv.saveUser(backendUser);
+      });
+    }
   }
 
   function _initTrackStateErrors(){

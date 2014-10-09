@@ -70,14 +70,22 @@ angular.module('app')
 
   function getUserSetting(setting){
     var user = _LocalStorageSrv.getUser();
-    return user.settings[setting];
+    return user ? user.settings[setting] : null;
   }
 
   function saveUserSetting(setting, value){
     var user = _LocalStorageSrv.getUser();
-    user.settings[setting] = value;
-    _LocalStorageSrv.setUser(user);
-    return BackendUserSrv.updateUserSetting(user.id, setting, value);
+    if(user && user.settings){
+      user.settings[setting] = value;
+      _LocalStorageSrv.setUser(user);
+      return BackendUserSrv.updateUserSetting(user.id, setting, value);
+    } else {
+      if(!user){user = {};}
+      user.settings = {};
+      user.settings[setting] = value;
+      _LocalStorageSrv.setUser(user);
+      return $q.when();
+    }
   }
 
   return service;

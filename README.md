@@ -3,9 +3,7 @@
 # TODO
 
 - next release :
-    - chargement des recettes quand on a pas de réseau
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
-    - ajouter un dateinfo sur les événements avec (jour de la semaine, jour de l'année, semaine de l'année)
     - problème scroll écran feedback (mail Julien Richarte)
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
@@ -15,7 +13,6 @@
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
     - accéder aux listes de courses archivées
-    - tracking : http://www.google.com/analytics/, https://keen.io/, http://trak.io/
 
 - téléphones posant problème :
     - GT-N7105 / galaxy note 2  / Adrien Henry
