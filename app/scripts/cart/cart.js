@@ -107,16 +107,20 @@ angular.module('app')
     }
   };
   $scope.cancelCustomItems = function(){
-    $scope.customItemsText = '';
-    $scope.editingCustomItems = false;
+    if($scope.editingCustomItems){
+      $scope.editingCustomItems = false;
+      $scope.customItemsText = '';
+    }
   };
   $scope.saveCustomItems = function(){
-    $scope.cart.customItems = customItemsToList($scope.customItemsText);
-    $scope.customItems = $scope.cart.customItems;
-    StorageSrv.saveCart($scope.cart);
-    $scope.customItemsText = '';
-    $scope.editingCustomItems = false;
-    LogSrv.trackEditCartCustomItems($scope.cart.customItems);
+    if($scope.editingCustomItems){
+      $scope.editingCustomItems = false;
+      $scope.cart.customItems = customItemsToList($scope.customItemsText);
+      $scope.customItems = $scope.cart.customItems;
+      StorageSrv.saveCart($scope.cart);
+      $scope.customItemsText = '';
+      LogSrv.trackEditCartCustomItems($scope.cart.customItems);
+    }
   };
   $scope.buyCustomItem = function(item){
     item.bought = true;
@@ -152,10 +156,11 @@ angular.module('app')
     }
   }
   function customItemsToText(customItems){
+    var ret = '';
     if(typeof customItems === 'string'){
-      return angular.copy(customItems.trim());
+      ret = angular.copy(customItems.trim());
     } else if(Array.isArray(customItems)){
-      return _.map(customItems, function(item){
+      ret = _.map(customItems, function(item){
         return item.name+(item.bought ? ' ok' : '');
       }).join('\n');
     } else {
@@ -164,6 +169,10 @@ angular.module('app')
         customItems: angular.copy(customItems)
       });
     }
+    if(ret !== ''){
+      ret = ret+'\n';
+    }
+    return ret;
   }
 
   $scope.openedItems = [];

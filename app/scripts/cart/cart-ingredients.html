@@ -1,7 +1,7 @@
 <div>
   <div class="list card add-product">
     <div class="item item-input">
-      <textarea msd-elastic blur-on-keyboard-out ng-model="customItemsText" ng-click="editCustomItems()"
+      <textarea msd-elastic blur-on-keyboard-out="saveCustomItems()" ng-model="customItemsText" ng-click="editCustomItems()"
                 rows="1" placeholder="Penser à acheter ..." ng-disabled="cart.archived"></textarea>
     </div>
     <div class="item" ng-if="editingCustomItems">
