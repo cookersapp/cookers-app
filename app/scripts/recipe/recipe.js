@@ -332,6 +332,23 @@ angular.module('app')
   };
 })
 
+.directive('imgRecipe', function(imagesPlaceholders){
+  'use strict';
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<img ng-src="{{img}}" loading-src="{{imgFail}}" fallback-src="{{imgFail}}">',
+    scope: {
+      images: '=',
+      type: '@'
+    },
+    link: function(scope, element, attr){
+      scope.imgFail = imagesPlaceholders.recipe[scope.type];
+      scope.img = scope.images ? scope.images[scope.type] : scope.imgFail;
+    }
+  };
+})
+
 .directive('cookTimer', function($timeout, $ionicScrollDelegate, MediaSrv, Utils){
   'use strict';
   var nearInterval = 60;

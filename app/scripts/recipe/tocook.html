@@ -11,11 +11,7 @@
 
     <div class="screen">
       <div class="row card" bindonce ng-repeat="recipe in recipes">
-        <div class="col col-33 picture" ng-if="$index%2 === 0">
-          <img ng-src="{{recipe.images.portrait}}"
-               loading-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}"
-               fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}">
-        </div>
+        <div class="col col-33 picture" ng-if="$index%2 === 0"><img-recipe images="recipe.images" type="portrait"></img-recipe></div>
         <div class="col text">
           <a class="cart-link" ng-click="remove(recipe)"><i class="icon ion-close-round"></i></a>
           <h1 class="title" bo-bind="recipe.name"></h1>
@@ -29,11 +25,7 @@
             <span bo-bind="recipe.time | cookTime"></span>
           </div>
         </div>
-        <div class="col col-33 picture" ng-if="$index%2 === 1">
-          <img ng-src="{{recipe.images.portrait}}"
-               loading-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}"
-               fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}">
-        </div>
+        <div class="col col-33 picture" ng-if="$index%2 === 1"><img-recipe images="recipe.images" type="portrait"></img-recipe></div>
       </div>
     </div>
   </ion-content>
