@@ -16,10 +16,13 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, Utils){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, StorageSrv, EmailSrv, ToastSrv, SelectionSrv, Utils){
   'use strict';
   $scope.standardMessage = null;
   $scope.stickyMessages = [];
+  
+  // preload selection
+  SelectionSrv.getCurrent();
 
   GlobalMessageSrv.getStandardMessageToDisplay().then(function(message){
     $scope.standardMessage = message;

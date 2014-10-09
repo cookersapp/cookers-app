@@ -5,13 +5,13 @@
 - next release :
     - chargement des recettes quand on a pas de réseau
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
-    - ajouter le numéro de semaine aux événements sur les recettes
+    - ajouter un dateinfo sur les événements avec (jour de la semaine, jour de l'année, semaine de l'année)
     - problème scroll écran feedback (mail Julien Richarte)
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
     
-    - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - notifications pour ne pas oublier l'application !
+    - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
     - accéder aux listes de courses archivées
