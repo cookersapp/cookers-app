@@ -181,7 +181,7 @@ angular.module('app')
       $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
 
       var user = StorageSrv.getUser();
-      if(user && user.data && user.data.skipCookFeatures){
+      if(user && user.settings && user.settings.skipCookFeatures){
         startTimer();
       } else {
         PopupSrv.tourCookFeatures().then(function(){
@@ -312,6 +312,24 @@ angular.module('app')
   };
 
   return service;
+})
+
+.directive('recipeImage', function(imagesPlaceholders){
+  'use strict';
+  return {
+    restrict: 'E',
+    template: '<img class="portrait" ng-src="{{bigImg}}" loading-src="{{bigImgFail}}" fallback-src="{{bigImgFail}}">'+
+    '<img class="landing" ng-src="{{smallImg}}" loading-src="{{smallImgFail}}" fallback-src="{{smallImgFail}}">',
+    scope: {
+      images: '='
+    },
+    link: function(scope, element, attr){
+      scope.bigImgFail = imagesPlaceholders.recipe.portrait;
+      scope.smallImgFail = imagesPlaceholders.recipe.landing;
+      scope.bigImg = scope.images ? scope.images.portrait : scope.bigImgFail;
+      scope.smallImg = scope.images ? scope.images.landing : scope.smallImgFail;
+    }
+  };
 })
 
 .directive('cookTimer', function($timeout, $ionicScrollDelegate, MediaSrv, Utils){

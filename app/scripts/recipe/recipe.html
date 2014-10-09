@@ -10,7 +10,9 @@
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
     <div class="screen" ng-cloack>
-      <img bo-src="recipe.images.landing" style="width: 100%">
+      <img ng-src="{{recipe.images.landing}}"
+           loading-src="{{ctx.cfg.imagesPlaceholders.recipe.landing}}"
+           fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.landing}}" style="width: 100%">
       <div class="legend-top">
         <div class="price" bo-if="ctx.settings.showPrices">
           <div class="number" bo-bind="recipe.price | price:false"></div>

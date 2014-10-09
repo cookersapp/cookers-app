@@ -84,7 +84,7 @@ angular.module('app')
   'use strict';
   $scope.totalPrice = CartSrv.getPrice($scope.cart);
   var user = StorageSrv.getUser();
-  if(!(user && user.data && user.data.skipCartFeatures)){
+  if(!(user && user.settings && user.settings.skipCartFeatures)){
     PopupSrv.tourCartFeatures().then(function(){
       StorageSrv.saveUserSetting('skipCartFeatures', true);
     });

@@ -15,7 +15,9 @@
     <div class="screen" ng-cloack>
       <div class="header row card">
         <div class="col col-33 picture">
-          <img bo-src="recipe.images.portrait">
+          <img ng-src="{{recipe.images.portrait}}"
+               loading-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}"
+               fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.portrait}}">
         </div>
         <div class="col text">
           <h1 class="title" bo-bind="recipe.name"></h1>
@@ -52,7 +54,9 @@
         </div>
       </div>
       <div class="cooked">
-        <img bo-src="recipe.images.landing">
+        <img ng-src="{{recipe.images.landing}}"
+             loading-src="{{ctx.cfg.imagesPlaceholders.recipe.landing}}"
+             fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.landing}}">
         <div class="finish">
           <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
           <h1 class="title handwritten">

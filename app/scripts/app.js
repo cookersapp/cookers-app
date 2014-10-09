@@ -1,4 +1,4 @@
-angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova', 'monospaced.elastic', 'pasvaz.bindonce'])
+angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bindonce', 'ngCordova', 'dcbImgFallback', 'monospaced.elastic'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
@@ -56,6 +56,14 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
   noBackdrop: true
 })
 
+.constant('imagesPlaceholders', {
+  recipe: {
+    portrait: 'images/recipe_placeholder_384x524.jpg',
+    landing: 'images/recipe_placeholder_400x225.jpg',
+    thumbnail: 'images/recipe_placeholder_200x200.jpg'
+  }
+})
+
 .value('localStorageDefault', {
   app: {
     version: '',
@@ -73,14 +81,19 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'ngCordova
   }
 })
 
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, appVersion, debug, PerfSrv){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, appVersion, debug, PerfSrv){
   'use strict';
+  var user = StorageSrv.getUser();
+  $rootScope.ctx = {
+    cfg: {
+      imagesPlaceholders: imagesPlaceholders
+    },
+    settings: user ? user.settings : null,
+    debug: debug,
+    appVersion: appVersion
+  };
   LaunchSrv.launch().then(function(){
-    $rootScope.ctx = {
-      settings: StorageSrv.getUser().settings,
-      debug: debug,
-      appVersion: appVersion
-    };
+    $rootScope.ctx.settings = StorageSrv.getUser().settings;
   });
 
   // utils methods

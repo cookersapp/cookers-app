@@ -10,13 +10,13 @@
     position: relative;
     padding: 0px;
     border: none;
-    & > img {
+    & img {
       width: 100%;
       &.portrait { display: none; }
       &.landing { display: block; }
     }
     &.big-image {
-      & > img {
+      & img {
         &.portrait { display: block; }
         &.landing { display: none; }
       }

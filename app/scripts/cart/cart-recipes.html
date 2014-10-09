@@ -15,7 +15,9 @@
         <ion-item ng-click="toggleRecipe(recipe)">
           <div>
             <div class="thumbnail pull-left">
-              <img bo-src="recipe.images.thumbnail">
+              <img ng-src="{{recipe.images.thumbnail}}"
+                   loading-src="{{ctx.cfg.imagesPlaceholders.recipe.thumbnail}}"
+                   fallback-src="{{ctx.cfg.imagesPlaceholders.recipe.thumbnail}}">
             </div>
             <div class="content">
               <h2 class="pull-right" bo-if="ctx.settings.showPrices" ng-bind="recipe.price | price:false:recipe.cartData.servings.value"></h2>
