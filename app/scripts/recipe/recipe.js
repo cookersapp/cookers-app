@@ -124,7 +124,7 @@ angular.module('app')
 .controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
   'use strict';
   var recipeId = $stateParams.recipeId;
-  var recipeIndex = $stateParams.recipeIndex;
+  var recipeIndex = $stateParams.recipeIndex ? parseInt($stateParams.recipeIndex) : undefined;
   var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   LogSrv.trackShowRecipeDetails(recipeId, recipeIndex);
   BackendSrv.getRecipe(recipeId).then(function(recipe){
