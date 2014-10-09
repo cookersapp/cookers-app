@@ -47,8 +47,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
 
 .constant('backendUrl', Config.backendUrl)
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
-.constant('mandrillUrl', 'https://mandrillapp.com/api/1.0')
-.constant('mandrillKey', '__YzrUYwZGkqqSM2pe9XFg')
 .constant('supportTeamEmail', 'loic@cookers.io')
 
 .constant('$ionicLoadingConfig', {
@@ -92,6 +90,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     debug: debug,
     appVersion: appVersion
   };
+
   LaunchSrv.launch().then(function(){
     user = StorageSrv.getUser();
     $rootScope.ctx.settings = user ? user.settings : null;

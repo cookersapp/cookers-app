@@ -103,59 +103,21 @@ angular.module('app')
   return service;
 })
 
-.factory('EmailSrv', function($http, $q, mandrillUrl, mandrillKey, supportTeamEmail){
+.factory('EmailSrv', function($http, backendUrl){
   'use strict';
   var service = {
     sendFeedback: sendFeedback
   };
 
   function sendFeedback(email, feedback){
-    return $http.post(mandrillUrl+'/messages/send.json', {
-      key: mandrillKey,
-      message: {
-        subject: '[Cookers] Feedback from app',
-        text: feedback,
-        //'html': '<p>'+feedback+'</p>',
-        from_email: email,
-        to: [
-          {email: supportTeamEmail, name: 'Cookers team'}
-        ],
-        important: false,
-        track_opens: true,
-        track_clicks: null,
-        preserve_recipients: null,
-        tags: ['app', 'feedback']
-      },
-      async: false
+    return $http.post(backendUrl+'/api/v1/app-feedback', {
+      from: email,
+      content: feedback,
+      source: 'mobile-app'
     }).then(function(result){
-      var sent = true;
-      for(var i in result.data){
-        if(result.data[i].reject_reason){
-          sent = false;
-        }
-      }
-      return sent;
+      return result.data === 'sent';
     });
   }
-
-  /*function sendWelcome(email){
-    return $http.post(mandrillUrl+'/messages/send-template.json', {
-      key: mandrillKey,
-      template_name: 'welcome',
-      template_content: [],
-      message: {
-        to: [
-          {email: email}
-        ],
-        track_opens: true,
-        preserve_recipients: true,
-        global_merge_vars: [
-          {name: 'FNAME', content: ''}
-        ],
-        tags: ['app', 'welcome']
-      }
-    });
-  }*/
 
   return service;
 });
