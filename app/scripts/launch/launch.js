@@ -6,18 +6,16 @@ angular.module('app')
     launch: function(){
       var defer = $q.defer();
       _initStorage();
-      $ionicPlatform.ready(function(){
-        var user = StorageSrv.getUser();
-        if(user && user.id){
-          launch().then(function(){
-            defer.resolve();
-          });
-        } else {
-          firstLaunch().then(function(){
-            defer.resolve();
-          });
-        }
-      });
+      var user = StorageSrv.getUser();
+      if(user && user.id){
+        launch().then(function(){
+          defer.resolve();
+        });
+      } else {
+        firstLaunch().then(function(){
+          defer.resolve();
+        });
+      }
       return defer.promise;
     }
   };

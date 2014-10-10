@@ -127,7 +127,6 @@ var Logger = (function(){
     if(!event.source)             { event.source = {};                           }
     if(window && window.location) { event.source.url = window.location.href;     }
     if(Config)                    { event.source.appVersion = Config.appVersion; }
-    if(Config)                    { event.debug = Config.debug;                  }
     if(!event.dateinfo){
       event.dateinfo = {
         year: moment().year(),

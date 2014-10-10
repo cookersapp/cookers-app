@@ -345,6 +345,9 @@ angular.module('app')
     link: function(scope, element, attr){
       scope.imgFail = imagesPlaceholders.recipe[scope.type];
       scope.img = scope.images ? scope.images[scope.type] : scope.imgFail;
+      scope.$watch('images', function(){
+        scope.img = scope.images ? scope.images[scope.type] : scope.imgFail;
+      });
     }
   };
 })

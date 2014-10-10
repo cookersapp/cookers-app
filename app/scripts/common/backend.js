@@ -25,7 +25,7 @@ angular.module('app')
   }
 
   function updateUserSetting(userId, setting, value){
-    return $http.put(backendUrl+'/api/v1/users/'+userId+'/settings/'+setting, value);
+    return $http.put(backendUrl+'/api/v1/users/'+userId+'/settings/'+setting, {value: value});
   }
 
   function setUserDevice(userId, device){
