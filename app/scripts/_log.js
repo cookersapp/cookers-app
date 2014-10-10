@@ -121,12 +121,12 @@ var Logger = (function(){
   Scheduler.init();
 
   function track(name, event){
-    if(!event.name)               { event.name = name;                           }
-    if(!event.time)               { event.time = Date.now();                     }
-    if(!event.userId)             { event.userId = _getUserId();                 }
-    if(!event.source)             { event.source = {};                           }
-    if(window && window.location) { event.source.url = window.location.href;     }
-    if(Config)                    { event.source.appVersion = Config.appVersion; }
+    if(!event.name)               { event.name = name;                            }
+    if(!event.time)               { event.time = Date.now();                      }
+    if(!event.user)               { event.user = _getUserId();                    }
+    if(!event.source)             { event.source = {};                            }
+    if(window && window.location) { event.source.url = window.location.href;      }
+    if(Config)                    { event.source.appVersion = Config.appVersion;  }
     if(!event.dateinfo){
       event.dateinfo = {
         year: moment().year(),
@@ -136,8 +136,8 @@ var Logger = (function(){
         dayOfWeek: moment().weekday()
       };
     }
-    event.eventId = createUuid();
-    event.previousEventId = currentEventId;
+    event.id = createUuid();
+    event.prevId = currentEventId;
     currentEventId = event.eventId;
 
     if(config.verbose){ console.log('$[track] '+name, event); }

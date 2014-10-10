@@ -90,6 +90,7 @@ angular.module('app')
   $scope.addRecipeToCart = function(recipe, index){
     PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
+        servings = parseInt(servings);
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
@@ -101,7 +102,7 @@ angular.module('app')
     });
   };
   $scope.removeRecipeFromCart = function(recipe, index){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, index, 'selection');
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, index);
     CartSrv.removeRecipe(cart, recipe);
     recipe.$formated.isInCart = false;
     ToastSrv.show('✔ recette supprimée de la liste de courses');
@@ -137,6 +138,7 @@ angular.module('app')
   $scope.addRecipeToCart = function(recipe){
     PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
       if(servings){
+        servings = parseInt(servings);
         LogSrv.trackAddRecipeToCart(recipe.id, servings, recipeIndex);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
@@ -147,7 +149,7 @@ angular.module('app')
     });
   };
   $scope.removeRecipeFromCart = function(recipe){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'recipe');
+    LogSrv.trackRemoveRecipeFromCart(recipe.id, recipeIndex);
     CartSrv.removeRecipe(cart, recipe);
     recipe.$formated.isInCart = false;
     ToastSrv.show('✔ recette supprimée de la liste de courses');
@@ -202,6 +204,7 @@ angular.module('app')
   $scope.changeServings = function(){
     PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
+        servings = parseInt(servings);
         $scope.servings = servings;
         $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
       }
@@ -283,6 +286,7 @@ angular.module('app')
   $scope.changeServings = function(recipe){
     PopupSrv.changeServings($scope.servings).then(function(servings){
       if(servings){
+        servings = parseInt(servings);
         recipe.cartData.servings.value = servings;
         CartSrv.updateCartRecipe(recipe);
       }
