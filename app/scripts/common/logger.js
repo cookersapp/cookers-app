@@ -15,7 +15,7 @@ angular.module('app')
     trackRecipeCooked:          function(recipe, cookDuration)  { track('recipe-cooked', {recipe: recipe, cookDuration: cookDuration}); },
     trackRecipesFeedback:       function(week, feedback)        { track('recipes-feedback-sent', {week: week, feedback: feedback});     },
 
-    trackBuyItem:               function(item)                  { trackWithPosition('item-bought', {item: item});                       },
+    trackBuyItem:               function(item, quantity)        { trackWithPosition('item-bought', {item: item, quantity: quantity});   },
     trackUnbuyItem:             function(item)                  { track('item-unbought', {item: item});                                 },
 
     trackEditCartCustomItems:   function(customItems)           { track('cart-custom-items-edited', {customItems: customItems});        },
@@ -31,19 +31,20 @@ angular.module('app')
 
   function trackWithPosition(event, params){
     if(navigator && navigator.geolocation){
+      var now = Date.now();
       var timeoutGeoloc = $timeout(function(){
-        track(event, params);
+        track(event, params, now);
       }, 3000);
       navigator.geolocation.getCurrentPosition(function(position){
         $timeout.cancel(timeoutGeoloc);
         params.position = position.coords;
         if(params.position){params.position.timestamp = position.timestamp;}
-        track(event, params);
+        track(event, params, now);
       }, function(error){
         $timeout.cancel(timeoutGeoloc);
         params.position = error;
         if(params.position){params.position.timestamp = Date.now();}
-        track(event, params);
+        track(event, params, now);
       }, {
         enableHighAccuracy: true,
         timeout: 2000,
@@ -54,10 +55,11 @@ angular.module('app')
     }
   }
 
-  function track(name, data){
+  function track(name, data, time){
     var user = _LocalStorageSrv.getUser();
     var event = {};
     if(data)            { event.data = data;       }
+    if(time)            { event.time = time;       }
     if(user && user.id) { event.userId = user.id;  }
     if(user && user.device){
       event.source = {};

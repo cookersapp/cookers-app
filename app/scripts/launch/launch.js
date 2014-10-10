@@ -65,13 +65,13 @@ angular.module('app')
 
       app = _LocalStorageSrv.getApp();
       if(app.version !== ''){
-        LogSrv.trackUpgrade(app.version, appVersion);
         /* Migration code */
         AccountsSrv.getEmailOrAsk().then(function(email){
           return BackendUserSrv.findUser(email);
         }).then(function(user){
           StorageSrv.saveUser(user);
           BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+          LogSrv.trackUpgrade(app.version, appVersion);
         });
         /* End migration code */
       }
@@ -93,8 +93,8 @@ angular.module('app')
 
   function _updateUser(){
     var user = StorageSrv.getUser();
-    if(user && user.id){
-      BackendUserSrv.getUser(user.id).then(function(backendUser){
+    if(user && user.email){
+      BackendUserSrv.findUser(user.email).then(function(backendUser){
         StorageSrv.saveUser(backendUser);
       });
     }

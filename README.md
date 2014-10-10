@@ -3,9 +3,6 @@
 # TODO
 
 - next release :
-    - recipe ratings to backend
-    - env var on play (allow to delete all on dev !)
-    - test rest api
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)

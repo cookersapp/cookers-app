@@ -212,7 +212,7 @@ angular.module('app')
     return bought;
   };
   $scope.buyItem = function(item){
-    LogSrv.trackBuyItem(item.food.id);
+    LogSrv.trackBuyItem(item.food.id, item.quantity);
     CartSrv.buyItem($scope.cart, item);
     ToastSrv.show('✔ '+item.food.name+' acheté !');
   };
