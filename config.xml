@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.cookers.assistant.android.dev" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.cookers.assistant.android.dev" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>dev-Cookers</name>
     <description>
         Les meilleures recettes sont dans votre poche !
     </description>
-    <author email="loicknuchel@gmail.com" href="http://cookers.io/">
+    <author email="loic@cookers.io" href="http://cookers.io/">
         Loïc Knuchel
     </author>
     <content src="index.html" />

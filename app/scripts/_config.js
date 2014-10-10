@@ -3,8 +3,8 @@ var Config = (function(){
   var cfg = {
     appVersion: '~',
     verbose: true,
-    track: true,
-    debug: true
+    debug: true,
+    track: true
   };
   var localBackendUrl = 'http://localhost:9000';
   var devBackendUrl = 'http://dev-cookers.herokuapp.com';
