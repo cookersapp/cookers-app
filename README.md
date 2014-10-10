@@ -3,8 +3,6 @@
 # TODO
 
 - next release :
-    - bouger le répertoire app/res à la racine du projet (peut alléger l'apk)
-    
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
