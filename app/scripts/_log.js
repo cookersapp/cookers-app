@@ -121,37 +121,48 @@ var Logger = (function(){
   Scheduler.init();
 
   function track(name, event){
-    if(!event.name)               { event.name = name;                            }
-    if(!event.time)               { event.time = Date.now();                      }
-    if(!event.user)               { event.user = _getUserId();                    }
-    if(!event.source)             { event.source = {};                            }
-    if(window && window.location) { event.source.url = window.location.href;      }
-    if(Config)                    { event.source.appVersion = Config.appVersion;  }
-    if(!event.dateinfo){
-      event.dateinfo = {
-        year: moment().year(),
-        month: moment().month(),
-        week: moment().week(),
-        dayOfYear: moment().dayOfYear(),
-        dayOfWeek: moment().weekday()
-      };
-    }
-    event.id = createUuid();
-    event.prevId = currentEventId;
-    currentEventId = event.eventId;
+    var userId = _getUserId();
+    if(!userId){
+      window.setTimeout(function(){
+        track(name, event);
+      }, 2000);
+    } else {
+      if(!event.name)               { event.name = name;                            }
+      if(!event.time)               { event.time = Date.now();                      }
+      if(!event.user)               { event.user = _getUserId();                    }
+      if(!event.source)             { event.source = {};                            }
+      if(window && window.location) { event.source.url = window.location.href;      }
+      if(Config)                    { event.source.appVersion = Config.appVersion;  }
+      if(!event.dateinfo){
+        event.dateinfo = {
+          year: moment().year(),
+          month: moment().month(),
+          week: moment().week(),
+          dayOfYear: moment().dayOfYear(),
+          dayOfWeek: moment().weekday()
+        };
+      }
+      event.id = createUuid();
+      event.prevId = currentEventId;
+      currentEventId = event.eventId;
 
-    if(config.verbose){ console.log('$[track] '+name, event); }
-    if(config.track){
-      if(config.async && event.name !== 'exception'){
-        Scheduler.schedule(event);
-      } else {
-        Scheduler.send(event, function(status){
-          if(status === 'ko'){Scheduler.schedule(event);}
-        });
+      if(config.verbose){ console.log('$[track] '+name, event); }
+      if(config.track){
+        if(config.async && event.name !== 'exception'){
+          Scheduler.schedule(event);
+        } else {
+          Scheduler.send(event, function(status){
+            if(status === 'ko'){Scheduler.schedule(event);}
+          });
+        }
+      }
+      if(name === 'error' && config.debug && event.data.error){
+        window.alert('Error: '+event.data.type+'\n'+event.data.error.message+'\nPlease contact: loic@cookers.io');
+      }
+      if(name === 'exception'){
+        window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');
       }
     }
-    if(name === 'error' && config.debug && event.data.error)  { window.alert('Error: '+event.data.type+'\n'+event.data.error.message+'\nPlease contact: loic@cookers.io');  }
-    if(name === 'exception')                                  { window.alert('Exception: '+event.data.message+'\nPlease contact: loic@cookers.io');    }
   }
 
   function _getUserId(){
