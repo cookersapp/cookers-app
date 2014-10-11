@@ -94,24 +94,11 @@ Interesting plugins :
 
 - change package & name in `config.xml` : `com.cookers.android.dev` => `com.cookers.android` and `dev-Cookers` => `Cookers`
 - increment version number and check that `debug` option is false : `app/scripts/_config.js`
-- remove and add android platform : `cordova platform remove android` and `cordova platform add android` (to sync platform with config.xml)
-- add icons to build : copy `app/res/android` in `platforms/android/res` and `platforms/android/res`
-- `cordova plugin rm org.apache.cordova.console` remove useless plugins
-- build app : `grunt build && cordova run android`
-- Your app is ready here : `platforms/android/ant-build/Cookers-debug-unaligned.apk`
-- Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number (git tag v0.3.1 && git push --tags)
-- Then, rollback your changes ;) (sampe process)
+- run `./build-release.sh`
+- Upload it to [bitbucket](https://bitbucket.org/retail-scan/ionicapp/downloads) and tag the commit with version number (ex: git tag v0.3.1 && git push --tags)
+- Then, rollback your changes (change `config.xml` and `app/scripts/_config.js`, then use `./build-debug.sh`)
 
 Publishing to market : http://ionicframework.com/docs/guide/publishing.html
-Run comands :
-
-- `cordova build --release android` that will create the release app in `platforms/android/ant-build/Cookers-release-unsigned.apk`
-- copy release apk in project folder (containing `cookers-assistant-android-key.keystore` file)
-- `jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore Cookers-release-unsigned.apk alias_name` (you will need keystore password...)
-- `zipalign -v 4 Cookers-release-unsigned.apk Cookers.apk`
-- Your apk is ready : `Cookers.apk` ! You can now delete `Cookers-release-unsigned.apk`
-
-Or, run script `build-release.sh`...
 
 ## Installer l'application
 

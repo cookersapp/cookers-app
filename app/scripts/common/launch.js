@@ -12,7 +12,7 @@ angular.module('app')
           defer.resolve();
         });
       } else {
-        firstLaunch().then(function(){
+        firstLaunch(user ? user.upgrade : null).then(function(){
           defer.resolve();
         });
       }
@@ -20,9 +20,11 @@ angular.module('app')
     }
   };
 
-  function firstLaunch(){
-    var promise = AccountsSrv.getEmailOrAsk().then(function(email){
-      return BackendUserSrv.findUser(email).then(function(user){
+  function firstLaunch(upgrade){
+    var defer = $q.defer();
+
+    AccountsSrv.getEmailOrAsk().then(function(email){
+      var promise =  BackendUserSrv.findUser(email).then(function(user){
         StorageSrv.saveUser(user);
         BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
       }, function(error){
@@ -34,13 +36,20 @@ angular.module('app')
           settings: {}
         });
       });
+
+      promise['finally'](function(){
+        if(upgrade){
+          LogSrv.trackUpgrade(upgrade, appVersion);
+        } else {
+          LogSrv.trackInstall();
+        }
+        launch().then(function(){
+          defer.resolve();
+        });
+      });
     });
 
-    promise['finally'](function(){
-      LogSrv.trackInstall();
-      launch();
-    });
-    return promise;
+    return defer.promise;
   }
 
   function launch(){
@@ -66,13 +75,7 @@ angular.module('app')
       app = _LocalStorageSrv.getApp();
       if(app.version !== ''){
         /* Migration code */
-        AccountsSrv.getEmailOrAsk().then(function(email){
-          return BackendUserSrv.findUser(email);
-        }).then(function(user){
-          StorageSrv.saveUser(user);
-          BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
-          LogSrv.trackUpgrade(app.version, appVersion);
-        });
+        _LocalStorageSrv.setUser({upgrade: app.version, data: {welcomeMailSent: true}});
         /* End migration code */
       }
 
@@ -85,7 +88,6 @@ angular.module('app')
 
   function _trackLaunch(){
     // INIT is defined in top of index.html
-    var user = StorageSrv.getUser();
     var launchTime = Date.now()-INIT;
     if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(launchTime);

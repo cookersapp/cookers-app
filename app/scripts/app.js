@@ -63,10 +63,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
 })
 
 .value('localStorageDefault', {
-  app: {
-    version: '',
-    firstLaunch: Date.now()
-  },
+  app: { version: '' },
   userCarts: { carts: [] },
   userStandaloneCookedRecipes: { recipes: [] },
   userRecipeHistory: { recipes: [] },

@@ -11,19 +11,13 @@ echo
 read -p "Continue ? [y/N] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo 'Build release !'
-    rm Cookers.apk
+    echo 'Build debug !'
     cordova platform remove android
     cordova platform add android
     cp -r app_icons/android/* platforms/android/res/
     grunt build
-    cordova build --release android
-    cp platforms/android/ant-build/Cookers-release-unsigned.apk .
-    jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore Cookers-release-unsigned.apk alias_name
-    zipalign -v 4 Cookers-release-unsigned.apk Cookers.apk
-    rm Cookers-release-unsigned.apk
     echo ''
-    echo 'Your production app is ready : Cookers.apk'
+    echo 'Your debug app is ready : platforms/android/ant-build/devCookers-debug.apk'
     echo ''
 else
     echo 'Abort build !'

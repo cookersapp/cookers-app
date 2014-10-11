@@ -96,7 +96,6 @@ angular.module('app')
   if(user && user.id)                         { identity.id         = user.id;              }
   if(user && user.email)                      { identity.email      = user.email;           }
   if(user && user.name)                       { identity.name       = user.name;            }
-  if(app && app.firstLaunch)                  { identity.created_at = app.firstLaunch/1000; }
   UserVoice.push(['identify', identity]);
   UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
   UserVoice.push(['autoprompt', {}]);
