@@ -121,31 +121,32 @@ var Logger = (function(){
   Scheduler.init();
 
   function track(name, event){
-    var userId = _getUserId();
-    if(!userId){
+    if(!event.name)                                     { event.name = name;                            }
+    if(!event.time)                                     { event.time = Date.now();                      }
+    if(!event.user)                                     { event.user = _getUserId();                    }
+    if(!event.source)                                   { event.source = {};                            }
+    if(!event.source.url && window && window.location)  { event.source.url = window.location.href;      }
+    if(!event.source.appVersion && Config)              { event.source.appVersion = Config.appVersion;  }
+    if(!event.dateinfo){
+      event.dateinfo = {
+        year: moment().year(),
+        month: moment().month(),
+        week: moment().week(),
+        dayOfYear: moment().dayOfYear(),
+        dayOfWeek: moment().weekday()
+      };
+    }
+    if(!event.id){
+      event.id = createUuid();
+      event.prevId = currentEventId;
+      currentEventId = event.eventId;
+    }
+
+    if(!event.user){
       window.setTimeout(function(){
         track(name, event);
       }, 2000);
     } else {
-      if(!event.name)               { event.name = name;                            }
-      if(!event.time)               { event.time = Date.now();                      }
-      if(!event.user)               { event.user = _getUserId();                    }
-      if(!event.source)             { event.source = {};                            }
-      if(window && window.location) { event.source.url = window.location.href;      }
-      if(Config)                    { event.source.appVersion = Config.appVersion;  }
-      if(!event.dateinfo){
-        event.dateinfo = {
-          year: moment().year(),
-          month: moment().month(),
-          week: moment().week(),
-          dayOfYear: moment().dayOfYear(),
-          dayOfWeek: moment().weekday()
-        };
-      }
-      event.id = createUuid();
-      event.prevId = currentEventId;
-      currentEventId = event.eventId;
-
       if(config.verbose){ console.log('$[track] '+name, event); }
       if(config.track){
         if(config.async && event.name !== 'exception'){
