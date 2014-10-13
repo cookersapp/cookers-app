@@ -23,7 +23,7 @@ angular.module('app')
   return service;
 })
 
-.factory('GlobalMessageSrv', function($q, StorageSrv, BackendSrv, debug, appVersion){
+.factory('GlobalMessageSrv', function($q, StorageSrv, BackendSrv, Config){
   'use strict';
   var service = {
     getStandardMessageToDisplay: getStandardMessageToDisplay,
@@ -81,7 +81,7 @@ angular.module('app')
     StorageSrv.getGlobalMessages().lastCall = Date.now();
     return BackendSrv.getMessages().then(function(allMessages){
       var messages = _.filter(allMessages, function(msg){
-        return msg && (msg.isProd || debug) && msg.targets && msg.targets.indexOf(appVersion) > -1 && !messageExists(msg);
+        return msg && (msg.isProd || Config.debug) && msg.targets && msg.targets.indexOf(Config.appVersion) > -1 && !messageExists(msg);
       });
       StorageSrv.getGlobalMessages().messages = StorageSrv.getGlobalMessages().messages.concat(messages);
       // sort chronogically
@@ -103,14 +103,14 @@ angular.module('app')
   return service;
 })
 
-.factory('EmailSrv', function($http, backendUrl){
+.factory('EmailSrv', function($http, Config){
   'use strict';
   var service = {
     sendFeedback: sendFeedback
   };
 
   function sendFeedback(email, feedback){
-    return $http.post(backendUrl+'/api/v1/app-feedback', {
+    return $http.post(Config.backendUrl+'/api/v1/app-feedback', {
       from: email,
       content: feedback,
       source: 'mobile-app'

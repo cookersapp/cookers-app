@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv, appVersion){
+.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv){
   'use strict';
   var service = {
     trackInstall:               function()                        { track('app-installed');                                                       },

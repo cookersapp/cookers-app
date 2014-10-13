@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('BackendUserSrv', function($q, $http, LogSrv, firebaseUrl, backendUrl, _LocalStorageSrv){
+.factory('BackendUserSrv', function($q, $http, LogSrv, firebaseUrl, Config, _LocalStorageSrv){
   'use strict';
   var service = {
     getUser: getUser,
@@ -10,7 +10,7 @@ angular.module('app')
   };
 
   function getUser(id){
-    return $http.get(backendUrl+'/api/v1/users/'+id).then(function(result){
+    return $http.get(Config.backendUrl+'/api/v1/users/'+id).then(function(result){
       return result.data;
     });
   }
@@ -19,17 +19,17 @@ angular.module('app')
     var user = _LocalStorageSrv.getUser();
     var welcomeEmailSent = user && user.data && user.data.welcomeMailSent ? user.data.welcomeMailSent : false;
     var mailSentParam = welcomeEmailSent ? '&welcomeEmailSent='+welcomeEmailSent : '';
-    return $http.get(backendUrl+'/api/v1/users/find?email='+email+mailSentParam).then(function(result){
+    return $http.get(Config.backendUrl+'/api/v1/users/find?email='+email+mailSentParam).then(function(result){
       return result.data;
     });
   }
 
   function updateUserSetting(userId, setting, value){
-    return $http.put(backendUrl+'/api/v1/users/'+userId+'/settings/'+setting, {value: value});
+    return $http.put(Config.backendUrl+'/api/v1/users/'+userId+'/settings/'+setting, {value: value});
   }
 
   function setUserDevice(userId, device){
-    return $http.put(backendUrl+'/api/v1/users/'+userId+'/device', device);
+    return $http.put(Config.backendUrl+'/api/v1/users/'+userId+'/device', device);
   }
 
   return service;

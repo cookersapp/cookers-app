@@ -112,7 +112,7 @@ angular.module('app')
   return service;
 })
 
-.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv, config){
   'use strict';
   var service = {
     forceAskEmail: forceAskEmail,
@@ -123,26 +123,30 @@ angular.module('app')
   };
 
   function forceAskEmail(){
-    var $scope = $rootScope.$new(true);
-    $scope.data = {email: ''};
-    return $ionicPopup.show({
-      template: '<input type="email" placeholder="Email" ng-model="data.email">',
-      title: 'Restons en contact !<br>Lâche ton email <i class="fa fa-smile-o">',
-      subTitle: 'Aucun spam garanti !',
-      scope: $scope,
-      buttons: [{
-        text: '<b>Continuer</b>',
-        type: 'button-positive',
-        onTap: function(e) {
-          if(!$scope.data.email){
-            e.preventDefault();
-            ToastSrv.show('Please, enter you email !');
-          } else {
-            return $scope.data.email;
+    if(config.defaultEmail){
+      return $q.when(config.defaultEmail);
+    } else {
+      var $scope = $rootScope.$new(true);
+      $scope.data = {email: ''};
+      return $ionicPopup.show({
+        template: '<input type="email" placeholder="Email" ng-model="data.email">',
+        title: 'Restons en contact !<br>Lâche ton email <i class="fa fa-smile-o">',
+        subTitle: 'Aucun spam garanti !',
+        scope: $scope,
+        buttons: [{
+          text: '<b>Continuer</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if(!$scope.data.email){
+              e.preventDefault();
+              ToastSrv.show('Please, enter you email !');
+            } else {
+              return $scope.data.email;
+            }
           }
-        }
-      }]
-    });
+        }]
+      });
+    }
   }
 
   function changeServings(defaultServings, title){

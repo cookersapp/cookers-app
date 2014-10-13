@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, _LocalStorageSrv, localStorageDefault, appVersion, debug){
+.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, _LocalStorageSrv, localStorageDefault, Config){
   'use strict';
   var service = {
     launch: function(){
@@ -39,7 +39,7 @@ angular.module('app')
 
       promise['finally'](function(){
         if(upgrade){
-          LogSrv.trackUpgrade(upgrade, appVersion);
+          LogSrv.trackUpgrade(upgrade, Config.appVersion);
         } else {
           LogSrv.trackInstall();
         }
@@ -63,7 +63,7 @@ angular.module('app')
 
   function _initStorage(){
     var app = _LocalStorageSrv.getApp();
-    if(!app || app.version !== appVersion){
+    if(!app || app.version !== Config.appVersion){
       for(var i in localStorageDefault){
         var key = i;
         var defaultValue = localStorageDefault[key] || {};
@@ -80,7 +80,7 @@ angular.module('app')
       }
 
       app = _LocalStorageSrv.getApp();
-      app.version = appVersion;
+      app.version = Config.appVersion;
       _LocalStorageSrv.setApp(app);
     }
   }
@@ -89,7 +89,7 @@ angular.module('app')
   function _trackLaunch(){
     // INIT is defined in top of index.html
     var launchTime = Date.now()-INIT;
-    if(debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
+    if(Config.debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(launchTime);
   }
 

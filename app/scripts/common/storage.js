@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('StorageSrv', function($window, $state, $q, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault, appVersion){
+.factory('StorageSrv', function($window, $state, $q, _LocalStorageSrv, BackendUserSrv, AccountsSrv, Utils, LogSrv, localStorageDefault){
   'use strict';
   var service = {
     getApp: _LocalStorageSrv.getApp,
@@ -91,7 +91,7 @@ angular.module('app')
   return service;
 })
 
-.factory('_LocalStorageSrv', function($window){
+.factory('_LocalStorageSrv', function($window, config){
   'use strict';
   var localStorageCache = {};
   var localStoragePrefix = 'ionic-';
@@ -121,7 +121,7 @@ angular.module('app')
   };
 
   function _get(key){
-    if(!localStorageCache[key] && $window.localStorage){
+    if(!localStorageCache[key] && $window.localStorage && config.storage){
       localStorageCache[key] = JSON.parse($window.localStorage.getItem(localStoragePrefix+key));
     }
     return angular.copy(localStorageCache[key]);
@@ -130,7 +130,7 @@ angular.module('app')
   function _set(key, value){
     if(!angular.equals(localStorageCache[key], value)){
       localStorageCache[key] = angular.copy(value);
-      if($window.localStorage){
+      if($window.localStorage && config.storage){
         $window.localStorage.setItem(localStoragePrefix+key, JSON.stringify(localStorageCache[key]));
       }
     } else {
@@ -156,7 +156,7 @@ angular.module('app')
   }
 
   function _reset(){
-    if($window.localStorage){
+    if($window.localStorage && config.storage){
       localStorageCache = {};
       for(var i in $window.localStorage){
         $window.localStorage.removeItem(i);

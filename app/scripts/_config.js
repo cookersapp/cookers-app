@@ -4,6 +4,8 @@ var Config = (function(){
     appVersion: '~',
     verbose: true,
     debug: true,
+    storage: true,
+    defaultEmail: null,
     track: true
   };
   var localBackendUrl = 'http://localhost:9000';

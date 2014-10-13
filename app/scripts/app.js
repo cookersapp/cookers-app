@@ -42,10 +42,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   $urlRouterProvider.otherwise('/app/home');
 })
 
-.constant('debug', Config.debug)
-.constant('appVersion', Config.appVersion)
-
-.constant('backendUrl', Config.backendUrl)
+.constant('Config', Config)
 .constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('supportTeamEmail', 'loic@cookers.io')
 
@@ -76,7 +73,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   }
 })
 
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, appVersion, debug, PerfSrv){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config, PerfSrv){
   'use strict';
   var user = StorageSrv.getUser();
   $rootScope.ctx = {
@@ -84,8 +81,8 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
       imagesPlaceholders: imagesPlaceholders
     },
     settings: user ? user.settings : null,
-    debug: debug,
-    appVersion: appVersion
+    debug: Config.debug,
+    appVersion: Config.appVersion
   };
 
   LaunchSrv.launch().then(function(){

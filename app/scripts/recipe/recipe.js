@@ -309,10 +309,10 @@ angular.module('app')
   });
 })
 
-.factory('SelectionSrv', function(StorageSrv, BackendSrv, debug){
+.factory('SelectionSrv', function(StorageSrv, BackendSrv, Config){
   'use strict';
   var service = {
-    getCurrent: function(){ return BackendSrv.getSelection(moment().week()+(debug ? 1 : 0)); }
+    getCurrent: function(){ return BackendSrv.getSelection(moment().week()+(Config.debug ? 1 : 0)); }
   };
 
   return service;
