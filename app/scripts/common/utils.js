@@ -112,7 +112,7 @@ angular.module('app')
   return service;
 })
 
-.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv, config){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv, Config){
   'use strict';
   var service = {
     forceAskEmail: forceAskEmail,
@@ -123,8 +123,8 @@ angular.module('app')
   };
 
   function forceAskEmail(){
-    if(config.defaultEmail){
-      return $q.when(config.defaultEmail);
+    if(Config.defaultEmail){
+      return $q.when(Config.defaultEmail);
     } else {
       var $scope = $rootScope.$new(true);
       $scope.data = {email: ''};

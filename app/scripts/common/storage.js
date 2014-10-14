@@ -91,7 +91,7 @@ angular.module('app')
   return service;
 })
 
-.factory('_LocalStorageSrv', function($window, config){
+.factory('_LocalStorageSrv', function($window, Config){
   'use strict';
   var localStorageCache = {};
   var localStoragePrefix = 'ionic-';
@@ -121,7 +121,7 @@ angular.module('app')
   };
 
   function _get(key){
-    if(!localStorageCache[key] && $window.localStorage && config.storage){
+    if(!localStorageCache[key] && $window.localStorage && Config.storage){
       localStorageCache[key] = JSON.parse($window.localStorage.getItem(localStoragePrefix+key));
     }
     return angular.copy(localStorageCache[key]);
@@ -130,7 +130,7 @@ angular.module('app')
   function _set(key, value){
     if(!angular.equals(localStorageCache[key], value)){
       localStorageCache[key] = angular.copy(value);
-      if($window.localStorage && config.storage){
+      if($window.localStorage && Config.storage){
         $window.localStorage.setItem(localStoragePrefix+key, JSON.stringify(localStorageCache[key]));
       }
     } else {
@@ -156,7 +156,7 @@ angular.module('app')
   }
 
   function _reset(){
-    if($window.localStorage && config.storage){
+    if($window.localStorage && Config.storage){
       localStorageCache = {};
       for(var i in $window.localStorage){
         $window.localStorage.removeItem(i);
