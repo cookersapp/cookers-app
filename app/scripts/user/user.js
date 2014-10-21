@@ -59,6 +59,7 @@ angular.module('app')
   var app = StorageSrv.getApp();
   var user = StorageSrv.getUser();
   $scope.feedback = {
+    placeholder: 'Un p\'tit compliment ? Quelle est ta fonctionnalité préférée ?',
     email: user.email,
     content: '',
     sending: false,
@@ -66,9 +67,9 @@ angular.module('app')
   };
 
   if($stateParams.source){
-    if($stateParams.source === 'recipes-rating-1'){$scope.feedback.content = 'Bof bof bof... Tiens quelques conseils !\n\nJe serais plus fan de ...';}
-    else if($stateParams.source === 'recipes-rating-2'){$scope.feedback.content = 'Plutôt cool tes recettes !\n\nJe verrais bien un peu plus ... ou un peu moins de ...';}
-    else if($stateParams.source === 'recipes-rating-3'){$scope.feedback.content = 'Wahou c\'est top !\n\nEt ça serait encore mieux si tu pouvais ...';}
+    if($stateParams.source === 'recipes-rating-1'){$scope.feedback.placeholder = 'Bof bof bof... Tiens quelques conseils ! Je serais plus fan de ...';}
+    else if($stateParams.source === 'recipes-rating-2'){$scope.feedback.placeholder = 'Plutôt cool tes recettes ! Je verrais bien un peu plus ... ou un peu moins de ...';}
+    else if($stateParams.source === 'recipes-rating-3'){$scope.feedback.placeholder = 'Wahou c\'est top ! Et ça serait encore mieux si tu pouvais ...';}
   }
 
   $scope.sendFeedback = function(){

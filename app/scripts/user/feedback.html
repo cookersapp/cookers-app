@@ -18,7 +18,7 @@
           <input type="email" name="email" placeholder="Email" ng-model="feedback.email" ng-disabled="feedback.sending || feedback.sent" required>
         </label>
         <label class="item item-input">
-          <textarea name="content" rows="5" blur-on-keyboard-out ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" placeholder="Un p'tit compliment ? Quelle est ta fonctionnalité préférée ?" required>{{feedback.content}}</textarea>
+          <textarea name="content" rows="5" blur-on-keyboard-out ng-model="feedback.content" ng-disabled="feedback.sending || feedback.sent" placeholder="{{feedback.placeholder}}" required>{{feedback.content}}</textarea>
         </label>
       </div>
       <div class="padding" ng-class="{hide: feedback.sent}">

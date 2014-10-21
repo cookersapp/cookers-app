@@ -110,6 +110,7 @@ angular.module('app')
 
   $scope.recipeFeedback = function(feedback){
     LogSrv.trackRecipesFeedback($scope.selection.week, feedback);
+    ToastSrv.show('Merci pour le retour :)');
     $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
   };
 

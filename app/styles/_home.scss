@@ -1,7 +1,6 @@
 @import "_colors";
 
 .home {
-  background-image: url(../images/texture_gray.png);
   .message {
     .alert {
       margin: 0px;
@@ -17,12 +16,20 @@
       border-radius: 4px;
       border: 2px solid #ccc;
       cursor: pointer;
+      &:active, &.activated {
+        margin-top: 23px;
+        margin-bottom: -3px;
+        background: #eee;
+      }
       .media {
         padding: 20px 0px;
         font-size: 40px;
         line-height: 40px;
         color: #fff;
         text-align: center;
+        .icon:before {
+          font-size: 40px;
+        }
       }
       .content {
         display: flex;
@@ -32,6 +39,7 @@
         font-size: 14px;
         text-transform: uppercase;
         font-weight: bold;
+        white-space: nowrap;
       }
     }
     .card:nth-child(1) {

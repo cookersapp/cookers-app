@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('BackendUserSrv', function($q, $http, LogSrv, firebaseUrl, Config, _LocalStorageSrv){
+.factory('BackendUserSrv', function($q, $http, LogSrv, Config, _LocalStorageSrv){
   'use strict';
   var service = {
     getUser: getUser,
