@@ -57,8 +57,8 @@
 
   <ion-footer-bar class="bar-dark">
     <div class="button-bar spaced">
-      <a class="button icon-left ion-clipboard button-balanced" ng-click="addRecipeToCart(recipe)" ng-if="!recipe.$formated.isInCart">A acheter !</a>
-      <a class="button icon-left ion-clipboard button-assertive" ng-click="removeRecipeFromCart(recipe)" ng-if="recipe.$formated.isInCart">A supprimer !</a>
+      <a class="button icon-left ion-clipboard button-balanced" ng-click="addRecipeToCart(recipe)" ng-if="!recipe._formated.isInCart">A acheter !</a>
+      <a class="button icon-left ion-clipboard button-assertive" ng-click="removeRecipeFromCart(recipe)" ng-if="recipe._formated.isInCart">A supprimer !</a>
       <a class="button icon-left fa fa-cutlery button-assertive" bo-href="'#/app/cook/none/'+recipe.id">Cuisiner !</a>
     </div>
   </ion-footer-bar>

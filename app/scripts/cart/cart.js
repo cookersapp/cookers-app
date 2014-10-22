@@ -40,8 +40,8 @@ angular.module('app')
 .controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, ScanSrv, ProductSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-  if(!$scope.cart.$formated){$scope.cart.$formated = {};}
-  $scope.cart.$formated.isEmpty = isEmpty($scope.cart);
+  if(!$scope.cart._formated){$scope.cart._formated = {};}
+  $scope.cart._formated.isEmpty = isEmpty($scope.cart);
 
   $scope.toggleSelfScan = function(){
     if($scope.cart.selfscan){
@@ -64,14 +64,14 @@ angular.module('app')
       var barcode = result.text;
       ProductSrv.get(barcode).then(function(product){
         if(product.status === 1){
-          alert('Product found: '+product.name);
+          $window.alert('Product found: '+product.name);
         } else {
-          alert('Product not found :(');
+          $window.alert('Product not found :(');
         }
       });
       //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
     }, function(error){
-      alert("Scanning failed: " + error);
+      $window.alert('Scanning failed: ' + error);
     });
   };
 
@@ -266,7 +266,7 @@ angular.module('app')
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, CartSrv, LogSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, CartSrv, LogSrv){
   'use strict';
   if(!$scope.cart.selfscan){
     $state.go('app.cart.ingredients');
