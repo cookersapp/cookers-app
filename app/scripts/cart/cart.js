@@ -26,14 +26,54 @@ angular.module('app')
     data: {
       noSleep: true
     }
+  })
+  .state('app.cart.selfscan', {
+    url: '/selfscan',
+    templateUrl: 'scripts/cart/cart-selfscan.html',
+    controller: 'CartSelfscanCtrl',
+    data: {
+      noSleep: true
+    }
   });
 })
 
-.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv){
+.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, ScanSrv, ProductSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   if(!$scope.cart.$formated){$scope.cart.$formated = {};}
   $scope.cart.$formated.isEmpty = isEmpty($scope.cart);
+
+  $scope.toggleSelfScan = function(){
+    if($scope.cart.selfscan){
+      if($window.confirm('Abandonner le self-scan ?')){
+        $scope.cart.selfscan = false;
+        CartSrv.updateCart($scope.cart);
+        $state.go('app.cart.ingredients');
+      }
+    } else {
+      if($window.confirm('Activer le self-scan ?')){
+        $scope.cart.selfscan = true;
+        CartSrv.updateCart($scope.cart);
+        $state.go('app.cart.selfscan');
+      }
+    }
+  };
+
+  $scope.scan = function(){
+    ScanSrv.scan(function(result){
+      var barcode = result.text;
+      ProductSrv.get(barcode).then(function(product){
+        if(product.status === 1){
+          alert('Product found: '+product.name);
+        } else {
+          alert('Product not found :(');
+        }
+      });
+      //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
+    }, function(error){
+      alert("Scanning failed: " + error);
+    });
+  };
 
   $ionicPopover.fromTemplateUrl('scripts/cart/cart-popover.html', {
     scope: $scope
@@ -80,57 +120,107 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, CartSrv, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
-  $scope.totalPrice = CartSrv.getPrice($scope.cart);
-  var user = StorageSrv.getUser();
-  if(!(user && user.settings && user.settings.skipCartFeatures)){
-    PopupSrv.tourCartFeatures().then(function(){
-      StorageSrv.saveUserSetting('skipCartFeatures', true);
-    });
-  }
-
-  // for compatibility
-  if(!Array.isArray($scope.cart.customItems)){
-    $scope.cart.customItems = customItemsToList($scope.cart.customItems);
-    StorageSrv.saveCart($scope.cart);
-  }
-  $scope.customItems = $scope.cart.customItems;
-  $scope.items = CartSrv.getItems($scope.cart);
-
-  $scope.editingCustomItems = false;
-  $scope.customItemsText = '';
-  $scope.editCustomItems = function(){
-    if(!$scope.editingCustomItems){
-      $scope.editingCustomItems = true;
-      $scope.customItemsText = customItemsToText($scope.cart.customItems);
+  if($scope.cart.selfscan){
+    $state.go('app.cart.selfscan');
+  } else {
+    $scope.totalPrice = CartSrv.getPrice($scope.cart);
+    var user = StorageSrv.getUser();
+    if(!(user && user.settings && user.settings.skipCartFeatures)){
+      PopupSrv.tourCartFeatures().then(function(){
+        StorageSrv.saveUserSetting('skipCartFeatures', true);
+      });
     }
-  };
-  $scope.cancelCustomItems = function(){
-    if($scope.editingCustomItems){
-      $scope.editingCustomItems = false;
-      $scope.customItemsText = '';
-    }
-  };
-  $scope.saveCustomItems = function(){
-    if($scope.editingCustomItems){
-      $scope.editingCustomItems = false;
-      $scope.cart.customItems = customItemsToList($scope.customItemsText);
-      $scope.customItems = $scope.cart.customItems;
+
+    // for compatibility
+    if(!Array.isArray($scope.cart.customItems)){
+      $scope.cart.customItems = customItemsToList($scope.cart.customItems);
       StorageSrv.saveCart($scope.cart);
-      $scope.customItemsText = '';
-      LogSrv.trackEditCartCustomItems($scope.cart.customItems);
     }
-  };
-  $scope.buyCustomItem = function(item){
-    item.bought = true;
-    StorageSrv.saveCart($scope.cart);
-    ToastSrv.show('✔ '+item.name+' acheté !');
-  };
-  $scope.unbuyCustomItem = function(item){
-    item.bought = false;
-    StorageSrv.saveCart($scope.cart);
-  };
+    $scope.customItems = $scope.cart.customItems;
+    $scope.items = CartSrv.getItems($scope.cart);
+
+    $scope.editingCustomItems = false;
+    $scope.customItemsText = '';
+    $scope.editCustomItems = function(){
+      if(!$scope.editingCustomItems){
+        $scope.editingCustomItems = true;
+        $scope.customItemsText = customItemsToText($scope.cart.customItems);
+      }
+    };
+    $scope.cancelCustomItems = function(){
+      if($scope.editingCustomItems){
+        $scope.editingCustomItems = false;
+        $scope.customItemsText = '';
+      }
+    };
+    $scope.saveCustomItems = function(){
+      if($scope.editingCustomItems){
+        $scope.editingCustomItems = false;
+        $scope.cart.customItems = customItemsToList($scope.customItemsText);
+        $scope.customItems = $scope.cart.customItems;
+        StorageSrv.saveCart($scope.cart);
+        $scope.customItemsText = '';
+        LogSrv.trackEditCartCustomItems($scope.cart.customItems);
+      }
+    };
+    $scope.buyCustomItem = function(item){
+      item.bought = true;
+      StorageSrv.saveCart($scope.cart);
+      ToastSrv.show('✔ '+item.name+' acheté !');
+    };
+    $scope.unbuyCustomItem = function(item){
+      item.bought = false;
+      StorageSrv.saveCart($scope.cart);
+    };
+
+    $scope.openedItems = [];
+    $scope.isOpened = function(item){
+      return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
+    };
+    $scope.toggleItem = function(item){
+      var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
+      if(index > -1){
+        $scope.openedItems.splice(index, 1);
+      } else {
+        $scope.openedItems.push(item);
+        LogSrv.trackShowCartItemDetails(item.food.id);
+      }
+    };
+
+    $scope.cartHasItems = function(){
+      return $scope.items.length > 0 || $scope.customItems.length > 0;
+    };
+    $scope.cartHasItemsToBuy = function(){
+      var itemsToBuy = _.filter($scope.items, function(item){
+        return !$scope.isBought(item);
+      });
+      return itemsToBuy.length > 0;
+    };
+    $scope.cartHasCustomItemsToBuy = function(){
+      var itemsToBuy = _.filter($scope.customItems, function(item){
+        return !item.bought;
+      });
+      return itemsToBuy.length > 0;
+    };
+    $scope.isBought = function(item){
+      var bought = true;
+      angular.forEach(item.sources, function(source){
+        if(!source.ingredient.bought){bought = false;}
+      });
+      return bought;
+    };
+    $scope.buyItem = function(item){
+      LogSrv.trackBuyItem(item.food.id, item.quantity);
+      CartSrv.buyItem($scope.cart, item);
+      ToastSrv.show('✔ '+item.food.name+' acheté !');
+    };
+    $scope.unbuyItem = function(item){
+      LogSrv.trackUnbuyItem(item.food.id);
+      CartSrv.unbuyItem($scope.cart, item);
+    };
+  }
 
   function customItemsToList(customItems){
     if(typeof customItems === 'string'){
@@ -174,52 +264,29 @@ angular.module('app')
     }
     return ret;
   }
+})
 
-  $scope.openedItems = [];
-  $scope.isOpened = function(item){
-    return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
-  };
-  $scope.toggleItem = function(item){
-    var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
-    if(index > -1){
-      $scope.openedItems.splice(index, 1);
-    } else {
-      $scope.openedItems.push(item);
-      LogSrv.trackShowCartItemDetails(item.food.id);
-    }
-  };
+.controller('CartSelfscanCtrl', function($scope, CartSrv, LogSrv){
+  'use strict';
+  if(!$scope.cart.selfscan){
+    $state.go('app.cart.ingredients');
+  } else {
+    $scope.items = CartSrv.getItems($scope.cart);
 
-  $scope.cartHasItems = function(){
-    return $scope.items.length > 0 || $scope.customItems.length > 0;
-  };
-  $scope.cartHasItemsToBuy = function(){
-    var itemsToBuy = _.filter($scope.items, function(item){
-      return !$scope.isBought(item);
-    });
-    return itemsToBuy.length > 0;
-  };
-  $scope.cartHasCustomItemsToBuy = function(){
-    var itemsToBuy = _.filter($scope.customItems, function(item){
-      return !item.bought;
-    });
-    return itemsToBuy.length > 0;
-  };
-  $scope.isBought = function(item){
-    var bought = true;
-    angular.forEach(item.sources, function(source){
-      if(!source.ingredient.bought){bought = false;}
-    });
-    return bought;
-  };
-  $scope.buyItem = function(item){
-    LogSrv.trackBuyItem(item.food.id, item.quantity);
-    CartSrv.buyItem($scope.cart, item);
-    ToastSrv.show('✔ '+item.food.name+' acheté !');
-  };
-  $scope.unbuyItem = function(item){
-    LogSrv.trackUnbuyItem(item.food.id);
-    CartSrv.unbuyItem($scope.cart, item);
-  };
+    $scope.openedItems = [];
+    $scope.isOpened = function(item){
+      return _.findIndex($scope.openedItems, {food: {id: item.food.id}}) > -1;
+    };
+    $scope.toggleItem = function(item){
+      var index = _.findIndex($scope.openedItems, {food: {id: item.food.id}});
+      if(index > -1){
+        $scope.openedItems.splice(index, 1);
+      } else {
+        $scope.openedItems.push(item);
+        LogSrv.trackShowCartItemDetails(item.food.id);
+      }
+    };
+  }
 })
 
 .factory('CartSrv', function(StorageSrv, PriceCalculator, _CartBuilder, _CartUtils){

@@ -1,5 +1,31 @@
 angular.module('app')
 
+// for BarcodeScanner plugin : https://github.com/wildabeast/BarcodeScanner.git
+.factory('ScanSrv', function($window, $ionicPlatform, LogSrv){
+  'use strict';
+  var service = {
+    scan: scan
+  };
+
+  function scan(success, error){
+    pluginReady(function(){
+      $window.cordova.plugins.barcodeScanner.scan(success, error);
+    });
+  }
+
+  function pluginReady(fn){
+    $ionicPlatform.ready(function(){
+      if($window.cordova && $window.cordova.plugins && $window.cordova.plugins.barcodeScanner){
+        fn();
+      } else {
+        LogSrv.trackError('pluginNotFound:BarcodeScanner');
+      }
+    });
+  }
+
+  return service;
+})
+
 // for Toast plugin : https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin
 .factory('ToastSrv', function($window, $ionicPlatform, LogSrv){
   'use strict';

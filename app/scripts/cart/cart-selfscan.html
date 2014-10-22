@@ -1,0 +1,19 @@
+<div>
+  <div class="screen">
+    <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{totalPrice | price}}</div>
+    <div ng-if="!cart.archived">
+      <div class="list card to-buy">
+        <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in items">
+          <div class="text" ng-click="toggleItem(item)" bo-bind="item | ingredient"></div>
+
+          <div class="details" ng-if="isOpened(item)">
+            <div class="source" ng-class="{'source-bought': source.ingredient.bought}" bindonce ng-repeat="source in item.sources">
+              <div class="quantity pull-right" bo-bind="source.quantity | quantity"></div>
+              <div class="text" bo-bind="source.recipe.name+' ('+(source.recipe.cartData.servings | servings)+')'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

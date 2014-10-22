@@ -1,4 +1,5 @@
 if(!window.plugins){window.plugins = {};}
+if(!window.cordova){window.cordova = {plugins: {}};}
 
 
 // for plugin https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
@@ -71,4 +72,15 @@ window.plugins.DeviceAccounts = {
   getByType: function(type, onSuccess, onFail){ onSuccess(/*[{type:'com.google', name:'test@example.com'}]*/); },
   getEmails: function(onSuccess, onFail){ onSuccess(/*['test@example.com']*/); },
   getEmail: function(onSuccess, onFail){ onSuccess(/*'test@example.com'*/); }
+};
+
+window.cordova.plugins.barcodeScanner = {
+  scan: function(success, fail){
+    var barcode = prompt('barcode :');
+    if(barcode == null){
+      success({ text: null, format: null, cancelled: true });
+    } else {
+      success({ text: barcode, format: 'text', cancelled: false });
+    }
+  }
 };

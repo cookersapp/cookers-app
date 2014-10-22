@@ -5,16 +5,26 @@
     </div>
     <h1 class="title" bo-bind="cart.name"></h1>
     <div class="buttons">
+      <button class="button button-icon" ng-class="{'ion-close-circled': cart.selfscan, 'ion-ios7-barcode-outline': !cart.selfscan}" ng-click="toggleSelfScan()"></button>
       <button class="button button-icon ion-more" ng-click="popover.show($event)"></button>
     </div>
   </ion-header-bar>
+
   <ion-content class="cart-screen" ng-class="{empty: cart.$formated.isEmpty}">
     <div class="cart-chooser padding">
       <div class="button-bar bar-light">
         <a class="button" href="#/app/cart/recipes" ng-class="{active: isActive('.*recipes')}">Recettes</a>
-        <a class="button" href="#/app/cart/ingredients" ng-class="{active: isActive('.*ingredients')}">Ingrédients</a>
+        <a class="button" href="#/app/cart/ingredients" ng-class="{active: isActive('.*ingredients')}" ng-show="!cart.selfscan">Ingrédients</a>
+        <a class="button" href="#/app/cart/selfscan" ng-class="{active: isActive('.*selfscan')}" ng-show="cart.selfscan">Panier</a>
       </div>
     </div>
     <ui-view></ui-view>
   </ion-content>
+
+  <ion-footer-bar class="bar-dark" ng-show="cart.selfscan">
+    <div class="button-bar spaced">
+      <a class="button button-custom" ng-click="scan(true)">Scan multiple</a>
+      <a class="button button-custom" ng-click="scan(false)">Scan simple</a>
+    </div>
+  </ion-footer-bar>
 </ion-view>
