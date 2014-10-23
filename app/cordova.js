@@ -8,7 +8,7 @@ window.plugins.toast = {
     // durations : short, long
     // positions : top, center, bottom
     // default: short bottom
-    alert('Toast: '+message);
+    window.alert('Toast: '+message);
     if(successCallback){window.setTimeout(successCallback('OK'), 0);}
   },
   showShortTop: function(message, successCallback, errorCallback){this.show(message, 'short', 'top', successCallback, errorCallback);},
@@ -76,11 +76,11 @@ window.plugins.DeviceAccounts = {
 
 window.cordova.plugins.barcodeScanner = {
   scan: function(success, fail){
-    var barcode = prompt('barcode :');
+    var barcode = window.prompt('barcode :');
     if(barcode == null){
-      success({ text: null, format: null, cancelled: true });
+      if(success){success({ text: null, format: null, cancelled: true });}
     } else {
-      success({ text: barcode, format: 'text', cancelled: false });
+      if(success){success({ text: barcode, format: 'text', cancelled: false });}
     }
   }
 };

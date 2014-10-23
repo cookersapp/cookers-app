@@ -1,0 +1,29 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-custom">
+    <h1 class="title">Produit scanné</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!product"><loading></loading></div>
+    <div class="card product" ng-show="product">
+      <div>
+        <img ng-src="{{product.imageSmall}}" style="display: block; margin: auto;">
+      </div>
+      <div class="padding pull-right">
+        <h4 style="white-space: nowrap;">{{product.store.price | price}}</h4>
+        <h5 style="white-space: nowrap;">{{product.store.genericPrice | price}}</h5>
+      </div>
+      <div class="padding">
+        <h4>{{product.name}}</h4>
+        <h5>{{product.brand}}</h5>
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar class="bar-dark">
+    <div class="button-bar spaced">
+      <a class="button button-assertive" ng-click="notAddToCart()">Reposer le produit</a>
+      <a class="button button-balanced" ng-click="addToCart()">Ajouter au panier</a>
+    </div>
+  </ion-footer-bar>
+</ion-modal-view>

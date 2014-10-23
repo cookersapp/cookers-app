@@ -37,7 +37,7 @@ angular.module('app')
   });
 })
 
-.controller('CartCtrl', function($scope, $state, $ionicPopover, $window, CartSrv, ScanSrv, ProductSrv){
+.controller('CartCtrl', function($scope, $state, $ionicPopover, $ionicModal, $window, CartSrv, ScanSrv, ProductSrv){
   'use strict';
   $scope.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   if(!$scope.cart._formated){$scope.cart._formated = {};}
@@ -59,19 +59,46 @@ angular.module('app')
     }
   };
 
+  $ionicModal.fromTemplateUrl('scripts/cart/product-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+  $scope.$on('$destroy', function(){
+    $scope.modal.remove();
+  });
+
   $scope.scan = function(){
     ScanSrv.scan(function(result){
-      var barcode = result.text;
-      ProductSrv.get(barcode).then(function(product){
-        if(product.status === 1){
-          $window.alert('Product found: '+product.name);
-        } else {
-          $window.alert('Product not found :(');
-        }
-      });
       //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
+      if(!result.cancelled){
+        var barcode = result.text;
+        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930'];
+        //var barcode = codes[Math.floor(Math.random() * codes.length)];
+        $scope.modal.show().then(function(){
+          return ProductSrv.getWithStore('demo', barcode)
+        }).then(function(product){
+          if(product && product.name){
+            $scope.product = product;
+          } else {
+            $window.alert('Product not found :(');
+            $scope.modal.hide();
+          }
+        });
+      }
     }, function(error){
       $window.alert('Scanning failed: ' + error);
+    });
+  };
+  $scope.addToCart = function(product){
+    $scope.modal.hide().then(function(){
+      $scope.product = null;
+    });
+  };
+  $scope.notAddToCart = function(product){
+    $scope.modal.hide().then(function(){
+      $scope.product = null;
     });
   };
 

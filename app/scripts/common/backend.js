@@ -132,35 +132,26 @@ angular.module('app')
   return service;
 })
 
-.factory('ProductSrv', function($http){
+.factory('ProductSrv', function($http, Config){
   'use strict';
   var service = {
-    get: get
+    get: get,
+    getWithStore: getWithStore
   };
 
   function get(barcode){
-    return $http.get('http://fr.openfoodfacts.org/api/v0/produit/'+barcode+'.json').then(function(res){
-      var product = {};
-      product.barcode = barcode;
-      if(res && res.data){
-        product.status            = res.data.status;
-        if(res.data.product){
-          product.generic_name    = res.data.product.generic_name;
-          product.name            = res.data.product.product_name;
-          product.image           = res.data.product.image_url;
-          product.image_small     = res.data.product.image_small_url;
-          product.quantity        = res.data.product.quantity;
-          product.serving         = res.data.product.serving_size;
-          product.servingQuantity = res.data.product.serving_quantity;
-          product.categories      = res.data.product.categories_tags;
-          product.ingredients     = res.data.product.ingredients;
-          product.ingredientsTags = res.data.product.ingredients_tags;
-          product.brands          = res.data.product.brands;
-          product.keywords        = res.data.product._keywords;
-          product.traces          = res.data.product.traces_tags;
-        }
+    return $http.get(Config.backendUrl+'/api/v1/products/'+barcode).then(function(res){
+      if(res && res.data && res.data.data){
+        return res.data.data;
       }
-      return product;
+    });
+  }
+
+  function getWithStore(store, barcode){
+    return $http.get(Config.backendUrl+'/api/v1/stores/'+store+'/products/'+barcode).then(function(res){
+      if(res && res.data && res.data.data){
+        return res.data.data;
+      }
     });
   }
 
