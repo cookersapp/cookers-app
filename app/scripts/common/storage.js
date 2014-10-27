@@ -91,7 +91,7 @@ angular.module('app')
   return service;
 })
 
-.factory('_LocalStorageSrv', function($window, Config){
+.factory('_LocalStorageSrv', function($window, Config, localStorageDefault){
   'use strict';
   var localStorageCache = {};
   var localStoragePrefix = 'ionic-';
@@ -123,6 +123,7 @@ angular.module('app')
   function _get(key){
     if(!localStorageCache[key] && $window.localStorage && Config.storage){
       localStorageCache[key] = JSON.parse($window.localStorage.getItem(localStoragePrefix+key));
+      if(!localStorageCache[key] && localStorageDefault[key]){localStorageCache[key] = angular.copy(localStorageDefault[key]);}
     }
     return angular.copy(localStorageCache[key]);
   }

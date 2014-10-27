@@ -13,7 +13,7 @@
       <img-recipe images="recipe.images" type="landing" style="width: 100%"></img-recipe>
       <div class="legend-top">
         <div class="price" bo-if="ctx.settings.showPrices">
-          <div class="number" bo-bind="recipe.price | price:false"></div>
+          <div class="number" bo-bind="recipe.price | price:1:false"></div>
           <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
         </div>
       </div>

@@ -60,10 +60,10 @@ angular.module('app')
 
 .filter('price', function($filter){
   'use strict';
-  return function(price, showUnit, priceAdjust){
+  return function(price, priceAdjust, showUnit){
     if(price){
-      if(showUnit === undefined){showUnit = true;}
       if(priceAdjust === undefined){priceAdjust = 1;}
+      if(showUnit === undefined){showUnit = true;}
       return $filter('mynumber')(price.value*priceAdjust, 2) + ' ' + price.currency + (showUnit && price.unit ? '/' + price.unit : '');
     } else {
       return '<price>';

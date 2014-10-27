@@ -18,7 +18,7 @@
               <img-recipe images="recipe.images" type="thumbnail"></img-recipe>
             </div>
             <div class="content">
-              <h2 class="pull-right" bo-if="ctx.settings.showPrices" ng-bind="recipe.price | price:false:recipe.cartData.servings.value"></h2>
+              <h2 class="pull-right" bo-if="ctx.settings.showPrices" ng-bind="recipe.price | price:recipe.cartData.servings.value:false"></h2>
               <h2 class="title" bo-bind="recipe.name"></h2>
               <div ng-bind="(recipe.cartData.servings | servings)+', '+(recipe.time | cookTime)"></div>
               <div>
