@@ -4,26 +4,26 @@
   </ion-header-bar>
 
   <ion-content>
-    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!product"><loading></loading></div>
-    <div class="card product" ng-show="product">
+    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
+    <div class="card product" ng-show="data.product">
       <div>
-        <img ng-src="{{product.image}}" style="display: block; margin: auto; max-height: 200px;">
+        <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
       </div>
       <div class="padding pull-right">
-        <h4 style="white-space: nowrap;">{{product.store.price | price}}</h4>
-        <h5 style="white-space: nowrap;">{{product.store.genericPrice | price}}</h5>
+        <h4 style="white-space: nowrap;">{{data.product.store.price | price}}</h4>
+        <h5 style="white-space: nowrap;">{{data.product.store.genericPrice | price}}</h5>
       </div>
       <div class="padding">
-        <h4>{{product.name}}</h4>
-        <h5>{{product.brand}}</h5>
+        <h4>{{data.product.name}}</h4>
+        <h5>{{data.product.brand}}</h5>
       </div>
     </div>
   </ion-content>
 
   <ion-footer-bar class="bar-dark">
     <div class="button-bar spaced">
-      <a class="button button-assertive" ng-click="notAddToCart()">Reposer le produit</a>
-      <a class="button button-balanced" ng-click="addToCart(product)">Ajouter au panier</a>
+      <a class="button button-assertive" ng-click="fn.notAddToCart()">Reposer le produit</a>
+      <a class="button button-balanced" ng-click="fn.addToCart(data.product)">Ajouter au panier</a>
     </div>
   </ion-footer-bar>
 </ion-modal-view>

@@ -4,15 +4,15 @@
     <a class="button button-block button-balanced" href="#/app/recipes">Ajoute une recette !</a>
   </div>
 
-  <div class="screen" bindonce="cart">
-    <div class="no-items-to-buy" bo-if="!(cart && cart.recipes && cart.recipes.length > 0)">
+  <div class="screen" bindonce="data.cart">
+    <div class="no-items-to-buy" bo-if="!(data.cart && data.cart.recipes && data.cart.recipes.length > 0)">
       Aucune recette ajoutée à la liste de course.
       <a class="button button-block button-balanced" href="#/app/recipes">Ajoute la première recette !</a>
     </div>
     <ion-list>
-      <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{totalPrice | price}}</div>
-      <div class="item-cart-recipe card" bindonce ng-repeat="recipe in cart.recipes">
-        <ion-item ng-click="toggleRecipe(recipe)">
+      <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{data.estimatedPrice | price}}</div>
+      <div class="item-cart-recipe card" bindonce ng-repeat="recipe in data.cart.recipes">
+        <ion-item ng-click="fn.toggleRecipe(recipe)">
           <div>
             <div class="thumbnail pull-left">
               <img-recipe images="recipe.images" type="thumbnail"></img-recipe>
@@ -32,16 +32,16 @@
               </div>
             </div>
           </div>
-          <ion-option-button class="button-assertive" ng-click="removeRecipeFromCart(recipe)">Supprimer</ion-option-button>
+          <ion-option-button class="button-assertive" ng-click="fn.removeRecipeFromCart(recipe)">Supprimer</ion-option-button>
         </ion-item>
-        <div class="addon" ng-if="selectedRecipe === recipe">
+        <div class="addon" ng-if="data.selectedRecipe === recipe">
           <div class="range range-positive range-thin">
             <i class="fa fa-user"></i>
-            <input type="range" name="servings" min="1" max="10" ng-model="recipe.cartData.servings.value" ng-change="updateServings(recipe, recipe.cartData.servings.value)">
+            <input type="range" name="servings" min="1" max="10" ng-model="recipe.cartData.servings.value" ng-change="fn.updateServings(recipe, recipe.cartData.servings.value)">
             <i class="fa fa-users"></i>
           </div>
           <div class="pull-right">
-            <button class="button button-xs button-assertive" ng-click="removeRecipeFromCart(recipe)">Supprimer</button>
+            <button class="button button-xs button-assertive" ng-click="fn.removeRecipeFromCart(recipe)">Supprimer</button>
           </div>
           <a class="button button-xs button-stable" bo-href="'#/app/recipe/'+recipe.id">Voir</a>
           <a class="button button-xs button-positive" bo-href="'#/app/cook/'+recipe.cartData.cart+'/'+recipe.id" bo-attr-disabled="recipe.cartData.cooked">

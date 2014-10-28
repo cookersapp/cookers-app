@@ -1,20 +1,5 @@
 angular.module('app')
 
-// holds list of items to share it between cart controllers
-.factory('ItemsSrv', function(CartSrv, CollectionUtils){
-  'use strict';
-  var service = {
-    items: [],
-    loadCart: loadCart
-  };
-
-  function loadCart(cart){
-    CollectionUtils.copy(CartSrv.getItemsWithProducts(cart), service.items);
-  }
-
-  return service;
-})
-
 .factory('CartSrv', function(StorageSrv, PriceCalculator, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
@@ -37,6 +22,7 @@ angular.module('app')
     addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe,
 
     getPrice: getPrice,
+    getProductPrice: getProductPrice,
     getItems: getItems,
     getItemsWithProducts: getItemsWithProducts,
     hasRecipe: hasRecipe,
@@ -139,7 +125,7 @@ angular.module('app')
   }
 
   function getPrice(cart){
-    if(cart && cart.recipes && Array.isArray(cart.recipes)){
+    if(cart && Array.isArray(cart.recipes)){
       var totalPrice = null;
       for(var i=0; i<cart.recipes.length; i++){
         var recipe = cart.recipes[i];
@@ -148,6 +134,23 @@ angular.module('app')
           totalPrice = recipePrice;
         } else {
           totalPrice = PriceCalculator.add(totalPrice, recipePrice);
+        }
+      }
+      return totalPrice;
+    }
+  }
+
+  function getProductPrice(cart){
+    if(cart && Array.isArray(cart.products)){
+      var totalPrice = null;
+      for(var i=0; i<cart.products.length; i++){
+        var product = cart.products[i];
+        var productPrice = angular.copy(product.store.price);
+        productPrice.value = productPrice.value * product.cartData.quantity;
+        if(i === 0){
+          totalPrice = productPrice;
+        } else {
+          totalPrice = PriceCalculator.add(totalPrice, productPrice);
         }
       }
       return totalPrice;
@@ -218,7 +221,7 @@ angular.module('app')
   function unbuyProduct(cart, items, product){
     if(cart.products){
       var cartProductIndex = _.findIndex(cart.products, {barcode: product.barcode});
-      if(cartProductIndex){
+      if(typeof cartProductIndex === 'number'){
         cart.products.splice(cartProductIndex, 1);
       }
       StorageSrv.saveCart(cart);
@@ -229,7 +232,7 @@ angular.module('app')
     var itemIndex = foodId ? _.findIndex(items, {food: {id: foodId}}) : _.findIndex(items, {food: {id: 'unknown'}});
     var item = items[itemIndex];
     var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: product.barcode}) : null;
-    if(itemProductIndex || itemProductIndex === 0){
+    if(typeof itemProductIndex === 'number'){
       item.products.splice(itemProductIndex, 1);
       if(item.products.length === 0){
         items.splice(itemIndex, 1);

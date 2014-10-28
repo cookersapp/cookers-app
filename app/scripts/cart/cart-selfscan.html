@@ -1,14 +1,14 @@
 <div>
   <div class="screen">
-    <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{totalPrice | price}}</div>
+    <div class="cart-price">Total : {{data.totalProductsPrice | price}}</div>
     <div>
       <div class="list card to-buy">
-        <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in items">
+        <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in data.items">
           <div class="text" bo-bind="item | ingredient"></div>
 
           <div class="details">
-            <div class="product" bindonce ng-repeat="product in item.products">
-              <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="unbuyProduct(product)">&times;</button></div>
+            <div class="product" ng-repeat="product in item.products">
+              <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="fn.unbuyProduct(product)">&times;</button></div>
               <div class="quantity pull-right">{{product.store.price | price:product.cartData.quantity}}</div>
               <div class="text"><b>{{product.cartData.quantity}} x</b> {{product.name}}</div>
             </div>
