@@ -20,7 +20,7 @@
     </div>
   </ion-content>
 
-  <ion-footer-bar class="bar-dark">
+  <ion-footer-bar class="bar-dark" ng-show="data.product">
     <div class="button-bar spaced">
       <a class="button button-assertive" ng-click="fn.notAddToCart()">Reposer le produit</a>
       <a class="button button-balanced" ng-click="fn.addToCart(data.product)">Ajouter au panier</a>

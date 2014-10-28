@@ -125,6 +125,7 @@ angular.module('app')
   }
 
   function getPrice(cart){
+    var zero = {value: 0, currency: '€'};
     if(cart && Array.isArray(cart.recipes)){
       var totalPrice = null;
       for(var i=0; i<cart.recipes.length; i++){
@@ -136,11 +137,14 @@ angular.module('app')
           totalPrice = PriceCalculator.add(totalPrice, recipePrice);
         }
       }
-      return totalPrice;
+      return totalPrice ? totalPrice : zero;
+    } else {
+      return zero;
     }
   }
 
   function getProductPrice(cart){
+    var zero = {value: 0, currency: '€'};
     if(cart && Array.isArray(cart.products)){
       var totalPrice = null;
       for(var i=0; i<cart.products.length; i++){
@@ -153,7 +157,9 @@ angular.module('app')
           totalPrice = PriceCalculator.add(totalPrice, productPrice);
         }
       }
-      return totalPrice;
+      return totalPrice ? totalPrice : zero;
+    } else {
+      return zero;
     }
   }
 

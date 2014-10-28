@@ -14,8 +14,6 @@ angular.module('app')
   data.estimatedPrice = CartSrv.getPrice(data.cart);
   data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
 
-  // TODO : refactor
-
   $ionicModal.fromTemplateUrl('scripts/cart/partials/shop-modal.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -58,15 +56,20 @@ angular.module('app')
   });
 
   fn.scan = function(multi){
+    var startScan = Date.now();
     ScanSrv.scan(function(result){
       //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
       if(!result.cancelled){
+        var scanDone = Date.now();
+        ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
         var barcode = result.text;
         var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
         ui.productModal.show().then(function(){
           return ProductSrv.getWithStore('demo', barcode);
         }).then(function(product){
+          var productShowed = Date.now();
+          ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
           if(product && product.name){
             data.product = product;
           } else {
@@ -134,6 +137,7 @@ angular.module('app')
     fn.unbuyProduct = function(product){
       if($window.confirm('Supprimer du panier : '+product.name+' ?')){
         CartSrv.unbuyProduct(data.cart, data.items, product);
+        data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
       }
     };
   }
