@@ -8,6 +8,12 @@ angular.module('app')
     getUserSetting: getUserSetting,
     saveUser: _LocalStorageSrv.setUser,
     saveUserSetting: saveUserSetting,
+    getFoods: function(){return _LocalStorageSrv.getFoods().foods;},
+    setFoods: function(foods){
+      var dataFoods = _LocalStorageSrv.getFoods();
+      dataFoods.foods = foods;
+      _LocalStorageSrv.setFoods(dataFoods);
+    },
     getFood: function(id){return _LocalStorageSrv.getFoods().foods[id];},
     addFood: function(food){
       if(food && food.id){

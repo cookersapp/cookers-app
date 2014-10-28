@@ -35,12 +35,10 @@ angular.module('app')
   return service;
 })
 
-.factory('BackendSrv', function($q, $http, StorageSrv, firebaseUrl){
+.factory('CompatibilitySrv', function(){
   'use strict';
   var service = {
-    getRecipe: getRecipe,
-    getSelection: getSelection,
-    getMessages: getMessages
+    setFoodCategoryToObj: setFoodCategoryToObj
   };
 
   var foodCategories = [
@@ -57,11 +55,41 @@ angular.module('app')
     {id: 11, order: 11, name: 'Entretien & Nettoyage'},
     {id: 12, order: 12, name: 'Animalerie'},
     {id: 13, order: 13, name: 'Bazar & Textile'},
-    {id: 14, order: 14, name: 'Surgelés'}
+    {id: 14, order: 14, name: 'Surgelés'},
+    {id: 15, order: 15, name: 'Autres'}
   ];
   for(var i in foodCategories){
     foodCategories[i].slug = getSlug(foodCategories[i].name);
   }
+
+  function setFoodCategoryToObj(food){
+    if(food && food.category && typeof food.category === 'string'){
+      var cat = _.find(foodCategories, {name: food.category});
+      if(cat){
+        food.category = angular.copy(cat);
+      } else {
+        food.category = {
+          id: 16,
+          order: 16,
+          name: food.category,
+          slug: getSlug(food.category)
+        };
+      }
+    }
+  }
+
+  return service;
+})
+
+.factory('BackendSrv', function($q, $http, StorageSrv, CollectionUtils, CompatibilitySrv, firebaseUrl){
+  'use strict';
+  var service = {
+    getRecipe: getRecipe,
+    getFood: getFood,
+    getFoods: getFoods,
+    getSelection: getSelection,
+    getMessages: getMessages
+  };
 
   function getRecipe(id){
     var recipe = StorageSrv.getRecipe(id);
@@ -73,24 +101,44 @@ angular.module('app')
         if(recipe && recipe.ingredients){
           for(var i in recipe.ingredients){
             var ing = recipe.ingredients[i];
-            if(ing && ing.food && ing.food.category && typeof ing.food.category === 'string'){
-              var cat = _.find(foodCategories, {name: ing.food.category});
-              if(cat){
-                ing.food.category = angular.copy(cat);
-              } else {
-                ing.food.category = {
-                  id: 15,
-                  order: 15,
-                  name: ing.food.category,
-                  slug: getSlug(ing.food.category)
-                };
-              }
-            }
+            CompatibilitySrv.setFoodCategoryToObj(ing.food);
           }
         }
         StorageSrv.addRecipe(recipe);
         return recipe;
       });
+    }
+  }
+
+  function getFood(id){
+    var food = StorageSrv.getFood(id);
+    if(food){
+      return $q.when(food);
+    } else {
+      return $http.get(firebaseUrl+'/foods/'+id+'.json').then(function(result){
+        var food = result.data;
+        CompatibilitySrv.setFoodCategoryToObj(food);
+        StorageSrv.addFood(food);
+        return food;
+      });
+    }
+  }
+
+  function getFoods(){
+    var foods = StorageSrv.getFoods();
+    var promise = $http.get(firebaseUrl+'/foods.json').then(function(result){
+      angular.copy(result.data, foods);
+      for(var i in foods){
+        CompatibilitySrv.setFoodCategoryToObj(foods[i]);
+      }
+      StorageSrv.setFoods(foods);
+      return foods;
+    });
+
+    if(CollectionUtils.size(foods) === 0){
+      return promise;
+    } else {
+      return $q.when(foods);
     }
   }
 
@@ -136,7 +184,8 @@ angular.module('app')
   'use strict';
   var service = {
     get: get,
-    getWithStore: getWithStore
+    getWithStore: getWithStore,
+    setFoodId: setFoodId
   };
 
   function get(barcode){
@@ -153,6 +202,10 @@ angular.module('app')
         return res.data.data;
       }
     });
+  }
+
+  function setFoodId(barcode, foodId){
+    return $http.put(Config.backendUrl+'/api/v1/products/'+barcode+'?foodId='+foodId);
   }
 
   return service;

@@ -179,13 +179,15 @@ angular.module('app')
   function size(col){
     if(Array.isArray(col)){
       return col.length;
-    } else {
+    } else if(typeof col === 'object'){
       return Object.keys(col).length;
+    } else {
+      return 0;
     }
   }
 
   function isEmpty(col){
-    return length(col) === 0;
+    return size(col) === 0;
   }
 
   return service;

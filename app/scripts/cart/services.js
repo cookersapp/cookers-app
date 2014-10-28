@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('CartSrv', function(StorageSrv, PriceCalculator, _CartBuilder, _CartUtils){
+.factory('CartSrv', function(StorageSrv, PriceCalculator, CollectionUtils, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
     getCarts: StorageSrv.getCarts,
@@ -210,16 +210,18 @@ angular.module('app')
     StorageSrv.saveCart(cart);
 
     // update showed items
-    var foodId = product.foodId;
-    var item = foodId ? _.find(items, {food: {id: foodId}}) : _.find(items, {food: {id: 'unknown'}});
+    var item = _.find(items, {food: {id: product.foodId}});
     var itemProduct = item && item.products ? _.find(item.products, {barcode: product.barcode}) : null;
-    if(item && !itemProduct){
+    if(itemProduct){
+      // this update is automatic (code above)
+    } else if(item){
       if(!item.products){item.products = [];}
       item.products.push(cartNewProduct);
-    } else if(!item) {
+    } else {
+      var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
       items.push({
-        food: {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres'}},
-        products: [cartNewProduct]
+        food: food,
+        products: [product]
       });
     }
   }
@@ -234,13 +236,12 @@ angular.module('app')
     }
 
     // update showed items
-    var foodId = product.foodId;
-    var itemIndex = foodId ? _.findIndex(items, {food: {id: foodId}}) : _.findIndex(items, {food: {id: 'unknown'}});
+    var itemIndex = _.findIndex(items, {food: {id: product.foodId}});
     var item = items[itemIndex];
     var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: product.barcode}) : null;
     if(typeof itemProductIndex === 'number'){
       item.products.splice(itemProductIndex, 1);
-      if(item.products.length === 0){
+      if(CollectionUtils.isEmpty(item.products) && CollectionUtils.isEmpty(item.sources)){
         items.splice(itemIndex, 1);
       }
     }
@@ -268,7 +269,7 @@ angular.module('app')
 
 
 // this service should be used only on other services in this file !!!
-.factory('_CartUtils', function(_CartBuilder, PriceCalculator, QuantityCalculator){
+.factory('_CartUtils', function(_CartBuilder, PriceCalculator, QuantityCalculator, StorageSrv){
   'use strict';
   var service = {
     recipesToItems: recipesToItems,
@@ -291,19 +292,24 @@ angular.module('app')
 
   function itemsWithProducts(items, products){
     if(Array.isArray(products)){
+      var shouldSort = false;
       _.map(products, function(product){
-        var foodId = product.foodId;
-        var item = foodId ? _.find(items, {food: {id: foodId}}) : _.find(items, {food: {id: 'unknown'}});
+        var item = _.find(items, {food: {id: product.foodId}});
         if(item){
           if(!item.products){item.products = [];}
           item.products.push(product);
         } else {
+          shouldSort = true;
+          var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
           items.push({
-            food: {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres'}},
+            food: food,
             products: [product]
           });
         }
       });
+      if(shouldSort){
+        _sortItemsByCategory(items);
+      }
     }
     return items;
   }

@@ -1,11 +1,11 @@
 <ion-modal-view>
   <ion-header-bar class="bar-custom">
-    <h1 class="title">{{data.product.name}}</h1>
-    <button class="button button-clear" ng-click="fn.closeProductDetails()">&times;</button>
+    <h1 class="title">Produit scanné</h1>
   </ion-header-bar>
 
   <ion-content>
-    <div class="card product">
+    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
+    <div class="card product" ng-show="data.product">
       <div>
         <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
       </div>
@@ -18,11 +18,12 @@
         <h5>{{data.product.brand}}</h5>
       </div>
     </div>
-    <div class="card list" ng-if="data.foods">
-      <label class="item item-input item-select">
-        <div class="input-label">Ingrédient</div>
-        <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in data.foods track by food.id"></select>
-      </label>
-    </div>
   </ion-content>
+
+  <ion-footer-bar class="bar-dark" ng-show="data.product">
+    <div class="button-bar spaced">
+      <a class="button button-assertive" ng-click="fn.notAddToCart()">Reposer le produit</a>
+      <a class="button button-balanced" ng-click="fn.addToCart(data.product)">Ajouter au panier</a>
+    </div>
+  </ion-footer-bar>
 </ion-modal-view>
