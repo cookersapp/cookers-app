@@ -14,13 +14,13 @@ angular.module('app')
   }
 
   function pluginReady(fn){
-    $ionicPlatform.ready(function(){
-      if($window.cordova && $window.cordova.plugins && $window.cordova.plugins.barcodeScanner){
-        fn();
-      } else {
-        LogSrv.trackError('pluginNotFound:BarcodeScanner');
-      }
-    });
+    //$ionicPlatform.ready(function(){
+    if($window.cordova && $window.cordova.plugins && $window.cordova.plugins.barcodeScanner){
+      fn();
+    } else {
+      LogSrv.trackError('pluginNotFound:BarcodeScanner');
+    }
+    //});
   }
 
   return service;

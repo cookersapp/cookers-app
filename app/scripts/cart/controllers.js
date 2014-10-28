@@ -49,7 +49,7 @@ angular.module('app')
     productModal.remove();
   });
 
-  $scope.scan = function(){
+  $scope.scan = function(multi){
     ScanSrv.scan(function(result){
       //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
       if(!result.cancelled){
@@ -109,15 +109,20 @@ angular.module('app')
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, CartSrv, ItemsSrv, LogSrv){
+.controller('CartSelfscanCtrl', function($scope, $window, $state, CartSrv, ItemsSrv, LogSrv){
   'use strict';
   if(!$scope.cart.selfscan){
     $state.go('app.cart.ingredients');
   } else {
     ItemsSrv.loadCart($scope.cart);
     $scope.items = ItemsSrv.items;
-    //$scope.items = CartSrv.getItemsWithProducts($scope.cart);
     console.log('items', $scope.items);
+
+    $scope.unbuyProduct = function(product){
+      if($window.confirm('Supprimer du panier : '+product.name+' ?')){
+        CartSrv.unbuyProduct($scope.cart, $scope.items, product);
+      }
+    };
   }
 })
 

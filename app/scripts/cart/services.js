@@ -215,8 +215,26 @@ angular.module('app')
     }
   }
 
-  function unbuyProduct(cart, product){
-    // TODO
+  function unbuyProduct(cart, items, product){
+    if(cart.products){
+      var cartProductIndex = _.findIndex(cart.products, {barcode: product.barcode});
+      if(cartProductIndex){
+        cart.products.splice(cartProductIndex, 1);
+      }
+      StorageSrv.saveCart(cart);
+    }
+
+    // update showed items
+    var foodId = product.foodId;
+    var itemIndex = foodId ? _.findIndex(items, {food: {id: foodId}}) : _.findIndex(items, {food: {id: 'unknown'}});
+    var item = items[itemIndex];
+    var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: product.barcode}) : null;
+    if(itemProductIndex || itemProductIndex === 0){
+      item.products.splice(itemProductIndex, 1);
+      if(item.products.length === 0){
+        items.splice(itemIndex, 1);
+      }
+    }
   }
 
   function archive(cart){
