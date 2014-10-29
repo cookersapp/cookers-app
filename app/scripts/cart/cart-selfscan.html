@@ -8,7 +8,7 @@
 
           <div class="details">
             <div class="product" ng-repeat="product in item.products">
-              <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="fn.unbuyProduct(product)">&times;</button></div>
+              <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="fn.removeFromCart(product)">&times;</button></div>
               <div class="quantity pull-right">{{product.store.price | price:product.cartData.quantity}}</div>
               <div class="text" ng-click="fn.productDetails(product)"><b>{{product.cartData.quantity}} x</b> {{product.name}}</div>
             </div>

@@ -29,8 +29,9 @@ angular.module('app')
     removeRecipe: removeRecipe,
     buyItem: function(cart, item){buyItem(cart, item, true);},
     unbuyItem: function(cart, item){buyItem(cart, item, false);},
-    buyProduct: buyProduct,
-    unbuyProduct: unbuyProduct,
+    addProduct: addProduct,
+    removeProduct: removeProduct,
+    updateProduct: updateProduct,
     archive: archive
   };
 
@@ -188,7 +189,7 @@ angular.module('app')
     StorageSrv.saveCart(cart);
   }
 
-  function buyProduct(cart, items, product, quantity){
+  function addProduct(cart, product, quantity){
     if(!cart.products){cart.products = [];}
     var cartProduct = _.find(cart.products, {barcode: product.barcode});
     var cartNewProduct = _CartBuilder.createProduct(cart, product, quantity);
@@ -198,25 +199,9 @@ angular.module('app')
       cart.products.push(cartNewProduct);
     }
     StorageSrv.saveCart(cart);
-
-    // update showed items
-    var item = _.find(items, {food: {id: product.foodId}});
-    var itemProduct = item && item.products ? _.find(item.products, {barcode: product.barcode}) : null;
-    if(itemProduct){
-      // this update is automatic (code above)
-    } else if(item){
-      if(!item.products){item.products = [];}
-      item.products.push(cartNewProduct);
-    } else {
-      var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
-      items.push({
-        food: food,
-        products: [product]
-      });
-    }
   }
 
-  function unbuyProduct(cart, items, product){
+  function removeProduct(cart, product){
     if(cart.products){
       var cartProductIndex = _.findIndex(cart.products, {barcode: product.barcode});
       if(typeof cartProductIndex === 'number'){
@@ -224,16 +209,13 @@ angular.module('app')
       }
       StorageSrv.saveCart(cart);
     }
+  }
 
-    // update showed items
-    var itemIndex = _.findIndex(items, {food: {id: product.foodId}});
-    var item = items[itemIndex];
-    var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: product.barcode}) : null;
-    if(typeof itemProductIndex === 'number'){
-      item.products.splice(itemProductIndex, 1);
-      if(CollectionUtils.isEmpty(item.products) && CollectionUtils.isEmpty(item.sources)){
-        items.splice(itemIndex, 1);
-      }
+  function updateProduct(cart, product){
+    var cartProduct = _.find(cart.products, {barcode: product.barcode});
+    if(cartProduct){
+      angular.copy(product, cartProduct);
+      StorageSrv.saveCart(cart);
     }
   }
 
@@ -258,10 +240,13 @@ angular.module('app')
 })
 
 
-.factory('ItemUtils', function(PriceCalculator, QuantityCalculator, StorageSrv){
+.factory('ItemUtils', function(PriceCalculator, QuantityCalculator, StorageSrv, CollectionUtils, _CartBuilder){
   'use strict';
   var service = {
     fromCart: fromCart,
+    addProduct: addProduct,
+    addCartProduct: addCartProduct,
+    removeCartProduct: removeCartProduct,
     sort: sortItemsByCategory
   };
 
@@ -279,22 +264,49 @@ angular.module('app')
       }
       if(Array.isArray(cart.products)){
         _.map(cart.products, function(product){
-          var item = _.find(items, {food: {id: product.foodId}});
-          if(item){
-            if(!item.products){item.products = [];}
-            item.products.push(product);
-          } else {
-            var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
-            items.push({
-              food: food,
-              products: [product]
-            });
-          }
+          addCartProduct(items, product, false);
         });
       }
     }
     sortItemsByCategory(items);
     return items;
+  }
+
+  function addProduct(cart, items, product, quantity){
+    var cartProduct = _CartBuilder.createProduct(cart, product, quantity);
+    addCartProduct(items, cartProduct, true);
+  }
+
+  function addCartProduct(items, cartProduct, _sort){
+    var item = _.find(items, {food: {id: cartProduct.foodId}});
+    var itemProduct = item && item.products ? _.find(item.products, {barcode: cartProduct.barcode}) : null;
+    if(itemProduct){
+      itemProduct.cartData.quantity += cartProduct.cartData.quantity;
+    } else if(item){
+      if(!item.products){item.products = [];}
+      item.products.push(angular.copy(cartProduct));
+    } else {
+      var food = StorageSrv.getFood(cartProduct.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
+      items.push({
+        food: food,
+        products: [angular.copy(cartProduct)]
+      });
+      if(_sort === undefined || _sort === true){
+        sortItemsByCategory(items);
+      }
+    }
+  }
+
+  function removeCartProduct(items, cartProduct){
+    var itemIndex = _.findIndex(items, {food: {id: cartProduct.foodId}});
+    var item = items[itemIndex];
+    var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: cartProduct.barcode}) : null;
+    if(typeof itemProductIndex === 'number'){
+      item.products.splice(itemProductIndex, 1);
+      if(CollectionUtils.isEmpty(item.products) && CollectionUtils.isEmpty(item.sources)){
+        items.splice(itemIndex, 1);
+      }
+    }
   }
 
   function sortItemsByCategory(items){

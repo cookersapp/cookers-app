@@ -85,8 +85,8 @@ angular.module('app')
     });
   };
   fn.addToCart = function(product){
-    console.log('product', product);
-    CartSrv.buyProduct(data.cart, data.items, product, 1);
+    CartSrv.addProduct(data.cart, product, 1);
+    ItemUtils.addProduct(data.cart, data.items, product, 1);
     data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
     ToastSrv.show('✔ '+product.name+' acheté !');
     ui.scanModal.hide().then(function(){
@@ -97,6 +97,13 @@ angular.module('app')
     ui.scanModal.hide().then(function(){
       data.product = null;
     });
+  };
+  fn.removeFromCart = function(product){
+    if($window.confirm('Supprimer du panier : '+product.name+' ?')){
+      CartSrv.removeProduct(data.cart, product);
+      ItemUtils.removeCartProduct(data.items, product);
+      data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
+    }
   };
 
   $ionicModal.fromTemplateUrl('scripts/cart/partials/product-modal.html', {
@@ -126,46 +133,18 @@ angular.module('app')
     }
     ui.productModal.show();
   };
-  fn.updateProductFood = function(product, food){
-    var paramFood = food;
-    return ProductSrv.setFoodId(product.barcode, paramFood.id).then(function(){
-      // update showed items
-      var itemIndex = _.findIndex(data.items, {food: {id: product.foodId}});
-      var item = data.items[itemIndex];
-      var itemProductIndex = item && item.products ? _.findIndex(item.products, {barcode: product.barcode}) : null;
-      if(typeof itemProductIndex === 'number'){
-        item.products.splice(itemProductIndex, 1);
-        if(CollectionUtils.isEmpty(item.products) && CollectionUtils.isEmpty(item.sources)){
-          data.items.splice(itemIndex, 1);
-        }
-      }
-
-      var newItem = _.find(data.items, {food: {id: paramFood.id}});
-      var newItemProduct = newItem && newItem.products ? _.find(newItem.products, {barcode: product.barcode}) : null;
-      if(newItemProduct){
-        newItemProduct.cartData.quantity += product.cartData.quantity;
-      } else if(newItem){
-        if(!newItem.products){newItem.products = [];}
-        newItem.products.push(product);
-      } else {
-        var elt = StorageSrv.getFood(paramFood.id) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
-        data.items.push({
-          food: elt,
-          products: [product]
-        });
-      }
-      // TODO sort items
-
-      // update cart
-      product.foodId = paramFood.id;
-      StorageSrv.saveCart(data.cart);
+  fn.updateProductFood = function(cartProduct, food){
+    ProductSrv.setFoodId(cartProduct.barcode, food.id).then(function(){
+      ItemUtils.removeCartProduct(data.items, cartProduct);
+      cartProduct.foodId = food.id;
+      ItemUtils.addCartProduct(data.items, cartProduct);
+      CartSrv.updateProduct(data.cart, cartProduct);
+      ToastSrv.show(data.product.name+' est assigné comme '+food.name);
     });
   };
   $scope.$watch('data.updateProductFood', function(food){
     if(food && data.product && data.product.foodId !== food.id){
-      fn.updateProductFood(data.product, food).then(function(){
-        ToastSrv.show(data.product.name+' est assigné comme '+food.name);
-      });
+      fn.updateProductFood(data.product, food);
     }
   });
   fn.closeProductDetails = function(){
@@ -207,13 +186,6 @@ angular.module('app')
     data.items = ItemUtils.fromCart(data.cart);
     data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
     console.log('items', data.items);
-
-    fn.unbuyProduct = function(product){
-      if($window.confirm('Supprimer du panier : '+product.name+' ?')){
-        CartSrv.unbuyProduct(data.cart, data.items, product);
-        data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
-      }
-    };
   }
 })
 
