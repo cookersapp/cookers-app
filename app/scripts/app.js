@@ -80,14 +80,16 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     cfg: {
       imagesPlaceholders: imagesPlaceholders
     },
-    settings: user ? user.settings : null,
+    settings: user ? user.settings : {defaultServings: 2},
     debug: Config.debug,
     appVersion: Config.appVersion
   };
 
   LaunchSrv.launch().then(function(){
     user = StorageSrv.getUser();
-    $rootScope.ctx.settings = user ? user.settings : null;
+    if(user){
+      $rootScope.ctx.settings = user.settings;
+    }
   });
 
   // utils methods

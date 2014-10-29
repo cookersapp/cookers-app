@@ -16,8 +16,8 @@ angular.module('app')
     addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe
   };
 
-  function _hasOpenedCarts(){ return _.findIndex(StorageSrv.getCarts(), {archived: false}) > -1; };
-  function _getOpenedCarts(){ return _.filter(StorageSrv.getCarts(), {archived: false}); };
+  function _hasOpenedCarts(){ return _.findIndex(StorageSrv.getCarts(), {archived: false}) > -1; }
+  function _getOpenedCarts(){ return _.filter(StorageSrv.getCarts(), {archived: false}); }
   function getCart(id){ return _.find(StorageSrv.getCarts(), {id: id}); }
   function getCurrentCart(){
     var cart = _hasOpenedCarts() ? _getOpenedCarts()[0] : createCart();
@@ -89,7 +89,7 @@ angular.module('app')
 })
 
 
-.factory('CartUtils', function(PriceCalculator){
+.factory('CartUtils', function(PriceCalculator, StorageSrv, _CartUtils, _CartBuilder){
   'use strict';
   var service = {
     getEstimatedPrice: getEstimatedPrice,
@@ -388,7 +388,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($state, $window, CartUtils, ItemUtils, ProductSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -408,7 +408,7 @@ angular.module('app')
     };
     fn.activeSelfScan = function(){
       scope.data.cart.selfscan = true;
-      CartUtils.updateCart(scope.data.cart);
+      CartSrv.updateCart(scope.data.cart);
       $state.go('app.cart.selfscan');
       modal.self.hide();
     };
@@ -488,7 +488,7 @@ angular.module('app')
 
     fn.archiveCart = function(){
       if($window.confirm('Archiver cette liste ?')){
-        CartUtils.archive(data.cart);
+        CartUtils.archive(scope.data.cart);
         popover.self.remove();
         $state.go('app.home');
       }

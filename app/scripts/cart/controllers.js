@@ -59,7 +59,7 @@ angular.module('app')
   };
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, CartUtils, CartUiUtils, ItemUtils, BackendSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
