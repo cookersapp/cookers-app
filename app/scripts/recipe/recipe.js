@@ -54,7 +54,7 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, StorageSrv, CartSrv, ToastSrv, LogSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv){
   'use strict';
   $scope.loadSelection = function(){
     $scope.status = 'loading';
@@ -63,7 +63,7 @@ angular.module('app')
         for(var i in selection.recipes){
           var recipe = selection.recipes[i];
           if(!recipe._formated){recipe._formated = {};}
-          recipe._formated.isInCart = CartSrv.hasRecipe(cart, recipe);
+          recipe._formated.isInCart = CartUtils.hasRecipe(cart, recipe);
         }
         userShiftRecipes(selection.recipes, StorageSrv.getUserSetting('recipeShiftOffset'));
       }
@@ -76,7 +76,7 @@ angular.module('app')
 
   $scope.loadSelection();
   $scope.recipeShowIngredients = null;
-  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  var cart = CartSrv.getCurrentCart();
 
 
 
@@ -94,7 +94,7 @@ angular.module('app')
         LogSrv.trackAddRecipeToCart(recipe.id, servings, index);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
-        CartSrv.addRecipe(cart, recipe, servings);
+        CartUtils.addRecipe(cart, recipe, servings);
         recipe._formated.isInCart = true;
         ToastSrv.show('✔ recette ajoutée à la liste de courses');
         StorageSrv.addRecipeToHistory(recipe);
@@ -103,7 +103,7 @@ angular.module('app')
   };
   $scope.removeRecipeFromCart = function(recipe, index){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, index);
-    CartSrv.removeRecipe(cart, recipe);
+    CartUtils.removeRecipe(cart, recipe);
     recipe._formated.isInCart = false;
     ToastSrv.show('✔ recette supprimée de la liste de courses');
   };
@@ -123,16 +123,16 @@ angular.module('app')
   }
 })
 
-.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
   'use strict';
   var recipeId = $stateParams.recipeId;
   var recipeIndex = $stateParams.recipeIndex ? parseInt($stateParams.recipeIndex) : undefined;
-  var cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
+  var cart = CartSrv.getCurrentCart();
   LogSrv.trackShowRecipeDetails(recipeId, recipeIndex);
   BackendSrv.getRecipe(recipeId).then(function(recipe){
     StorageSrv.addRecipeToHistory(recipe);
     if(!recipe._formated){recipe._formated = {};}
-    recipe._formated.isInCart = CartSrv.hasRecipe(cart, recipe);
+    recipe._formated.isInCart = CartUtils.hasRecipe(cart, recipe);
     $scope.recipe = recipe;
   });
 
@@ -143,7 +143,7 @@ angular.module('app')
         LogSrv.trackAddRecipeToCart(recipe.id, servings, recipeIndex);
         $rootScope.ctx.settings.defaultServings = servings;
         StorageSrv.saveUserSetting('defaultServings', servings);
-        CartSrv.addRecipe(cart, recipe, servings);
+        CartUtils.addRecipe(cart, recipe, servings);
         recipe._formated.isInCart = true;
         ToastSrv.show('✔ recette ajoutée à la liste de courses');
       }
@@ -151,7 +151,7 @@ angular.module('app')
   };
   $scope.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, recipeIndex);
-    CartSrv.removeRecipe(cart, recipe);
+    CartUtils.removeRecipe(cart, recipe);
     recipe._formated.isInCart = false;
     ToastSrv.show('✔ recette supprimée de la liste de courses');
   };

@@ -1,18 +1,16 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, BackendSrv, CartSrv, ItemUtils, CartUiUtils, ScanSrv, ProductSrv, ToastSrv){
+.controller('CartCtrl', function($scope, $state, $window, BackendSrv, CartSrv, CartUtils, ItemUtils, CartUiUtils, ScanSrv, ProductSrv, ToastSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
   $scope.fn = fn;
   $scope.ui = ui;
 
-  data.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
-  if(!data.cart._formated){data.cart._formated = {};}
-  data.cart._formated.isEmpty = isEmpty(data.cart);
+  data.cart = CartSrv.getCurrentCart();
   data.items = ItemUtils.fromCart(data.cart);
-  data.estimatedPrice = CartSrv.getPrice(data.cart);
-  data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
+  data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+  data.totalProductsPrice = CartUtils.getShopPrice(data.cart);
 
   CartUiUtils.initStartSelfScanModal  ($scope).then(function(modal)   { ui.shopModal    = modal;    });
   CartUiUtils.initScanModal           ($scope).then(function(modal)   { ui.scanModal    = modal;    });
@@ -60,11 +58,12 @@ angular.module('app')
       $window.alert('Scanning failed: ' + error);
     });
   };
+
   fn.removeFromCart = function(product){
     if($window.confirm('Supprimer du panier : '+product.name+' ?')){
-      CartSrv.removeProduct(data.cart, product);
+      CartUtils.removeProduct(data.cart, product);
       ItemUtils.removeCartProduct(data.items, product);
-      data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
+      data.totalProductsPrice = CartUtils.getShopPrice(data.cart);
     }
   };
 
@@ -86,16 +85,9 @@ angular.module('app')
     }
     ui.productModal.show();
   };
-
-  function isEmpty(cart){
-    return !(cart && (
-      (cart.recipes && cart.recipes.length > 0) ||
-      (cart.customItems && cart.customItems.length > 0) ||
-      (cart.products && cart.products.length > 0)));
-  }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, CartSrv, ItemUtils){
+.controller('CartSelfscanCtrl', function($scope, $state, CartUtils, ItemUtils){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -105,18 +97,18 @@ angular.module('app')
     $state.go('app.cart.ingredients');
   } else {
     data.items = ItemUtils.fromCart(data.cart);
-    data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
+    data.totalProductsPrice = CartUtils.getShopPrice(data.cart);
   }
 })
 
-.controller('CartRecipesCtrl', function($scope, CartSrv, StorageSrv, ToastSrv, LogSrv){
+.controller('CartRecipesCtrl', function($scope, CartUtils, StorageSrv, ToastSrv, LogSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
 
   data.selectedRecipe = null;
-  data.estimatedPrice = CartSrv.getPrice(data.cart);
+  data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
 
   fn.toggleRecipe = function(recipe){
     if(data.selectedRecipe === recipe){
@@ -129,17 +121,17 @@ angular.module('app')
 
   fn.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
-    CartSrv.removeRecipe(data.cart, recipe);
+    CartUtils.removeRecipe(data.cart, recipe);
     ToastSrv.show('✔ recette supprimée de la liste de courses');
   };
 
   fn.updateServings = function(recipe, servingsValue){
     StorageSrv.saveCart(data.cart);
-    data.estimatedPrice = CartSrv.getPrice(data.cart);
+    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, ItemUtils, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, $state, CartUtils, ItemUtils, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -148,7 +140,7 @@ angular.module('app')
   if(data.cart.selfscan){
     $state.go('app.cart.selfscan');
   } else {
-    data.estimatedPrice = CartSrv.getPrice(data.cart);
+    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
     var user = StorageSrv.getUser();
     if(!(user && user.settings && user.settings.skipCartFeatures)){
       PopupSrv.tourCartFeatures().then(function(){
@@ -236,12 +228,12 @@ angular.module('app')
     };
     fn.buyItem = function(item){
       LogSrv.trackBuyItem(item.food.id, item.quantity);
-      CartSrv.buyItem(data.cart, item);
+      CartUtils.addItem(data.cart, item);
       ToastSrv.show('✔ '+item.food.name+' acheté !');
     };
     fn.unbuyItem = function(item){
       LogSrv.trackUnbuyItem(item.food.id);
-      CartSrv.unbuyItem(data.cart, item);
+      CartUtils.removeItem(data.cart, item);
     };
   }
 
