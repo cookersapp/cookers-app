@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $ionicPopover, $ionicModal, $window, $q, BackendSrv, CartSrv, ScanSrv, ProductSrv, ToastSrv, StorageSrv, CollectionUtils){
+.controller('CartCtrl', function($scope, $state, $ionicPopover, $ionicModal, $window, $q, BackendSrv, CartSrv, ItemUtils, ScanSrv, ProductSrv, ToastSrv, StorageSrv, CollectionUtils){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -10,7 +10,7 @@ angular.module('app')
   data.cart = CartSrv.hasOpenedCarts() ? CartSrv.getOpenedCarts()[0] : CartSrv.createCart();
   if(!data.cart._formated){data.cart._formated = {};}
   data.cart._formated.isEmpty = isEmpty(data.cart);
-  data.items = CartSrv.getItemsWithProducts(data.cart);
+  data.items = ItemUtils.fromCart(data.cart);
   data.estimatedPrice = CartSrv.getPrice(data.cart);
   data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
 
@@ -195,7 +195,7 @@ angular.module('app')
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $window, $state, CartSrv, LogSrv){
+.controller('CartSelfscanCtrl', function($scope, $window, $state, CartSrv, ItemUtils, LogSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -204,7 +204,7 @@ angular.module('app')
   if(!data.cart.selfscan){
     $state.go('app.cart.ingredients');
   } else {
-    data.items = CartSrv.getItemsWithProducts(data.cart);
+    data.items = ItemUtils.fromCart(data.cart);
     data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
     console.log('items', data.items);
 
@@ -247,7 +247,7 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, ItemUtils, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -270,7 +270,7 @@ angular.module('app')
       StorageSrv.saveCart(data.cart);
     }
     data.customItems = data.cart.customItems;
-    data.items = CartSrv.getItems(data.cart);
+    data.items = ItemUtils.fromCart(data.cart);
 
     data.editingCustomItems = false;
     data.customItemsText = '';

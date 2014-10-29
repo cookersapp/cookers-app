@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('CartSrv', function(StorageSrv, PriceCalculator, CollectionUtils, _CartBuilder, _CartUtils){
+.factory('CartSrv', function(StorageSrv, PriceCalculator, ItemUtils, CollectionUtils, _CartBuilder, _CartUtils){
   'use strict';
   var service = {
     getCarts: StorageSrv.getCarts,
@@ -12,19 +12,18 @@ angular.module('app')
     createCart: createCart,
     updateCart: updateCart,
     updateCartRecipe: updateCartRecipe,
-    /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
-    isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,*/
 
+    /*isRecipeExistInOpenedCart: isRecipeExistInOpenedCart,
+    isRecipeExistInAllOpenedCart: isRecipeExistInAllOpenedCart,
     recipesFromOpenedCarts: recipesFromOpenedCarts,
-    itemsFromOpenedCarts: itemsFromOpenedCarts,
+    itemsFromOpenedCarts: itemsFromOpenedCarts,*/
+
     getRecipesToCook: getRecipesToCook,
     getCookedRecipes: getCookedRecipes,
     addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe,
 
     getPrice: getPrice,
     getProductPrice: getProductPrice,
-    getItems: getItems,
-    getItemsWithProducts: getItemsWithProducts,
     hasRecipe: hasRecipe,
     addRecipe: addRecipe,
     removeRecipe: removeRecipe,
@@ -85,7 +84,7 @@ angular.module('app')
     var openedCarts = getOpenedCarts();
     var cartsWithRecipe = _cartsWithRecipe(openedCarts, recipe);
     return openedCarts.length === cartsWithRecipe.length;
-  }*/
+  }
 
   function recipesFromOpenedCarts(){
     return _recipesFromCarts(getOpenedCarts());
@@ -93,8 +92,8 @@ angular.module('app')
 
   function itemsFromOpenedCarts(){
     var recipes = recipesFromOpenedCarts();
-    return _CartUtils.recipesToItems(recipes);
-  }
+    return ItemUtils.recipesToItems(recipes);
+  }*/
 
   /*
    * if recipe.cartData.cooked is :
@@ -105,7 +104,7 @@ angular.module('app')
   function getRecipesToCook(order){
     var recipes = _recipesFromCarts(StorageSrv.getCarts());
     var ret = _.filter(recipes, {cartData: {cooked: false}});
-    if(order && typeof order === 'function' && ret && Array.isArray(ret)){
+    if(typeof order === 'function' && Array.isArray(ret)){
       ret.sort(order);
     }
     return ret;
@@ -118,7 +117,7 @@ angular.module('app')
     });
     var standaloneCookedRecipes = StorageSrv.getStandaloneCookedRecipes();
     var ret = cartCookedRecipes.concat(standaloneCookedRecipes);
-    if(order && typeof order === 'function' && ret && Array.isArray(ret)){
+    if(typeof order === 'function' && Array.isArray(ret)){
       ret.sort(order);
     }
     return ret;
@@ -161,15 +160,6 @@ angular.module('app')
     } else {
       return zero;
     }
-  }
-
-  function getItems(cart){
-    return _CartUtils.recipesToItems(cart.recipes);
-  }
-
-  function getItemsWithProducts(cart){
-    var items = _CartUtils.recipesToItems(cart.recipes);
-    return _CartUtils.itemsWithProducts(items, cart.products);
   }
 
   function hasRecipe(cart, recipe){
@@ -268,78 +258,59 @@ angular.module('app')
 })
 
 
-// this service should be used only on other services in this file !!!
-.factory('_CartUtils', function(_CartBuilder, PriceCalculator, QuantityCalculator, StorageSrv){
+.factory('ItemUtils', function(PriceCalculator, QuantityCalculator, StorageSrv){
   'use strict';
   var service = {
-    recipesToItems: recipesToItems,
-    itemsWithProducts: itemsWithProducts,
-    boughtPercentage: boughtPercentage
+    fromCart: fromCart,
+    sort: sortItemsByCategory
   };
 
-  function recipesToItems(recipes){
+  function fromCart(cart){
     var items = [];
-    _.map(recipes, function(recipe){
-      _.map(recipe.ingredients, function(ingredient){
-        var item = _.find(items, {food: {id: ingredient.food.id}});
-        if(item){ _addSourceToItem(item, ingredient, recipe); }
-        else { items.push(_createItem(ingredient, recipe)); }
-      });
-    });
-    _sortItemsByCategory(items);
-    return items;
-  }
-
-  function itemsWithProducts(items, products){
-    if(Array.isArray(products)){
-      var shouldSort = false;
-      _.map(products, function(product){
-        var item = _.find(items, {food: {id: product.foodId}});
-        if(item){
-          if(!item.products){item.products = [];}
-          item.products.push(product);
-        } else {
-          shouldSort = true;
-          var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
-          items.push({
-            food: food,
-            products: [product]
+    if(cart){
+      if(Array.isArray(cart.recipes)){
+        _.map(cart.recipes, function(recipe){
+          _.map(recipe.ingredients, function(ingredient){
+            var item = _.find(items, {food: {id: ingredient.food.id}});
+            if(item){ _addSourceToItem(item, ingredient, recipe); }
+            else { items.push(_createItem(ingredient, recipe)); }
           });
-        }
-      });
-      if(shouldSort){
-        _sortItemsByCategory(items);
+        });
+      }
+      if(Array.isArray(cart.products)){
+        _.map(cart.products, function(product){
+          var item = _.find(items, {food: {id: product.foodId}});
+          if(item){
+            if(!item.products){item.products = [];}
+            item.products.push(product);
+          } else {
+            var food = StorageSrv.getFood(product.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
+            items.push({
+              food: food,
+              products: [product]
+            });
+          }
+        });
       }
     }
+    sortItemsByCategory(items);
     return items;
   }
 
-  function boughtPercentage(recipe){
-    if(recipe && recipe.cartData && recipe.ingredients && recipe.ingredients.length > 0){
-      var ingredientBought = 0;
-      for(var i in recipe.ingredients){
-        if(recipe.ingredients[i].bought){
-          ingredientBought++;
-        }
-      }
-      return 100 * ingredientBought / recipe.ingredients.length;
-    } else {
-      return 100;
+  function sortItemsByCategory(items){
+    if(Array.isArray(items)){
+      items.sort(function(a, b){
+        var aCategory = a && a.food && a.food.category && a.food.category.order ? a.food.category.order : 50;
+        var bCategory = b && b.food && b.food.category && b.food.category.order ? b.food.category.order : 50;
+        var aName = a && a.name ? a.name.toLowerCase() : '';
+        var bName = b && b.name ? b.name.toLowerCase() : '';
+        if(aCategory > bCategory){return 1;}
+        else if(aCategory < bCategory){return -1;}
+        else if(aName > bName){return 1;}
+        else if(aName < bName){return -1;}
+        else {return 0;}
+      });
     }
-  }
-
-  function _sortItemsByCategory(items){
-    items.sort(function(a, b){
-      var aCategory = a && a.food && a.food.category && a.food.category.order ? a.food.category.order : 50;
-      var bCategory = b && b.food && b.food.category && b.food.category.order ? b.food.category.order : 50;
-      var aName = a && a.name ? a.name.toLowerCase() : '';
-      var bName = b && b.name ? b.name.toLowerCase() : '';
-      if(aCategory > bCategory){return 1;}
-      else if(aCategory < bCategory){return -1;}
-      else if(aName > bName){return 1;}
-      else if(aName < bName){return -1;}
-      else {return 0;}
-    });
   }
 
   function _createItem(ingredient, recipe){
@@ -372,7 +343,30 @@ angular.module('app')
 })
 
 
-// this service should be used only on other services in this file !!!
+.factory('_CartUtils', function(){
+  'use strict';
+  var service = {
+    boughtPercentage: boughtPercentage
+  };
+
+  function boughtPercentage(recipe){
+    if(recipe && recipe.cartData && recipe.ingredients && recipe.ingredients.length > 0){
+      var ingredientBought = 0;
+      for(var i in recipe.ingredients){
+        if(recipe.ingredients[i].bought){
+          ingredientBought++;
+        }
+      }
+      return 100 * ingredientBought / recipe.ingredients.length;
+    } else {
+      return 100;
+    }
+  }
+
+  return service;
+})
+
+
 .factory('_CartBuilder', function(Utils){
   'use strict';
   var service = {
