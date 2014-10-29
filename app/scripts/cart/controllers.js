@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $ionicPopover, $ionicModal, $window, $q, BackendSrv, CartSrv, ItemUtils, ScanSrv, ProductSrv, ToastSrv, StorageSrv, CollectionUtils){
+.controller('CartCtrl', function($scope, $state, $window, BackendSrv, CartSrv, ItemUtils, CartUiUtils, ScanSrv, ProductSrv, ToastSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -14,15 +14,10 @@ angular.module('app')
   data.estimatedPrice = CartSrv.getPrice(data.cart);
   data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
 
-  $ionicModal.fromTemplateUrl('scripts/cart/partials/shop-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal){
-    ui.shopModal = modal;
-  });
-  $scope.$on('$destroy', function(){
-    ui.shopModal.remove();
-  });
+  CartUiUtils.initStartSelfScanModal  ($scope).then(function(modal)   { ui.shopModal    = modal;    });
+  CartUiUtils.initScanModal           ($scope).then(function(modal)   { ui.scanModal    = modal;    });
+  CartUiUtils.initProductModal        ($scope).then(function(modal)   { ui.productModal = modal;    });
+  CartUiUtils.initCartOptions         ($scope).then(function(popover) { ui.popover      = popover;  });
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
@@ -35,25 +30,6 @@ angular.module('app')
       ui.shopModal.show();
     }
   };
-  fn.cancelSelfScan = function(){
-    ui.shopModal.hide();
-  };
-  fn.activeSelfScan = function(){
-    data.cart.selfscan = true;
-    CartSrv.updateCart(data.cart);
-    $state.go('app.cart.selfscan');
-    ui.shopModal.hide();
-  };
-
-  $ionicModal.fromTemplateUrl('scripts/cart/partials/scan-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal){
-    ui.scanModal = modal;
-  });
-  $scope.$on('$destroy', function(){
-    ui.scanModal.remove();
-  });
 
   fn.scan = function(multi){
     var startScan = Date.now();
@@ -84,20 +60,6 @@ angular.module('app')
       $window.alert('Scanning failed: ' + error);
     });
   };
-  fn.addToCart = function(product){
-    CartSrv.addProduct(data.cart, product, 1);
-    ItemUtils.addProduct(data.cart, data.items, product, 1);
-    data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
-    ToastSrv.show('✔ '+product.name+' acheté !');
-    ui.scanModal.hide().then(function(){
-      data.product = null;
-    });
-  };
-  fn.notAddToCart = function(product){
-    ui.scanModal.hide().then(function(){
-      data.product = null;
-    });
-  };
   fn.removeFromCart = function(product){
     if($window.confirm('Supprimer du panier : '+product.name+' ?')){
       CartSrv.removeProduct(data.cart, product);
@@ -106,15 +68,6 @@ angular.module('app')
     }
   };
 
-  $ionicModal.fromTemplateUrl('scripts/cart/partials/product-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal){
-    ui.productModal = modal;
-  });
-  $scope.$on('$destroy', function(){
-    ui.productModal.remove();
-  });
   fn.productDetails = function(product){
     data.product = product;
     data.updateProductFood = {id: product.foodId};
@@ -133,38 +86,6 @@ angular.module('app')
     }
     ui.productModal.show();
   };
-  fn.updateProductFood = function(cartProduct, food){
-    ProductSrv.setFoodId(cartProduct.barcode, food.id).then(function(){
-      ItemUtils.removeCartProduct(data.items, cartProduct);
-      cartProduct.foodId = food.id;
-      ItemUtils.addCartProduct(data.items, cartProduct);
-      CartSrv.updateProduct(data.cart, cartProduct);
-      ToastSrv.show(data.product.name+' est assigné comme '+food.name);
-    });
-  };
-  $scope.$watch('data.updateProductFood', function(food){
-    if(food && data.product && data.product.foodId !== food.id){
-      fn.updateProductFood(data.product, food);
-    }
-  });
-  fn.closeProductDetails = function(){
-    data.product = null;
-    ui.productModal.hide();
-  };
-
-  $ionicPopover.fromTemplateUrl('scripts/cart/partials/cart-popover.html', {
-    scope: $scope
-  }).then(function(popover){
-    ui.popover = popover;
-  });
-
-  fn.archiveCart = function(){
-    if($window.confirm('Archiver cette liste ?')){
-      CartSrv.archive(data.cart);
-      ui.popover.remove();
-      $state.go('app.home');
-    }
-  };
 
   function isEmpty(cart){
     return !(cart && (
@@ -174,7 +95,7 @@ angular.module('app')
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $window, $state, CartSrv, ItemUtils, LogSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, CartSrv, ItemUtils){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -185,7 +106,6 @@ angular.module('app')
   } else {
     data.items = ItemUtils.fromCart(data.cart);
     data.totalProductsPrice = CartSrv.getProductPrice(data.cart);
-    console.log('items', data.items);
   }
 })
 

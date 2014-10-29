@@ -355,6 +355,122 @@ angular.module('app')
 })
 
 
+.factory('CartUiUtils', function($state, $window, CartSrv, ItemUtils, ProductSrv, ToastSrv, IonicUi){
+  'use strict';
+  var service = {
+    initStartSelfScanModal: initStartSelfScanModal,
+    initScanModal: initScanModal,
+    initProductModal: initProductModal,
+    initCartOptions: initCartOptions
+  };
+
+  function initStartSelfScanModal($scope){
+    var scope = $scope.$new();
+    var fn = {};
+    var modal = {fn: fn};
+    scope.modal = modal;
+
+    fn.cancelSelfScan = function(){
+      modal.self.hide();
+    };
+    fn.activeSelfScan = function(){
+      scope.data.cart.selfscan = true;
+      CartSrv.updateCart(scope.data.cart);
+      $state.go('app.cart.selfscan');
+      modal.self.hide();
+    };
+
+    return IonicUi.initModal(scope, 'scripts/cart/partials/shop-modal.html').then(function(modal){
+      scope.modal.self = modal;
+      return modal;
+    });
+  }
+
+  function initScanModal($scope){
+    var scope = $scope.$new();
+    var fn = {};
+    var modal = {fn: fn};
+    scope.modal = modal;
+
+    fn.addToCart = function(product){
+      CartSrv.addProduct(scope.data.cart, product, 1);
+      ItemUtils.addProduct(scope.data.cart, scope.data.items, product, 1);
+      scope.data.totalProductsPrice = CartSrv.getProductPrice(scope.data.cart);
+      ToastSrv.show('✔ '+product.name+' acheté !');
+      modal.self.hide().then(function(){
+        scope.data.product = null;
+      });
+    };
+    fn.notAddToCart = function(){
+      console.log('notAddToCart');
+      modal.self.hide().then(function(){
+        scope.data.product = null;
+      });
+    };
+
+    return IonicUi.initModal(scope, 'scripts/cart/partials/scan-modal.html').then(function(modal){
+      scope.modal.self = modal;
+      return modal;
+    });
+  }
+
+  function initProductModal($scope){
+    var scope = $scope.$new();
+    var fn = {};
+    var modal = {fn: fn};
+    scope.modal = modal;
+
+    scope.$watch('data.updateProductFood', function(food){
+      if(food && scope.data.product && scope.data.product.foodId !== food.id){
+        updateProductFood(scope.data.product, food);
+      }
+    });
+    function updateProductFood(cartProduct, food){
+      ProductSrv.setFoodId(cartProduct.barcode, food.id).then(function(){
+        ItemUtils.removeCartProduct(scope.data.items, cartProduct);
+        cartProduct.foodId = food.id;
+        ItemUtils.addCartProduct(scope.data.items, cartProduct);
+        CartSrv.updateProduct(scope.data.cart, cartProduct);
+        ToastSrv.show(scope.data.product.name+' est assigné comme '+food.name);
+      });
+    }
+
+    fn.close = function(){
+      modal.self.hide().then(function(){
+        scope.data.product = null;
+      });
+    };
+
+    return IonicUi.initModal(scope, 'scripts/cart/partials/product-modal.html').then(function(modal){
+      scope.modal.self = modal;
+      return modal;
+    });
+  }
+
+  function initCartOptions($scope){
+    var scope = $scope.$new();
+    var fn = {};
+    var popover = {fn: fn};
+    scope.popover = popover;
+
+    fn.archiveCart = function(){
+      if($window.confirm('Archiver cette liste ?')){
+        CartSrv.archive(data.cart);
+        popover.self.remove();
+        $state.go('app.home');
+      }
+    };
+
+    return IonicUi.initPopover(scope, 'scripts/cart/partials/cart-popover.html').then(function(popover){
+      scope.popover.self = popover;
+      return popover;
+    });
+  }
+
+  return service;
+})
+
+
 .factory('_CartUtils', function(){
   'use strict';
   var service = {
