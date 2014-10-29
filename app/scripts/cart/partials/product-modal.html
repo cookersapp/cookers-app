@@ -24,5 +24,16 @@
         <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in data.foods track by food.id"></select>
       </label>
     </div>
+    <div class="card list">
+      <div class="item" style="white-space: normal;">Rating: {{data.product.rating.value | rating:data.product.rating.max:true}}</div>
+      <div class="item" style="white-space: normal;">Catégorie: {{data.product.category}}</div>
+      <div class="item" style="white-space: normal;">Quantité: {{data.product.quantity | quantity}}</div>
+      <div class="item" style="white-space: normal;">Labels: <span ng-repeat="label in data.product.labels"><br>{{label}}</span></div>
+      <div class="item" style="white-space: normal;">Ingrédients: <ul><li ng-repeat="ingredient in data.product.ingredients">{{ingredient}}</li></ul></div>
+      <div class="item" style="white-space: normal;">Additifs: <span ng-repeat="additive in data.product.additives"><br>{{additive.name}}</span></div>
+      <div class="item" style="white-space: normal;">Description: {{data.product.infos.description}}</div>
+      <div class="item" style="white-space: normal;">Astuce: {{data.product.infos.tips}}</div>
+      <div class="item" style="white-space: normal;">Mots clé: <span ng-repeat="keyword in data.product.keywords"><br>{{keyword}}</span></div>
+    </div>
   </ion-content>
 </ion-modal-view>

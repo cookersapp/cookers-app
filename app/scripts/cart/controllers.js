@@ -36,7 +36,7 @@ angular.module('app')
         var scanDone = Date.now();
         ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
         var barcode = result.text;
-        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533'];
+        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
         ui.scanModal.show().then(function(){
           return ProductSrv.getWithStore('demo', barcode);
