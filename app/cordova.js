@@ -1,6 +1,4 @@
 if(!window.plugins){window.plugins = {};}
-if(!window.cordova){window.cordova = {plugins: {}};}
-
 
 // for plugin https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
 window.plugins.toast = {
@@ -74,13 +72,18 @@ window.plugins.DeviceAccounts = {
   getEmail: function(onSuccess, onFail){ onSuccess(/*'test@example.com'*/); }
 };
 
-window.cordova.plugins.barcodeScanner = {
-  scan: function(success, fail){
-    var barcode = window.prompt('barcode :');
-    if(barcode == null){
-      if(success){success({ text: null, format: null, cancelled: true });}
-    } else {
-      if(success){success({ text: barcode, format: 'text', cancelled: false });}
+// add property cordova with a delay because it prevents deviceready to get fired !!!
+setTimeout(function(){
+  if(!window.cordova){window.cordova = {plugins: {}};}
+
+  window.cordova.plugins.barcodeScanner = {
+    scan: function(success, fail){
+      var barcode = window.prompt('barcode :');
+      if(barcode == null){
+        if(success){success({ text: null, format: null, cancelled: true });}
+      } else {
+        if(success){success({ text: barcode, format: 'text', cancelled: false });}
+      }
     }
-  }
-};
+  };
+}, 1000);
