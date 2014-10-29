@@ -324,6 +324,70 @@ angular.module('app')
 })
 
 
+.factory('CustomItemUtils', function(StorageSrv, LogSrv, Utils){
+  'use strict';
+  var service = {
+    compatibility: compatibility,
+    toList: toList,
+    toText: toText
+  };
+
+  function compatibility(cart){
+    // this is for compatibility with previous versions where customItems were saved as text !
+    if(!Array.isArray(cart.customItems)){
+      cart.customItems = toList(cart.customItems);
+      StorageSrv.saveCart(cart);
+    }
+  }
+
+  function toList(customItems){
+    if(typeof customItems === 'string'){
+      return _.filter(_.map(customItems.split('\n'), function(item){
+        var name = item.trim();
+        if(name.length > 0){
+          if(Utils.endsWith(name, ' ok')){
+            return {bought: true, name: name.replace(/ ok/g, '')};
+          } else {
+            return {bought: false, name: name};
+          }
+        }
+      }), function(item){
+        return item && item.name && item.name.length > 0;
+      });
+    } else if(Array.isArray(customItems)){
+      return angular.copy(customItems);
+    } else {
+      LogSrv.trackError('cartCustomItemsError', {
+        message: 'Can\'t parse customItems',
+        customItems: angular.copy(customItems)
+      });
+    }
+  }
+
+  function toText(customItems){
+    var ret = '';
+    if(typeof customItems === 'string'){
+      ret = angular.copy(customItems.trim());
+    } else if(Array.isArray(customItems)){
+      ret = _.map(customItems, function(item){
+        return item.name+(item.bought ? ' ok' : '');
+      }).join('\n');
+    } else {
+      LogSrv.trackError('cartCustomItemsError', {
+        message: 'Can\'t parse customItems',
+        customItems: angular.copy(customItems)
+      });
+    }
+    if(ret !== ''){
+      ret = ret+'\n';
+    }
+    return ret;
+  }
+
+  return service;
+})
+
+
 .factory('CartUiUtils', function($state, $window, CartUtils, ItemUtils, ProductSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
@@ -364,7 +428,7 @@ angular.module('app')
     fn.addToCart = function(product){
       CartUtils.addProduct(scope.data.cart, product, 1);
       ItemUtils.addProduct(scope.data.cart, scope.data.items, product, 1);
-      scope.data.totalProductsPrice = CartUtils.getShopPrice(scope.data.cart);
+      scope.data.shopPrice = CartUtils.getShopPrice(scope.data.cart);
       ToastSrv.show('✔ '+product.name+' acheté !');
       modal.self.hide().then(function(){
         scope.data.product = null;

@@ -1,17 +1,17 @@
 <div>
   <div class="list card add-product">
     <div class="item item-input">
-      <textarea msd-elastic blur-on-keyboard-out="fn.saveCustomItems()" ng-model="data.customItemsText" ng-click="fn.editCustomItems()"
+      <textarea msd-elastic blur-on-keyboard-out="customItems.fn.save()" ng-model="customItems.data.text" ng-click="customItems.fn.edit()"
                 rows="1" placeholder="Penser à acheter ..." ng-disabled="data.cart.archived"></textarea>
     </div>
-    <div class="item" ng-show="data.editingCustomItems">
-      <button class="button button-small pull-right button-positive" ng-click="fn.saveCustomItems()">Enregistrer</button>
-      <button class="button button-small" ng-click="fn.cancelCustomItems()">Annuler</button>
+    <div class="item" ng-show="customItems.data.editing">
+      <button class="button button-small pull-right button-positive" ng-click="customItems.fn.save()">Enregistrer</button>
+      <button class="button button-small" ng-click="customItems.fn.cancel()">Annuler</button>
     </div>
-    <div class="list to-buy" ng-show="!data.editingCustomItems && data.customItems && data.customItems.length > 0 && fn.cartHasCustomItemsToBuy()">
-      <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.customItems" ng-show="!item.bought">
+    <div class="list to-buy" ng-show="!customItems.data.editing && data.cart.customItems && data.cart.customItems.length > 0 && fn.cartHasCustomItemsToBuy()">
+      <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.cart.customItems" ng-show="!item.bought">
         <div class="check pull-right">
-          <div class="box" ng-click="fn.buyCustomItem(item)"></div>
+          <div class="box" ng-click="fn.customItem.buy(item)"></div>
         </div>
         <div class="text" bo-bind="item.name"></div>
       </div>
@@ -43,9 +43,9 @@
           <div class="check pull-right">
             <div class="box" ng-click="fn.buyItem(item)"></div>
           </div>
-          <div class="text" ng-click="fn.toggleItem(item)" bo-bind="item | ingredient"></div>
+          <div class="text" ng-click="openedItems.fn.toggleItem(item)" bo-bind="item | ingredient"></div>
 
-          <div class="details" ng-show="fn.isOpened(item)">
+          <div class="details" ng-show="openedItems.fn.isOpened(item)">
             <div class="source" ng-class="{'source-bought': source.ingredient.bought}" bindonce ng-repeat="source in item.sources">
               <div class="quantity pull-right" bo-bind="source.quantity | quantity"></div>
               <div class="text" bo-bind="source.recipe.name+' ('+(source.recipe.cartData.servings | servings)+')'"></div>
@@ -55,9 +55,9 @@
       </div>
 
       <div class="list bought">
-        <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.customItems" ng-show="item.bought">
+        <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.cart.customItems" ng-show="item.bought">
           <div class="check pull-right">
-            <div class="box" ng-click="fn.unbuyCustomItem(item)">✔</div>
+            <div class="box" ng-click="fn.customItem.unbuy(item)">✔</div>
           </div>
           <div class="text" bo-bind="item.name"></div>
         </div>
