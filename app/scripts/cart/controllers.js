@@ -40,7 +40,7 @@ angular.module('app')
         var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
         ui.scanModal.show().then(function(){
-          return ProductSrv.getWithStore('demo', barcode);
+          return ProductSrv.getWithStore(data.cart.store.id, barcode);
         }).then(function(product){
           var productShowed = Date.now();
           ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
@@ -99,6 +99,10 @@ angular.module('app')
         });
       }
       ui.productModal.show();
+    };
+
+    fn.checkout = function(){
+
     };
   }
 })

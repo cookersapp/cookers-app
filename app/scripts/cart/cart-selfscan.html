@@ -1,20 +1,18 @@
-<div>
-  <div class="screen">
-    <div class="cart-price">Total : {{data.shopPrice | price}}</div>
-    <div>
-      <div class="list card to-buy">
-        <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in data.items">
-          <div class="text" bo-bind="item | ingredient"></div>
-
-          <div class="details">
-            <div class="product" ng-repeat="product in item.products">
-              <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="fn.removeFromCart(product)">&times;</button></div>
-              <div class="quantity pull-right">{{product.store.price | price:product.cartData.quantity}}</div>
-              <div class="text" ng-click="fn.productDetails(product)"><b>{{product.cartData.quantity}} x</b> {{product.name}}</div>
-            </div>
-          </div>
+<div class="screen">
+  <div class="cart-price">Total : {{data.shopPrice | price}}</div>
+  <div class="list card to-buy">
+    <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in data.items">
+      <div class="text" bo-bind="item | ingredient"></div>
+      <div class="details">
+        <div class="product" ng-repeat="product in item.products">
+          <div class="actions pull-right"><button class="button button-clear button-xs button-assertive" ng-click="fn.removeFromCart(product)">&times;</button></div>
+          <div class="quantity pull-right">{{product.store.price | price:product.cartData.quantity}}</div>
+          <div class="text" ng-click="fn.productDetails(product)"><b>{{product.cartData.quantity}} x</b> {{product.name}}</div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="checkout" ng-show="data.cart.products && data.cart.products.length > 0">
+    <button class="button button-custom" ng-click="fn.checkout()">Terminer et Payer</button>
   </div>
 </div>

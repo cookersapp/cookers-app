@@ -405,18 +405,22 @@ angular.module('app')
     scope.modal = modal;
 
     StoreSrv.getAll().then(function(stores){
-      console.log('stores', stores);
+      data.stores = stores;
     });
 
     fn.cancelSelfScan = function(){
       modal.self.hide();
     };
     fn.activeSelfScan = function(store){
-      scope.data.cart.selfscan = true;
-      scope.data.cart.store = store;
-      CartSrv.updateCart(scope.data.cart);
-      $state.go('app.cart.selfscan');
-      modal.self.hide();
+      if(store && store.id){
+        scope.data.cart.selfscan = true;
+        scope.data.cart.store = store;
+        CartSrv.updateCart(scope.data.cart);
+        $state.go('app.cart.selfscan');
+        modal.self.hide();
+      } else {
+        $window.alert('Error: unknown store: '+JSON.stringify(store));
+      }
     };
 
     return IonicUi.initModal(scope, 'scripts/cart/partials/shop-modal.html').then(function(modal){
@@ -441,7 +445,6 @@ angular.module('app')
       });
     };
     fn.notAddToCart = function(){
-      console.log('notAddToCart');
       modal.self.hide().then(function(){
         scope.data.product = null;
       });
