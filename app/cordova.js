@@ -32,12 +32,12 @@ window.Media = function(src, mediaSuccess, mediaError, mediaStatus){
   // mediaError: (Optional) The callback that executes if an error occurs. (Function)
   // mediaStatus: (Optional) The callback that executes to indicate status changes. (Function)
 
-  if (typeof Audio !== "function" && typeof Audio !== "object") {
-    console.warn("HTML5 Audio is not supported in this browser");
+  if (typeof Audio !== 'function' && typeof Audio !== 'object') {
+    console.warn('HTML5 Audio is not supported in this browser');
   }
   var sound = new Audio();
   sound.src = src;
-  sound.addEventListener("ended", mediaSuccess, false);
+  sound.addEventListener('ended', mediaSuccess, false);
   sound.load();
 
   return {
@@ -77,6 +77,7 @@ setTimeout(function(){
   if(!window.cordova){window.cordova = {plugins: {}};}
 
   window.cordova.plugins.barcodeScanner = {
+    Encode: {TEXT_TYPE: 'TEXT_TYPE', EMAIL_TYPE: 'EMAIL_TYPE', PHONE_TYPE: 'PHONE_TYPE', SMS_TYPE: 'SMS_TYPE'},
     scan: function(success, fail){
       var barcode = window.prompt('barcode :');
       if(barcode == null){
@@ -84,6 +85,9 @@ setTimeout(function(){
       } else {
         if(success){success({ text: barcode, format: 'text', cancelled: false });}
       }
+    },
+    encode: function (type, data, successCallback, errorCallback, options){
+
     }
   };
 }, 1000);

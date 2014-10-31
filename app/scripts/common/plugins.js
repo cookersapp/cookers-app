@@ -1,15 +1,31 @@
 angular.module('app')
 
 // for BarcodeScanner plugin : https://github.com/wildabeast/BarcodeScanner.git
-.factory('ScanSrv', function($window, $ionicPlatform, LogSrv){
+.factory('BarcodeSrv', function($window, $ionicPlatform, LogSrv){
   'use strict';
   var service = {
-    scan: scan
+    scan: scan,
+    encode: encode
   };
 
   function scan(success, error){
     pluginReady(function(){
       $window.cordova.plugins.barcodeScanner.scan(success, error);
+    });
+  }
+
+  function encode(){
+    // Not Working !!!
+    pluginReady(function(){
+      $window.cordova.plugins.barcodeScanner.encode(
+        'TEXT_TYPE', // TEXT_TYPE, EMAIL_TYPE, PHONE_TYPE, SMS_TYPE
+        'http://www.nytimes.com',
+        function(success){
+          console.log('encode success: ', success);
+        },
+        function(fail){
+          console.log('encoding failed: ', fail);
+        });
     });
   }
 

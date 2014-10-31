@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, ScanSrv, ProductSrv, ToastSrv){
+.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -31,7 +31,7 @@ angular.module('app')
 
   fn.scan = function(multi){
     var startScan = Date.now();
-    ScanSrv.scan(function(result){
+    BarcodeSrv.scan(function(result){
       //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
       if(!result.cancelled){
         var scanDone = Date.now();
@@ -60,7 +60,7 @@ angular.module('app')
   };
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv, BarcodeSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -102,7 +102,8 @@ angular.module('app')
     };
 
     fn.checkout = function(){
-
+      $window.alert('TODO...');
+      //BarcodeSrv.encode();
     };
   }
 })
