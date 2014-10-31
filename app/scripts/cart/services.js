@@ -388,7 +388,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -400,14 +400,20 @@ angular.module('app')
   function initStartSelfScanModal($scope){
     var scope = $scope.$new();
     var fn = {};
-    var modal = {fn: fn};
+    var data = {};
+    var modal = {fn: fn, data: data};
     scope.modal = modal;
+
+    StoreSrv.getAll().then(function(stores){
+      console.log('stores', stores);
+    });
 
     fn.cancelSelfScan = function(){
       modal.self.hide();
     };
-    fn.activeSelfScan = function(){
+    fn.activeSelfScan = function(store){
       scope.data.cart.selfscan = true;
+      scope.data.cart.store = store;
       CartSrv.updateCart(scope.data.cart);
       $state.go('app.cart.selfscan');
       modal.self.hide();

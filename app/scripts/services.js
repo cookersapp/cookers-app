@@ -114,8 +114,12 @@ angular.module('app')
       from: email,
       content: feedback,
       source: 'mobile-app'
-    }).then(function(result){
-      return result.data === 'sent';
+    }).then(function(res){
+      if(res && res.data){
+        if(res.data.data){ return res.data.data === 'sent'; }
+        else { return res.data === 'sent'; }
+      }
+      return false;
     });
   }
 

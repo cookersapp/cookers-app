@@ -19,7 +19,8 @@ angular.module('app')
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
       if($window.confirm('Abandonner le self-scan ?')){
-        data.cart.selfscan = false;
+        delete data.cart.selfscan;
+        delete data.cart.store;
         CartSrv.updateCart(data.cart);
         $state.go('app.cart.ingredients');
       }

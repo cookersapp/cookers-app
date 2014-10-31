@@ -1,26 +1,19 @@
 angular.module('app')
 
-.factory('BackendUserSrv', function($q, $http, LogSrv, Config, _LocalStorageSrv){
+.factory('BackendUserSrv', function($http, Config){
   'use strict';
   var service = {
-    getUser: getUser,
     findUser: findUser,
     updateUserSetting: updateUserSetting,
     setUserDevice: setUserDevice
   };
 
-  function getUser(id){
-    return $http.get(Config.backendUrl+'/api/v1/users/'+id).then(function(result){
-      return result.data;
-    });
-  }
-
   function findUser(email){
-    var user = _LocalStorageSrv.getUser();
-    var welcomeEmailSent = user && user.data && user.data.welcomeMailSent ? user.data.welcomeMailSent : false;
-    var mailSentParam = welcomeEmailSent ? '&welcomeEmailSent='+welcomeEmailSent : '';
-    return $http.get(Config.backendUrl+'/api/v1/users/find?email='+email+mailSentParam).then(function(result){
-      return result.data;
+    return $http.get(Config.backendUrl+'/api/v1/users/find?email='+email).then(function(res){
+      if(res && res.data){
+        if(res.data.data){ return res.data.data; }
+        else { return res.data; }
+      }
     });
   }
 
@@ -183,29 +176,42 @@ angular.module('app')
 .factory('ProductSrv', function($http, Config){
   'use strict';
   var service = {
-    get: get,
-    getWithStore: getWithStore,
-    setFoodId: setFoodId
+    getAll        : function(barcode)         { return _get('/api/v1/products/'+barcode);                   },
+    getWithStore  : function(store, barcode)  { return _get('/api/v1/stores/'+store+'/products/'+barcode);  },
+    setFoodId     : function(barcode, foodId) { return _put('/api/v1/products/'+barcode+'?foodId='+foodId); }
   };
 
-  function get(barcode){
-    return $http.get(Config.backendUrl+'/api/v1/products/'+barcode).then(function(res){
+  function _get(url){
+    return $http.get(Config.backendUrl+url).then(function(res){
       if(res && res.data && res.data.data){
         return res.data.data;
       }
     });
   }
 
-  function getWithStore(store, barcode){
-    return $http.get(Config.backendUrl+'/api/v1/stores/'+store+'/products/'+barcode).then(function(res){
+  function _put(url){
+    return $http.put(Config.backendUrl+url).then(function(res){
       if(res && res.data && res.data.data){
         return res.data.data;
       }
     });
   }
 
-  function setFoodId(barcode, foodId){
-    return $http.put(Config.backendUrl+'/api/v1/products/'+barcode+'?foodId='+foodId);
+  return service;
+})
+
+.factory('StoreSrv', function($http, Config){
+  'use strict';
+  var service = {
+    getAll: function(){ return _get('/api/v1/stores'); }
+  };
+
+  function _get(url){
+    return $http.get(Config.backendUrl+url).then(function(res){
+      if(res && res.data && res.data.data){
+        return res.data.data;
+      }
+    });
   }
 
   return service;
