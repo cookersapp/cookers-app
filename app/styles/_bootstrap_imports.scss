@@ -77,18 +77,36 @@ button.close {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.progress-bar-success {
-  background-color: #5cb85c;
+.progress-bar-success { background-color: #5cb85c; }
+.progress-bar-info    { background-color: #5bc0de; }
+.progress-bar-warning { background-color: #f0ad4e; }
+.progress-bar-danger  { background-color: #d9534f; }
+
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
 }
-.progress-bar-info {
-  background-color: #5bc0de;
-}
-.progress-bar-warning {
-  background-color: #f0ad4e;
-}
-.progress-bar-danger {
-  background-color: #d9534f;
-}
+.label-default  { background-color: #777; }
+.label-primary  { background-color: #428bca; }
+.label-success  { background-color: #5cb85c; }
+.label-info     { background-color: #5bc0de; }
+.label-warning  { background-color: #f0ad4e; }
+.label-danger   { background-color: #d9534f; }
+
+.text-muted   { color: #777; }
+.text-primary { color: #428bca; }
+.text-success { color: #3c763d; }
+.text-info    { color: #31708f; }
+.text-warning { color: #8a6d3b; }
+.text-danger  { color: #a94442; }
 
 .form-control {
   display: block;
