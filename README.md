@@ -151,21 +151,6 @@ Screenshot gallery inspiration :
 - newsletter : [customer.io](http://customer.io/)
 - cordova plugins : http://plugreg.com/plugins and http://plugins.cordova.io/
 
-# Changelog
+## See
 
-## v0.3.2
-
-- prix pour la liste de courses
-- optimisation de performance
-- meilleur rendu sur les écrans étroits
-- correction de quelques bug
-
-## v0.3.0
-
-- écran de cuisine
-- recettes à cuisiner et recettes cuisinées
-- améliorations design
-
-## v0.2.0
-
-- l'écran de s'éteint plus sur la ingrédients de la liste de course (quand on est au magasin) et sur le détail d'une recette (quand on cuisine)
+- http://modernweb.com/category/mobile/phonegap/

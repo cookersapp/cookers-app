@@ -392,7 +392,6 @@ angular.module('app')
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
-    initScanModal: initScanModal,
     initProductModal: initProductModal,
     initCartOptions: initCartOptions
   };
@@ -429,37 +428,11 @@ angular.module('app')
     });
   }
 
-  function initScanModal($scope){
+  function initProductModal($scope, scan){
     var scope = $scope.$new();
     var fn = {};
-    var modal = {fn: fn};
-    scope.modal = modal;
-
-    fn.addToCart = function(product){
-      CartUtils.addProduct(scope.data.cart, product, 1);
-      ItemUtils.addProduct(scope.data.cart, scope.data.items, product, 1);
-      scope.data.shopPrice = CartUtils.getShopPrice(scope.data.cart);
-      ToastSrv.show('✔ '+product.name+' acheté !');
-      modal.self.hide().then(function(){
-        scope.data.product = null;
-      });
-    };
-    fn.notAddToCart = function(){
-      modal.self.hide().then(function(){
-        scope.data.product = null;
-      });
-    };
-
-    return IonicUi.initModal(scope, 'scripts/cart/partials/scan-modal.html').then(function(modal){
-      scope.modal.self = modal;
-      return modal;
-    });
-  }
-
-  function initProductModal($scope){
-    var scope = $scope.$new();
-    var fn = {};
-    var modal = {fn: fn};
+    var data = {};
+    var modal = {fn: fn, data: data};
     scope.modal = modal;
 
     scope.$watch('data.updateProductFood', function(food){
@@ -475,6 +448,28 @@ angular.module('app')
         CartUtils.updateProduct(scope.data.cart, cartProduct);
         ToastSrv.show(scope.data.product.name+' est assigné comme '+food.name);
       });
+    }
+
+    data.scan = scan;
+    if(scan){
+      data.title = 'Produit scanné';
+      fn.addToCart = function(product){
+        CartUtils.addProduct(scope.data.cart, product, 1);
+        ItemUtils.addProduct(scope.data.cart, scope.data.items, product, 1);
+        scope.data.shopPrice = CartUtils.getShopPrice(scope.data.cart);
+        ToastSrv.show('✔ '+product.name+' acheté !');
+        modal.self.hide().then(function(){
+          scope.data.product = null;
+        });
+      };
+      fn.notAddToCart = function(){
+        modal.self.hide().then(function(){
+          scope.data.product = null;
+        });
+      };
+    } else {
+      data.title = 'Produit acheté';
+
     }
 
     fn.close = function(){

@@ -30,20 +30,40 @@ angular.module('app')
       name: '@',
       level: '='
     },
-    template: '<div ng-show="level" class="{{color}}"><i class="fa {{icon}}"></i> {{name}}</div>',
+    template: '<div ng-show="level" class="nutrition {{level}}"><i class="fa {{icon}}"></i> {{name}}</div>',
     link: function(scope, element, attrs){
       if(scope.level === 'low'){
         scope.icon = 'fa-smile-o';
-        scope.color = 'text-success';
       } else if(scope.level === 'moderate'){
         scope.icon = 'fa-meh-o';
-        scope.color = 'text-warning';
       } else if(scope.level === 'high'){
         scope.icon = 'fa-frown-o';
-        scope.color = 'text-danger';
       } else {
         scope.icon = 'fa-circle-thin';
-        scope.color = 'text-muted';
+      }
+    }
+  };
+})
+
+.directive('additif', function (){
+  'use strict';
+  return {
+    restrict: 'E',
+    scope: {
+      data: '='
+    },
+    template: '<span class="additive danger{{data.danger.level}}">'+
+    '<i class="fa {{icon}}"></i> {{data.fullName}} <span ng-show="data.category">({{data.category}})</span>'+
+    '</span>',
+    link: function(scope, element, attrs){
+      if(scope.data.danger.level === 1 || scope.data.danger.level === 2){
+        scope.icon = 'fa-smile-o';
+      } else if(scope.data.danger.level === 3 || scope.data.danger.level === 4){
+        scope.icon = 'fa-meh-o';
+      } else if(scope.data.danger.level === 5 || scope.data.danger.level === 6){
+        scope.icon = 'fa-frown-o';
+      } else {
+        scope.icon = 'fa-circle-thin';
       }
     }
   };

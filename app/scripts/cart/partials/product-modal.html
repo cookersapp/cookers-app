@@ -1,39 +1,83 @@
 <ion-modal-view>
   <ion-header-bar class="bar-custom">
-    <h1 class="title">Produit acheté</h1>
-    <button class="button button-clear" ng-click="modal.fn.close()">Annuler</button>
+    <h1 class="title">{{modal.data.title}}</h1>
+    <button class="button button-clear" ng-click="modal.fn.close()" ng-show="!modal.data.scan">Annuler</button>
   </ion-header-bar>
 
   <ion-content>
-    <div class="card product">
-      <div>
-        <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
+    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
+    <div ng-show="data.product">
+      <div class="card product">
+        <div>
+          <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
+        </div>
+        <div class="padding pull-right">
+          <h4 style="white-space: nowrap;">{{data.product.store.price | price}}</h4>
+          <h5 style="white-space: nowrap;">{{data.product.store.genericPrice | price}}</h5>
+        </div>
+        <div class="padding">
+          <h4>{{data.product.name}}</h4>
+          <h5>{{data.product.brand}}</h5>
+        </div>
       </div>
-      <div class="padding pull-right">
-        <h4 style="white-space: nowrap;">{{data.product.store.price | price}}</h4>
-        <h5 style="white-space: nowrap;">{{data.product.store.genericPrice | price}}</h5>
+      <div class="card list" ng-show="data.foods">
+        <label class="item item-input item-select">
+          <div class="input-label">Ingrédient</div>
+          <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in data.foods track by food.id"></select>
+        </label>
       </div>
-      <div class="padding">
-        <h4>{{data.product.name}}</h4>
-        <h5>{{data.product.brand}}</h5>
+      <div class="card padding" ng-show="data.product && data.product.labels">
+        Labels :
+        <span ng-repeat="label in data.product.labels">
+          <span class="label label-success">{{label}}</span>
+        </span>
       </div>
-    </div>
-    <div class="card list" ng-if="data.foods">
-      <label class="item item-input item-select">
-        <div class="input-label">Ingrédient</div>
-        <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in data.foods track by food.id"></select>
-      </label>
-    </div>
-    <div class="card list">
-      <div class="item" style="white-space: normal;">Rating: {{data.product.rating.value | rating:data.product.rating.max:true}}</div>
-      <div class="item" style="white-space: normal;">Catégorie: {{data.product.category}}</div>
-      <div class="item" style="white-space: normal;">Quantité: {{data.product.quantity | quantity}}</div>
-      <div class="item" style="white-space: normal;">Labels: <span ng-repeat="label in data.product.labels"><br>{{label}}</span></div>
-      <div class="item" style="white-space: normal;">Ingrédients: <ul><li ng-repeat="ingredient in data.product.ingredients">{{ingredient}}</li></ul></div>
-      <div class="item" style="white-space: normal;">Additifs: <span ng-repeat="additive in data.product.additives"><br>{{additive.name}}</span></div>
-      <div class="item" style="white-space: normal;">Description: {{data.product.infos.description}}</div>
-      <div class="item" style="white-space: normal;">Astuce: {{data.product.infos.tips}}</div>
-      <div class="item" style="white-space: normal;">Mots clé: <span ng-repeat="keyword in data.product.keywords"><br>{{keyword}}</span></div>
+      <div class="card padding" ng-if="data.product && data.product.nutrition">
+        <nutrition-grade grade="data.product.nutrition.grade"></nutrition-grade>
+        <div ng-if="data.product.nutrition.levels">
+          <nutrition-level name="Sel" level="data.product.nutrition.levels.salt"></nutrition-level>
+          <nutrition-level name="Matières grasses" level="data.product.nutrition.levels.fat"></nutrition-level>
+          <nutrition-level name="Sucres" level="data.product.nutrition.levels.sugars"></nutrition-level>
+          <nutrition-level name="Matières grasses saturées" level="data.product.nutrition.levels['saturated-fat']"></nutrition-level>
+        </div>
+        <!--<div>
+<i class="fa fa-circle"></i> <i class="fa fa-bullseye"></i> <i class="fa fa-dot-circle-o"></i> <i class="fa fa-circle-o"></i><br>
+<i class="fa fa-smile-o"></i> <i class="fa fa-meh-o"></i> <i class="fa fa-frown-o"></i> <i class="fa fa-circle-thin"></i><br>
+<i class="fa fa-thumbs-up"></i> <i class="fa fa-thumbs-down"></i> <i class="fa fa-thumbs-o-up"></i> <i class="fa fa-thumbs-o-down"></i><br>
+<i class="fa fa-exclamation-triangle"></i> <i class="fa fa-times-circle"></i> <i class="fa fa-times-circle-o"></i> <i class="fa fa-ban"></i> <i class="fa fa-minus-circle"></i> <i class="fa fa-check-circle"></i> <i class="fa fa-check-circle-o"></i><br>
+</div>-->
+      </div>
+      <div class="card padding" ng-show="data.product && data.product.additives">
+        Additifs :
+        <div ng-repeat="additive in data.product.additives">
+          <additif data="additive"></additif>
+        </div>
+      </div>
+      <div class="card padding" ng-show="data.product && data.product.traces">
+        Traces : <span ng-repeat="trace in data.product.traces">{{trace}}<span ng-show="!$last">, </span></span>
+      </div>
+      <div class="card padding" ng-show="data.product && data.product.infos">
+        <div ng-show="data.product.infos.description">Informations :<br>{{data.product.infos.description}}</div>
+        <div ng-show="data.product.infos.tips">Astuces :<br>{{data.product.infos.tips}}</div>
+      </div>
+      <!--<div class="card list">
+<div class="item" style="white-space: normal;">Rating: {{data.product.rating.value | rating:data.product.rating.max:true}}</div>
+<div class="item" style="white-space: normal;">Catégorie: {{data.product.category}}</div>
+<div class="item" style="white-space: normal;">Quantité: {{data.product.quantity | quantity}}</div>
+<div class="item" style="white-space: normal;">Labels: <span ng-repeat="label in data.product.labels"><br>{{label}}</span></div>
+<div class="item" style="white-space: normal;">Ingrédients: <ul><li ng-repeat="ingredient in data.product.ingredients">{{ingredient}}</li></ul></div>
+<div class="item" style="white-space: normal;">Additifs: <span ng-repeat="additive in data.product.additives"><br>{{additive.name}}</span></div>
+<div class="item" style="white-space: normal;">Description: {{data.product.infos.description}}</div>
+<div class="item" style="white-space: normal;">Astuce: {{data.product.infos.tips}}</div>
+<div class="item" style="white-space: normal;">Mots clé: <span ng-repeat="keyword in data.product.keywords"><br>{{keyword}}</span></div>
+</div>-->
     </div>
   </ion-content>
+
+  <ion-footer-bar class="bar-dark" ng-show="modal.data.scan && data.product">
+    <div class="button-bar spaced">
+      <a class="button button-assertive" ng-click="modal.fn.notAddToCart()">Reposer le produit</a>
+      <a class="button button-balanced" ng-click="modal.fn.addToCart(data.product)">Ajouter au panier</a>
+    </div>
+  </ion-footer-bar>
 </ion-modal-view>

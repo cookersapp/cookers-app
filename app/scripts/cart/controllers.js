@@ -12,9 +12,9 @@ angular.module('app')
   data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   data.shopPrice = CartUtils.getShopPrice(data.cart);
 
-  CartUiUtils.initStartSelfScanModal  ($scope).then(function(modal)   { ui.shopModal    = modal;    });
-  CartUiUtils.initScanModal           ($scope).then(function(modal)   { ui.scanModal    = modal;    });
-  CartUiUtils.initCartOptions         ($scope).then(function(popover) { ui.popover      = popover;  });
+  CartUiUtils.initStartSelfScanModal  ($scope       ).then(function(modal)   { ui.shopModal    = modal;    });
+  CartUiUtils.initProductModal        ($scope, true ).then(function(modal)   { ui.scanModal    = modal;    });
+  CartUiUtils.initCartOptions         ($scope       ).then(function(popover) { ui.popover      = popover;  });
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
@@ -70,7 +70,7 @@ angular.module('app')
   if(!data.cart.selfscan){
     $state.go('app.cart.ingredients');
   } else {
-    CartUiUtils.initProductModal($scope).then(function(modal){
+    CartUiUtils.initProductModal($scope, false).then(function(modal){
       ui.productModal = modal;
     });
 
