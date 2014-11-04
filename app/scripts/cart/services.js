@@ -461,11 +461,13 @@ angular.module('app')
         ToastSrv.show('✔ '+product.name+' acheté !');
         modal.self.hide().then(function(){
           scope.data.product = null;
+          scope.data.updateProductFood = null;
         });
       };
       fn.notAddToCart = function(){
         modal.self.hide().then(function(){
           scope.data.product = null;
+          scope.data.updateProductFood = null;
         });
       };
     } else {
@@ -476,6 +478,7 @@ angular.module('app')
     fn.close = function(){
       modal.self.hide().then(function(){
         scope.data.product = null;
+        scope.data.updateProductFood = null;
       });
     };
 

@@ -31,7 +31,6 @@ angular.module('app')
   fn.scan = function(multi){
     var startScan = Date.now();
     BarcodeSrv.scan(function(result){
-      //alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
       if(!result.cancelled){
         var scanDone = Date.now();
         ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
@@ -45,6 +44,7 @@ angular.module('app')
           ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
           if(product && product.name){
             data.product = product;
+            data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
           } else {
             $window.alert('Product not found :(');
             ui.scanModal.hide();
@@ -59,7 +59,7 @@ angular.module('app')
   };
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $timeout, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv, BarcodeSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv, BarcodeSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -84,10 +84,9 @@ angular.module('app')
     };
 
     fn.productDetails = function(product){
-      ui.productModal.show();
-      $timeout(function(){
+      ui.productModal.show().then(function(){
         data.product = product;
-        data.updateProductFood = {id: product.foodId};
+        data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
         if(!data.foods){
           BackendSrv.getFoods().then(function(foods){
             data.foods = [];
@@ -101,7 +100,7 @@ angular.module('app')
             });
           });
         }
-      }, 400);
+      });
     };
 
     fn.checkout = function(){
