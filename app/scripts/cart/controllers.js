@@ -8,7 +8,6 @@ angular.module('app')
   $scope.ui = ui;
 
   data.cart = CartSrv.getCurrentCart();
-  data.items = ItemUtils.fromCart(data.cart);
   data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   data.shopPrice = CartUtils.getShopPrice(data.cart);
 
@@ -37,7 +36,7 @@ angular.module('app')
         var scanDone = Date.now();
         ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
         var barcode = result.text;
-        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177'];
+        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
         ui.scanModal.show().then(function(){
           return ProductSrv.getWithStore(data.cart.store.id, barcode);
@@ -60,7 +59,7 @@ angular.module('app')
   };
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv, BarcodeSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $timeout, $window, CartUtils, CartUiUtils, ItemUtils, BackendSrv, BarcodeSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -70,6 +69,8 @@ angular.module('app')
   if(!data.cart.selfscan){
     $state.go('app.cart.ingredients');
   } else {
+    data.items = ItemUtils.fromCart(data.cart);
+
     CartUiUtils.initProductModal($scope, false).then(function(modal){
       ui.productModal = modal;
     });
@@ -83,22 +84,24 @@ angular.module('app')
     };
 
     fn.productDetails = function(product){
-      data.product = product;
-      data.updateProductFood = {id: product.foodId};
-      if(!data.foods){
-        BackendSrv.getFoods().then(function(foods){
-          data.foods = [];
-          for(var i in foods){
-            data.foods.push(foods[i]);
-          }
-          data.foods.sort(function(a,b){
-            if(a.name > b.name){return 1; }
-            else if(a.name < b.name){ return -1; }
-            else { return 0; }
-          });
-        });
-      }
       ui.productModal.show();
+      $timeout(function(){
+        data.product = product;
+        data.updateProductFood = {id: product.foodId};
+        if(!data.foods){
+          BackendSrv.getFoods().then(function(foods){
+            data.foods = [];
+            for(var i in foods){
+              data.foods.push(foods[i]);
+            }
+            data.foods.sort(function(a,b){
+              if(a.name > b.name){return 1; }
+              else if(a.name < b.name){ return -1; }
+              else { return 0; }
+            });
+          });
+        }
+      }, 400);
     };
 
     fn.checkout = function(){
@@ -153,6 +156,8 @@ angular.module('app')
         StorageSrv.saveUserSetting('skipCartFeatures', true);
       });
     }
+
+    data.items = ItemUtils.fromCart(data.cart);
 
     CustomItemUtils.compatibility(data.cart);
     var customItems = {

@@ -250,6 +250,7 @@ angular.module('app')
     var item = _.find(items, {food: {id: cartProduct.foodId}});
     var itemProduct = item && item.products ? _.find(item.products, {barcode: cartProduct.barcode}) : null;
     if(itemProduct){
+      // TODO : cartData is undefined when the ingredient previously failed to load !?!?!?!?
       itemProduct.cartData.quantity += cartProduct.cartData.quantity;
     } else if(item){
       if(!item.products){item.products = [];}
