@@ -1,7 +1,7 @@
 <ion-modal-view>
   <ion-header-bar class="bar-custom">
-    <h1 class="title">{{modal.data.title}}</h1>
-    <button class="button button-clear" ng-click="modal.fn.close()" ng-show="modal.data.scan !== 'scan'">Annuler</button>
+    <h1 class="title">{{data.title}}</h1>
+    <button class="button button-clear" ng-click="fn.close('cancel')">Annuler</button>
   </ion-header-bar>
 
   <ion-content>
@@ -50,12 +50,12 @@
       <div class="card padding" ng-show="data.product && data.product.traces">
         Traces : <span ng-repeat="trace in data.product.traces">{{trace}}<span ng-show="!$last">, </span></span>
       </div>
-      <div class="card list" ng-show="modal.data.foods">
+      <!--<div class="card list" ng-show="modal.data.foods">
         <label class="item item-input item-select">
           <div class="input-label">Ingrédient</div>
           <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in modal.data.foods track by food.id"></select>
         </label>
-      </div>
+      </div>-->
       <div class="card padding" ng-show="data.product && data.product.infos">
         <div ng-show="data.product.infos.description">Informations :<br>{{data.product.infos.description}}</div>
         <div ng-show="data.product.infos.tips">Astuces :<br>{{data.product.infos.tips}}</div>
@@ -74,10 +74,10 @@
     </div>
   </ion-content>
 
-  <ion-footer-bar class="bar-dark" ng-show="modal.data.scan === 'scan' && data.product">
+  <ion-footer-bar class="bar-dark" ng-show="data.product && data.buyBar !== false">
     <div class="button-bar spaced">
-      <a class="button button-assertive" ng-click="modal.fn.notAddToCart()">Reposer le produit</a>
-      <a class="button button-balanced" ng-click="modal.fn.addToCart(data.product)">Ajouter au panier</a>
+      <a class="button button-assertive" ng-click="fn.close('notBought')">Reposer le produit</a>
+      <a class="button button-balanced" ng-click="fn.close('bought')">Ajouter au panier</a>
     </div>
   </ion-footer-bar>
 </ion-modal-view>

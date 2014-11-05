@@ -389,7 +389,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, BackendSrv, ProductSrv, StoreSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, BackendSrv, ProductSrv, StoreSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -429,20 +429,21 @@ angular.module('app')
     });
   }
 
-  function initProductModal($scope, scan){
-    var scope = $scope.$new();
-    var fn = {};
-    var data = {};
-    var modal = {fn: fn, data: data};
-    scope.modal = modal;
 
-    scope.$watch('data.updateProductFood', function(food){
-      if(food && scope.data.product && scope.data.product.foodId !== food.id){
-        updateProductFood(scope.data.product, food);
+  function initProductModal(){
+    var data = {}, fn = {};
+    var scope = $rootScope.$new(true);
+    scope.data = data;
+    scope.fn = fn;
+
+    /*scope.$watch('data.updateProductFood', function(food){
+      if(food && data.product && data.product.foodId !== food.id){
+        updateProductFood(data.product, food);
       }
     });
     function updateProductFood(cartProduct, food){
       ProductSrv.setFoodId(cartProduct.barcode, food.id).then(function(){
+        // TODO : should access to controller items & cart...
         ItemUtils.removeCartProduct(scope.data.items, cartProduct);
         cartProduct.foodId = food.id;
         ItemUtils.addCartProduct(scope.data.items, cartProduct);
@@ -450,64 +451,51 @@ angular.module('app')
         ToastSrv.show(scope.data.product.name+' est assigné comme '+food.name);
       });
     }
-
-    /*
-     * 'scan' values :
-     *  - 'scan'    : scan a product with self-scan
-     *  - 'details' : show details of bought product via self-scan
-     *  - 'info'    : show product infos in shopping list
-     */
-    data.scan = scan;
-    if(scan === 'scan'){
-      data.title = 'Produit scanné';
-      fn.addToCart = function(product){
-        CartUtils.addProduct(scope.data.cart, product, 1);
-        ItemUtils.addProduct(scope.data.cart, scope.data.items, product, 1);
-        scope.data.shopPrice = CartUtils.getShopPrice(scope.data.cart);
-        ToastSrv.show('✔ '+product.name+' acheté !');
-        modal.self.hide().then(function(){
-          scope.data.product = null;
-          scope.data.updateProductFood = null;
-        });
-      };
-      fn.notAddToCart = function(){
-        modal.self.hide().then(function(){
-          scope.data.product = null;
-          scope.data.updateProductFood = null;
-        });
-      };
-    } else if(scan === 'details'){
-      data.title = 'Produit acheté';
-    } else if(scan === 'info'){
-      data.title = 'Produit scanné';
-    }
-
-    if(!data.foods && scan !== 'info'){
-      BackendSrv.getFoods().then(function(foods){
-        data.foods = [];
-        for(var i in foods){
-          data.foods.push(foods[i]);
-        }
-        data.foods.sort(function(a,b){
-          if(a.name > b.name){return 1; }
-          else if(a.name < b.name){ return -1; }
-          else { return 0; }
-        });
+    BackendSrv.getFoods().then(function(foods){
+      data.foods = [];
+      for(var i in foods){
+        data.foods.push(foods[i]);
+      }
+      data.foods.sort(function(a,b){
+        if(a.name > b.name){return 1; }
+        else if(a.name < b.name){ return -1; }
+        else { return 0; }
       });
-    }
-
-    fn.close = function(){
-      modal.self.hide().then(function(){
-        scope.data.product = null;
-        scope.data.updateProductFood = null;
-      });
-    };
+    });*/
 
     return IonicUi.initModal(scope, 'scripts/cart/partials/product-modal.html').then(function(modal){
-      scope.modal.self = modal;
-      return modal;
+      return {
+        open: function(opts){
+          var startTime = Date.now(), modalShowedTime = null, productLoadedTime = null;
+
+          fn.close = function(action){
+            modal.hide().then(function(){
+              if(opts.callback){opts.callback(action, data.product);}
+              data.product = null;
+              //data.updateProductFood = null;
+            });
+          };
+          data.title = opts.title;
+          data.buyBar = opts.buyBar;
+
+          return modal.show().then(function(){
+            modalShowedTime = Date.now();
+            console.log('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');
+            return opts.product ? opts.product : (opts.store ? ProductSrv.getWithStore(opts.store, opts.barcode) : ProductSrv.get(opts.barcode));
+          }).then(function(product){
+            productLoadedTime = Date.now();
+            console.log('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');
+            data.product = product;
+            //data.updateProductFood = {id: product.food.id};
+          }, function(err){
+            $window.alert('err: '+JSON.stringify(err));
+            modal.hide();
+          });
+        }
+      };
     });
   }
+
 
   function initCartOptions($scope){
     var scope = $scope.$new();

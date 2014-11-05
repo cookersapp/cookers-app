@@ -11,9 +11,9 @@ angular.module('app')
   data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   data.shopPrice = CartUtils.getShopPrice(data.cart);
 
-  CartUiUtils.initStartSelfScanModal  ($scope         ).then(function(modal)   { ui.shopModal    = modal;    });
-  CartUiUtils.initProductModal        ($scope, 'scan' ).then(function(modal)   { ui.scanModal    = modal;    });
-  CartUiUtils.initCartOptions         ($scope         ).then(function(popover) { ui.popover      = popover;  });
+  CartUiUtils.initStartSelfScanModal  ($scope ).then(function(modal)   { ui.shopModal    = modal;    });
+  CartUiUtils.initProductModal        (       ).then(function(modal)   { ui.productModal = modal;    });
+  CartUiUtils.initCartOptions         ($scope ).then(function(popover) { ui.popover      = popover;  });
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
@@ -37,20 +37,19 @@ angular.module('app')
         var barcode = result.text;
         var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
-        ui.scanModal.show().then(function(){
-          return ProductSrv.getWithStore(data.cart.store.id, barcode);
-        }).then(function(product){
-          var productShowed = Date.now();
-          ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
-          if(product && product.name){
-            data.product = product;
-            data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
-          } else {
-            $window.alert('Product not found :(');
-            ui.scanModal.hide();
+
+        ui.productModal.open({
+          title: 'Produit scanné',
+          store: data.cart.store.id,
+          barcode: barcode,
+          callback: function(action, product){
+            if(action === 'bought'){
+              CartUtils.addProduct(data.cart, product, 1);
+              ItemUtils.addProduct(data.cart, data.items, product, 1);
+              data.shopPrice = CartUtils.getShopPrice(data.cart);
+              ToastSrv.show('✔ '+product.name+' acheté !');
+            }
           }
-        }, function(err){
-          $window.alert('err: '+JSON.stringify(err));
         });
       }
     }, function(error){
@@ -71,10 +70,6 @@ angular.module('app')
   } else {
     data.items = ItemUtils.fromCart(data.cart);
 
-    CartUiUtils.initProductModal($scope, 'details').then(function(modal){
-      ui.productModal = modal;
-    });
-
     fn.removeFromCart = function(product){
       if($window.confirm('Supprimer du panier : '+product.name+' ?')){
         CartUtils.removeProduct(data.cart, product);
@@ -84,22 +79,10 @@ angular.module('app')
     };
 
     fn.productDetails = function(product){
-      ui.productModal.show().then(function(){
-        data.product = product;
-        data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
-        if(!data.foods){
-          BackendSrv.getFoods().then(function(foods){
-            data.foods = [];
-            for(var i in foods){
-              data.foods.push(foods[i]);
-            }
-            data.foods.sort(function(a,b){
-              if(a.name > b.name){return 1; }
-              else if(a.name < b.name){ return -1; }
-              else { return 0; }
-            });
-          });
-        }
+      ui.productModal.open({
+        title: 'Produit acheté',
+        buyBar: false,
+        product: product
       });
     };
 
@@ -145,12 +128,7 @@ angular.module('app')
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
-  var ui = {};
-  $scope.ui = ui;
-
-  CartUiUtils.initProductModal($scope, 'info').then(function(modal){
-    ui.scanModal = modal;
-  });
+  var ui = $scope.ui;
 
   if(data.cart.selfscan){
     $state.go('app.cart.selfscan');
@@ -263,24 +241,19 @@ angular.module('app')
       BarcodeSrv.scan(function(result){
         if(!result.cancelled){
           var scanDone = Date.now();
-          ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
+          console.log('Scanned in '+(scanDone-startScan)+' ms');
           var barcode = result.text;
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
           barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
-          ui.scanModal.show().then(function(){
-            return ProductSrv.get(barcode);
-          }).then(function(product){
-            var productShowed = Date.now();
-            ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
-            if(product && product.name){
-              data.product = product;
-              data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
-            } else {
-              $window.alert('Product not found :(');
-              ui.scanModal.hide();
+
+          ui.productModal.open({
+            title: 'Produit scanné',
+            barcode: barcode,
+            callback: function(action, product){
+              if(action === 'bought'){
+                fn.buyItem(item);
+              }
             }
-          }, function(err){
-            $window.alert('err: '+JSON.stringify(err));
           });
         }
       }, function(error){
