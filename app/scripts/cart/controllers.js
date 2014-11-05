@@ -11,9 +11,13 @@ angular.module('app')
   data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   data.shopPrice = CartUtils.getShopPrice(data.cart);
 
-  CartUiUtils.initStartSelfScanModal  ($scope ).then(function(modal)   { ui.shopModal    = modal;    });
-  CartUiUtils.initProductModal        (       ).then(function(modal)   { ui.productModal = modal;    });
-  CartUiUtils.initCartOptions         ($scope ).then(function(popover) { ui.popover      = popover;  });
+  CartUiUtils.initStartSelfScanModal()    .then(function(modal)   { ui.shopModal    = modal;    });
+  CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
+  CartUiUtils.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
+
+  fn.showOptions = function(event){
+    ui.cartOptions.open(event);
+  };
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
@@ -24,16 +28,24 @@ angular.module('app')
         $state.go('app.cart.ingredients');
       }
     } else {
-      ui.shopModal.show();
+      ui.shopModal.open({
+        callback: function(action, store){
+          if(action === 'storeSelected' && store && store.id){
+            data.cart.selfscan = true;
+            data.cart.store = store;
+            CartSrv.updateCart(data.cart);
+            $state.go('app.cart.selfscan');
+          }
+        }
+      });
     }
   };
 
   fn.scan = function(multi){
-    var startScan = Date.now();
+    var startScanTime = Date.now();
     BarcodeSrv.scan(function(result){
       if(!result.cancelled){
-        var scanDone = Date.now();
-        ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
+        ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');
         var barcode = result.text;
         var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
@@ -237,11 +249,10 @@ angular.module('app')
     };
 
     fn.productDetails = function(item){
-      var startScan = Date.now();
+      var startScanTime = Date.now();
       BarcodeSrv.scan(function(result){
         if(!result.cancelled){
-          var scanDone = Date.now();
-          console.log('Scanned in '+(scanDone-startScan)+' ms');
+          ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');
           var barcode = result.text;
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
           barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];

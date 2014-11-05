@@ -1,21 +1,21 @@
 <ion-modal-view>
   <ion-header-bar class="bar-custom">
     <h1 class="title">Activer le self-scan ?</h1>
-    <button class="button button-clear" ng-click="modal.fn.cancelSelfScan()">Annuler</button>
+    <button class="button button-clear" ng-click="fn.cancelSelfScan()">Annuler</button>
   </ion-header-bar>
 
   <ion-content class="padding start-selfscan">
     <h3>Pour commencer vos achats :</h3>
     <div class="section big">
       Sélectionnez votre magasin :
-      <select name="store" class="form-control" ng-model="modal.data.storeSelected" ng-options="store as store.name for store in modal.data.stores track by store.id"></select>
+      <select name="store" class="form-control" ng-model="data.storeSelected" ng-options="store as store.name for store in data.stores track by store.id"></select>
     </div>
     <div class="section">Ou</div>
     <div class="section">
       <button class="button">Scannez le QRcode à l'entrée</button>
     </div>
     <div class="section big">
-      <button class="button button-block button-positive" ng-click="modal.fn.activeSelfScan(modal.data.storeSelected)" ng-disabled="!modal.data.storeSelected.id">
+      <button class="button button-block button-positive" ng-click="fn.activeSelfScan(data.storeSelected)" ng-disabled="!data.storeSelected.id">
         Commencer ses courses
       </button>
     </div>

@@ -6,7 +6,7 @@
     <h1 class="title" bo-bind="data.cart.name"></h1>
     <div class="buttons">
       <button class="button button-icon" ng-class="{'ion-close-circled': data.cart.selfscan, 'ion-ios7-barcode-outline': !data.cart.selfscan}" ng-click="fn.toggleSelfScan()"></button>
-      <button class="button button-icon ion-more" ng-click="ui.popover.show($event)"></button>
+      <button class="button button-icon ion-more" ng-click="fn.showOptions($event)"></button>
     </div>
   </ion-header-bar>
 

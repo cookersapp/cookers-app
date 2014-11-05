@@ -6,7 +6,7 @@ window.plugins.toast = {
     // durations : short, long
     // positions : top, center, bottom
     // default: short bottom
-    window.alert('Toast: '+message);
+    console.log('Toast: '+message);
     if(successCallback){window.setTimeout(successCallback('OK'), 0);}
   },
   showShortTop: function(message, successCallback, errorCallback){this.show(message, 'short', 'top', successCallback, errorCallback);},
