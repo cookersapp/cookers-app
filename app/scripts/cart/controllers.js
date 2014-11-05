@@ -11,9 +11,9 @@ angular.module('app')
   data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
   data.shopPrice = CartUtils.getShopPrice(data.cart);
 
-  CartUiUtils.initStartSelfScanModal  ($scope       ).then(function(modal)   { ui.shopModal    = modal;    });
-  CartUiUtils.initProductModal        ($scope, true ).then(function(modal)   { ui.scanModal    = modal;    });
-  CartUiUtils.initCartOptions         ($scope       ).then(function(popover) { ui.popover      = popover;  });
+  CartUiUtils.initStartSelfScanModal  ($scope         ).then(function(modal)   { ui.shopModal    = modal;    });
+  CartUiUtils.initProductModal        ($scope, 'scan' ).then(function(modal)   { ui.scanModal    = modal;    });
+  CartUiUtils.initCartOptions         ($scope         ).then(function(popover) { ui.popover      = popover;  });
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
@@ -71,7 +71,7 @@ angular.module('app')
   } else {
     data.items = ItemUtils.fromCart(data.cart);
 
-    CartUiUtils.initProductModal($scope, false).then(function(modal){
+    CartUiUtils.initProductModal($scope, 'details').then(function(modal){
       ui.productModal = modal;
     });
 
@@ -140,11 +140,17 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, CartUtils, ItemUtils, CustomItemUtils, StorageSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, $state, $window, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
+  var ui = {};
+  $scope.ui = ui;
+
+  CartUiUtils.initProductModal($scope, 'info').then(function(modal){
+    ui.scanModal = modal;
+  });
 
   if(data.cart.selfscan){
     $state.go('app.cart.selfscan');
@@ -250,6 +256,36 @@ angular.module('app')
     fn.unbuyItem = function(item){
       LogSrv.trackUnbuyItem(item.food.id);
       CartUtils.removeItem(data.cart, item);
+    };
+
+    fn.productDetails = function(item){
+      var startScan = Date.now();
+      BarcodeSrv.scan(function(result){
+        if(!result.cancelled){
+          var scanDone = Date.now();
+          ToastSrv.show('Scanned in '+(scanDone-startScan)+' ms');
+          var barcode = result.text;
+          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
+          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+          ui.scanModal.show().then(function(){
+            return ProductSrv.get(barcode);
+          }).then(function(product){
+            var productShowed = Date.now();
+            ToastSrv.show('Get product in '+(productShowed-scanDone)+' ms');
+            if(product && product.name){
+              data.product = product;
+              data.updateProductFood = product && product.foodId ? {id: product.foodId} : null;
+            } else {
+              $window.alert('Product not found :(');
+              ui.scanModal.hide();
+            }
+          }, function(err){
+            $window.alert('err: '+JSON.stringify(err));
+          });
+        }
+      }, function(error){
+        $window.alert('Scanning failed: ' + error);
+      });
     };
   }
 });

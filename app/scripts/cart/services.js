@@ -389,7 +389,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($state, $window, CartSrv, CartUtils, ItemUtils, BackendSrv, ProductSrv, StoreSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -451,8 +451,14 @@ angular.module('app')
       });
     }
 
+    /*
+     * 'scan' values :
+     *  - 'scan'    : scan a product with self-scan
+     *  - 'details' : show details of bought product via self-scan
+     *  - 'info'    : show product infos in shopping list
+     */
     data.scan = scan;
-    if(scan){
+    if(scan === 'scan'){
       data.title = 'Produit scanné';
       fn.addToCart = function(product){
         CartUtils.addProduct(scope.data.cart, product, 1);
@@ -470,9 +476,24 @@ angular.module('app')
           scope.data.updateProductFood = null;
         });
       };
-    } else {
+    } else if(scan === 'details'){
       data.title = 'Produit acheté';
+    } else if(scan === 'info'){
+      data.title = 'Produit scanné';
+    }
 
+    if(!data.foods && scan !== 'info'){
+      BackendSrv.getFoods().then(function(foods){
+        data.foods = [];
+        for(var i in foods){
+          data.foods.push(foods[i]);
+        }
+        data.foods.sort(function(a,b){
+          if(a.name > b.name){return 1; }
+          else if(a.name < b.name){ return -1; }
+          else { return 0; }
+        });
+      });
     }
 
     fn.close = function(){

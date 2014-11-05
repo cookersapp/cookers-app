@@ -169,7 +169,7 @@ angular.module('app')
 .factory('ProductSrv', function($http, Config){
   'use strict';
   var service = {
-    getAll        : function(barcode)         { return _get('/api/v1/products/'+barcode);                   },
+    get           : function(barcode)         { return _get('/api/v1/products/'+barcode);                   },
     getWithStore  : function(store, barcode)  { return _get('/api/v1/stores/'+store+'/products/'+barcode);  },
     setFoodId     : function(barcode, foodId) { return _put('/api/v1/products/'+barcode+'?foodId='+foodId); }
   };
