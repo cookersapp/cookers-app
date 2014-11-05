@@ -80,8 +80,7 @@ angular.module('app')
     getRecipe: getRecipe,
     getFood: getFood,
     getFoods: getFoods,
-    getSelection: getSelection,
-    getMessages: getMessages
+    getSelection: getSelection
   };
 
   function getRecipe(id){
@@ -162,12 +161,6 @@ angular.module('app')
     } else {
       return $q.when(selection);
     }
-  }
-
-  function getMessages(){
-    return $http.get(firebaseUrl+'/globalmessages.json').then(function(result){
-      return result.data;
-    });
   }
 
   return service;

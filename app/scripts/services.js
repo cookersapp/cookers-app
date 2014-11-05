@@ -23,81 +23,63 @@ angular.module('app')
   return service;
 })
 
-.factory('GlobalMessageSrv', function($q, StorageSrv, BackendSrv, Config){
+.factory('GlobalMessageSrv', function($http, $q, StorageSrv, Config){
   'use strict';
   var service = {
-    getStandardMessageToDisplay: getStandardMessageToDisplay,
+    getMessage: getMessage,
     getStickyMessages: getStickyMessages,
-    execMessages: execMessages
+    hideMessage: hideMessage
   };
+  var day = 1000*60*60*24;
+  var dataPromise = null;
+  _init();
 
-  function getStandardMessageToDisplay(){
-    var type = 'standard';
-    var message = findMessage(type);
-    if(message){
-      fetchMessages();
-      return $q.when(message);
-    } else {
-      return fetchMessages().then(function(){
-        return findMessage(type);
+  function getMessage(){
+    return dataPromise.then(function(data){
+      return _.find(data.messages, function(msg){
+        return !msg.sticky && msg.versions.indexOf(Config.appVersion) > -1 && data.hiddenMessageIds.indexOf(msg.id) === -1;
       });
-    }
+    });
   }
 
   function getStickyMessages(){
-    var type = 'sticky';
-    return fetchMessages().then(function(){
-      return findMessages(type);
+    return dataPromise.then(function(data){
+      return _.filter(data.messages, function(msg){
+        return msg.sticky && msg.versions.indexOf(Config.appVersion) > -1;
+      });
     });
   }
 
-  function execMessages(){
-    var type = 'exec';
-    return fetchMessages().then(function(){
-      var messages = findMessages(type);
-      for(var i in messages){
-        if(messages[i].exec){
-          execMessage(messages[i].exec, messages[i]);
-        }
-        messages[i].hide = true;
+  function hideMessage(message){
+    dataPromise.then(function(data){
+      if(!data.hiddenMessageIds){data.hiddenMessageIds = [];}
+      if(data.hiddenMessageIds.indexOf(message.id) === -1){
+        data.hiddenMessageIds.push(message.id);
+        StorageSrv.setGlobalmessages(data);
       }
-      return messages;
     });
   }
 
-  function findMessages(type){
-    return _.filter(StorageSrv.getGlobalMessages().messages, function(msg){
-      return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
-    });
-  }
+  function _init(){
+    var globalmessages = StorageSrv.getGlobalMessages();
+    // compatibility with 1.1.0
+    if(!globalmessages.hiddenMessageIds){globalmessages.hiddenMessageIds = [];}
 
-  function findMessage(type){
-    return _.find(StorageSrv.getGlobalMessages().messages, function(msg){
-      return msg.type === type && !msg.hide && msg.shouldDisplay && execMessage(msg.shouldDisplay, msg);
-    });
-  }
-
-  function fetchMessages(){
-    StorageSrv.getGlobalMessages().lastCall = Date.now();
-    return BackendSrv.getMessages().then(function(allMessages){
-      var messages = _.filter(allMessages, function(msg){
-        return msg && (msg.isProd || Config.debug) && msg.targets && msg.targets.indexOf(Config.appVersion) > -1 && !messageExists(msg);
+    if(!globalmessages.lastCall || Date.now() - globalmessages.lastCall > day){
+      dataPromise = $http.get(Config.backendUrl+'/api/v1/globalmessages').then(function(res){
+        if(res && res.data && res.data.data){
+          var newGlobalMessages = {
+            lastCall: Date.now(),
+            messages: res.data.data,
+            hiddenMessageIds: globalmessages.hiddenMessageIds
+          };
+          StorageSrv.setGlobalmessages(newGlobalMessages);
+          return newGlobalMessages;
+        }
       });
-      StorageSrv.getGlobalMessages().messages = StorageSrv.getGlobalMessages().messages.concat(messages);
-      // sort chronogically
-      StorageSrv.getGlobalMessages().messages.sort(function(a,b){
-        return a.created - b.created;
-      });
-    });
-  }
-
-  function execMessage(fn, message){
-    var user = StorageSrv.getUser();
-    return eval(fn);
-  }
-
-  function messageExists(message){
-    return message && message.created && _.findIndex(StorageSrv.getGlobalMessages().messages, {created: message.created}) > -1;
+    } else {
+      dataPromise = $q.when(globalmessages);
+    }
   }
 
   return service;

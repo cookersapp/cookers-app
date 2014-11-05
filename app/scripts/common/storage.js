@@ -64,6 +64,7 @@ angular.module('app')
       _LocalStorageSrv.setStandaloneCookedRecipes(userStandaloneCookedRecipes);
     },
     getGlobalMessages: function(){return _LocalStorageSrv.getGlobalmessages();},
+    setGlobalmessages: function(messages){return _LocalStorageSrv.setGlobalmessages(messages);},
     clearCache: function(){
       _LocalStorageSrv.setFoods(localStorageDefault.dataFoods);
       _LocalStorageSrv.setRecipes(localStorageDefault.dataRecipes);

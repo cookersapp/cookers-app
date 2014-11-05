@@ -9,13 +9,13 @@
   <ion-content class="home">
     <!-- contextual message -->
     <div class="padding message" bindonce ng-repeat="msg in stickyMessages">
-      <div class="alert card" bo-class="'alert-'+msg.display">
+      <div class="alert card" bo-class="'alert-'+msg.category">
         <span bo-html="msg.content"></span>
       </div>
     </div>
     <div class="padding message" ng-if="standardMessage">
-      <div class="alert card" ng-class="'alert-'+standardMessage.display">
-        <button type="button" class="close" ng-click="hideStandardMessage()">&times;</button>
+      <div class="alert card" ng-class="'alert-'+standardMessage.category">
+        <button type="button" class="close" ng-click="hideMessage(standardMessage)">&times;</button>
         <span external-content="standardMessage.content"></span>
       </div>
     </div>

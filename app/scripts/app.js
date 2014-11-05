@@ -69,7 +69,8 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   dataSelections: { selections: {} },
   dataGlobalmessages: {
     lastCall: null,
-    messages: []
+    messages: [],
+    hiddenMessageIds: []
   }
 })
 
