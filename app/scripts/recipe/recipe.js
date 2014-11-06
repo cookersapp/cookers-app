@@ -123,13 +123,13 @@ angular.module('app')
   }
 })
 
-.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv){
   'use strict';
   var recipeId = $stateParams.recipeId;
   var recipeIndex = $stateParams.recipeIndex ? parseInt($stateParams.recipeIndex) : undefined;
   var cart = CartSrv.getCurrentCart();
   LogSrv.trackShowRecipeDetails(recipeId, recipeIndex);
-  BackendSrv.getRecipe(recipeId).then(function(recipe){
+  RecipeSrv.get(recipeId).then(function(recipe){
     StorageSrv.addRecipeToHistory(recipe);
     if(!recipe._formated){recipe._formated = {};}
     recipe._formated.isInCart = CartUtils.hasRecipe(cart, recipe);
@@ -157,7 +157,7 @@ angular.module('app')
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, BackendSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv, Utils){
   'use strict';
   // TODO : vocal commands : should go to next step when knock knock (speech recognition)
   // TODO : visibe timers : should stick active timers on top (or bottom?) of screen if you scroll
@@ -168,7 +168,7 @@ angular.module('app')
   LogSrv.trackShowRecipeCook(recipeId);
 
   if(cartId === 'none'){
-    BackendSrv.getRecipe(recipeId).then(function(recipe){
+    RecipeSrv.get(recipeId).then(function(recipe){
       initData(recipe);
     });
   } else {
@@ -308,15 +308,6 @@ angular.module('app')
   $scope.recipes = CartSrv.getCookedRecipes(function(a, b){
     return -(a.cartData.cooked.time - b.cartData.cooked.time);
   });
-})
-
-.factory('SelectionSrv', function(StorageSrv, BackendSrv, Config){
-  'use strict';
-  var service = {
-    getCurrent: function(){ return BackendSrv.getSelection(moment().week()+(Config.debug ? 1 : 0)); }
-  };
-
-  return service;
 })
 
 .directive('recipeImage', function(imagesPlaceholders){

@@ -43,7 +43,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
 })
 
 .constant('Config', Config)
-.constant('firebaseUrl', 'https://crackling-fire-7710.firebaseio.com')
 .constant('supportTeamEmail', 'loic@cookers.io')
 
 .constant('$ionicLoadingConfig', {

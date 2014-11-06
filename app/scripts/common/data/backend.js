@@ -11,7 +11,41 @@ angular.module('app')
   return service;
 })
 
+.factory('FoodSrv', function(BackendUtils){
+  'use strict';
+  var aDay = 1000*60*60*24;
+  var service = {
+    get: function(id){ return BackendUtils.getWithCache('foods', id, aDay); },
+    getAll: function(){ return BackendUtils.getAllWithCache('foods'); }
+  };
 
+  return service;
+})
+
+.factory('RecipeSrv', function(BackendUtils){
+  'use strict';
+  var aDay = 1000*60*60*24;
+  var service = {
+    get: function(id){ return BackendUtils.getWithCache('recipes', id, aDay); }
+  };
+
+  return service;
+})
+
+.factory('SelectionSrv', function(BackendUtils, Config){
+  'use strict';
+  var aDay = 1000*60*60*24;
+  var service = {
+    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
+    get: get
+  };
+
+  function get(id){
+    return BackendUtils.getWithCache('selections', id, aDay);
+  }
+
+  return service;
+})
 
 .factory('ProductSrv', function(BackendUtils){
   'use strict';
@@ -29,7 +63,7 @@ angular.module('app')
   'use strict';
   var aDay = 1000*60*60*24;
   var service = {
-    getAll: function(){ return BackendUtils.getAllWithCache('stores', aDay); }
+    getAll: function(){ return BackendUtils.getAllWithCache('stores'); }
   };
 
   return service;

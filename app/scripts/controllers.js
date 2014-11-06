@@ -17,7 +17,7 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv){
   'use strict';
   // preload selection
   SelectionSrv.getCurrent();

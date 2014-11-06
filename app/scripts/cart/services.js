@@ -389,7 +389,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, BackendSrv, ProductSrv, StoreSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -452,16 +452,15 @@ angular.module('app')
         ToastSrv.show(scope.data.product.name+' est assigné comme '+food.name);
       });
     }
-    BackendSrv.getFoods().then(function(foods){
-      data.foods = [];
-      for(var i in foods){
-        data.foods.push(foods[i]);
+    FoodSrv.getAll().then(function(foods){
+      if(foods){
+        foods.sort(function(a,b){
+          if(a.name > b.name){return 1; }
+          else if(a.name < b.name){ return -1; }
+          else { return 0; }
+        });
+        data.foods = foods;
       }
-      data.foods.sort(function(a,b){
-        if(a.name > b.name){return 1; }
-        else if(a.name < b.name){ return -1; }
-        else { return 0; }
-      });
     });*/
 
     return IonicUi.initModal(scope, 'scripts/cart/partials/product-modal.html').then(function(modal){
