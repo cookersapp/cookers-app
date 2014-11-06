@@ -126,6 +126,7 @@ angular.module('app')
   fn.removeRecipeFromCart = function(recipe){
     LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
     CartUtils.removeRecipe(data.cart, recipe);
+    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
     ToastSrv.show('✔ recette supprimée de la liste de courses');
   };
 
