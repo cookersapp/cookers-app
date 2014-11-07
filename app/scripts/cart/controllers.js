@@ -70,41 +70,6 @@ angular.module('app')
   };
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BarcodeSrv){
-  'use strict';
-  // herited from CartCtrl
-  var data = $scope.data;
-  var fn = $scope.fn;
-  var ui = $scope.ui;
-
-  if(!data.cart.selfscan){
-    $state.go('app.cart.ingredients');
-  } else {
-    data.items = ItemUtils.fromCart(data.cart);
-
-    fn.removeFromCart = function(product){
-      if($window.confirm('Supprimer du panier : '+product.name+' ?')){
-        CartUtils.removeProduct(data.cart, product);
-        ItemUtils.removeCartProduct(data.items, product);
-        data.shopPrice = CartUtils.getShopPrice(data.cart);
-      }
-    };
-
-    fn.productDetails = function(product){
-      ui.productModal.open({
-        title: 'Produit acheté',
-        buyBar: false,
-        product: product
-      });
-    };
-
-    fn.checkout = function(){
-      $window.alert('TODO...');
-      //BarcodeSrv.encode();
-    };
-  }
-})
-
 .controller('CartRecipesCtrl', function($scope, CartUtils, StorageSrv, ToastSrv, LogSrv){
   'use strict';
   // herited from CartCtrl
@@ -136,7 +101,7 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, $window, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CartIngredientsCtrl', function($scope, $state, $window, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils, Config){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -253,10 +218,11 @@ angular.module('app')
       var startScanTime = Date.now();
       BarcodeSrv.scan(function(result){
         if(!result.cancelled){
-          ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');
           var barcode = result.text;
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
           barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+          if(Config.debug){ToastSrv.show(barcode+' scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
+          LogSrv.trackCartScan(item.food.id, barcode, Date.now()-startScanTime);
 
           ui.productModal.open({
             title: 'Produit scanné',
@@ -269,8 +235,44 @@ angular.module('app')
           });
         }
       }, function(error){
-        $window.alert('Scanning failed: ' + error);
+        ToastSrv.show('Scan error :(');
+        LogSrv.trackError('scanFailed', error);
       });
+    };
+  }
+})
+
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BarcodeSrv){
+  'use strict';
+  // herited from CartCtrl
+  var data = $scope.data;
+  var fn = $scope.fn;
+  var ui = $scope.ui;
+
+  if(!data.cart.selfscan){
+    $state.go('app.cart.ingredients');
+  } else {
+    data.items = ItemUtils.fromCart(data.cart);
+
+    fn.removeFromCart = function(product){
+      if($window.confirm('Supprimer du panier : '+product.name+' ?')){
+        CartUtils.removeProduct(data.cart, product);
+        ItemUtils.removeCartProduct(data.items, product);
+        data.shopPrice = CartUtils.getShopPrice(data.cart);
+      }
+    };
+
+    fn.productDetails = function(product){
+      ui.productModal.open({
+        title: 'Produit acheté',
+        buyBar: false,
+        product: product
+      });
+    };
+
+    fn.checkout = function(){
+      $window.alert('TODO...');
+      //BarcodeSrv.encode();
     };
   }
 });

@@ -22,30 +22,27 @@ angular.module('app')
   };
 })
 
-.directive('nutritionLevel', function (){
+.directive('nutriment', function (){
   'use strict';
   return {
     restrict: 'E',
     scope: {
-      name: '@',
-      level: '='
+      nutriment: '=data'
     },
-    template: '<div ng-show="level" class="nutrition {{level}}"><i class="fa {{icon}}"></i> {{name}}</div>',
+    template: '<div ng-show="nutriment.level" class="nutrition danger{{nutriment.level}}">'+
+    '<i class="fa {{icon}}"></i> {{nutriment.displayName}}'+
+    ' <small ng-show="nutriment.quantity_100g">({{nutriment.quantity_100g | mynumber:2}}g pour 100g)</small>'+
+    '</div>',
     link: function(scope, element, attrs){
-      if(scope.level === 'low'){
-        scope.icon = 'fa-smile-o';
-      } else if(scope.level === 'moderate'){
-        scope.icon = 'fa-meh-o';
-      } else if(scope.level === 'high'){
-        scope.icon = 'fa-frown-o';
-      } else {
-        scope.icon = 'fa-circle-thin';
-      }
+      if(scope.nutriment.level === 1)       { scope.icon = 'fa-smile-o';      }
+      else if(scope.nutriment.level === 2)  { scope.icon = 'fa-meh-o';        }
+      else if(scope.nutriment.level === 3)  { scope.icon = 'fa-frown-o';      }
+      else                                  { scope.icon = 'fa-circle-thin';  }
     }
   };
 })
 
-.directive('additif', function (){
+.directive('additive', function (){
   'use strict';
   return {
     restrict: 'E',
@@ -53,7 +50,7 @@ angular.module('app')
       data: '='
     },
     template: '<span class="additive danger{{data.danger.level}}">'+
-    '<i class="fa {{icon}}"></i> {{data.fullName}} <span ng-show="data.category">({{data.category}})</span>'+
+    '<i class="fa {{icon}}"></i> {{data.fullName}} <small ng-show="data.category">({{data.category}})</small>'+
     '</span>',
     link: function(scope, element, attrs){
       if(scope.data.danger.level === 1 || scope.data.danger.level === 2){

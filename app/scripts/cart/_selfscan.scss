@@ -24,7 +24,7 @@
 
 .nutrition {
   color: #b0b0b0;
-  &.low       { color: #427d06; }
-  &.moderate  { color: #cc9800; }
-  &.high      { color: #cc0000; }
+  &.danger1 { color: #427d06; }
+  &.danger2 { color: #cc9800; }
+  &.danger3 { color: #cc0000; }
 }

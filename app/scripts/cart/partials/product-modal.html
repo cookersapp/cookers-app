@@ -20,43 +20,44 @@
           <h5>{{data.product.brand}}</h5>
         </div>
       </div>
-      <div class="card padding" ng-show="data.product && data.product.labels">
+      <div class="card padding" ng-show="data.product.labels">
         Labels :
         <span ng-repeat="label in data.product.labels">
           <span class="label label-success">{{label}}</span>
         </span>
       </div>
-      <div class="card padding" ng-if="data.product && data.product.nutrition">
+      <div class="card padding" ng-if="data.product.nutrition">
         <nutrition-grade grade="data.product.nutrition.grade"></nutrition-grade>
-        <div ng-if="data.product.nutrition.levels">
-          <nutrition-level name="Sel" level="data.product.nutrition.levels.salt"></nutrition-level>
-          <nutrition-level name="Matières grasses" level="data.product.nutrition.levels.fat"></nutrition-level>
-          <nutrition-level name="Sucres" level="data.product.nutrition.levels.sugars"></nutrition-level>
-          <nutrition-level name="Matières grasses saturées" level="data.product.nutrition.levels['saturated-fat']"></nutrition-level>
+        <div ng-if="data.product.nutrition.nutriments">
+          <div ng-repeat="nutriment in data.product.nutrition.nutriments | orderBy:'-level'">
+            <nutriment data="nutriment"></nutriment>
+          </div>
         </div>
-        <!--<div>
-<i class="fa fa-circle"></i> <i class="fa fa-bullseye"></i> <i class="fa fa-dot-circle-o"></i> <i class="fa fa-circle-o"></i><br>
-<i class="fa fa-smile-o"></i> <i class="fa fa-meh-o"></i> <i class="fa fa-frown-o"></i> <i class="fa fa-circle-thin"></i><br>
-<i class="fa fa-thumbs-up"></i> <i class="fa fa-thumbs-down"></i> <i class="fa fa-thumbs-o-up"></i> <i class="fa fa-thumbs-o-down"></i><br>
-<i class="fa fa-exclamation-triangle"></i> <i class="fa fa-times-circle"></i> <i class="fa fa-times-circle-o"></i> <i class="fa fa-ban"></i> <i class="fa fa-minus-circle"></i> <i class="fa fa-check-circle"></i> <i class="fa fa-check-circle-o"></i><br>
-</div>-->
       </div>
-      <div class="card padding" ng-show="data.product && data.product.additives">
+      <div class="card padding" ng-if="!data.product.nutrition">
+        Valeures nutritionelles non renseignées :(
+      </div>
+      <div class="card padding">
         Additifs :
-        <div ng-repeat="additive in data.product.additives">
-          <additif data="additive"></additif>
+        <div ng-show="data.product.additives">
+          <div ng-repeat="additive in data.product.additives | orderBy:'-danger.level'">
+            <additive data="additive"></additive>
+          </div>
+        </div>
+        <div ng-show="!data.product.additives">
+          Aucun additif recensé :)
         </div>
       </div>
-      <div class="card padding" ng-show="data.product && data.product.traces">
+      <div class="card padding" ng-show="data.product.traces">
         Traces : <span ng-repeat="trace in data.product.traces">{{trace}}<span ng-show="!$last">, </span></span>
       </div>
       <!--<div class="card list" ng-show="modal.data.foods">
-        <label class="item item-input item-select">
-          <div class="input-label">Ingrédient</div>
-          <select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in modal.data.foods track by food.id"></select>
-        </label>
-      </div>-->
-      <div class="card padding" ng-show="data.product && data.product.infos">
+<label class="item item-input item-select">
+<div class="input-label">Ingrédient</div>
+<select name="food" ng-model="data.updateProductFood" ng-options="food as food.name for food in modal.data.foods track by food.id"></select>
+</label>
+</div>-->
+      <div class="card padding" ng-show="data.product.infos">
         <div ng-show="data.product.infos.description">Informations :<br>{{data.product.infos.description}}</div>
         <div ng-show="data.product.infos.tips">Astuces :<br>{{data.product.infos.tips}}</div>
       </div>

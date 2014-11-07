@@ -389,7 +389,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi){
+.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi, LogSrv, Config){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -403,7 +403,7 @@ angular.module('app')
     scope.data = data;
     scope.fn = fn;
 
-    StoreSrv.getAll().then(function(stores){
+    StoreSrv.getAll(true).then(function(stores){
       data.stores = stores;
     });
 
@@ -480,16 +480,19 @@ angular.module('app')
 
           return modal.show().then(function(){
             modalShowedTime = Date.now();
-            ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');
+            if(Config.debug){ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');}
             return opts.product ? opts.product : (opts.store ? ProductSrv.getWithStore(opts.store, opts.barcode) : ProductSrv.get(opts.barcode));
           }).then(function(product){
             productLoadedTime = Date.now();
-            ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');
-            data.product = product;
-            //data.updateProductFood = {id: product.food.id};
-          }, function(err){
-            $window.alert('err: '+JSON.stringify(err));
-            modal.hide();
+            if(Config.debug){ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');}
+            LogSrv.trackCartProductLoaded(product ? product.barcode : opts.barcode, productLoadedTime-modalShowedTime, product ? true : false);
+            if(product){
+              data.product = product;
+              //data.updateProductFood = {id: product.food.id};
+            } else {
+              $window.alert('err: '+JSON.stringify(err));
+              modal.hide();
+            }
           });
         }
       };
