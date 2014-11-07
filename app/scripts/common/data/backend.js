@@ -290,14 +290,14 @@ angular.module('app')
 
     // specific for embeded beans !
     if(name === 'selections'){
-      if(cacheElt && cacheElt.data && cacheElt.data.recipes && cacheElt.updated){
+      if(elt && elt.data && elt.data.recipes && elt.updated){
         var recipeName = 'recipes';
         if(!cache.elts[recipeName]){ cache.elts[recipeName] = {}; }
         var localCache = _getLocalCache(recipeName);
-        for(var i in cacheElt.data.recipes){
-          var recipe = cacheElt.data.recipes[i];
+        for(var i in elt.data.recipes){
+          var recipe = elt.data.recipes[i];
           var recipeId = recipe.id;
-          var cacheRecipe = _createCacheData(recipe, cacheElt.updated);
+          var cacheRecipe = _createCacheData(recipe, elt.updated);
           _updateCacheData(recipeName, recipeId, cacheRecipe);
           localCache.elts[recipeId] = cache.elts[recipeName][recipeId];
         }

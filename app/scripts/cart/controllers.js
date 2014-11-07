@@ -28,7 +28,7 @@ angular.module('app')
           CartSrv.updateCart(data.cart);
           $state.go('app.cart.ingredients');
         }
-      })
+      });
     } else {
       ui.shopModal.open({
         callback: function(action, store){

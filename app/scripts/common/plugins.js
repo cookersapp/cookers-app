@@ -120,7 +120,6 @@ angular.module('app')
         fn();
       } else {
         LogSrv.trackError('pluginNotFound:Vibrate');
-        alert('vibrate not found');
       }
     });
   }
@@ -187,6 +186,7 @@ angular.module('app')
   }
 
   function pluginBeep(times){
+    if(!times){times = 1;}
     pluginReady(function(){
       $window.navigator.notification.beep(times);
     }, function(){
@@ -201,8 +201,9 @@ angular.module('app')
     return value ? 1 : 2;
   }
 
-  if(window.audioContext || window.webkitAudioContext){
-    var ctx = new(window.audioContext || window.webkitAudioContext);
+  var AudioCtx = window.audioContext || window.webkitAudioContext;
+  if(AudioCtx){
+    var ctx = new AudioCtx();
     var html5Beep = function(callback){
       var duration = 200;
       var type = 0;

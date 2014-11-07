@@ -32,7 +32,6 @@ angular.module('app')
     $scope.stickyMessages = messages;
   });
 
-
   $scope.hideMessage = function(message){
     GlobalMessageSrv.hideMessage(message);
     $scope.standardMessage = null;
