@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv){
+.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv, DialogSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -21,12 +21,14 @@ angular.module('app')
 
   fn.toggleSelfScan = function(){
     if(data.cart.selfscan){
-      if($window.confirm('Abandonner le self-scan ?')){
-        delete data.cart.selfscan;
-        delete data.cart.store;
-        CartSrv.updateCart(data.cart);
-        $state.go('app.cart.ingredients');
-      }
+      DialogSrv.confirm('Abandonner le self-scan ?').then(function(result){
+        if(result){
+          delete data.cart.selfscan;
+          delete data.cart.store;
+          CartSrv.updateCart(data.cart);
+          $state.go('app.cart.ingredients');
+        }
+      })
     } else {
       ui.shopModal.open({
         callback: function(action, store){
@@ -65,7 +67,7 @@ angular.module('app')
         });
       }
     }, function(error){
-      $window.alert('Scanning failed: ' + error);
+      DialogSrv.alert('Scanning failed: ' + error);
     });
   };
 })
@@ -242,7 +244,7 @@ angular.module('app')
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BarcodeSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BarcodeSrv, DialogSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -255,11 +257,13 @@ angular.module('app')
     data.items = ItemUtils.fromCart(data.cart);
 
     fn.removeFromCart = function(product){
-      if($window.confirm('Supprimer du panier : '+product.name+' ?')){
-        CartUtils.removeProduct(data.cart, product);
-        ItemUtils.removeCartProduct(data.items, product);
-        data.shopPrice = CartUtils.getShopPrice(data.cart);
-      }
+      DialogSrv.confirm('Supprimer du panier : '+product.name+' ?').then(function(result){
+        if(result){
+          CartUtils.removeProduct(data.cart, product);
+          ItemUtils.removeCartProduct(data.items, product);
+          data.shopPrice = CartUtils.getShopPrice(data.cart);
+        }
+      });
     };
 
     fn.productDetails = function(product){

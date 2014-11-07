@@ -65,7 +65,7 @@ Your app is now running to your computer. To run it to your android device :
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console org.apache.cordova.splashscreen https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git https://github.com/Dbuggerx/BarcodeScanner.git` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console org.apache.cordova.splashscreen https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git https://github.com/Dbuggerx/BarcodeScanner.git org.apache.cordova.dialogs` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands

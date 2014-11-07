@@ -157,7 +157,7 @@ angular.module('app')
   };
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv, Utils){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, DialogSrv, LogSrv, Utils){
   'use strict';
   // TODO : vocal commands : should go to next step when knock knock (speech recognition)
   // TODO : visibe timers : should stick active timers on top (or bottom?) of screen if you scroll
@@ -198,7 +198,7 @@ angular.module('app')
         cartId: cartId,
         recipeId: recipeId
       });
-      $window.alert('Error: forbidden action !\nCan\'t cook recipe from '+cartId+'/'+recipeId+' !\nPlease contact loicknuchel@gmail.com !');
+      DialogSrv.alert('Error: forbidden action !\nCan\'t cook recipe from '+cartId+'/'+recipeId+' !\nPlease contact loicknuchel@gmail.com !');
     }
   }
 
@@ -277,7 +277,7 @@ angular.module('app')
   }
 })
 
-.controller('TocookCtrl', function($scope, $window, PopupSrv, CartSrv){
+.controller('TocookCtrl', function($scope, $window, PopupSrv, CartSrv, DialogSrv){
   'use strict';
   $scope.recipes = CartSrv.getRecipesToCook(function(a, b){
     var ret = -(a.cartData.boughtPc - b.cartData.boughtPc);
@@ -295,11 +295,13 @@ angular.module('app')
   };
 
   $scope.remove = function(recipe){
-    if($window.confirm('Ne plus cuisiner cette recette ?')){
-      recipe.cartData.cooked = 'none';
-      CartSrv.updateCartRecipe(recipe);
-      $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
-    }
+    DialogSrv.confirm('Ne plus cuisiner cette recette ?').then(function(result){
+      if(result){
+        recipe.cartData.cooked = 'none';
+        CartSrv.updateCartRecipe(recipe);
+        $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
+      }
+    });
   };
 })
 

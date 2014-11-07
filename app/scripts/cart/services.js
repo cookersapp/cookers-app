@@ -389,7 +389,7 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, IonicUi, LogSrv, Config){
+.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, DialogSrv, IonicUi, LogSrv, Config){
   'use strict';
   var service = {
     initStartSelfScanModal: initStartSelfScanModal,
@@ -418,9 +418,11 @@ angular.module('app')
           fn.activeSelfScan = function(store){
             if(store && store.id){
               if(opts.callback){ opts.callback('storeSelected', store); }
-              modal.hide();
+              modal.hide().then(function(){
+                data.storeSelected = null;
+              });
             } else {
-              $window.alert('Error: unknown store: '+JSON.stringify(store));
+              DialogSrv.alert('Error: unknown store: '+JSON.stringify(store));
             }
           };
 
@@ -490,7 +492,8 @@ angular.module('app')
               data.product = product;
               //data.updateProductFood = {id: product.food.id};
             } else {
-              $window.alert('err: '+JSON.stringify(err));
+              // TODO : ask user some infos...
+              DialogSrv.alert('Product not found :(');
               modal.hide();
             }
           });
@@ -508,11 +511,13 @@ angular.module('app')
 
     return IonicUi.initPopover(scope, 'scripts/cart/partials/cart-popover.html').then(function(popover){
       fn.archiveCart = function(){
-        if($window.confirm('Archiver cette liste ?')){
-          CartUtils.archive(cart);
-          popover.remove();
-          $state.go('app.home');
-        }
+        DialogSrv.confirm('Archiver cette liste ?').then(function(result){
+          if(result){
+            CartUtils.archive(cart);
+            popover.remove();
+            $state.go('app.home');
+          }
+        });
       };
 
       return {

@@ -72,10 +72,10 @@
   .item-cart-ingredient {
     padding: 5px 10px;
     border: none;
-    &.fruits-and-legumes .text {border-color: $material-green;}
-    &.viandes-and-poissons .text {border-color: $material-red;}
+    &.fruits-and-legumes .text, &.fruits-legumes .text {border-color: $material-green;}
+    &.viandes-and-poissons .text, &.viandes-poissons .text {border-color: $material-red;}
     &.frais .text {border-color: $material-blue;}
-    &.pains-and-patisseries .text {border-color: $material-brown;}
+    &.pains-and-patisseries .text, &.pains-patisseries .text {border-color: $material-brown;}
     &.epicerie-salee .text {border-color: $material-blue-grey;}
     &.epicerie-sucree .text {border-color: $material-orange;}
     .text {

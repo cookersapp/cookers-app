@@ -24,22 +24,27 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $window, StorageSrv, LogSrv, Utils){
+.controller('ProfileCtrl', function($scope, $window, StorageSrv, ToastSrv, DialogSrv, LogSrv, Utils){
   'use strict';
   var user = StorageSrv.getUser();
 
   $scope.clearCache = function(){
-    if($window.confirm('Vider le cache ?')){
-      LogSrv.trackClearCache();
-      StorageSrv.clearCache();
-    }
+    DialogSrv.confirm('Vider le cache ?').then(function(result){
+      if(result){
+        LogSrv.trackClearCache();
+        StorageSrv.clearCache();
+        ToastSrv.show('Cache vidé !');
+      }
+    });
   };
   $scope.resetApp = function(){
-    if($window.confirm('Réinitialiser complètement l\'application ?')){
-      LogSrv.trackClearApp();
-      StorageSrv.clear();
-      Utils.exitApp();
-    }
+    DialogSrv.confirm('Réinitialiser complètement l\'application ?').then(function(result){
+      if(result){
+        LogSrv.trackClearApp();
+        StorageSrv.clear();
+        Utils.exitApp();
+      }
+    });
   };
 
   $scope.$watch('ctx.settings.showPrices', function(newValue, oldValue){
@@ -54,7 +59,7 @@ angular.module('app')
   });
 })
 
-.controller('FeedbackCtrl', function($scope, $stateParams, $window, StorageSrv, EmailSrv, LogSrv, supportTeamEmail){
+.controller('FeedbackCtrl', function($scope, $stateParams, $window, StorageSrv, EmailSrv, DialogSrv, LogSrv, supportTeamEmail){
   'use strict';
   var app = StorageSrv.getApp();
   var user = StorageSrv.getUser();
@@ -79,7 +84,7 @@ angular.module('app')
       if(sent){
         $scope.feedback.sent = true;
       } else {
-        $window.alert('Echec de l\'envoi du email :(\nContactez '+supportTeamEmail+' si vous le souhaitez !');
+        DialogSrv.alert('Echec de l\'envoi du email :(\nContactez '+supportTeamEmail+' si vous le souhaitez !');
       }
     });
   };

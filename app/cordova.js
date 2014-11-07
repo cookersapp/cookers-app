@@ -1,4 +1,6 @@
 if(!window.plugins){window.plugins = {};}
+if(!window.navigator){window.navigator = {};}
+if(!window.navigator.notification){window.navigator.notification = {};}
 
 // for plugin https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
 window.plugins.toast = {
@@ -71,6 +73,48 @@ window.plugins.DeviceAccounts = {
   getEmails: function(onSuccess, onFail){ onSuccess(/*['test@example.com']*/); },
   getEmail: function(onSuccess, onFail){ onSuccess(/*'test@example.com'*/); }
 };
+
+// for plugin org.apache.cordova.dialogs
+window.navigator.notification = (function(){
+  var ctx = new(window.audioContext || window.webkitAudioContext);
+  function html5Beep(callback){
+    var duration = 200;
+    var type = 0;
+    if(!callback){callback = function(){};}
+    var osc = ctx.createOscillator();
+    osc.type = type;
+    osc.connect(ctx.destination);
+    osc.noteOn(0);
+    window.setTimeout(function(){
+      osc.noteOff(0);
+      callback();
+    }, duration);
+  }
+
+  function beep(times){
+    if(times > 0){
+      html5Beep(function(){
+        window.setTimeout(function(){beep(times-1);}, 500);
+      });
+    }
+  }
+
+  return {
+    alert: function(message, alertCallback, title, buttonName){
+      window.alert(message);
+      if(alertCallback){alertCallback();}
+    },
+    confirm: function(message, confirmCallback, title, buttonLabels){
+      var c = window.confirm(message);
+      if(confirmCallback){confirmCallback(c ? 1 : 2);}
+    },
+    prompt: function(message, promptCallback, title, buttonLabels, defaultText){
+      var text = window.prompt(message, defaultText);
+      if(promptCallback){promptCallback({buttonIndex: text ? 1 : 2, input1: text});}
+    },
+    beep: beep
+  };
+})();
 
 // add property cordova with a delay because it prevents deviceready to get fired !!!
 setTimeout(function(){

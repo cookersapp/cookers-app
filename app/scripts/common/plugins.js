@@ -78,6 +78,117 @@ angular.module('app')
   return service;
 })
 
+// for Dialogs plugin : org.apache.cordova.dialogs
+.factory('DialogSrv', function($window, $ionicPlatform, $q, LogSrv){
+  'use strict';
+  /*
+   * Button indexes :
+   *    - 0 : cancel with backdrop
+   *    - 1 : Ok
+   *    - 2 : Annuler
+   * Or, your index in buttonLabels array but one based !!! (0 is still cancel)
+   */
+  var service = {
+    alert: pluginAlert,
+    confirm: function(message, _title){
+      return pluginConfirm(message, _title).then(function(buttonIndex){
+        return _isConfirm(buttonIndex);
+      });
+    },
+    confirmMulti: pluginConfirm,
+    prompt: function(message, _title, _defaultText){
+      return pluginPrompt(message, _title, null, _defaultText).then(function(result){
+        result.confirm = _isConfirm(result.buttonIndex);
+        return result;
+      });
+    },
+    promptMulti: pluginPrompt,
+    beep: pluginBeep
+  };
+
+  function pluginAlert(message, _title, _buttonName){
+    var defer = $q.defer();
+    pluginReady(function(){
+      $window.navigator.notification.alert(message, function(){ defer.resolve(); }, _title, _buttonName);
+    }, function(){
+      $window.alert(message);
+      defer.resolve();
+    });
+    return defer.promise;
+  }
+
+  function pluginConfirm(message, _title, _buttonLabels){
+    var defer = $q.defer();
+    pluginReady(function(){
+      $window.navigator.notification.confirm(message, function(buttonIndex){ defer.resolve(buttonIndex); }, _title, _buttonLabels);
+    }, function(){ defer.resolve(_toButtonIndex($window.confirm(message))); });
+    return defer.promise;
+  }
+
+  function pluginPrompt(message, _title, _buttonLabels, _defaultText){
+    var defer = $q.defer();
+    pluginReady(function(){
+      $window.navigator.notification.prompt(message, function(result){ defer.resolve(result); }, _title, _buttonLabels, _defaultText);
+    }, function(){
+      var text = $window.prompt(message, _defaultText);
+      defer.resolve({buttonIndex: _toButtonIndex(text), input1: text});
+    });
+    return defer.promise;
+  }
+
+  function pluginBeep(times){
+    pluginReady(function(){
+      $window.navigator.notification.beep(times);
+    }, function(){
+      if(beepFallback){beepFallback(times);}
+    });
+  }
+  
+  function _isConfirm(buttonIndex){
+    return buttonIndex === 1 ? true : false;
+  }
+  function _toButtonIndex(value){
+    return value ? 1 : 2;
+  }
+
+  if(window.audioContext || window.webkitAudioContext){
+    var ctx = new(window.audioContext || window.webkitAudioContext);
+    var html5Beep = function(callback){
+      var duration = 200;
+      var type = 0;
+      if(!callback){callback = function(){};}
+      var osc = ctx.createOscillator();
+      osc.type = type;
+      osc.connect(ctx.destination);
+      osc.noteOn(0);
+      $window.setTimeout(function(){
+        osc.noteOff(0);
+        callback();
+      }, duration);
+    };
+    var beepFallback = function(times){
+      if(times > 0){
+        html5Beep(function(){
+          $window.setTimeout(function(){beepFallback(times-1);}, 500);
+        });
+      }
+    };
+  }
+
+  function pluginReady(fn, fnErr){
+    $ionicPlatform.ready(function(){
+      if($window.navigator && $window.navigator.notification){
+        fn();
+      } else {
+        LogSrv.trackError('pluginNotFound:Dialogs');
+        fnErr();
+      }
+    });
+  }
+
+  return service;
+})
+
 // for Media plugin : http://plugins.cordova.io/#/package/org.apache.cordova.media
 .factory('MediaSrv', function($q, $window, $ionicPlatform, LogSrv){
   'use strict';
