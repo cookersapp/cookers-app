@@ -125,9 +125,9 @@ var Logger = (function(){
     if(!event.time)                                     { event.time = Date.now();                          }
     if(!event.user)                                     { event.user = cache.userId || _getUserId();        }
     if(!event.device)                                   { event.device = cache.deviceId || _getDeviceId();  }
+    if(!event.appVersion && Config)                     { event.appVersion = Config.appVersion;             }
     if(!event.source)                                   { event.source = {};                                }
     if(!event.source.url && window && window.location)  { event.source.url = window.location.href;          }
-    if(!event.source.appVersion && Config)              { event.source.appVersion = Config.appVersion;      }
     if(!event.dateinfo){
       event.dateinfo = {
         year: moment().year(),

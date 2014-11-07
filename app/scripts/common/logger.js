@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout, Utils, _LocalStorageSrv){
+.factory('LogSrv', function($timeout){
   'use strict';
   var service = {
     trackInstall:               function()                        { track('app-installed');                                                           },
@@ -58,15 +58,9 @@ angular.module('app')
   }
 
   function track(name, data, time){
-    var user = _LocalStorageSrv.getUser();
     var event = {};
-    if(data)            { event.data = data;       }
-    if(time)            { event.time = time;       }
-    if(user && user.id) { event.userId = user.id;  }
-    if(user && user.device){
-      event.source = {};
-      event.source.device = angular.copy(user.device);
-    }
+    if(data){ event.data = data; }
+    if(time){ event.time = time; }
 
     Logger.track(name, event);
   }
