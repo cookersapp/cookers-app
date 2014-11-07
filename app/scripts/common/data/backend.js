@@ -1,79 +1,5 @@
 angular.module('app')
 
-.factory('BackendUserSrv', function(BackendUtils){
-  'use strict';
-  var service = {
-    findUser          : function(email)                   { return BackendUtils.get('/users/find?email='+email);                             },
-    updateUserSetting : function(userId, setting, value)  { return BackendUtils.put('/users/'+userId+'/settings/'+setting, {value: value});  },
-    setUserDevice     : function(userId, device)          { return BackendUtils.put('/users/'+userId+'/device', device);                     }
-  };
-
-  return service;
-})
-
-.factory('FoodSrv', function(BackendUtils){
-  'use strict';
-  var cacheMaxSize = 1000; // (a food ~ 0,3ko => Max 300ko)
-  var timeToUpdate = 1000*60*60*24; // one day
-  var service = {
-    get: function(id){ return BackendUtils.getWithCache('foods', id, cacheMaxSize, timeToUpdate); },
-    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('foods', _quickNDirty, cacheMaxSize); }
-  };
-
-  return service;
-})
-
-.factory('RecipeSrv', function(BackendUtils){
-  'use strict';
-  var cacheMaxSize = 100; // (a recipe ~ 4,2ko => Max 420ko)
-  var timeToUpdate = 1000*60*60*24; // one day
-  var service = {
-    get: function(id){ return BackendUtils.getWithCache('recipes', id, cacheMaxSize, timeToUpdate); }
-  };
-
-  return service;
-})
-
-.factory('SelectionSrv', function(BackendUtils, Config){
-  'use strict';
-  var cacheMaxSize = 10; // (a selection ~ 42ko => Max 420ko)
-  var timeToUpdate = 1000*60*60*24; // one day
-  var service = {
-    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
-    get: get
-  };
-
-  function get(id){
-    return BackendUtils.getWithCache('selections', id, cacheMaxSize, timeToUpdate);
-  }
-
-  return service;
-})
-
-.factory('ProductSrv', function(BackendUtils){
-  'use strict';
-  var cacheMaxSize = 500; // (a product ~ 1,4ko => Max 700ko)
-  var timeToUpdate = 1000*60*60*24; // one day
-  var service = {
-    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, cacheMaxSize, timeToUpdate);     },
-    //get           : function(barcode)         { return BackendUtils.get('/products/'+barcode);     },
-    getWithStore  : function(store, barcode)  { return BackendUtils.get('/stores/'+store+'/products/'+barcode);  },
-    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId); }
-  };
-
-  return service;
-})
-
-.factory('StoreSrv', function(BackendUtils){
-  'use strict';
-  var cacheMaxSize = 100;
-  var service = {
-    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('stores', _quickNDirty, cacheMaxSize); }
-  };
-
-  return service;
-})
-
 .factory('GlobalMessageSrv', function(BackendUtils, $q, StorageSrv, Config){
   'use strict';
   var service = {
@@ -156,9 +82,78 @@ angular.module('app')
   return service;
 })
 
+.factory('BackendUserSrv', function(BackendUtils){
+  'use strict';
+  var service = {
+    findUser          : function(email)                   { return BackendUtils.get('/users/find?email='+email);                             },
+    updateUserSetting : function(userId, setting, value)  { return BackendUtils.put('/users/'+userId+'/settings/'+setting, {value: value});  },
+    setUserDevice     : function(userId, device)          { return BackendUtils.put('/users/'+userId+'/device', device);                     }
+  };
+
+  return service;
+})
+
+.factory('FoodSrv', function(BackendUtils){
+  'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
+  var service = {
+    get: function(id){ return BackendUtils.getWithCache('foods', id, timeToUpdate); },
+    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('foods', _quickNDirty); }
+  };
+
+  return service;
+})
+
+.factory('RecipeSrv', function(BackendUtils){
+  'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
+  var service = {
+    get: function(id){ return BackendUtils.getWithCache('recipes', id, timeToUpdate); }
+  };
+
+  return service;
+})
+
+.factory('SelectionSrv', function(BackendUtils, Config){
+  'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
+  var service = {
+    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
+    get: get
+  };
+
+  function get(id){
+    return BackendUtils.getWithCache('selections', id, timeToUpdate);
+  }
+
+  return service;
+})
+
+.factory('ProductSrv', function(BackendUtils){
+  'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
+  var service = {
+    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, timeToUpdate);     },
+    //get           : function(barcode)         { return BackendUtils.get('/products/'+barcode);     },
+    getWithStore  : function(store, barcode)  { return BackendUtils.get('/stores/'+store+'/products/'+barcode);  },
+    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId); }
+  };
+
+  return service;
+})
+
+.factory('StoreSrv', function(BackendUtils){
+  'use strict';
+  var service = {
+    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('stores', _quickNDirty); }
+  };
+
+  return service;
+})
+
 .factory('BackendUtils', function($http, $q, _LocalStorageSrv, CollectionUtils, Config){
   'use strict';
-  var keyPrefix = 'cache-', cacheMaxSizeDefault = 50;
+  var keyPrefix = 'cache-', cacheDefaultMaxSize = 50;
   var service = {
     get: get,
     put: put,
@@ -167,49 +162,49 @@ angular.module('app')
     getAllWithCache: getAllWithCache
   };
   var cache = {
+    defaultMaxSize: {foods: 1000, recipes: 100, selections: 4, additives: 700, products: 500},
     elts: {},
     eltPromises: {},
     allElts: {}
   };
 
-  function getWithCache(name, id, _cacheMaxSize, _timeToUpdate, _timeToExpire){
-    var key = keyPrefix+name;
-    if(!cache.elts[key]){ cache.elts[key] = {}; }
-    if(!cache.eltPromises[key]){ cache.eltPromises[key] = {}; }
+  function getWithCache(name, id, _timeToUpdate, _timeToExpire){
+    if(!cache.elts[name]){ cache.elts[name] = {}; }
+    if(!cache.eltPromises[name]){ cache.eltPromises[name] = {}; }
 
-    if(cache.elts[key][id] && cache.elts[key][id].data && !_isExpired(cache.elts[key][id], _timeToExpire)){ // found in inMemoryCache
-      if(_isExpired(cache.elts[key][id], _timeToUpdate)){ _backgroundUpdate(key, name, id, _cacheMaxSize); }
-      return $q.when(cache.elts[key][id].data);
-    } else if(cache.eltPromises[key][id]){ // data already requested, will return it as soon as possible
-      return cache.eltPromises[key][id];
+    if(cache.elts[name][id] && cache.elts[name][id].data && !_isExpired(cache.elts[name][id], _timeToExpire)){ // found in inMemoryCache
+      if(_isExpired(cache.elts[name][id], _timeToUpdate)){ _backgroundUpdate(name, id); }
+      return $q.when(cache.elts[name][id].data);
+    } else if(cache.eltPromises[name][id]){ // data already requested, will return it as soon as possible
+      return cache.eltPromises[name][id];
     } else {
-      var localCache = _LocalStorageSrv.get(key) || {elts:{}};
+      var localCache = _getLocalCache(name);
       if(localCache.elts[id] && !_isExpired(localCache.elts[id], _timeToExpire)){ // found in localCache
-        _updateCacheData(key, id, localCache.elts[id]);
-        if(_isExpired(cache.elts[key][id], _timeToUpdate)){ _backgroundUpdate(key, name, id, _cacheMaxSize); }
-        return $q.when(cache.elts[key][id].data);
+        _updateCacheData(name, id, localCache.elts[id]);
+        if(_isExpired(cache.elts[name][id], _timeToUpdate)){ _backgroundUpdate(name, id); }
+        return $q.when(cache.elts[name][id].data);
       } else { // not found in caches, get it from server and store it in caches
-        cache.eltPromises[key][id] = get('/'+name+'/'+id).then(function(elt){
+        cache.eltPromises[name][id] = get('/'+name+'/'+id).then(function(elt){
           if(elt){
-            _updateCacheData(key, id, _createCacheData(elt));
-            localCache.elts[id] = cache.elts[key][id];
-            _saveLocalCache(key, localCache, _cacheMaxSize);
+            _updateCacheData(name, id, _createCacheData(elt));
+            localCache.elts[id] = cache.elts[name][id];
+            _saveLocalCache(name, localCache);
           }
-          delete cache.eltPromises[key][id];
-          return cache.elts[key][id].data;
+          delete cache.eltPromises[name][id];
+          return cache.elts[name][id].data;
         });
-        return cache.eltPromises[key][id];
+        return cache.eltPromises[name][id];
       }
     }
   }
 
-  function _backgroundUpdate(key, name, id, _cacheMaxSize){
+  function _backgroundUpdate(name, id){
     return get('/'+name+'/'+id).then(function(elt){
       if(elt){
-        var localCache = _LocalStorageSrv.get(key) || {elts:{}};
-        _updateCacheData(key, id, _createCacheData(elt));
-        localCache.elts[id] = cache.elts[key][id];
-        _saveLocalCache(key, localCache, _cacheMaxSize);
+        var localCache = _getLocalCache(name);
+        _updateCacheData(name, id, _createCacheData(elt));
+        localCache.elts[id] = cache.elts[name][id];
+        _saveLocalCache(name, localCache);
       }
     });
   }
@@ -226,29 +221,29 @@ angular.module('app')
    * Can't return only cache because it has limited size...
    * So, with _quickNDirty mode, return cached elts and update them after to add all loaded elts
    */
-  function getAllWithCache(name, _quickNDirty, _cacheMaxSize, _timeToExpire){
-    var key = keyPrefix+name;
-    if(!cache.elts[key]){ cache.elts[key] = {}; }
+  function getAllWithCache(name, _quickNDirty, _timeToExpire){
+    if(!cache.elts[name]){ cache.elts[name] = {}; }
 
-    if(cache.allElts[key] && !_isExpired(cache.allElts[key], _timeToExpire)){
-      return $q.when(angular.copy(cache.allElts[key].data));
+    if(cache.allElts[name] && !_isExpired(cache.allElts[name], _timeToExpire)){
+      return $q.when(angular.copy(cache.allElts[name].data));
     } else {
       if(_quickNDirty){ // return elements presents in cache and update them with loaded results
-        var localCache = _LocalStorageSrv.get(key) || {elts:{}};
+        var localCache = _getLocalCache(name);
         var results = _.map(localCache.elts, function(elt){
-          if(elt && elt.data && elt.data.id){ _updateCacheData(key, elt.data.id, elt); }
+          if(elt && elt.data && elt.data.id){ _updateCacheData(name, elt.data.id, elt); }
           return elt.data;
         });
         get('/'+name).then(function(elts){
           if(elts){
-            cache.allElts[key] = _createCacheData(elts);
-            var localCache = _LocalStorageSrv.get(key) || {elts:{}};
+            cache.allElts[name] = _createCacheData(elts);
+            var localCache = _getLocalCache(name);
             for(var i in elts){
               if(elts[i] && elts[i].id){
                 var id = elts[i].id;
-                _updateCacheData(key, id, _createCacheData(elts[i]));
-                localCache.elts[id] = cache.elts[key][id];
+                _updateCacheData(name, id, _createCacheData(elts[i]));
+                localCache.elts[id] = cache.elts[name][id];
 
+                // update returned elts
                 var result = _.find(results, {id: elts[i].id});
                 if(result){
                   angular.copy(elts[i], result);
@@ -257,23 +252,23 @@ angular.module('app')
                 }
               }
             }
-            _saveLocalCache(key, localCache, _cacheMaxSize);
+            _saveLocalCache(name, localCache);
           }
         });
         return $q.when(results);
       } else { // load all elements, update the cache and return theù
         return get('/'+name).then(function(elts){
           if(elts){
-            cache.allElts[key] = _createCacheData(elts);
-            var localCache = _LocalStorageSrv.get(key) || {elts:{}};
+            cache.allElts[name] = _createCacheData(elts);
+            var localCache = _getLocalCache(name);
             for(var i in elts){
               if(elts[i] && elts[i].id){
                 var id = elts[i].id;
-                _updateCacheData(key, id, _createCacheData(elts[i]));
-                localCache.elts[id] = cache.elts[key][id];
+                _updateCacheData(name, id, _createCacheData(elts[i]));
+                localCache.elts[id] = cache.elts[name][id];
               }
             }
-            _saveLocalCache(key, localCache, _cacheMaxSize);
+            _saveLocalCache(name, localCache);
           }
           return elts;
         });
@@ -281,10 +276,40 @@ angular.module('app')
     }
   }
 
-  function _saveLocalCache(key, localCache, _cacheMaxSize){
-    if(typeof _cacheMaxSize !== 'number'){ _cacheMaxSize = cacheMaxSizeDefault; }
+  function _updateCacheData(name, id, elt){
+    if(!cache.elts[name][id]){
+      cache.elts[name][id] = elt;
+    } else if(cache.elts[name][id] && cache.elts[name][id].updated < elt.updated){
+      if(elt.data && cache.elts[name][id].data){
+        angular.copy(elt.data, cache.elts[name][id].data);
+        cache.elts[name][id].updated = elt.updated;
+      } else {
+        angular.copy(elt, cache.elts[name][id]);
+      }
+    }
+
+    // specific for embeded beans !
+    if(name === 'selections'){
+      if(cacheElt && cacheElt.data && cacheElt.data.recipes && cacheElt.updated){
+        var recipeName = 'recipes';
+        if(!cache.elts[recipeName]){ cache.elts[recipeName] = {}; }
+        var localCache = _getLocalCache(recipeName);
+        for(var i in cacheElt.data.recipes){
+          var recipe = cacheElt.data.recipes[i];
+          var recipeId = recipe.id;
+          var cacheRecipe = _createCacheData(recipe, cacheElt.updated);
+          _updateCacheData(recipeName, recipeId, cacheRecipe);
+          localCache.elts[recipeId] = cache.elts[recipeName][recipeId];
+        }
+        _saveLocalCache(recipeName, localCache);
+      }
+    }
+  }
+
+  function _saveLocalCache(name, localCache){
+    var cacheMaxSize = _getCacheMaxSize(name);
     if(localCache && localCache.elts){
-      while(CollectionUtils.size(localCache.elts) > _cacheMaxSize){
+      while(CollectionUtils.size(localCache.elts) > cacheMaxSize){
         var oldestId = null, oldestTime = null;
         for(var i in localCache.elts){
           if(oldestId === null){
@@ -298,24 +323,22 @@ angular.module('app')
         delete localCache.elts[i];
       }
     }
-    _LocalStorageSrv.set(key, localCache);
+    _setLocalCache(name, localCache);
   }
 
-  function _updateCacheData(key, id, elt){
-    if(!cache.elts[key][id]){
-      cache.elts[key][id] = elt;
-    } else if(cache.elts[key][id] && cache.elts[key][id].updated < elt.updated){
-      if(elt.data && cache.elts[key][id].data){
-        angular.copy(elt.data, cache.elts[key][id].data);
-        cache.elts[key][id].updated = elt.updated;
-      } else {
-        angular.copy(elt, cache.elts[key][id]);
-      }
-    }
+  function _getCacheMaxSize(name){
+    return cache.defaultMaxSize[name] ? cache.defaultMaxSize[name] : cacheDefaultMaxSize;
   }
 
-  function _createCacheData(data){
-    return {data: data, updated: Date.now()};
+  function _createCacheData(data, date){
+    return {data: data, updated: date ? date : Date.now()};
+  }
+
+  function _getLocalCache(name){
+    return _LocalStorageSrv.get(keyPrefix+name) || {elts:{}};
+  }
+  function _setLocalCache(name, cache){
+    _LocalStorageSrv.set(keyPrefix+name, cache);
   }
 
   function get(url){

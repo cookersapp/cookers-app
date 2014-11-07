@@ -9,7 +9,13 @@
       margin-top: 60px;
     }
   }
+}
 
+.nutrition {
+  color: #b0b0b0;
+  &.danger1 { color: #427d06; }
+  &.danger2 { color: #cc9800; }
+  &.danger3 { color: #cc0000; }
 }
 
 .additive {
@@ -20,11 +26,4 @@
   &.danger4 { color: #cc9800; }
   &.danger5 { color: #cc5800; }
   &.danger6 { color: #cc0000; }
-}
-
-.nutrition {
-  color: #b0b0b0;
-  &.danger1 { color: #427d06; }
-  &.danger2 { color: #cc9800; }
-  &.danger3 { color: #cc0000; }
 }
