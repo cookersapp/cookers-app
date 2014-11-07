@@ -117,16 +117,17 @@ var Logger = (function(){
       interval: 3000
     }
   };
-  var currentEventId = null;
+  var cache = {currentEventId: null, userId: null, deviceId: null};
   Scheduler.init();
 
   function track(name, event){
-    if(!event.name)                                     { event.name = name;                            }
-    if(!event.time)                                     { event.time = Date.now();                      }
-    if(!event.user)                                     { event.user = _getUserId();                    }
-    if(!event.source)                                   { event.source = {};                            }
-    if(!event.source.url && window && window.location)  { event.source.url = window.location.href;      }
-    if(!event.source.appVersion && Config)              { event.source.appVersion = Config.appVersion;  }
+    if(!event.name)                                     { event.name = name;                                }
+    if(!event.time)                                     { event.time = Date.now();                          }
+    if(!event.user)                                     { event.user = cache.userId || _getUserId();        }
+    if(!event.device)                                   { event.device = cache.deviceId || _getDeviceId();  }
+    if(!event.source)                                   { event.source = {};                                }
+    if(!event.source.url && window && window.location)  { event.source.url = window.location.href;          }
+    if(!event.source.appVersion && Config)              { event.source.appVersion = Config.appVersion;      }
     if(!event.dateinfo){
       event.dateinfo = {
         year: moment().year(),
@@ -138,8 +139,8 @@ var Logger = (function(){
     }
     if(!event.id){
       event.id = createUuid();
-      event.prevId = currentEventId;
-      currentEventId = event.eventId;
+      event.prevId = cache.currentEventId;
+      cache.currentEventId = event.eventId;
     }
 
     if(!event.user){
@@ -170,7 +171,18 @@ var Logger = (function(){
     if(localStorage){
       var user = JSON.parse(localStorage.getItem('ionic-user'));
       if(user && user.id){
+        cache.userId = user.id;
         return user.id;
+      }
+    }
+  }
+
+  function _getDeviceId(){
+    if(ionic && ionic.Platform){
+      var device = ionic.Platform.device();
+      if(device && device.uuid){
+        cache.deviceId = device.uuid;
+        return device.uuid;
       }
     }
   }
