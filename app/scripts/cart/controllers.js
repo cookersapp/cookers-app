@@ -45,12 +45,12 @@ angular.module('app')
 
   fn.scan = function(multi){
     var startScanTime = Date.now();
-    BarcodeSrv.scan(function(result){
+    BarcodeSrv.scan().then(function(result){
       if(!result.cancelled){
-        ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');
         var barcode = result.text;
         var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
         barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+        if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
 
         ui.productModal.open({
           title: 'Produit scanné',
@@ -67,7 +67,7 @@ angular.module('app')
         });
       }
     }, function(error){
-      DialogSrv.alert('Scanning failed: ' + error);
+      DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
     });
   };
 })
@@ -218,7 +218,7 @@ angular.module('app')
 
     fn.productDetails = function(item){
       var startScanTime = Date.now();
-      BarcodeSrv.scan(function(result){
+      BarcodeSrv.scan().then(function(result){
         if(!result.cancelled){
           var barcode = result.text;
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];

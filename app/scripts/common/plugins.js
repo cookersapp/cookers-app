@@ -1,17 +1,25 @@
 angular.module('app')
 
 // for BarcodeScanner plugin : https://github.com/wildabeast/BarcodeScanner.git
-.factory('BarcodeSrv', function($window, $ionicPlatform, LogSrv){
+.factory('BarcodeSrv', function($window, $ionicPlatform, $q, LogSrv){
   'use strict';
   var service = {
     scan: scan,
     encode: encode
   };
 
-  function scan(success, error){
+  function scan(){
+    var defer = $q.defer();
     pluginReady(function(){
-      $window.cordova.plugins.barcodeScanner.scan(success, error);
+      $window.cordova.plugins.barcodeScanner.scan(function(result){
+        defer.resolve(result);
+      }, function(error){
+        defer.reject(error);
+      });
+    }, function(){
+      defer.reject();
     });
+    return defer.promise;
   }
 
   function encode(){
@@ -29,12 +37,13 @@ angular.module('app')
     });
   }
 
-  function pluginReady(fn){
+  function pluginReady(fn, fnErr){
     $ionicPlatform.ready(function(){
       if($window.cordova && $window.cordova.plugins && $window.cordova.plugins.barcodeScanner){
         fn();
       } else {
         LogSrv.trackError('pluginNotFound:BarcodeScanner');
+        fnErr();
       }
     });
   }
@@ -71,6 +80,47 @@ angular.module('app')
         fn();
       } else {
         LogSrv.trackError('pluginNotFound:Toast');
+      }
+    });
+  }
+
+  return service;
+})
+
+.factory('VibrateSrv', function($window, $ionicPlatform, LogSrv){
+  'use strict';
+  var service = {
+    vibrateOnce: vibrateOnce,
+    vibrateWithPattern: vibrateWithPattern,
+    cancelVibration: cancelVibration
+  };
+
+  function vibrateOnce(time){
+    if(!time){time = 300;}
+    pluginReady(function(){
+      $window.navigator.vibrate(time);
+    });
+  }
+
+  function vibrateWithPattern(patternArray){
+    pluginReady(function(){
+      $window.navigator.vibrate(patternArray);
+    });
+  }
+
+  function cancelVibration(){
+    pluginReady(function(){
+      $window.navigator.vibrate(0);
+    });
+  }
+
+  function pluginReady(fn){
+    $ionicPlatform.ready(function(){
+      if($window.navigator && $window.navigator.vibrate){
+        fn();
+      } else {
+        LogSrv.trackError('pluginNotFound:Vibrate');
+        alert('vibrate not found');
       }
     });
   }
@@ -143,7 +193,7 @@ angular.module('app')
       if(beepFallback){beepFallback(times);}
     });
   }
-  
+
   function _isConfirm(buttonIndex){
     return buttonIndex === 1 ? true : false;
   }
