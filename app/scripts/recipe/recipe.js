@@ -324,8 +324,8 @@ angular.module('app')
     link: function(scope, element, attr){
       scope.bigImgFail = imagesPlaceholders.recipe.portrait;
       scope.smallImgFail = imagesPlaceholders.recipe.landing;
-      scope.bigImg = scope.images ? scope.images.portrait : scope.bigImgFail;
-      scope.smallImg = scope.images ? scope.images.landing : scope.smallImgFail;
+      scope.bigImg = scope.images && scope.images.portrait ? scope.images.portrait : scope.bigImgFail;
+      scope.smallImg = scope.images && scope.images.landing ? scope.images.landing : scope.smallImgFail;
     }
   };
 })

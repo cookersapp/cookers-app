@@ -3,6 +3,8 @@
 # TODO
 
 - next release :
+    - supprimer dataFoods, dataRecipes, dataSelections, dataGlobalmessages et vider le cache (avec le nouveau système)
+
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
@@ -100,23 +102,50 @@ Interesting plugins :
 
 Publishing to market : http://ionicframework.com/docs/guide/publishing.html
 
-## Installer l'application
-
-Android :
-
-- aller dans les Paramètres > Sécurité > Sources inconnues
-- Télécharger l'application
-- L'installer
-
-## Useful infos
+## Useful plugins
 
 - barcode scanner :
     - https://github.com/wildabeast/BarcodeScanner
     - https://github.com/Dbuggerx/BarcodeScanner (for portrait)
     - https://github.com/bitflower/Cordova-CanvasCamera (embed camera in img/canvas)
     - https://github.com/daraosn/Cordova-CanvasCamera (camera inside in img/canvas)
-- android push notifications : http://intown.biz/2014/04/11/android-notifications/
-- speech recognition : https://github.com/jcsmesquita/cordova-speechrecognition https://github.com/poiuytrez/SpeechRecognizer https://github.com/manueldeveloper/cordova-plugin-speech-recognizer https://github.com/macdonst/SpeechRecognitionPlugin
+- android push notifications :
+    - https://github.com/katzer/cordova-plugin-local-notifications
+    - http://intown.biz/2014/04/11/android-notifications/
+    - https://github.com/phonegap-build/PushPlugin
+    - https://github.com/avivais/phonegap-parse-plugin
+    - https://github.com/mgcrea/cordova-push-notification
+- social share :
+    - https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin
+    - https://github.com/leecrossley/cordova-plugin-social-message
+- speech recognition :
+    - https://github.com/jcsmesquita/cordova-speechrecognition
+    - https://github.com/poiuytrez/SpeechRecognizer
+    - https://github.com/manueldeveloper/cordova-plugin-speech-recognizer
+    - https://github.com/macdonst/SpeechRecognitionPlugin
+- ask to rate app :
+    - https://github.com/Viras-/cordova-plugin-rateapp
+- resize image :
+    - https://github.com/raananw/PhoneGap-Image-Resizer
+- app badge :
+    - https://github.com/katzer/cordova-plugin-badge
+- datepicker :
+    - https://github.com/VitaliiBlagodir/cordova-plugin-datepicker
+- webintent :
+    - https://github.com/Initsogar/cordova-webintent
+- network infos :
+    - https://github.com/apache/cordova-plugin-network-information
+- geofencing :
+    - https://github.com/cowbell/cordova-plugin-geofence (sample app: https://github.com/cowbell/ionic-geofence)
+- contact picker :
+    - https://github.com/nishilshah17/CordovaContactPickerPlugin
+- get native app version :
+    - https://github.com/whiteoctober/cordova-plugin-app-version
+
+- Android undo bar (like gmail, firefox) :
+    - https://github.com/JohnPersano/SuperToasts
+    - https://github.com/soarcn/UndoBar
+    - https://github.com/SimonVT/MessageBar
 
 ## Design
 
