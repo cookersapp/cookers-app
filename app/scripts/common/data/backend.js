@@ -118,7 +118,7 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
+    getCurrent: function(){ return get(moment().week()+(Config.debug ? 2 : 0)); },
     get: get
   };
 

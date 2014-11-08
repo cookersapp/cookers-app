@@ -3,7 +3,6 @@
 # TODO
 
 - next release :
-    - scan sur les customItems
     - show temp images on recipes list (if they fail to load !)
     - supprimer dataFoods, dataRecipes, dataSelections, dataGlobalmessages et vider le cache (avec le nouveau système)
     - mettre en cache les données embeded dans les recipes (foods), les products (additives)

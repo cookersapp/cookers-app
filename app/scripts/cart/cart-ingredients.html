@@ -10,8 +10,9 @@
     </div>
     <div class="list to-buy" ng-show="!customItems.data.editing && data.cart.customItems && data.cart.customItems.length > 0 && fn.cartHasCustomItemsToBuy()">
       <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.cart.customItems" ng-show="!item.bought">
+        <div class="scan pull-right" ng-click="fn.productDetails(item)"><i class="ion-icon ion-android-mixer"></i></div>
         <div class="check pull-right">
-          <div class="box" ng-click="fn.customItem.buy(item)"></div>
+          <div class="box" ng-click="customItems.fn.buy(item)"></div>
         </div>
         <div class="text" bo-bind="item.name"></div>
       </div>
@@ -58,7 +59,7 @@
       <div class="list bought">
         <div class="item item-cart-ingredient" bindonce ng-repeat="item in data.cart.customItems" ng-show="item.bought">
           <div class="check pull-right">
-            <div class="box" ng-click="fn.customItem.unbuy(item)">✔</div>
+            <div class="box" ng-click="customItems.fn.unbuy(item)">✔</div>
           </div>
           <div class="text" bo-bind="item.name"></div>
         </div>
