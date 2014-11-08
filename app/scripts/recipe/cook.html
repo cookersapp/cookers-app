@@ -15,7 +15,7 @@
     <div class="screen" ng-cloack>
       <div class="header row card">
         <div class="col col-33 picture">
-          <img-recipe images="recipe.images" type="portrait"></img-recipe>
+          <img-recipe images="recipe.images" type="'portrait'"></img-recipe>
         </div>
         <div class="col text">
           <h1 class="title" bo-bind="recipe.name"></h1>
@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="cooked">
-        <img-recipe images="recipe.images" type="landing"></img-recipe>
+        <img-recipe images="recipe.images" type="'landing'"></img-recipe>
         <div class="finish">
           <button class="button button-balanced handwritten" ng-click="done()">Fini !</button>
           <h1 class="title handwritten">

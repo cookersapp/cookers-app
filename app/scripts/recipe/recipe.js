@@ -312,24 +312,6 @@ angular.module('app')
   });
 })
 
-.directive('recipeImage', function(imagesPlaceholders){
-  'use strict';
-  return {
-    restrict: 'E',
-    template: '<img class="portrait" ng-src="{{bigImg}}" loading-src="{{bigImgFail}}" fallback-src="{{bigImgFail}}">'+
-    '<img class="landing" ng-src="{{smallImg}}" loading-src="{{smallImgFail}}" fallback-src="{{smallImgFail}}">',
-    scope: {
-      images: '='
-    },
-    link: function(scope, element, attr){
-      scope.bigImgFail = imagesPlaceholders.recipe.portrait;
-      scope.smallImgFail = imagesPlaceholders.recipe.landing;
-      scope.bigImg = scope.images && scope.images.portrait ? scope.images.portrait : scope.bigImgFail;
-      scope.smallImg = scope.images && scope.images.landing ? scope.images.landing : scope.smallImgFail;
-    }
-  };
-})
-
 .directive('imgRecipe', function(imagesPlaceholders){
   'use strict';
   return {
@@ -338,13 +320,13 @@ angular.module('app')
     template: '<img ng-src="{{img}}" loading-src="{{imgFail}}" fallback-src="{{imgFail}}">',
     scope: {
       images: '=',
-      type: '@'
+      type: '='
     },
     link: function(scope, element, attr){
       scope.imgFail = imagesPlaceholders.recipe[scope.type];
-      scope.img = scope.images ? scope.images[scope.type] : scope.imgFail;
+      scope.img = scope.images && scope.images[scope.type] ? scope.images[scope.type] : scope.imgFail;
       scope.$watch('images', function(){
-        scope.img = scope.images ? scope.images[scope.type] : scope.imgFail;
+        scope.img = scope.images && scope.images[scope.type] ? scope.images[scope.type] : scope.imgFail;
       });
     }
   };

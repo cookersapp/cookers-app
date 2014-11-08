@@ -22,8 +22,8 @@
 
     <div class="screen">
       <div class="list">
-        <div class="item item-recipe-img-full card" bo-class="{'big-image': ctx.settings.bigImages}" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
-          <recipe-image images="recipe.images" ng-click="toggleIngredients(recipe, $index)"></recipe-image>
+        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
+          <img-recipe images="recipe.images" type="ctx.settings.bigImages ? 'portrait' : 'landing'" ng-click="toggleIngredients(recipe, $index)"></img-recipe>
           <div class="legend-top">
             <div class="price" bo-if="ctx.settings.showPrices">
               <div class="number" bo-bind="recipe.price | price:1:false"></div>

@@ -10,16 +10,9 @@
     position: relative;
     padding: 0px;
     border: none;
+    min-height: 150px;
     & img {
       width: 100%;
-      &.portrait { display: none; }
-      &.landing { display: block; }
-    }
-    &.big-image {
-      & img {
-        &.portrait { display: block; }
-        &.landing { display: none; }
-      }
     }
     .ingredients-overlay {
       display: none;

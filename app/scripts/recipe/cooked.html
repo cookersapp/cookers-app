@@ -11,7 +11,7 @@
 
     <div class="screen">
       <div class="header row card" bindonce ng-repeat="recipe in recipes" ui-sref="app.recipe({recipeId: recipe.id})">
-        <div class="col col-33 picture" bo-if="$index%2 === 0"><img-recipe images="recipe.images" type="portrait"></img-recipe></div>
+        <div class="col col-33 picture" bo-if="$index%2 === 0"><img-recipe images="recipe.images" type="'portrait'"></img-recipe></div>
         <div class="col text">
           <h1 class="title" bo-bind="recipe.name"></h1>
           <div class="content">
@@ -25,7 +25,7 @@
             <span bo-bind="recipe.time | cookTime"></span>
           </div>
         </div>
-        <div class="col col-33 picture" bo-if="$index%2 === 1"><img-recipe images="recipe.images" type="portrait"></img-recipe></div>
+        <div class="col col-33 picture" bo-if="$index%2 === 1"><img-recipe images="recipe.images" type="'portrait'"></img-recipe></div>
       </div>
     </div>
   </ion-content>
