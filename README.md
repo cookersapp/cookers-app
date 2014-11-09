@@ -3,6 +3,7 @@
 # TODO
 
 - next release :
+    - quantité liste de course : compter que les not bought
     - supprimer dataFoods, dataRecipes, dataSelections, dataGlobalmessages et vider le cache (avec le nouveau système)
     - count user scans
     - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine

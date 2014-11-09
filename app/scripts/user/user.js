@@ -24,7 +24,7 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $window, StorageSrv, ToastSrv, DialogSrv, LogSrv, Utils){
+.controller('ProfileCtrl', function($scope, $window, StorageSrv, BackendUtils, ToastSrv, DialogSrv, LogSrv, Utils){
   'use strict';
   var user = StorageSrv.getUser();
 
@@ -32,7 +32,7 @@ angular.module('app')
     DialogSrv.confirm('Vider le cache ?').then(function(result){
       if(result){
         LogSrv.trackClearCache();
-        StorageSrv.clearCache();
+        BackendUtils.clearCache();
         ToastSrv.show('Cache vidé !');
       }
     });

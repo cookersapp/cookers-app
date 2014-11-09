@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, _LocalStorageSrv, localStorageDefault, Config){
+.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, localStorageDefault, Config){
   'use strict';
   var service = {
     launch: function(){
@@ -62,26 +62,26 @@ angular.module('app')
   }
 
   function _initStorage(){
-    var app = _LocalStorageSrv.getApp();
+    var app = StorageSrv.getApp();
     if(!app || app.version !== Config.appVersion){
       for(var i in localStorageDefault){
         var key = i;
         var defaultValue = localStorageDefault[key] || {};
-        var storageValue = _LocalStorageSrv.get(key) || {};
+        var storageValue = StorageSrv.get(key) || {};
         var extendedValue = Utils.extendDeep({}, defaultValue, storageValue);
-        _LocalStorageSrv.set(key, extendedValue);
+        StorageSrv.set(key, extendedValue);
       }
 
-      app = _LocalStorageSrv.getApp();
+      app = StorageSrv.getApp();
       if(app.version !== ''){
         /* Migration code */
-        _LocalStorageSrv.setUser({upgrade: app.version, data: {welcomeMailSent: true}});
+        StorageSrv.saveUser({upgrade: app.version, data: {welcomeMailSent: true}});
         /* End migration code */
       }
 
-      app = _LocalStorageSrv.getApp();
+      app = StorageSrv.getApp();
       app.version = Config.appVersion;
-      _LocalStorageSrv.setApp(app);
+      StorageSrv.setApp(app);
     }
   }
 

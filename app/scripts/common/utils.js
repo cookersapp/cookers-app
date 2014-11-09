@@ -6,6 +6,7 @@ angular.module('app')
     createUuid: createUuid,
     extendDeep: extendDeep,
     isEmail: isEmail,
+    startsWith: startsWith,
     endsWith: endsWith,
     randInt: randInt,
     clock: addClock,
@@ -37,6 +38,10 @@ angular.module('app')
   function isEmail(str){
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(str);
+  }
+
+  function startsWith(str, prefix){
+    return str.indexOf(prefix) === 0;
   }
 
   function endsWith(str, suffix){
