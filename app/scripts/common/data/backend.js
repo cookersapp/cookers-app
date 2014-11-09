@@ -184,14 +184,21 @@ angular.module('app')
         if(_isExpired(cache.elts[name][id], _timeToUpdate)){ _backgroundUpdate(name, id); }
         return $q.when(cache.elts[name][id].data);
       } else { // not found in caches, get it from server and store it in caches
-        cache.eltPromises[name][id] = get('/'+name+'/'+id).then(function(elt){
+        var defer = $q.defer();
+        cache.eltPromises[name][id] = defer.promise;
+        get('/'+name+'/'+id).then(function(elt){
           if(elt){
             _updateCacheData(name, id, _createCacheData(elt));
             localCache.elts[id] = cache.elts[name][id];
             _saveLocalCache(name, localCache);
+            defer.resolve(cache.elts[name][id].data);
+          } else {
+            defer.resolve();
           }
-          delete cache.eltPromises[name][id];
-          return cache.elts[name][id].data;
+
+          if(cache.eltPromises[name]){ delete cache.eltPromises[name][id]; }
+        }, function(err){
+          defer.resolve();
         });
         return cache.eltPromises[name][id];
       }

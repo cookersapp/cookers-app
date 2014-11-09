@@ -3,8 +3,10 @@
 # TODO
 
 - next release :
-    - show temp images on recipes list (if they fail to load !)
     - supprimer dataFoods, dataRecipes, dataSelections, dataGlobalmessages et vider le cache (avec le nouveau système)
+    - count user scans
+    - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
+    - widget uservoice sur la home
     - mettre en cache les données embeded dans les recipes (foods), les products (additives)
 
     - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
