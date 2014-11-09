@@ -297,10 +297,8 @@ angular.module('app')
 
   function _createItem(ingredient, recipe){
     var item = angular.copy(ingredient);
-    var source = _createItemSource(ingredient, recipe);
-    item.price = source.price;
-    item.quantity = source.quantity;
-    item.sources = [source];
+    item.sources = [];
+    _addSourceToItem(item, ingredient, recipe);
     return item;
   }
 
@@ -309,7 +307,7 @@ angular.module('app')
     item.sources.push(source);
     var _ctx = {ingredient: item};
     item.price = PriceCalculator.sum(_.map(item.sources, 'price'), _ctx);
-    item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'), _ctx);
+    item.quantity = QuantityCalculator.sum(_.map(_.filter(item.sources, function(elt){return !elt.ingredient.bought;}), 'quantity'), _ctx);
   }
 
   function _createItemSource(ingredient, recipe){
