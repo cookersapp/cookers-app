@@ -1,15 +1,22 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv, DialogSrv){
+.controller('CartCtrl', function($scope, $state, $window, $timeout, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv, DialogSrv){
   'use strict';
+  $scope.addPerfTime('loadCartCtrl');
+  $scope.$on('$viewContentLoaded', function(){
+    $scope.addPerfTime('$viewContentLoaded CartCtrl');
+  });
+
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
   $scope.fn = fn;
   $scope.ui = ui;
 
-  data.cart = CartSrv.getCurrentCart();
-  data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
-  data.shopPrice = CartUtils.getShopPrice(data.cart);
+  $scope.$on('$viewContentLoaded', function(){
+    data.cart = CartSrv.getCurrentCart();
+    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+    data.shopPrice = CartUtils.getShopPrice(data.cart);
+  });
 
   CartUiUtils.initStartSelfScanModal()    .then(function(modal)   { ui.shopModal    = modal;    });
   CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
@@ -103,14 +110,21 @@ angular.module('app')
   };
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, $window, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils, Config){
+.controller('CartIngredientsCtrl', function($scope, $state, $window, $timeout, CartSrv, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils, Config, perfTimes){
   'use strict';
+  $scope.addPerfTime('loadCartIngredientsCtrl');
+  $scope.$on('$viewContentLoaded', function(){
+    $scope.addPerfTime('$viewContentLoaded CartIngredientsCtrl');
+    ToastSrv.show('$viewContentLoaded in '+perfTimes[perfTimes.length-1].total+' ms');
+  });
+  $scope.perfTimes = perfTimes;
+
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
   var ui = $scope.ui;
 
-  if(data.cart.selfscan){
+  if(data.cart && data.cart.selfscan){
     $state.go('app.cart.selfscan');
   } else {
     var user = StorageSrv.getUser();
@@ -120,7 +134,10 @@ angular.module('app')
       });
     }
 
-    data.items = ItemUtils.fromCart(data.cart);
+    $scope.$on('$viewContentLoaded', function(){
+      if(!data.cart){data.cart = CartSrv.getCurrentCart();}
+      data.items = ItemUtils.fromCart(data.cart);
+    });
 
     CustomItemUtils.compatibility(data.cart);
     var customItems = {
@@ -185,7 +202,7 @@ angular.module('app')
     $scope.openedItems = openedItems;
 
     fn.cartHasItems = function(){
-      return data.items.length > 0 || data.cart.customItems.length > 0;
+      return (data.items && data.items.length > 0) || (data.cart && data.cart.customItems.length > 0);
     };
     fn.cartHasItemsToBuy = function(){
       var itemsToBuy = _.filter(data.items, function(item){

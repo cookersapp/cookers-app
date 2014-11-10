@@ -36,11 +36,22 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
         controller: 'HomeCtrl'
       }
     }
+  })
+  .state('app.empty', {
+    url: '/empty',
+    views: {
+      'menuContent': {
+        templateUrl: 'views/empty.html',
+        controller: 'EmptyCtrl'
+      }
+    }
   });
 
   // set default route
   $urlRouterProvider.otherwise('/app/home');
 })
+
+.value('perfTimes', [])
 
 .constant('Config', Config)
 .constant('supportTeamEmail', 'loic@cookers.io')
@@ -63,9 +74,6 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   userCarts: { carts: [] },
   userStandaloneCookedRecipes: { recipes: [] },
   userRecipeHistory: { recipes: [] },
-  dataFoods: { foods: {} },
-  dataRecipes: { recipes: {} },
-  dataSelections: { selections: {} },
   dataGlobalmessages: {
     lastCall: null,
     messages: [],
@@ -73,7 +81,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   }
 })
 
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config, PerfSrv){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config, PerfSrv, perfTimes, ToastSrv){
   'use strict';
   var user = StorageSrv.getUser();
   $rootScope.ctx = {
@@ -116,4 +124,22 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     var watchers = PerfSrv.getWatchesForElement(body);
     console.log(digests + ' calls ('+watchers.length+' watches)');
   });*/
+  $rootScope.addPerfTime = function(name){
+    var elt = {name: name, time: Date.now()};
+    if(perfTimes.length > 0){
+      elt.duration = elt.time - perfTimes[perfTimes.length-1].time;
+      if(perfTimes[perfTimes.length-1].total){
+        elt.total = perfTimes[perfTimes.length-1].total + elt.duration;
+      } else {
+        elt.total = elt.duration;
+      }
+    }
+    perfTimes.push(elt);
+  };
+  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+    $rootScope.addPerfTime('$stateChangeStart');
+  });
+  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    $rootScope.addPerfTime('$stateChangeSuccess');
+  });
 });

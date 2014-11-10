@@ -15,6 +15,7 @@ angular.module('app')
   function _get(key, defaultValue){
     if(!localStorageCache[key]){
       if($window.localStorage && Config.storage){
+        // TODO : try/catch si la valeure stockée n'est pas un json valide
         localStorageCache[key] = JSON.parse($window.localStorage.getItem(localStoragePrefix+key)) || angular.copy(defaultValue);
       } else {
         localStorageCache[key] = angular.copy(defaultValue);

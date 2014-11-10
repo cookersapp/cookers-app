@@ -1,0 +1,19 @@
+<ion-view>
+  <ion-header-bar align-title="center" class="bar-custom">
+    <div class="buttons">
+      <button menu-toggle="left" class="button button-icon ion-navicon"></button>
+    </div>
+    <h1 class="title">Empty</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <table>
+      <tr><th>Step</th><th>Duration</th><th>Total</th></tr>
+      <tr ng-repeat="step in perfTimes">
+        <td>{{step.name}}</td>
+        <td>{{step.duration}}</td>
+        <td>{{step.total}}</td>
+      </tr>
+    </table>
+  </ion-content>
+</ion-view>

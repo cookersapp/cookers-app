@@ -3,8 +3,6 @@
 # TODO
 
 - next release :
-    - quantité liste de course : compter que les not bought
-    - supprimer dataFoods, dataRecipes, dataSelections, dataGlobalmessages et vider le cache (avec le nouveau système)
     - count user scans
     - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
     - widget uservoice sur la home
@@ -146,6 +144,9 @@ Publishing to market : http://ionicframework.com/docs/guide/publishing.html
     - https://github.com/nishilshah17/CordovaContactPickerPlugin
 - get native app version :
     - https://github.com/whiteoctober/cordova-plugin-app-version
+- audio :
+    - https://github.com/SidneyS/cordova-plugin-nativeaudio
+    - https://github.com/apache/cordova-plugin-media
 
 - Android undo bar (like gmail, firefox) :
     - https://github.com/JohnPersano/SuperToasts

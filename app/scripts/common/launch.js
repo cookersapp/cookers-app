@@ -75,7 +75,9 @@ angular.module('app')
       app = StorageSrv.getApp();
       if(app.version !== ''){
         /* Migration code */
-        StorageSrv.saveUser({upgrade: app.version, data: {welcomeMailSent: true}});
+        StorageSrv.remove('dataFoods');
+        StorageSrv.remove('dataRecipes');
+        StorageSrv.remove('dataSelections');
         /* End migration code */
       }
 

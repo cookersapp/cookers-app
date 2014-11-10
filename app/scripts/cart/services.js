@@ -333,7 +333,7 @@ angular.module('app')
 
   function compatibility(cart){
     // this is for compatibility with previous versions where customItems were saved as text !
-    if(!Array.isArray(cart.customItems)){
+    if(cart && !Array.isArray(cart.customItems)){
       cart.customItems = toList(cart.customItems);
       StorageSrv.saveCart(cart);
     }

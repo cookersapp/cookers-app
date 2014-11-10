@@ -17,7 +17,7 @@ angular.module('app')
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv, perfTimes, ToastSrv, $state){
   'use strict';
   // preload selection
   SelectionSrv.getCurrent();
@@ -42,4 +42,25 @@ angular.module('app')
       });
     }, 3000);
   };
+
+  while(perfTimes.length){perfTimes.pop();}
+  $scope.goToEmpty = function(){
+    ToastSrv.show('clicked !!!');
+    $scope.addPerfTime('buttonClick');
+    $state.go('app.empty');
+  };
+  $scope.goToCart = function(){
+    ToastSrv.show('clicked !!!');
+    $scope.addPerfTime('buttonClick');
+    $state.go('app.cart.ingredients');
+  };
+})
+
+.controller('EmptyCtrl', function($scope, perfTimes, ToastSrv){
+  $scope.addPerfTime('loadController');
+  $scope.$on('$viewContentLoaded', function(){
+    $scope.addPerfTime('$viewContentLoaded');
+    ToastSrv.show('$viewContentLoaded in '+perfTimes[perfTimes.length-1].total+' ms');
+  });
+  $scope.perfTimes = perfTimes;
 });
