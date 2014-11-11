@@ -11,9 +11,9 @@
         <div>
           <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
         </div>
-        <div class="padding pull-right" ng-show="data.product.store">
-          <h4 style="white-space: nowrap;">{{data.product.store.price | price}}</h4>
-          <h5 style="white-space: nowrap;">{{data.product.store.genericPrice | price}}</h5>
+        <div class="padding pull-right" ng-show="data.store">
+          <h4 style="white-space: nowrap;">{{data.store.price | price}}</h4>
+          <h5 style="white-space: nowrap;">{{data.store.genericPrice | price}}</h5>
         </div>
         <div class="padding">
           <h4>{{data.product.name}}</h4>

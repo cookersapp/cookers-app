@@ -78,8 +78,7 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    get: function(id){ return BackendUtils.getWithCache('foods', id, timeToUpdate); },
-    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('foods', _quickNDirty); }
+    get: function(id){ return BackendUtils.getWithCache('foods', id, timeToUpdate); }
   };
 
   return service;
@@ -125,8 +124,10 @@ angular.module('app')
 
 .factory('StoreSrv', function(BackendUtils){
   'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    getAll: function(_quickNDirty){ return BackendUtils.getAllWithCache('stores', _quickNDirty); }
+    getAll  : function(_quickNDirty)  { return BackendUtils.getAllWithCache('stores', _quickNDirty);  },
+    get     : function(id)            { return BackendUtils.getWithCache('stores', id, timeToUpdate); }
   };
 
   return service;

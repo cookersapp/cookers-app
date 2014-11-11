@@ -137,7 +137,8 @@ angular.module('app')
       var totalPrice = null;
       for(var i=0; i<cart.products.length; i++){
         var product = cart.products[i];
-        var productPrice = angular.copy(product.store.price);
+        var productPrice = angular.copy(product.cartData.price);
+        console.log('product.cartData', product.cartData);
         productPrice.value = productPrice.value * product.cartData.quantity;
         if(i === 0){
           totalPrice = productPrice;
@@ -177,10 +178,10 @@ angular.module('app')
     CartDataSrv.updateCart(cart);
   }
 
-  function addProduct(cart, product, quantity){
+  function addProduct(cart, product, quantity, price){
     if(!cart.products){cart.products = [];}
     var cartProduct = _.find(cart.products, {barcode: product.barcode});
-    var cartNewProduct = _CartBuilder.createProduct(cart, product, quantity);
+    var cartNewProduct = _CartBuilder.createProduct(cart, product, quantity, price);
     if(cartProduct){
       cartProduct.cartData.quantity += quantity;
     } else {
@@ -216,7 +217,7 @@ angular.module('app')
 })
 
 
-.factory('ItemUtils', function(PriceCalculator, QuantityCalculator, StorageSrv, CollectionUtils, _CartBuilder){
+.factory('ItemUtils', function(PriceCalculator, QuantityCalculator, FoodSrv, CollectionUtils, _CartBuilder){
   'use strict';
   var service = {
     fromCart: fromCart,
@@ -248,8 +249,8 @@ angular.module('app')
     return items;
   }
 
-  function addProduct(cart, items, product, quantity){
-    var cartProduct = _CartBuilder.createProduct(cart, product, quantity);
+  function addProduct(cart, items, product, quantity, price){
+    var cartProduct = _CartBuilder.createProduct(cart, product, quantity, price);
     addCartProduct(items, cartProduct, true);
   }
 
@@ -263,14 +264,16 @@ angular.module('app')
       if(!item.products){item.products = [];}
       item.products.push(angular.copy(cartProduct));
     } else {
-      var food = StorageSrv.getFood(cartProduct.foodId) || {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}};
-      items.push({
-        food: food,
-        products: [angular.copy(cartProduct)]
+      FoodSrv.get(cartProduct.foodId).then(function(food){
+        if(!food){ food = {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}}; }
+        items.push({
+          food: food,
+          products: [angular.copy(cartProduct)]
+        });
+        if(_sort === undefined || _sort === true){
+          sortItemsByCategory(items);
+        }
       });
-      if(_sort === undefined || _sort === true){
-        sortItemsByCategory(items);
-      }
     }
   }
 
@@ -438,48 +441,12 @@ angular.module('app')
 })
 
 
-.factory('CartUiUtils', function($rootScope, $state, $window, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, DialogSrv, IonicUi, LogSrv, Config){
+.factory('CartUiUtils', function($rootScope, $state, $window, $q, CartSrv, CartUtils, ItemUtils, ProductSrv, StoreSrv, ToastSrv, DialogSrv, IonicUi, LogSrv, Config){
   'use strict';
   var service = {
-    initStartSelfScanModal: initStartSelfScanModal,
     initProductModal: initProductModal,
     initCartOptions: initCartOptions
   };
-
-  function initStartSelfScanModal(){
-    var data = {}, fn = {};
-    var scope = $rootScope.$new(true);
-    scope.data = data;
-    scope.fn = fn;
-
-    StoreSrv.getAll(true).then(function(stores){
-      data.stores = stores;
-    });
-
-    return IonicUi.initModal(scope, 'scripts/cart/partials/shop-modal.html').then(function(modal){
-      return {
-        open: function(opts){
-          fn.cancelSelfScan = function(){
-            modal.hide().then(function(){
-              if(opts.callback){ opts.callback('cancel'); }
-            });
-          };
-          fn.activeSelfScan = function(store){
-            if(store && store.id){
-              if(opts.callback){ opts.callback('storeSelected', store); }
-              modal.hide().then(function(){
-                data.storeSelected = null;
-              });
-            } else {
-              DialogSrv.alert('Error: unknown store: '+JSON.stringify(store));
-            }
-          };
-
-          return modal.show();
-        }
-      };
-    });
-  }
 
 
   function initProductModal(){
@@ -488,32 +455,6 @@ angular.module('app')
     scope.data = data;
     scope.fn = fn;
 
-    /*scope.$watch('data.updateProductFood', function(food){
-      if(food && data.product && data.product.foodId !== food.id){
-        updateProductFood(data.product, food);
-      }
-    });
-    function updateProductFood(cartProduct, food){
-      ProductSrv.setFoodId(cartProduct.barcode, food.id).then(function(){
-        // TODO : should access to controller items & cart...
-        ItemUtils.removeCartProduct(scope.data.items, cartProduct);
-        cartProduct.foodId = food.id;
-        ItemUtils.addCartProduct(scope.data.items, cartProduct);
-        CartUtils.updateProduct(scope.data.cart, cartProduct);
-        ToastSrv.show(scope.data.product.name+' est assigné comme '+food.name);
-      });
-    }
-    FoodSrv.getAll().then(function(foods){
-      if(foods){
-        foods.sort(function(a,b){
-          if(a.name > b.name){return 1; }
-          else if(a.name < b.name){ return -1; }
-          else { return 0; }
-        });
-        data.foods = foods;
-      }
-    });*/
-
     return IonicUi.initModal(scope, 'scripts/cart/partials/product-modal.html').then(function(modal){
       return {
         open: function(opts){
@@ -521,9 +462,8 @@ angular.module('app')
 
           fn.close = function(action){
             modal.hide().then(function(){
-              if(opts.callback){opts.callback(action, data.product);}
+              if(opts.callback){opts.callback(action, data.product, 1, data.store.price);}
               data.product = null;
-              //data.updateProductFood = null;
             });
           };
           data.title = opts.title;
@@ -532,15 +472,20 @@ angular.module('app')
           return modal.show().then(function(){
             modalShowedTime = Date.now();
             if(Config.debug){ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');}
-            return opts.product ? opts.product : (opts.store ? ProductSrv.getWithStore(opts.store, opts.barcode) : ProductSrv.get(opts.barcode));
-          }).then(function(product){
+            var promises = [];
+            promises.push(opts.product ? $q.when(opts.product) : ProductSrv.get(opts.barcode));
+            if(opts.store){ promises.push(ProductSrv.getWithStore(opts.store, opts.product ? opts.product.barcode : opts.barcode)); }
+            return $q.all(promises);
+          }).then(function(results){
+            var product = results[0];
+            var store = results[1];
             console.log('product', product);
             productLoadedTime = Date.now();
             if(Config.debug){ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');}
             LogSrv.trackCartProductLoaded(product ? product.barcode : opts.barcode, productLoadedTime-modalShowedTime, product ? true : false);
             if(product){
               data.product = product;
-              //data.updateProductFood = {id: product.food.id};
+              data.store = store;
             } else {
               // TODO : ask user some infos...
               DialogSrv.alert('Product not found :(');
@@ -640,12 +585,13 @@ angular.module('app')
     return r;
   }
 
-  function createProduct(cart, product, quantity){
+  function createProduct(cart, product, quantity, price){
     var p = angular.copy(product);
     p.cartData = {
       cart: cart.id,
       created: Date.now(),
-      quantity: quantity
+      quantity: quantity,
+      price: price
     };
     return p;
   }

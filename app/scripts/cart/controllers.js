@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ToastSrv, DialogSrv, PerfSrv){
+.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, StoreSrv, ToastSrv, DialogSrv, LogSrv, Utils, PerfSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -14,7 +14,6 @@ angular.module('app')
       data.shopPrice = CartUtils.getShopPrice(data.cart);
     });
 
-    CartUiUtils.initStartSelfScanModal()    .then(function(modal)   { ui.shopModal    = modal;    });
     CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
     CartUiUtils.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
 
@@ -22,9 +21,74 @@ angular.module('app')
       ui.cartOptions.open(event);
     };
 
+    fn.scan = function(_item){
+      var startScanTime = Date.now();
+      BarcodeSrv.scan().then(function(result){
+        $window.alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
+        if(!result.cancelled){
+          var barcode = result.text;
+          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
+          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+          if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
+
+          // http://cookers.io/scan/stores/54536fe98272782700c77b46
+          if(Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){
+            var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
+            var matches = barcode.match(regex);
+            var storeId = matches ? matches[1] : null;
+            StoreSrv.get(storeId).then(function(store){
+              if(store){
+                DialogSrv.confirm('Bienvenu à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
+                  if(result){
+                    data.cart.selfscan = true;
+                    data.cart.store = store;
+                    CartSrv.updateCart(data.cart);
+                    $state.go('app.cart.selfscan');
+                  }
+                });
+              } else {
+                DialogSrv.alert('Magasin non reconnu :(', 'Self-scan');
+              }
+            });
+          } else {
+            var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
+            var storeId = data && data.cart && data.cart.store ? data.cart.store.id : undefined;
+            LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
+
+            ui.productModal.open({
+              title: 'Produit scanné',
+              store: storeId,
+              barcode: barcode,
+              callback: function(action, product, quantity, price){
+                if(action === 'bought'){
+                  if(data.cart.selfscan){
+                    CartUtils.addProduct(data.cart, product, quantity, price);
+                    ItemUtils.addProduct(data.cart, data.items, product, quantity, price);
+                    data.shopPrice = CartUtils.getShopPrice(data.cart);
+                    ToastSrv.show('✔ '+product.name+' acheté !');
+                  } else {
+                    if(_item){
+                      if(_item.food && _item.food.id){
+                        fn.buyItem(_item);
+                      } else {
+                        customItems.fn.buy(item);
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        }
+      }, function(error){
+        DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
+        LogSrv.trackError('scanFailed', error);
+      });
+    };
+
     fn.toggleSelfScan = function(){
       if(data.cart.selfscan){
-        DialogSrv.confirm('Abandonner le self-scan ?').then(function(result){
+        DialogSrv.confirm('Votre panier sera perdu !', 'Abandonner le self-scan ?').then(function(result){
           if(result){
             delete data.cart.selfscan;
             delete data.cart.store;
@@ -33,46 +97,8 @@ angular.module('app')
           }
         });
       } else {
-        ui.shopModal.open({
-          callback: function(action, store){
-            if(action === 'storeSelected' && store && store.id){
-              data.cart.selfscan = true;
-              data.cart.store = store;
-              CartSrv.updateCart(data.cart);
-              $state.go('app.cart.selfscan');
-            }
-          }
-        });
+        fn.scan();
       }
-    };
-
-    fn.scan = function(multi){
-      var startScanTime = Date.now();
-      BarcodeSrv.scan().then(function(result){
-        if(!result.cancelled){
-          var barcode = result.text;
-          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
-          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
-          if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
-
-          ui.productModal.open({
-            title: 'Produit scanné',
-            store: data.cart.store.id,
-            barcode: barcode,
-            callback: function(action, product){
-              if(action === 'bought'){
-                CartUtils.addProduct(data.cart, product, 1);
-                ItemUtils.addProduct(data.cart, data.items, product, 1);
-                data.shopPrice = CartUtils.getShopPrice(data.cart);
-                ToastSrv.show('✔ '+product.name+' acheté !');
-              }
-            }
-          });
-        }
-      }, function(error){
-        DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
-        LogSrv.trackError('scanFailed', error);
-      });
     };
   });
 })
@@ -235,37 +261,6 @@ angular.module('app')
     fn.unbuyItem = function(item){
       LogSrv.trackUnbuyItem(item.food.id);
       CartUtils.unbuyItem(data.cart, item);
-    };
-
-    fn.productDetails = function(_item){
-      var startScanTime = Date.now();
-      BarcodeSrv.scan().then(function(result){
-        if(!result.cancelled){
-          var barcode = result.text;
-          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
-          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
-          if(Config.debug){ToastSrv.show(barcode+' scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
-          var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
-          LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
-
-          ui.productModal.open({
-            title: 'Produit scanné',
-            barcode: barcode,
-            callback: function(action, product){
-              if(action === 'bought'){
-                if(item.food && item.food.id){
-                  fn.buyItem(item);
-                } else {
-                  customItems.fn.buy(item);
-                }
-              }
-            }
-          });
-        }
-      }, function(error){
-        DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
-        LogSrv.trackError('scanFailed', error);
-      });
     };
   }
 })
