@@ -1,4 +1,4 @@
-angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bindonce', 'ngCordova', 'dcbImgFallback', 'monospaced.elastic'])
+angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bindonce', 'ngCordova', 'dcbImgFallback', 'monospaced.elastic', 'LocalForageModule'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
@@ -36,22 +36,11 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
         controller: 'HomeCtrl'
       }
     }
-  })
-  .state('app.empty', {
-    url: '/empty',
-    views: {
-      'menuContent': {
-        templateUrl: 'views/empty.html',
-        controller: 'EmptyCtrl'
-      }
-    }
   });
 
   // set default route
   $urlRouterProvider.otherwise('/app/home');
 })
-
-.value('perfTimes', [])
 
 .constant('Config', Config)
 .constant('supportTeamEmail', 'loic@cookers.io')
@@ -69,35 +58,28 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   }
 })
 
-.value('localStorageDefault', {
-  app: { version: '' },
-  userCarts: { carts: [] },
-  userStandaloneCookedRecipes: { recipes: [] },
-  userRecipeHistory: { recipes: [] },
-  dataGlobalmessages: {
-    lastCall: null,
-    messages: [],
-    hiddenMessageIds: []
-  }
-})
-
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config, PerfSrv, perfTimes, ToastSrv){
+.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config){
   'use strict';
-  var user = StorageSrv.getUser();
   $rootScope.ctx = {
     cfg: {
       imagesPlaceholders: imagesPlaceholders
     },
-    settings: user ? user.settings : {defaultServings: 2},
+    settings: {defaultServings: 2},
     debug: Config.debug,
     appVersion: Config.appVersion
   };
-
-  LaunchSrv.launch().then(function(){
-    user = StorageSrv.getUser();
-    if(user){
+  StorageSrv.getUser().then(function(user){
+    if(user && user.settings){
       $rootScope.ctx.settings = user.settings;
     }
+  });
+
+  LaunchSrv.launch().then(function(){
+    StorageSrv.getUser().then(function(user){
+      if(user && user.settings){
+        $rootScope.ctx.settings = user.settings;
+      }
+    });
   });
 
   // utils methods
@@ -124,22 +106,4 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     var watchers = PerfSrv.getWatchesForElement(body);
     console.log(digests + ' calls ('+watchers.length+' watches)');
   });*/
-  $rootScope.addPerfTime = function(name){
-    var elt = {name: name, time: Date.now()};
-    if(perfTimes.length > 0){
-      elt.duration = elt.time - perfTimes[perfTimes.length-1].time;
-      if(perfTimes[perfTimes.length-1].total){
-        elt.total = perfTimes[perfTimes.length-1].total + elt.duration;
-      } else {
-        elt.total = elt.duration;
-      }
-    }
-    perfTimes.push(elt);
-  };
-  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
-    $rootScope.addPerfTime('$stateChangeStart');
-  });
-  $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    $rootScope.addPerfTime('$stateChangeSuccess');
-  });
 });

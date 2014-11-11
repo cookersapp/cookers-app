@@ -1,29 +1,35 @@
 angular.module('app')
 
-.factory('CartSrv', function(StorageSrv, _CartBuilder, _CartUtils){
+.factory('CartSrv', function(StorageSrv, CartDataSrv, _CartBuilder, _CartUtils){
   'use strict';
+  var storageKey = 'userCarts';
   var service = {
-    getCarts: StorageSrv.getCarts,
-    getCart: getCart,
     getCurrentCart: getCurrentCart,
     getRecipeFromCart: getRecipeFromCart,
-    getCartRecipe: function(cartId, recipeId){ return getRecipeFromCart(getCart(cartId), recipeId); },
-    createCart: createCart,
-    updateCart: function(cart){ StorageSrv.saveCart(cart); },
+    getCartRecipe: getCartRecipe,
+    createCart: CartDataSrv.createCart,
+    updateCart: CartDataSrv.updateCart,
     updateCartRecipe: updateCartRecipe,
     getRecipesToCook: getRecipesToCook,
     getCookedRecipes: getCookedRecipes,
     addStandaloneCookedRecipe: StorageSrv.addStandaloneCookedRecipe
   };
 
-  function _hasOpenedCarts(){ return _.findIndex(StorageSrv.getCarts(), {archived: false}) > -1; }
-  function _getOpenedCarts(){ return _.filter(StorageSrv.getCarts(), {archived: false}); }
-  function getCart(id){ return _.find(StorageSrv.getCarts(), {id: id}); }
+  function _hasOpenedCarts(carts){ return _.findIndex(carts, {archived: false}) > -1; }
+  function _getOpenedCarts(carts){ return _.filter(carts, {archived: false}); }
+  function _getCart(carts, id){ return _.find(carts, {id: id}); }
+  function getCartRecipe(cartId, recipeId){
+    return CartDataSrv.getCarts().then(function(carts){
+      return getRecipeFromCart(_getCart(carts, cartId), recipeId);
+    });
+  }
   function getCurrentCart(){
-    var cart = _hasOpenedCarts() ? _getOpenedCarts()[0] : createCart();
-    if(!cart._formated){ cart._formated = {}; }
-    cart._formated.isEmpty = isEmpty(cart);
-    return cart;
+    return CartDataSrv.getCarts().then(function(carts){
+      var cart = _hasOpenedCarts(carts) ? _getOpenedCarts(carts)[0] : CartDataSrv.createCart();
+      if(!cart._formated){ cart._formated = {}; }
+      cart._formated.isEmpty = isEmpty(cart);
+      return cart;
+    });
   }
   function getRecipeFromCart(cart, recipeId){ return cart ? _.find(cart.recipes, {id: recipeId}) : null; }
 
@@ -34,20 +40,16 @@ angular.module('app')
       (cart.products && cart.products.length > 0)));
   }
 
-  function createCart(name){
-    var cart = _CartBuilder.createCart(name);
-    StorageSrv.addCart(cart);
-    return cart;
-  }
-
   function updateCartRecipe(recipe){
     if(recipe && recipe.cartData && recipe.cartData.cart){
-      var cart = getCart(recipe.cartData.cart);
-      var cartRecipe = getRecipeFromCart(cart, recipe.id);
-      if(cartRecipe){
-        angular.copy(recipe, cartRecipe);
-        StorageSrv.saveCart(cart);
-      }
+      return CartDataSrv.getCarts().then(function(carts){
+        var cart = _getCart(carts, recipe.cartData.cart);
+        var cartRecipe = getRecipeFromCart(cart, recipe.id);
+        if(cartRecipe){
+          angular.copy(recipe, cartRecipe);
+          return CartDataSrv.updateCart(cart);
+        }
+      });
     }
   }
 
@@ -58,25 +60,30 @@ angular.module('app')
    *  - {time: 123, duration: 123.2}  : recipe is cooked
    */
   function getRecipesToCook(order){
-    var recipes = _recipesFromCarts(StorageSrv.getCarts());
-    var ret = _.filter(recipes, {cartData: {cooked: false}});
-    if(typeof order === 'function' && Array.isArray(ret)){
-      ret.sort(order);
-    }
-    return ret;
+    return CartDataSrv.getCarts().then(function(carts){
+      var recipes = _recipesFromCarts(carts);
+      var ret = _.filter(recipes, {cartData: {cooked: false}});
+      if(typeof order === 'function' && Array.isArray(ret)){
+        ret.sort(order);
+      }
+      return ret;
+    });
   }
 
   function getCookedRecipes(order){
-    var recipes = _recipesFromCarts(StorageSrv.getCarts());
-    var cartCookedRecipes = _.filter(recipes, function(recipe){
-      return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
+    return CartDataSrv.getCarts().then(function(carts){
+      var recipes = _recipesFromCarts(carts);
+      var cartCookedRecipes = _.filter(recipes, function(recipe){
+        return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
+      });
+      return StorageSrv.getStandaloneCookedRecipes().then(function(standaloneCookedRecipes){
+        var ret = cartCookedRecipes.concat(standaloneCookedRecipes);
+        if(typeof order === 'function' && Array.isArray(ret)){
+          ret.sort(order);
+        }
+        return ret;
+      });
     });
-    var standaloneCookedRecipes = StorageSrv.getStandaloneCookedRecipes();
-    var ret = cartCookedRecipes.concat(standaloneCookedRecipes);
-    if(typeof order === 'function' && Array.isArray(ret)){
-      ret.sort(order);
-    }
-    return ret;
   }
 
   function _recipesFromCarts(carts){
@@ -89,7 +96,7 @@ angular.module('app')
 })
 
 
-.factory('CartUtils', function(PriceCalculator, StorageSrv, _CartUtils, _CartBuilder){
+.factory('CartUtils', function(PriceCalculator, CartDataSrv, _CartUtils, _CartBuilder){
   'use strict';
   var service = {
     getEstimatedPrice: getEstimatedPrice,
@@ -97,8 +104,8 @@ angular.module('app')
     hasRecipe: hasRecipe,
     addRecipe: addRecipe,
     removeRecipe: removeRecipe,
-    addItem: function(cart, item){buyItem(cart, item, true);},
-    removeItem: function(cart, item){buyItem(cart, item, false);},
+    buyItem: function(cart, item){buyItem(cart, item, true);},
+    unbuyItem: function(cart, item){buyItem(cart, item, false);},
     addProduct: addProduct,
     removeProduct: removeProduct,
     updateProduct: updateProduct,
@@ -151,12 +158,12 @@ angular.module('app')
   function addRecipe(cart, recipe, servings){
     var r = _CartBuilder.createRecipe(cart, recipe, servings);
     cart.recipes.push(r);
-    StorageSrv.saveCart(cart);
+    CartDataSrv.updateCart(cart);
   }
 
   function removeRecipe(cart, recipe){
     _.remove(cart.recipes, {id: recipe.id});
-    StorageSrv.saveCart(cart);
+    CartDataSrv.updateCart(cart);
   }
 
   function buyItem(cart, item, bought){
@@ -167,7 +174,7 @@ angular.module('app')
       var recipeSrc = item.sources[i].recipe;
       recipeSrc.cartData.boughtPc = _CartUtils.boughtPercentage(recipeSrc);
     }
-    StorageSrv.saveCart(cart);
+    CartDataSrv.updateCart(cart);
   }
 
   function addProduct(cart, product, quantity){
@@ -179,7 +186,7 @@ angular.module('app')
     } else {
       cart.products.push(cartNewProduct);
     }
-    StorageSrv.saveCart(cart);
+    CartDataSrv.updateCart(cart);
   }
 
   function removeProduct(cart, product){
@@ -188,7 +195,7 @@ angular.module('app')
       if(typeof cartProductIndex === 'number'){
         cart.products.splice(cartProductIndex, 1);
       }
-      StorageSrv.saveCart(cart);
+      CartDataSrv.updateCart(cart);
     }
   }
 
@@ -196,13 +203,13 @@ angular.module('app')
     var cartProduct = _.find(cart.products, {barcode: product.barcode});
     if(cartProduct){
       angular.copy(product, cartProduct);
-      StorageSrv.saveCart(cart);
+      CartDataSrv.updateCart(cart);
     }
   }
 
   function archive(cart){
     cart.archived = true;
-    StorageSrv.saveCart(cart);
+    CartDataSrv.updateCart(cart);
   }
 
   return service;
@@ -323,7 +330,7 @@ angular.module('app')
 })
 
 
-.factory('CustomItemUtils', function(StorageSrv, LogSrv, Utils){
+.factory('CustomItemUtils', function(CartDataSrv, LogSrv, Utils){
   'use strict';
   var service = {
     compatibility: compatibility,
@@ -335,7 +342,7 @@ angular.module('app')
     // this is for compatibility with previous versions where customItems were saved as text !
     if(cart && !Array.isArray(cart.customItems)){
       cart.customItems = toList(cart.customItems);
-      StorageSrv.saveCart(cart);
+      CartDataSrv.updateCart(cart);
     }
   }
 
@@ -381,6 +388,50 @@ angular.module('app')
       ret = ret+'\n';
     }
     return ret;
+  }
+
+  return service;
+})
+
+
+.factory('CartDataSrv', function($q, LocalForageUtils, _CartBuilder){
+  'use strict';
+  var storageKey = 'userCarts';
+  var service = {
+    getCarts: getCarts,
+    updateCart: updateCart,
+    createCart: createCart
+  };
+
+  function getCarts(){
+    return LocalForageUtils.get(storageKey).then(function(userCarts){
+      return userCarts && Array.isArray(userCarts.carts) ? userCarts.carts : [];
+    });
+  }
+  function updateCart(cart){
+    if(cart && cart.id){
+      return LocalForageUtils.get(storageKey).then(function(userCarts){
+        if(userCarts && Array.isArray(userCarts.carts)){
+          var index = _.findIndex(userCarts.carts, {id: cart.id});
+          if(index > -1){
+            userCarts.carts.splice(index, 1, cart);
+            return LocalForageUtils.set(storageKey, userCarts);
+          }
+        }
+      });
+    } else {
+      return $q.when();
+    }
+  }
+  function createCart(name){
+    var cart = _CartBuilder.createCart(name);
+    LocalForageUtils.get(storageKey).then(function(userCarts){
+      if(!userCarts){userCarts = {};}
+      if(!Array.isArray(userCarts.carts)){userCarts.carts = [];}
+      userCarts.carts.unshift(cart);
+      return LocalForageUtils.set(storageKey, userCarts);
+    });
+    return cart;
   }
 
   return service;
@@ -483,6 +534,7 @@ angular.module('app')
             if(Config.debug){ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');}
             return opts.product ? opts.product : (opts.store ? ProductSrv.getWithStore(opts.store, opts.barcode) : ProductSrv.get(opts.barcode));
           }).then(function(product){
+            console.log('product', product);
             productLoadedTime = Date.now();
             if(Config.debug){ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');}
             LogSrv.trackCartProductLoaded(product ? product.barcode : opts.barcode, productLoadedTime-modalShowedTime, product ? true : false);

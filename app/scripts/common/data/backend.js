@@ -2,61 +2,42 @@ angular.module('app')
 
 .factory('GlobalMessageSrv', function(BackendUtils, $q, StorageSrv, Config){
   'use strict';
+  var timeToUpdate = 1000*60*60*24; // one day
   var service = {
     getMessage: getMessage,
     getStickyMessages: getStickyMessages,
     hideMessage: hideMessage
   };
-  var day = 1000*60*60*24;
-  var dataPromise = null;
-  _init();
 
   function getMessage(){
-    return dataPromise.then(function(data){
-      return _.find(data.messages, function(msg){
-        return !msg.sticky && msg.versions.indexOf(Config.appVersion) > -1 && data.hiddenMessageIds.indexOf(msg.id) === -1;
+    return BackendUtils.getAllWithCache('globalmessages', false, timeToUpdate).then(function(messages){
+      return StorageSrv.getUser().then(function(user){
+        var closedMessages = user && Array.isArray(user.closedMessages) ? user.closedMessages : [];
+        return _.find(messages, function(msg){
+          return !msg.sticky && msg.versions.indexOf(Config.appVersion) > -1 && closedMessages.indexOf(msg.id) === -1;
+        });
       });
     });
   }
 
   function getStickyMessages(){
-    return dataPromise.then(function(data){
-      return _.filter(data.messages, function(msg){
+    return BackendUtils.getAllWithCache('globalmessages', false, timeToUpdate).then(function(messages){
+      return _.find(messages, function(msg){
         return msg.sticky && msg.versions.indexOf(Config.appVersion) > -1;
       });
     });
   }
 
   function hideMessage(message){
-    dataPromise.then(function(data){
-      if(!data.hiddenMessageIds){data.hiddenMessageIds = [];}
-      if(data.hiddenMessageIds.indexOf(message.id) === -1){
-        data.hiddenMessageIds.push(message.id);
-        StorageSrv.setGlobalmessages(data);
+    return StorageSrv.getUser().then(function(user){
+      if(!(user && Array.isArray(user.closedMessages))){ user.closedMessages = []; }
+      if(user.closedMessages.indexOf(message.id) === -1){
+        user.closedMessages.push(message.id);
+        return BackendUtils.put('/users/'+user.id+'/messages/'+message.id+'/close').then(function(){
+          return StorageSrv.setUser(user);
+        });
       }
     });
-  }
-
-  function _init(){
-    var globalmessages = StorageSrv.getGlobalMessages();
-    // compatibility with 1.1.0
-    if(!globalmessages.hiddenMessageIds){globalmessages.hiddenMessageIds = [];}
-
-    if(!globalmessages.lastCall || Date.now() - globalmessages.lastCall > day){
-      dataPromise = BackendUtils.get('/globalmessages').then(function(messages){
-        if(messages){
-          var newGlobalMessages = {
-            lastCall: Date.now(),
-            messages: messages,
-            hiddenMessageIds: globalmessages.hiddenMessageIds
-          };
-          StorageSrv.setGlobalmessages(newGlobalMessages);
-          return newGlobalMessages;
-        }
-      });
-    } else {
-      dataPromise = $q.when(globalmessages);
-    }
   }
 
   return service;
@@ -118,7 +99,7 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    getCurrent: function(){ return get(moment().week()+(Config.debug ? 2 : 0)); },
+    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
     get: get
   };
 

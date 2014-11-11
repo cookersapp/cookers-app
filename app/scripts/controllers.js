@@ -6,18 +6,19 @@ angular.module('app')
   $scope.imageCover = $scope.defaultCovers[0];
 
   $interval(function(){
-    var recipesHistory = StorageSrv.getRecipeHistory();
-    var historyLength = recipesHistory ? recipesHistory.length : 0;
-    if(historyLength > 0 && Math.random() > (historyLength/$scope.defaultCovers.length)){
-      var images = recipesHistory[Math.floor(Math.random() * historyLength)].images;
-      $scope.imageCover = images ? images.landing : imagesPlaceholders.recipe.landing;
-    } else {
-      $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
-    }
+    StorageSrv.getRecipeHistory().then(function(recipesHistory){
+      var historyLength = recipesHistory ? recipesHistory.length : 0;
+      if(historyLength > 0 && Math.random() > (historyLength/$scope.defaultCovers.length)){
+        var images = recipesHistory[Math.floor(Math.random() * historyLength)].images;
+        $scope.imageCover = images ? images.landing : imagesPlaceholders.recipe.landing;
+      } else {
+        $scope.imageCover = $scope.defaultCovers[Math.floor(Math.random() * $scope.defaultCovers.length)];
+      }
+    });
   }, 10000);
 })
 
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv, perfTimes, ToastSrv, $state){
+.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv){
   'use strict';
   // preload selection
   SelectionSrv.getCurrent();
@@ -42,25 +43,4 @@ angular.module('app')
       });
     }, 3000);
   };
-
-  while(perfTimes.length){perfTimes.pop();}
-  $scope.goToEmpty = function(){
-    ToastSrv.show('clicked !!!');
-    $scope.addPerfTime('buttonClick');
-    $state.go('app.empty');
-  };
-  $scope.goToCart = function(){
-    ToastSrv.show('clicked !!!');
-    $scope.addPerfTime('buttonClick');
-    $state.go('app.cart.ingredients');
-  };
-})
-
-.controller('EmptyCtrl', function($scope, perfTimes, ToastSrv){
-  $scope.addPerfTime('loadController');
-  $scope.$on('$viewContentLoaded', function(){
-    $scope.addPerfTime('$viewContentLoaded');
-    ToastSrv.show('$viewContentLoaded in '+perfTimes[perfTimes.length-1].total+' ms');
-  });
-  $scope.perfTimes = perfTimes;
 });

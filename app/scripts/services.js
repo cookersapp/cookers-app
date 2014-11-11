@@ -1,8 +1,9 @@
 angular.module('app')
 
-.factory('PerfSrv', function(){
+.factory('PerfSrv', function($timeout){
   'use strict';
   var service = {
+    loadController: loadController,
     getWatchesForElement: getWatchesForElement
   };
 
@@ -18,6 +19,14 @@ angular.module('app')
       watchers = watchers.concat(getWatchesForElement(angular.element(childElement)));
     });
     return watchers;
+  }
+
+  function loadController($scope, controllerFn){
+    $scope.$on('$viewContentLoaded', function(){
+      $timeout(function(){
+        controllerFn();
+      }, 700);
+    });
   }
 
   return service;

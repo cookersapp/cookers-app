@@ -1,13 +1,4 @@
 <div>
-  <table>
-    <tr><th>Step</th><th>Duration</th><th>Total</th></tr>
-    <tr ng-repeat="step in perfTimes">
-      <td>{{step.name}}</td>
-      <td>{{step.duration}}</td>
-      <td>{{step.total}}</td>
-    </tr>
-  </table>
-
   <div class="list card add-product">
     <div class="item item-input">
       <textarea msd-elastic blur-on-keyboard-out="customItems.fn.save()" ng-model="customItems.data.text" ng-click="customItems.fn.edit()"
@@ -46,7 +37,7 @@
       Liste archivée !
     </div>
 
-    <div class="cart-price" ng-if="ctx.settings.showPrices">Prix total estimé : {{data.estimatedPrice | price}}</div>
+    <div class="cart-price" ng-if="ctx.settings.showPrices" ng-show="data.estimatedPrice">Prix total estimé : {{data.estimatedPrice | price}}</div>
     <div ng-show="!data.cart.archived">
       <div class="list card to-buy" ng-show="fn.cartHasItemsToBuy()">
         <div class="item item-cart-ingredient" bo-class="item.food.category.slug" bindonce ng-repeat="item in data.items" ng-show="!fn.isBought(item)">

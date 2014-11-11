@@ -12,7 +12,7 @@
       <div class="legend">Nous sommes friands de retours et adorons discuter avec nos utilisateurs !</div>
     </div>
 
-    <form ng-submit="sendFeedback()" class="feedback-form">
+    <form ng-submit="sendFeedback()" class="feedback-form" ng-show="feedback">
       <div class="list list-inset">
         <label class="item item-input" ng-if="!feedback.email">
           <input type="email" name="email" placeholder="Email" ng-model="feedback.email" ng-disabled="feedback.sending || feedback.sent" required>

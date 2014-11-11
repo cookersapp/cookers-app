@@ -121,13 +121,13 @@ var Logger = (function(){
   Scheduler.init();
 
   function track(name, event){
-    if(!event.name)                                     { event.name = name;                                }
-    if(!event.time)                                     { event.time = Date.now();                          }
-    if(!event.user)                                     { event.user = cache.userId || _getUserId();        }
-    if(!event.device)                                   { event.device = cache.deviceId || _getDeviceId();  }
-    if(!event.appVersion && Config)                     { event.appVersion = Config.appVersion;             }
-    if(!event.source)                                   { event.source = {};                                }
-    if(!event.source.url && window && window.location)  { event.source.url = window.location.href;          }
+    if(!event.name)                                     { event.name = name;                        }
+    if(!event.time)                                     { event.time = Date.now();                  }
+    if(!event.user)                                     { event.user = _getUserId();                }
+    if(!event.device)                                   { event.device = _getDeviceId();            }
+    if(!event.appVersion && Config)                     { event.appVersion = Config.appVersion;     }
+    if(!event.source)                                   { event.source = {};                        }
+    if(!event.source.url && window && window.location)  { event.source.url = window.location.href;  }
     if(!event.dateinfo){
       event.dateinfo = {
         year: moment().year(),
@@ -168,7 +168,9 @@ var Logger = (function(){
   }
 
   function _getUserId(){
-    if(localStorage){
+    if(cache && cache.userId){
+      return cache.userId;
+    } else if(localStorage){
       var user = JSON.parse(localStorage.getItem('ionic-user'));
       if(user && user.id){
         cache.userId = user.id;
@@ -178,7 +180,9 @@ var Logger = (function(){
   }
 
   function _getDeviceId(){
-    if(ionic && ionic.Platform){
+    if(cache && cache.deviceId){
+      return cache.deviceId;
+    } else if(ionic && ionic.Platform){
       var device = ionic.Platform.device();
       if(device && device.uuid){
         cache.deviceId = device.uuid;

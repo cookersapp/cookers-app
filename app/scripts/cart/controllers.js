@@ -1,145 +1,149 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, $timeout, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ProductSrv, ToastSrv, DialogSrv){
+.controller('CartCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, ToastSrv, DialogSrv, PerfSrv){
   'use strict';
-  $scope.addPerfTime('loadCartCtrl');
-  $scope.$on('$viewContentLoaded', function(){
-    $scope.addPerfTime('$viewContentLoaded CartCtrl');
-  });
-
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
   $scope.fn = fn;
   $scope.ui = ui;
 
-  $scope.$on('$viewContentLoaded', function(){
-    data.cart = CartSrv.getCurrentCart();
-    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
-    data.shopPrice = CartUtils.getShopPrice(data.cart);
-  });
+  PerfSrv.loadController($scope, function(){
+    CartSrv.getCurrentCart().then(function(cart){
+      data.cart = cart;
+      data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+      data.shopPrice = CartUtils.getShopPrice(data.cart);
+    });
 
-  CartUiUtils.initStartSelfScanModal()    .then(function(modal)   { ui.shopModal    = modal;    });
-  CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
-  CartUiUtils.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
+    CartUiUtils.initStartSelfScanModal()    .then(function(modal)   { ui.shopModal    = modal;    });
+    CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
+    CartUiUtils.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
 
-  fn.showOptions = function(event){
-    ui.cartOptions.open(event);
-  };
+    fn.showOptions = function(event){
+      ui.cartOptions.open(event);
+    };
 
-  fn.toggleSelfScan = function(){
-    if(data.cart.selfscan){
-      DialogSrv.confirm('Abandonner le self-scan ?').then(function(result){
-        if(result){
-          delete data.cart.selfscan;
-          delete data.cart.store;
-          CartSrv.updateCart(data.cart);
-          $state.go('app.cart.ingredients');
-        }
-      });
-    } else {
-      ui.shopModal.open({
-        callback: function(action, store){
-          if(action === 'storeSelected' && store && store.id){
-            data.cart.selfscan = true;
-            data.cart.store = store;
+    fn.toggleSelfScan = function(){
+      if(data.cart.selfscan){
+        DialogSrv.confirm('Abandonner le self-scan ?').then(function(result){
+          if(result){
+            delete data.cart.selfscan;
+            delete data.cart.store;
             CartSrv.updateCart(data.cart);
-            $state.go('app.cart.selfscan');
+            $state.go('app.cart.ingredients');
           }
-        }
-      });
-    }
-  };
-
-  fn.scan = function(multi){
-    var startScanTime = Date.now();
-    BarcodeSrv.scan().then(function(result){
-      if(!result.cancelled){
-        var barcode = result.text;
-        var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
-        barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
-        if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
-
-        ui.productModal.open({
-          title: 'Produit scanné',
-          store: data.cart.store.id,
-          barcode: barcode,
-          callback: function(action, product){
-            if(action === 'bought'){
-              CartUtils.addProduct(data.cart, product, 1);
-              ItemUtils.addProduct(data.cart, data.items, product, 1);
-              data.shopPrice = CartUtils.getShopPrice(data.cart);
-              ToastSrv.show('✔ '+product.name+' acheté !');
+        });
+      } else {
+        ui.shopModal.open({
+          callback: function(action, store){
+            if(action === 'storeSelected' && store && store.id){
+              data.cart.selfscan = true;
+              data.cart.store = store;
+              CartSrv.updateCart(data.cart);
+              $state.go('app.cart.selfscan');
             }
           }
         });
       }
-    }, function(error){
-      DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
-    });
-  };
-})
+    };
 
-.controller('CartRecipesCtrl', function($scope, CartUtils, StorageSrv, ToastSrv, LogSrv){
-  'use strict';
-  // herited from CartCtrl
-  var data = $scope.data;
-  var fn = $scope.fn;
+    fn.scan = function(multi){
+      var startScanTime = Date.now();
+      BarcodeSrv.scan().then(function(result){
+        if(!result.cancelled){
+          var barcode = result.text;
+          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
+          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+          if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
 
-  data.selectedRecipe = null;
-  data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
-
-  fn.toggleRecipe = function(recipe){
-    if(data.selectedRecipe === recipe){
-      data.selectedRecipe = null;
-    } else {
-      LogSrv.trackCartRecipeDetails(recipe.id);
-      data.selectedRecipe = recipe;
-    }
-  };
-
-  fn.removeRecipeFromCart = function(recipe){
-    LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
-    CartUtils.removeRecipe(data.cart, recipe);
-    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
-    ToastSrv.show('✔ recette supprimée de la liste de courses');
-  };
-
-  fn.updateServings = function(recipe, servingsValue){
-    StorageSrv.saveCart(data.cart);
-    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
-  };
-})
-
-.controller('CartIngredientsCtrl', function($scope, $state, $window, $timeout, CartSrv, CartUtils, ItemUtils, CustomItemUtils, CartUiUtils, StorageSrv, BarcodeSrv, ProductSrv, PopupSrv, ToastSrv, LogSrv, Utils, Config, perfTimes){
-  'use strict';
-  $scope.addPerfTime('loadCartIngredientsCtrl');
-  $scope.$on('$viewContentLoaded', function(){
-    $scope.addPerfTime('$viewContentLoaded CartIngredientsCtrl');
-    ToastSrv.show('$viewContentLoaded in '+perfTimes[perfTimes.length-1].total+' ms');
+          ui.productModal.open({
+            title: 'Produit scanné',
+            store: data.cart.store.id,
+            barcode: barcode,
+            callback: function(action, product){
+              if(action === 'bought'){
+                CartUtils.addProduct(data.cart, product, 1);
+                ItemUtils.addProduct(data.cart, data.items, product, 1);
+                data.shopPrice = CartUtils.getShopPrice(data.cart);
+                ToastSrv.show('✔ '+product.name+' acheté !');
+              }
+            }
+          });
+        }
+      }, function(error){
+        DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
+        LogSrv.trackError('scanFailed', error);
+      });
+    };
   });
-  $scope.perfTimes = perfTimes;
+})
 
+.controller('CartRecipesCtrl', function($scope, CartUtils, CartSrv, ToastSrv, LogSrv, PerfSrv){
+  'use strict';
+  PerfSrv.loadController($scope, function(){
+    // herited from CartCtrl
+    var data = $scope.data;
+    var fn = $scope.fn;
+
+    data.selectedRecipe = null;
+    data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+
+    fn.toggleRecipe = function(recipe){
+      if(data.selectedRecipe === recipe){
+        data.selectedRecipe = null;
+      } else {
+        LogSrv.trackCartRecipeDetails(recipe.id);
+        data.selectedRecipe = recipe;
+      }
+    };
+
+    fn.removeRecipeFromCart = function(recipe){
+      LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
+      CartUtils.removeRecipe(data.cart, recipe);
+      data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+      ToastSrv.show('✔ recette supprimée de la liste de courses');
+    };
+
+    fn.updateServings = function(recipe, servingsValue){
+      CartSrv.updateCart(data.cart);
+      data.estimatedPrice = CartUtils.getEstimatedPrice(data.cart);
+    };
+  });
+})
+
+.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CustomItemUtils, StorageSrv, BarcodeSrv, PopupSrv, ToastSrv, LogSrv, Config, PerfSrv){
+  'use strict';
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
   var ui = $scope.ui;
 
-  if(data.cart && data.cart.selfscan){
-    $state.go('app.cart.selfscan');
-  } else {
-    var user = StorageSrv.getUser();
-    if(!(user && user.settings && user.settings.skipCartFeatures)){
-      PopupSrv.tourCartFeatures().then(function(){
-        StorageSrv.saveUserSetting('skipCartFeatures', true);
+  PerfSrv.loadController($scope, function(){
+    if(!data.cart){
+      CartSrv.getCurrentCart().then(function(cart){
+        data.cart = cart;
+        controller();
       });
+    } else {
+      controller();
     }
+  });
 
-    $scope.$on('$viewContentLoaded', function(){
-      if(!data.cart){data.cart = CartSrv.getCurrentCart();}
-      data.items = ItemUtils.fromCart(data.cart);
+  function controller(){
+    StorageSrv.getUser().then(function(user){
+      if(!(user && user.settings && user.settings.skipCartFeatures)){
+        PopupSrv.tourCartFeatures().then(function(){
+          StorageSrv.setUserSetting('skipCartFeatures', true);
+        });
+      }
     });
 
-    CustomItemUtils.compatibility(data.cart);
+    if(data.cart && data.cart.selfscan){
+      $state.go('app.cart.selfscan');
+    } else {
+      data.items = ItemUtils.fromCart(data.cart);
+      CustomItemUtils.compatibility(data.cart);
+    }
+
     var customItems = {
       data: {
         editing: false,
@@ -162,19 +166,19 @@ angular.module('app')
           if(customItems.data.editing){
             customItems.data.editing = false;
             data.cart.customItems = CustomItemUtils.toList(customItems.data.text);
-            StorageSrv.saveCart(data.cart);
+            CartSrv.updateCart(data.cart);
             customItems.data.text = '';
             LogSrv.trackEditCartCustomItems(data.cart.customItems);
           }
         },
         buy: function(item){
           item.bought = true;
-          StorageSrv.saveCart(data.cart);
+          CartSrv.updateCart(data.cart);
           ToastSrv.show('✔ '+item.name+' acheté !');
         },
         unbuy: function(item){
           item.bought = false;
-          StorageSrv.saveCart(data.cart);
+          CartSrv.updateCart(data.cart);
         }
       }
     };
@@ -225,15 +229,15 @@ angular.module('app')
     };
     fn.buyItem = function(item){
       LogSrv.trackBuyItem(item.food.id, item.quantity);
-      CartUtils.addItem(data.cart, item);
+      CartUtils.buyItem(data.cart, item);
       ToastSrv.show('✔ '+item.food.name+' acheté !');
     };
     fn.unbuyItem = function(item){
       LogSrv.trackUnbuyItem(item.food.id);
-      CartUtils.removeItem(data.cart, item);
+      CartUtils.unbuyItem(data.cart, item);
     };
 
-    fn.productDetails = function(item){
+    fn.productDetails = function(_item){
       var startScanTime = Date.now();
       BarcodeSrv.scan().then(function(result){
         if(!result.cancelled){
@@ -241,7 +245,7 @@ angular.module('app')
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
           barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
           if(Config.debug){ToastSrv.show(barcode+' scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
-          var itemId = item.food && item.food.id ? item.food.id : item.name;
+          var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
           LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
 
           ui.productModal.open({
@@ -259,24 +263,37 @@ angular.module('app')
           });
         }
       }, function(error){
-        ToastSrv.show('Scan error :(');
+        DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
         LogSrv.trackError('scanFailed', error);
       });
     };
   }
 })
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartUtils, CartUiUtils, ItemUtils, BarcodeSrv, DialogSrv){
+.controller('CartSelfscanCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, DialogSrv, PerfSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
   var fn = $scope.fn;
   var ui = $scope.ui;
 
-  if(!data.cart.selfscan){
-    $state.go('app.cart.ingredients');
-  } else {
-    data.items = ItemUtils.fromCart(data.cart);
+  PerfSrv.loadController($scope, function(){
+    if(!data.cart){
+      CartSrv.getCurrentCart().then(function(cart){
+        data.cart = cart;
+        controller();
+      });
+    } else {
+      controller();
+    }
+  });
+
+  function controller(){
+    if(data.cart && data.cart.selfscan){
+      data.items = ItemUtils.fromCart(data.cart);
+    } else {
+      $state.go('app.cart.ingredients');
+    }
 
     fn.removeFromCart = function(product){
       DialogSrv.confirm('Supprimer du panier : '+product.name+' ?').then(function(result){
@@ -298,7 +315,6 @@ angular.module('app')
 
     fn.checkout = function(){
       $window.alert('TODO...');
-      //BarcodeSrv.encode();
     };
   }
 });

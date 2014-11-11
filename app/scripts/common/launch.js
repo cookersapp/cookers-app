@@ -1,22 +1,18 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $state, $q, $ionicPlatform, $ionicLoading, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, localStorageDefault, Config){
+.factory('LaunchSrv', function($rootScope, $q, $ionicLoading, $window, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, Config){
   'use strict';
   var service = {
     launch: function(){
-      var defer = $q.defer();
-      _initStorage();
-      var user = StorageSrv.getUser();
-      if(user && user.id){
-        launch().then(function(){
-          defer.resolve();
-        });
-      } else {
-        firstLaunch(user ? user.upgrade : null).then(function(){
-          defer.resolve();
-        });
-      }
-      return defer.promise;
+      return _initStorage().then(function(){
+        return StorageSrv.getUser();
+      }).then(function(user){
+        if(user && user.id){
+          return launch();
+        } else {
+          return firstLaunch(user ? user.upgrade : null);
+        }
+      });
     }
   };
 
@@ -25,13 +21,14 @@ angular.module('app')
 
     AccountsSrv.getEmailOrAsk().then(function(email){
       var promise =  BackendUserSrv.findUser(email).then(function(user){
-        StorageSrv.saveUser(user);
-        BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+        return StorageSrv.setUser(user).then(function(){
+          return BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+        });
       }, function(error){
         if(!error){error = {};}
         else if(typeof error === 'string'){error = {message: error};}
         LogSrv.trackError('userNotFound', error);
-        StorageSrv.saveUser({
+        return StorageSrv.setUser({
           email: email,
           settings: {}
         });
@@ -62,29 +59,17 @@ angular.module('app')
   }
 
   function _initStorage(){
-    var app = StorageSrv.getApp();
-    if(!app || app.version !== Config.appVersion){
-      for(var i in localStorageDefault){
-        var key = i;
-        var defaultValue = localStorageDefault[key] || {};
-        var storageValue = StorageSrv.get(key) || {};
-        var extendedValue = Utils.extendDeep({}, defaultValue, storageValue);
-        StorageSrv.set(key, extendedValue);
+    return StorageSrv.getApp().then(function(app){
+      if(!app || app.version !== Config.appVersion){
+        /** Upgrade code **/
+        if($window.localStorage){
+          $window.localStorage.clear();
+        }
+        if(!app){ app = {}; }
+        app.version = Config.appVersion;
+        return StorageSrv.setApp(app);
       }
-
-      app = StorageSrv.getApp();
-      if(app.version !== ''){
-        /* Migration code */
-        StorageSrv.remove('dataFoods');
-        StorageSrv.remove('dataRecipes');
-        StorageSrv.remove('dataSelections');
-        /* End migration code */
-      }
-
-      app = StorageSrv.getApp();
-      app.version = Config.appVersion;
-      StorageSrv.setApp(app);
-    }
+    });
   }
 
 
@@ -96,12 +81,13 @@ angular.module('app')
   }
 
   function _updateUser(){
-    var user = StorageSrv.getUser();
-    if(user && user.email){
-      BackendUserSrv.findUser(user.email).then(function(backendUser){
-        StorageSrv.saveUser(backendUser);
-      });
-    }
+    return StorageSrv.getUser().then(function(user){
+      if(user && user.email){
+        return BackendUserSrv.findUser(user.email).then(function(backendUser){
+          return StorageSrv.setUser(backendUser);
+        });
+      }
+    });
   }
 
   function _initTrackStateErrors(){

@@ -24,16 +24,15 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, $window, StorageSrv, BackendUtils, ToastSrv, DialogSrv, LogSrv, Utils){
+.controller('ProfileCtrl', function($scope, StorageSrv, BackendUtils, ToastSrv, DialogSrv, LogSrv, Utils){
   'use strict';
-  var user = StorageSrv.getUser();
-
   $scope.clearCache = function(){
     DialogSrv.confirm('Vider le cache ?').then(function(result){
       if(result){
         LogSrv.trackClearCache();
-        BackendUtils.clearCache();
-        ToastSrv.show('Cache vidé !');
+        BackendUtils.clearCache().then(function(){
+          ToastSrv.show('Cache vidé !');
+        });
       }
     });
   };
@@ -41,35 +40,37 @@ angular.module('app')
     DialogSrv.confirm('Réinitialiser complètement l\'application ?').then(function(result){
       if(result){
         LogSrv.trackClearApp();
-        StorageSrv.clear();
-        Utils.exitApp();
+        StorageSrv.clear().then(function(){
+          Utils.exitApp();
+        });
       }
     });
   };
 
   $scope.$watch('ctx.settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
-      StorageSrv.saveUserSetting('showPrices', newValue);
+      StorageSrv.setUserSetting('showPrices', newValue);
     }
   });
   $scope.$watch('ctx.settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
-      StorageSrv.saveUserSetting('bigImages', newValue);
+      StorageSrv.setUserSetting('bigImages', newValue);
     }
   });
 })
 
 .controller('FeedbackCtrl', function($scope, $stateParams, $window, StorageSrv, EmailSrv, DialogSrv, LogSrv, supportTeamEmail){
   'use strict';
-  var app = StorageSrv.getApp();
-  var user = StorageSrv.getUser();
-  $scope.feedback = {
-    placeholder: 'Un p\'tit compliment ? Quelle est ta fonctionnalité préférée ?',
-    email: user.email,
-    content: '',
-    sending: false,
-    sent: false
-  };
+  var userPromise = StorageSrv.getUser();
+  userPromise.then(function(user){
+    $scope.feedback = {
+      placeholder: 'Un p\'tit compliment ? Quelle est ta fonctionnalité préférée ?',
+      email: user.email,
+      content: '',
+      sending: false,
+      sent: false
+    };
+  });
 
   if($stateParams.source){
     if($stateParams.source === 'recipes-rating-1'){$scope.feedback.placeholder = 'Bof bof bof... Tiens quelques conseils ! Je serais plus fan de ...';}
@@ -93,16 +94,18 @@ angular.module('app')
   };
 
   // UserVoice widget
-  UserVoice.push(['set', {
-    accent_color: '#f62',
-    trigger_color: 'white',
-    trigger_background_color: '#f62'
-  }]);
-  var identity = {};
-  if(user && user.id)                         { identity.id         = user.id;              }
-  if(user && user.email)                      { identity.email      = user.email;           }
-  if(user && user.name)                       { identity.name       = user.name;            }
-  UserVoice.push(['identify', identity]);
-  UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
-  UserVoice.push(['autoprompt', {}]);
+  userPromise.then(function(user){
+    UserVoice.push(['set', {
+      accent_color: '#f62',
+      trigger_color: 'white',
+      trigger_background_color: '#f62'
+    }]);
+    var identity = {};
+    if(user && user.id)                         { identity.id         = user.id;              }
+    if(user && user.email)                      { identity.email      = user.email;           }
+    if(user && user.name)                       { identity.name       = user.name;            }
+    UserVoice.push(['identify', identity]);
+    UserVoice.push(['addTrigger', '#uservoice', {mode: 'smartvote'}]);
+    UserVoice.push(['autoprompt', {}]);
+  });
 });
