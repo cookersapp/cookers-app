@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, StoreSrv, ToastSrv, DialogSrv, LogSrv, Utils, PerfSrv){
+.controller('CartCtrl', function($scope, $state, $window, $ionicLoading, CartSrv, CartUtils, ItemUtils, CartUiUtils, BarcodeSrv, StoreSrv, ToastSrv, DialogSrv, LogSrv, Utils, PerfSrv){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -24,19 +24,19 @@ angular.module('app')
     fn.scan = function(_item){
       var startScanTime = Date.now();
       BarcodeSrv.scan().then(function(result){
-        $window.alert("We got a barcode\nResult: " + result.text + "\nFormat: " + result.format + "\nCancelled: " + result.cancelled);
         if(!result.cancelled){
           var barcode = result.text;
           var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
           barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
           if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
 
-          // http://cookers.io/scan/stores/54536fe98272782700c77b46
-          if(Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){
+          if(Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){ // format: QR_CODE
             var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
             var matches = barcode.match(regex);
             var storeId = matches ? matches[1] : null;
+            $ionicLoading.show();
             StoreSrv.get(storeId).then(function(store){
+              $ionicLoading.hide();
               if(store){
                 DialogSrv.confirm('Bienvenu à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
                   if(result){
@@ -50,7 +50,7 @@ angular.module('app')
                 DialogSrv.alert('Magasin non reconnu :(', 'Self-scan');
               }
             });
-          } else {
+          } else { // format: EAN_13
             var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
             var storeId = data && data.cart && data.cart.store ? data.cart.store.id : undefined;
             LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);

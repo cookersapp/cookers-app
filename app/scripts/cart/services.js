@@ -462,7 +462,7 @@ angular.module('app')
 
           fn.close = function(action){
             modal.hide().then(function(){
-              if(opts.callback){opts.callback(action, data.product, 1, data.store.price);}
+              if(opts.callback){opts.callback(action, data.product, 1, data.store ? data.store.price : null);}
               data.product = null;
             });
           };
