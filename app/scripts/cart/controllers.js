@@ -155,7 +155,7 @@ angular.module('app')
 
   function controller(){
     StorageSrv.getUser().then(function(user){
-      if(!(user && user.settings && user.settings.skipCartFeatures)){
+      if(user && user.settings && !user.settings.skipCartFeatures){
         PopupSrv.tourCartFeatures().then(function(){
           StorageSrv.setUserSetting('skipCartFeatures', true);
         });

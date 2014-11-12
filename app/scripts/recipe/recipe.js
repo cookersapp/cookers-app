@@ -199,13 +199,13 @@ angular.module('app')
         $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
 
         StorageSrv.getUser().then(function(user){
-          if(user && user.settings && user.settings.skipCookFeatures){
-            startTimer();
-          } else {
+          if(user && user.settings && !user.settings.skipCookFeatures){
             PopupSrv.tourCookFeatures().then(function(){
               StorageSrv.setUserSetting('skipCookFeatures', true);
               startTimer();
             });
+          } else {
+            startTimer();
           }
         });
       } else {

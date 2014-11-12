@@ -465,6 +465,7 @@ angular.module('app')
             modal.hide().then(function(){
               if(opts.callback){opts.callback(action, data.product, 1, data.store ? data.store.price : null);}
               data.product = null;
+              data.store = null;
             });
           };
           data.title = opts.title;

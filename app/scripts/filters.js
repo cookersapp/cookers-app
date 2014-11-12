@@ -45,7 +45,7 @@ angular.module('app')
 .filter('unit', function(){
   'use strict';
   return function(unit){
-    if(unit === 'piece' || unit === 'pièce'){
+    if(unit === 'piece' || unit === 'pièce' || unit === 'unit'){
       return '';
     } else {
       return unit;
@@ -64,7 +64,8 @@ angular.module('app')
   'use strict';
   return function(servings, servingsAdjust){
     if(!servingsAdjust){servingsAdjust = 1;}
-    return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+' '+$filter('unit')(servings.unit) : '';
+    var unit = $filter('unit')(servings.unit);
+    return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : '';
   };
 })
 
@@ -85,7 +86,8 @@ angular.module('app')
   'use strict';
   return function(quantity, servingsAdjust){
     if(!servingsAdjust){servingsAdjust = 1;}
-    return quantity && quantity.value > 0 ? $filter('mynumber')(quantity.value*servingsAdjust, 2)+' '+$filter('unit')(quantity.unit) : '';
+    var unit = $filter('unit')(quantity ? quantity.unit : '');
+    return quantity && quantity.value > 0 ? $filter('mynumber')(quantity.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : '';
   };
 })
 

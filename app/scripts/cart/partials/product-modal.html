@@ -73,6 +73,10 @@
 <div class="item" style="white-space: normal;">Mots clé: <span ng-repeat="keyword in data.product.keywords"><br>{{keyword}}</span></div>
 </div>-->
     </div>
+    <div>
+      Product: <pre>{{data.product | json}}</pre>
+      Store: <pre>{{data.store | json}}</pre>
+    </div>
   </ion-content>
 
   <ion-footer-bar class="bar-dark" ng-show="data.product && data.buyBar !== false">

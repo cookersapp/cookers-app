@@ -115,6 +115,10 @@
       width: 30px;
       text-align: right;
     }
+    .item-bought {
+      text-decoration: line-through;
+      color: #bbb;
+    }
     .details {
       font-size: .8em;
       .source, .product {
