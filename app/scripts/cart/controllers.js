@@ -52,12 +52,11 @@ angular.module('app')
             });
           } else { // format: EAN_13
             var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
-            var storeId = data && data.cart && data.cart.store ? data.cart.store.id : undefined;
             LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
 
             ui.productModal.open({
               title: 'Produit scanné',
-              store: storeId,
+              store: data && data.cart && data.cart.store ? data.cart.store.id : undefined,
               barcode: barcode,
               callback: function(action, product, quantity, price){
                 if(action === 'bought'){
@@ -71,7 +70,7 @@ angular.module('app')
                       if(_item.food && _item.food.id){
                         fn.buyItem(_item);
                       } else {
-                        customItems.fn.buy(item);
+                        fn.buyCustomItems(_item);
                       }
                     }
                   }
@@ -209,6 +208,7 @@ angular.module('app')
       }
     };
     $scope.customItems = customItems;
+    fn.buyCustomItems = customItems.fn.buy;
 
     var openedItems = {
       data: {

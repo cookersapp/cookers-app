@@ -21,9 +21,11 @@ angular.module('app')
 
     AccountsSrv.getEmailOrAsk().then(function(email){
       var promise =  BackendUserSrv.findUser(email).then(function(user){
-        return StorageSrv.setUser(user).then(function(){
-          return BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
-        });
+        if(user){
+          return StorageSrv.setUser(user).then(function(){
+            return BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
+          });
+        }
       }, function(error){
         if(!error){error = {};}
         else if(typeof error === 'string'){error = {message: error};}
@@ -84,7 +86,9 @@ angular.module('app')
     return StorageSrv.getUser().then(function(user){
       if(user && user.email){
         return BackendUserSrv.findUser(user.email).then(function(backendUser){
-          return StorageSrv.setUser(backendUser);
+          if(backendUser){
+            return StorageSrv.setUser(backendUser);
+          }
         });
       }
     });
