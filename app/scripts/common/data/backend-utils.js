@@ -19,7 +19,7 @@ angular.module('app')
     allEltPromises: {}
   };
 
-  function getWithCache(name, id, _timeToUpdate, _timeToExpire){
+  function getWithCache(name, id, _defaultValue, _timeToUpdate, _timeToExpire){
     if(!cache.elts[name]){ cache.elts[name] = {}; }
     if(!cache.eltPromises[name]){ cache.eltPromises[name] = {}; }
 
@@ -29,32 +29,37 @@ angular.module('app')
     } else if(cache.eltPromises[name][id]){ // data already requested, will return it as soon as possible
       return cache.eltPromises[name][id];
     } else {
-      return _getLocalCache(name).then(function(localCache){
+      var defer = $q.defer();
+      cache.eltPromises[name][id] = defer.promise;
+      _getLocalCache(name).then(function(localCache){
         if(localCache.elts[id] && !_isExpired(localCache.elts[id], _timeToExpire)){ // found in localCache
           _updateCacheData(name, id, localCache.elts[id]);
           if(_isExpired(cache.elts[name][id], _timeToUpdate)){ _backgroundUpdate(name, id); }
-          return angular.copy(cache.elts[name][id].data);
+          defer.resolve(angular.copy(cache.elts[name][id].data));
+          delete cache.eltPromises[name][id];
         } else { // not found in caches, get it from server and store it in caches
-          var defer = $q.defer();
-          cache.eltPromises[name][id] = defer.promise;
           get('/'+name+'/'+id).then(function(elt){
-            if(elt){
-              _updateCacheData(name, id, _createCacheData(elt));
-              localCache.elts[id] = cache.elts[name][id];
-              _saveLocalCache(name, localCache);
-              defer.resolve(angular.copy(cache.elts[name][id].data));
-            } else {
-              defer.resolve();
-            }
-
-            if(cache.eltPromises[name]){ delete cache.eltPromises[name][id]; }
+            _getWithCacheSaveFetchedValue(name, id, elt, localCache, _defaultValue);
           }, function(err){
-            defer.resolve();
+            _getWithCacheSaveFetchedValue(name, id, null, localCache, _defaultValue);
           });
-          return cache.eltPromises[name][id];
         }
       });
+      return cache.eltPromises[name][id];
     }
+  }
+
+  function _getWithCacheSaveFetchedValue(name, id, elt, localCache, _defaultValue){
+    if(!elt && _defaultValue){ elt = _defaultValue; }
+    if(elt){
+      _updateCacheData(name, id, _createCacheData(elt));
+      localCache.elts[id] = cache.elts[name][id];
+      _saveLocalCache(name, localCache);
+      defer.resolve(angular.copy(cache.elts[name][id].data));
+    } else {
+      defer.resolve();
+    }
+    delete cache.eltPromises[name][id];
   }
 
   function _backgroundUpdate(name, id){

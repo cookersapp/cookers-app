@@ -78,7 +78,7 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    get: function(id){ return BackendUtils.getWithCache('foods', id, timeToUpdate); }
+    get: function(id, _defaultValue){ return BackendUtils.getWithCache('foods', id, _defaultValue, timeToUpdate); }
   };
 
   return service;
@@ -88,7 +88,7 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    get: function(id){ return BackendUtils.getWithCache('recipes', id, timeToUpdate); }
+    get: function(id){ return BackendUtils.getWithCache('recipes', id, null, timeToUpdate); }
   };
 
   return service;
@@ -103,7 +103,7 @@ angular.module('app')
   };
 
   function get(id){
-    return BackendUtils.getWithCache('selections', id, timeToUpdate);
+    return BackendUtils.getWithCache('selections', id, null, timeToUpdate);
   }
 
   return service;
@@ -113,10 +113,9 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, timeToUpdate);     },
-    //get           : function(barcode)         { return BackendUtils.get('/products/'+barcode);     },
-    getWithStore  : function(store, barcode)  { return BackendUtils.get('/stores/'+store+'/products/'+barcode);  },
-    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId); }
+    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, null, timeToUpdate);  },
+    getStoreInfo  : function(store, barcode)  { return BackendUtils.get('/stores/'+store+'/products/'+barcode);             },
+    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId);            }
   };
 
   return service;
@@ -126,8 +125,8 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    getAll  : function(_quickNDirty)  { return BackendUtils.getAllWithCache('stores', _quickNDirty);  },
-    get     : function(id)            { return BackendUtils.getWithCache('stores', id, timeToUpdate); }
+    getAll  : function(_quickNDirty)  { return BackendUtils.getAllWithCache('stores', _quickNDirty);        },
+    get     : function(id)            { return BackendUtils.getWithCache('stores', id, null, timeToUpdate); }
   };
 
   return service;

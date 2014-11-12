@@ -138,7 +138,6 @@ angular.module('app')
       for(var i=0; i<cart.products.length; i++){
         var product = cart.products[i];
         var productPrice = angular.copy(product.cartData.price);
-        console.log('product.cartData', product.cartData);
         productPrice.value = productPrice.value * product.cartData.quantity;
         if(i === 0){
           totalPrice = productPrice;
@@ -254,24 +253,26 @@ angular.module('app')
     addCartProduct(items, cartProduct, true);
   }
 
-  function addCartProduct(items, cartProduct, _sort){
+  function addCartProduct(items, cartProduct, _sort, __food){
     var item = _.find(items, {food: {id: cartProduct.foodId}});
     var itemProduct = item && item.products ? _.find(item.products, {barcode: cartProduct.barcode}) : null;
     if(itemProduct){
-      // TODO : cartData is undefined when the ingredient previously failed to load !?!?!?!?
       itemProduct.cartData.quantity += cartProduct.cartData.quantity;
     } else if(item){
       if(!item.products){item.products = [];}
       item.products.push(angular.copy(cartProduct));
+    } else if(__food){
+      items.push({
+        food: __food,
+        products: [angular.copy(cartProduct)]
+      });
+      if(_sort === undefined || _sort === true){
+        sortItemsByCategory(items);
+      }
     } else {
-      FoodSrv.get(cartProduct.foodId).then(function(food){
-        if(!food){ food = {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}}; }
-        items.push({
-          food: food,
-          products: [angular.copy(cartProduct)]
-        });
-        if(_sort === undefined || _sort === true){
-          sortItemsByCategory(items);
+      FoodSrv.get(cartProduct.foodId, {id: 'unknown', name: 'Autres', category: {id: 15, order: 15, name: 'Autres', slug: 'autres'}}).then(function(food){
+        if(food){
+          addCartProduct(items, cartProduct, _sort, food);
         }
       });
     }
@@ -474,7 +475,7 @@ angular.module('app')
             if(Config.debug){ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');}
             var promises = [];
             promises.push(opts.product ? $q.when(opts.product) : ProductSrv.get(opts.barcode));
-            if(opts.store){ promises.push(ProductSrv.getWithStore(opts.store, opts.product ? opts.product.barcode : opts.barcode)); }
+            if(opts.store){ promises.push(ProductSrv.getStoreInfo(opts.store, opts.product ? opts.product.barcode : opts.barcode)); }
             return $q.all(promises);
           }).then(function(results){
             var product = results[0];
