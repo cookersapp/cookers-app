@@ -39,9 +39,9 @@ angular.module('app')
           delete cache.eltPromises[name][id];
         } else { // not found in caches, get it from server and store it in caches
           get('/'+name+'/'+id).then(function(elt){
-            _getWithCacheSaveFetchedValue(name, id, elt, localCache, _defaultValue);
+            _getWithCacheSaveFetchedValue(defer, name, id, elt, localCache, _defaultValue);
           }, function(err){
-            _getWithCacheSaveFetchedValue(name, id, null, localCache, _defaultValue);
+            _getWithCacheSaveFetchedValue(defer, name, id, null, localCache, _defaultValue);
           });
         }
       });
@@ -49,7 +49,7 @@ angular.module('app')
     }
   }
 
-  function _getWithCacheSaveFetchedValue(name, id, elt, localCache, _defaultValue){
+  function _getWithCacheSaveFetchedValue(defer, name, id, elt, localCache, _defaultValue){
     if(!elt && _defaultValue){ elt = _defaultValue; }
     if(elt){
       _updateCacheData(name, id, _createCacheData(elt));

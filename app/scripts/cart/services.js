@@ -480,7 +480,6 @@ angular.module('app')
           }).then(function(results){
             var product = results[0];
             var store = results[1];
-            console.log('product', product);
             productLoadedTime = Date.now();
             if(Config.debug){ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');}
             LogSrv.trackCartProductLoaded(product ? product.barcode : opts.barcode, productLoadedTime-modalShowedTime, product ? true : false);

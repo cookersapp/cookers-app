@@ -301,9 +301,11 @@ angular.module('app')
     };
 
     fn.productDetails = function(product){
+      var storeId = data && data.cart && data.cart.store ? data.cart.store.id : undefined;
       ui.productModal.open({
         title: 'Produit acheté',
         buyBar: false,
+        store: storeId,
         product: product
       });
     };

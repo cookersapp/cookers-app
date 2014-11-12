@@ -113,9 +113,9 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, null, timeToUpdate);  },
-    getStoreInfo  : function(store, barcode)  { return BackendUtils.get('/stores/'+store+'/products/'+barcode);             },
-    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId);            }
+    get           : function(barcode)         { return BackendUtils.getWithCache('products', barcode, null, timeToUpdate);                  },
+    getStoreInfo  : function(store, barcode)  { return BackendUtils.getWithCache('stores/'+store+'/products', barcode, null, timeToUpdate); },
+    setFoodId     : function(barcode, foodId) { return BackendUtils.put('/products/'+barcode+'?foodId='+foodId);                            }
   };
 
   return service;
