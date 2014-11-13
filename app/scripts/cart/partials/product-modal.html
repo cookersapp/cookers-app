@@ -20,17 +20,25 @@
           <h5>{{data.product.brand}}</h5>
         </div>
       </div>
-      <div>
-        <div class="promo card" ng-if="data.store">
-          <div class="thumbnail pull-left">
-            <img src="http://fr.openfoodfacts.org/images/products/353/571/000/2787/front.5.400.jpg">
+      <div class="promo card" ng-if="data.store && !data.textPromo" ng-click="data.textPromo=!data.textPromo">
+        <div class="media">
+          <a class="media-left"><img src="http://images.test-comparatif.quechoisir.org/test/potage-aux-legumes/zoom/liebig-pur-soup_001.jpg"></a>
+          <div class="media-body">
+            <h2 class="media-heading"><strong>0,50€</strong> de réduction immédiate</h2>
+            <p>à valoir sur une soupe <strong>Liebig</strong></p>
           </div>
-          <div class="badge">
-            <i class="fa fa-certificate"></i>
-            <span class="text">-50%</span>
-          </div>
-
         </div>
+        <div class="badge">
+          <i class="fa fa-certificate"></i>
+          <span class="text">0,50€</span>
+        </div>
+      </div>
+      <div class="promo-img card" ng-if="data.store && data.textPromo" ng-click="data.textPromo=!data.textPromo">
+        <div class="badge">
+          <i class="fa fa-certificate"></i>
+          <span class="text">0,50€</span>
+        </div>
+        <img src="images/promo.jpg">
       </div>
       <div class="card padding" ng-show="data.product.labels">
         Labels :

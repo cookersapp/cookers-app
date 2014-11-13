@@ -3,7 +3,9 @@
 # TODO
 
 - next release :
-    - count user scans
+    - afficher les cutomItems sur la partie self-scan
+    - faire un scénario de démo promos
+    
     - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
     - widget uservoice sur la home
     - mettre en cache les données embeded dans les recipes (foods), les products (additives)
