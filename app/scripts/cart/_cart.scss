@@ -167,3 +167,52 @@
     margin-bottom: 20px;
   }
 }
+
+.product-card {
+  .promo {
+    position: relative;
+    overflow: initial;
+    display: flex;
+    padding: 0px;
+
+    border-color: #2b542c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168;
+
+    border-color: #66afe9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+
+    border-color: #66512c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #c0a16b;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #c0a16b;
+
+    border-color: #843534;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+
+    .thumbnail {
+      img {height: 100px;}
+    }
+    .badge {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      i {
+        color: red;
+        font-size: 50px;
+      }
+      .text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -20px;
+        margin-top: -10px;
+        color: black;
+        width: 40px;
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+  }
+}

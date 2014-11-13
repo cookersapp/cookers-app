@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('BackendUtils', function($http, $q, LocalForageUtils, CollectionUtils, Config){
+.factory('BackendUtils', function($http, $q, LocalForageUtils, CollectionUtils, Config, LogSrv){
   'use strict';
   var keyPrefix = 'cache-', cacheDefaultMaxSize = 50;
   var service = {
@@ -9,6 +9,7 @@ angular.module('app')
     post: post,
     getWithCache: getWithCache,
     getAllWithCache: getAllWithCache,
+    addToCache: addToCache,
     clearCache: clearCache
   };
   var cache = {
@@ -64,14 +65,20 @@ angular.module('app')
 
   function _backgroundUpdate(name, id){
     return get('/'+name+'/'+id).then(function(elt){
-      if(elt){
-        _updateCacheData(name, id, _createCacheData(elt));
-        return _getLocalCache(name).then(function(localCache){
-          localCache.elts[id] = cache.elts[name][id];
-          _saveLocalCache(name, localCache);
-        });
-      }
+      return addToCache(name, id, elt);
     });
+  }
+
+  function addToCache(name, id, elt){
+    if(name && id && elt){
+      _updateCacheData(name, id, _createCacheData(elt));
+      return _getLocalCache(name).then(function(localCache){
+        localCache.elts[id] = cache.elts[name][id];
+        return _saveLocalCache(name, localCache);
+      });
+    } else {
+      return $q.when();
+    }
   }
 
   function _isExpired(cachedData, timeToExpire){
@@ -224,57 +231,56 @@ angular.module('app')
     });
   }
 
-  function get(url){
+  function get(url, _objectOnly){
     var defer = $q.defer();
     $http.get(Config.backendUrl+'/api/v1'+url).then(function(res){
-      if(res && res.data){
-        if(res.data.data || res.data.status){
-          defer.resolve(res.data.data);
-        } else { // compatibility for /api/v1/users/find in version 1.1.0
-          defer.resolve(res.data);
-        }
-      } else {
-        defer.resolve();
-      }
+      _returnData(defer, null, res, _objectOnly);
     }, function(err){
-      console.error(err);
-      defer.resolve();
+      _returnData(defer, err, null, _objectOnly);
     });
     return defer.promise;
   }
 
-  function post(url, data){
+  function post(url, data, _objectOnly){
     var defer = $q.defer();
     $http.post(Config.backendUrl+'/api/v1'+url, data).then(function(res){
-      if(res && res.data){
-        if(res.data.data || res.data.status){
-          defer.resolve(res.data.data);
-        } else { // compatibility for /api/v1/app-feedback in version 1.1.0
-          defer.resolve(res.data);
-        }
-      } else {
-        defer.resolve();
-      }
+      _returnData(defer, null, res, _objectOnly);
     }, function(err){
-      console.error(err);
-      defer.resolve();
+      _returnData(defer, err, null, _objectOnly);
     });
     return defer.promise;
   }
 
-  function put(url, data){
+  function put(url, data, _objectOnly){
     var defer = $q.defer();
     $http.put(Config.backendUrl+'/api/v1'+url, data).then(function(res){
-      if(res && res.data && res.data.data){
-        defer.resolve(res.data.data);
+      _returnData(defer, null, res, _objectOnly);
+    }, function(err){
+      _returnData(defer, err, null, _objectOnly);
+    });
+    return defer.promise;
+  }
+
+  // objectOnly is to return only JS objects (do not return html error pages)
+  function _returnData(defer, err, res, objectOnly){
+    if(res && res.data){
+      var ret;
+      if(res.data.data || res.data.status){
+        ret = res.data.data;
+      } else { // compatibility for /api/v1/users/find in version 1.1.0
+        ret = res.data;
+      }
+      if(objectOnly === false || typeof ret === 'object'){
+        defer.resolve(ret);
       } else {
         defer.resolve();
       }
-    }, function(err){
-      console.error(err);
+    } else {
+      if(err){
+        console.error(err);
+      }
       defer.resolve();
-    });
-    return defer.promise;
+    }
   }
 
   return service;

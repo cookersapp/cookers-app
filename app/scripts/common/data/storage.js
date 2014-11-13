@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('StorageSrv', function($q, LocalForageUtils, BackendUserSrv){
+.factory('StorageSrv', function($q, LocalForageUtils, UserSrv){
   'use strict';
   var service = {
     get: _get,
@@ -8,10 +8,6 @@ angular.module('app')
     remove: _remove,
     getApp: getApp,
     setApp: setApp,
-    getUser: getUser,
-    getUserSetting: getUserSetting,
-    setUser: setUser,
-    setUserSetting: setUserSetting,
     getRecipeHistory: getRecipeHistory,
     addRecipeToHistory: addRecipeToHistory,
     getStandaloneCookedRecipes: getStandaloneCookedRecipes,
@@ -21,28 +17,6 @@ angular.module('app')
 
   function getApp(){ return _get('app'); }
   function setApp(app){ return _set('app', app); }
-  function getUser(){ return _get('user'); }
-  function getUserSetting(setting){
-    return getUser().then(function(user){
-      return user && user.settings ? user.settings[setting] : null;
-    });
-  }
-  function setUser(user){ return _set('user', user); }
-  function setUserSetting(setting, value){
-    return getUser().then(function(user){
-      if(user && user.settings){
-        user.settings[setting] = value;
-        return setUser(user).then(function(){
-          return BackendUserSrv.updateUserSetting(user.id, setting, value);
-        });
-      } else {
-        if(!user){user = {};}
-        user.settings = {};
-        user.settings[setting] = value;
-        return setUser(user);
-      }
-    });
-  }
   function getRecipeHistory(){
     return _get('userRecipeHistory').then(function(history){
       return history ? history.recipes : null;

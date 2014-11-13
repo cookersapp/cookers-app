@@ -58,7 +58,7 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
   }
 })
 
-.run(function($rootScope, $location, LaunchSrv, StorageSrv, imagesPlaceholders, Config){
+.run(function($rootScope, $location, LaunchSrv, imagesPlaceholders, Config){
   'use strict';
   $rootScope.ctx = {
     cfg: {
@@ -68,18 +68,11 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     debug: Config.debug,
     appVersion: Config.appVersion
   };
-  StorageSrv.getUser().then(function(user){
+
+  LaunchSrv.launch().then(function(user){
     if(user && user.settings){
       $rootScope.ctx.settings = user.settings;
     }
-  });
-
-  LaunchSrv.launch().then(function(){
-    StorageSrv.getUser().then(function(user){
-      if(user && user.settings){
-        $rootScope.ctx.settings = user.settings;
-      }
-    });
   });
 
   // utils methods

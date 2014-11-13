@@ -135,7 +135,7 @@ angular.module('app')
   });
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CustomItemUtils, StorageSrv, BarcodeSrv, PopupSrv, ToastSrv, LogSrv, Config, PerfSrv){
+.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CustomItemUtils, UserSrv, BarcodeSrv, PopupSrv, ToastSrv, LogSrv, Config, PerfSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -154,10 +154,10 @@ angular.module('app')
   });
 
   function controller(){
-    StorageSrv.getUser().then(function(user){
+    UserSrv.get().then(function(user){
       if(user && user.settings && !user.settings.skipCartFeatures){
         PopupSrv.tourCartFeatures().then(function(){
-          StorageSrv.setUserSetting('skipCartFeatures', true);
+          UserSrv.setSetting('skipCartFeatures', true);
         });
       }
     });

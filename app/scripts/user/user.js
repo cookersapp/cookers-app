@@ -24,7 +24,7 @@ angular.module('app')
   });
 })
 
-.controller('ProfileCtrl', function($scope, StorageSrv, BackendUtils, ToastSrv, DialogSrv, LogSrv, Utils){
+.controller('ProfileCtrl', function($scope, UserSrv, StorageSrv, BackendUtils, ToastSrv, DialogSrv, LogSrv, Utils){
   'use strict';
   $scope.clearCache = function(){
     DialogSrv.confirm('Vider le cache ?').then(function(result){
@@ -49,19 +49,19 @@ angular.module('app')
 
   $scope.$watch('ctx.settings.showPrices', function(newValue, oldValue){
     if(newValue !== oldValue){
-      StorageSrv.setUserSetting('showPrices', newValue);
+      UserSrv.setSetting('showPrices', newValue);
     }
   });
   $scope.$watch('ctx.settings.bigImages', function(newValue, oldValue){
     if(newValue !== oldValue){
-      StorageSrv.setUserSetting('bigImages', newValue);
+      UserSrv.setSetting('bigImages', newValue);
     }
   });
 })
 
-.controller('FeedbackCtrl', function($scope, $stateParams, $window, StorageSrv, EmailSrv, DialogSrv, LogSrv, supportTeamEmail){
+.controller('FeedbackCtrl', function($scope, $stateParams, $window, UserSrv, EmailSrv, DialogSrv, LogSrv, supportTeamEmail){
   'use strict';
-  var userPromise = StorageSrv.getUser();
+  var userPromise = UserSrv.get();
   userPromise.then(function(user){
     $scope.feedback = {
       placeholder: 'Un p\'tit compliment ? Quelle est ta fonctionnalité préférée ?',

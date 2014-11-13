@@ -54,7 +54,7 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv, PerfSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, UserSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv, PerfSrv){
   'use strict';
   PerfSrv.loadController($scope, function(){
     $scope.recipeShowIngredients = null;
@@ -74,7 +74,7 @@ angular.module('app')
             if(!recipe._formated){recipe._formated = {};}
             recipe._formated.isInCart = CartUtils.hasRecipe(data.cart, recipe);
           }
-          StorageSrv.getUserSetting('recipeShiftOffset').then(function(offset){
+          UserSrv.getSetting('recipeShiftOffset').then(function(offset){
             userShiftRecipes(selection.recipes, offset);
             $scope.selection = selection;
           });
@@ -98,7 +98,7 @@ angular.module('app')
           servings = parseInt(servings);
           LogSrv.trackAddRecipeToCart(recipe.id, servings, index);
           $rootScope.ctx.settings.defaultServings = servings;
-          StorageSrv.setUserSetting('defaultServings', servings);
+          UserSrv.setSetting('defaultServings', servings);
           CartUtils.addRecipe(data.cart, recipe, servings);
           recipe._formated.isInCart = true;
           ToastSrv.show('✔ recette ajoutée à la liste de courses');
@@ -129,7 +129,7 @@ angular.module('app')
   });
 })
 
-.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv, PerfSrv){
+.controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, UserSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv, PerfSrv){
   'use strict';
   PerfSrv.loadController($scope, function(){
     var recipeId = $stateParams.recipeId;
@@ -153,7 +153,7 @@ angular.module('app')
           servings = parseInt(servings);
           LogSrv.trackAddRecipeToCart(recipe.id, servings, recipeIndex);
           $rootScope.ctx.settings.defaultServings = servings;
-          StorageSrv.setUserSetting('defaultServings', servings);
+          UserSrv.setSetting('defaultServings', servings);
           CartUtils.addRecipe(data.cart, recipe, servings);
           recipe._formated.isInCart = true;
           ToastSrv.show('✔ recette ajoutée à la liste de courses');
@@ -169,7 +169,7 @@ angular.module('app')
   });
 })
 
-.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, DialogSrv, LogSrv, Utils, PerfSrv){
+.controller('CookCtrl', function($scope, $state, $stateParams, $window, CartSrv, UserSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, DialogSrv, LogSrv, Utils, PerfSrv){
   'use strict';
   PerfSrv.loadController($scope, function(){
     // TODO : vocal commands : should go to next step when knock knock (speech recognition)
@@ -198,10 +198,10 @@ angular.module('app')
         $scope.servingsAdjust = $scope.servings / $scope.recipe.servings.value;
         $scope.timer = moment.duration($scope.recipe.time.eat, 'minutes').asSeconds();
 
-        StorageSrv.getUser().then(function(user){
+        UserSrv.get().then(function(user){
           if(user && user.settings && !user.settings.skipCookFeatures){
             PopupSrv.tourCookFeatures().then(function(){
-              StorageSrv.setUserSetting('skipCookFeatures', true);
+              UserSrv.setSetting('skipCookFeatures', true);
               startTimer();
             });
           } else {

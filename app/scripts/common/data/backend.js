@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('GlobalMessageSrv', function(BackendUtils, $q, StorageSrv, Config){
+.factory('GlobalMessageSrv', function(BackendUtils, $q, UserSrv, Config){
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
@@ -11,30 +11,38 @@ angular.module('app')
 
   function getMessage(){
     return BackendUtils.getAllWithCache('globalmessages', false, timeToUpdate).then(function(messages){
-      return StorageSrv.getUser().then(function(user){
-        var closedMessages = user && Array.isArray(user.closedMessages) ? user.closedMessages : [];
-        return _.find(messages, function(msg){
-          return !msg.sticky && msg.versions.indexOf(Config.appVersion) > -1 && closedMessages.indexOf(msg.id) === -1;
+      if(messages){
+        return UserSrv.get().then(function(user){
+          var closedMessages = user && Array.isArray(user.closedMessages) ? user.closedMessages : [];
+          return _.find(messages, function(msg){
+            return !msg.sticky && msg.versions.indexOf(Config.appVersion) > -1 && closedMessages.indexOf(msg.id) === -1;
+          });
         });
-      });
+      } else {
+        return $q.when();
+      }
     });
   }
 
   function getStickyMessages(){
     return BackendUtils.getAllWithCache('globalmessages', false, timeToUpdate).then(function(messages){
-      return _.find(messages, function(msg){
-        return msg.sticky && msg.versions.indexOf(Config.appVersion) > -1;
-      });
+      if(messages){
+        return _.find(messages, function(msg){
+          return msg.sticky && msg.versions.indexOf(Config.appVersion) > -1;
+        });
+      } else {
+        return $q.when([]);
+      }
     });
   }
 
   function hideMessage(message){
-    return StorageSrv.getUser().then(function(user){
+    return UserSrv.get().then(function(user){
       if(!(user && Array.isArray(user.closedMessages))){ user.closedMessages = []; }
       if(user.closedMessages.indexOf(message.id) === -1){
         user.closedMessages.push(message.id);
         return BackendUtils.put('/users/'+user.id+'/messages/'+message.id+'/close').then(function(){
-          return StorageSrv.setUser(user);
+          return UserSrv.set(user);
         });
       }
     });
@@ -54,7 +62,7 @@ angular.module('app')
       from: email,
       content: feedback,
       source: 'mobile-app'
-    }).then(function(data){
+    }, false).then(function(data){
       if(data){ return data === 'sent'; }
       return false;
     });
@@ -63,13 +71,116 @@ angular.module('app')
   return service;
 })
 
-.factory('BackendUserSrv', function(BackendUtils){
+.factory('UserSrv', function($q, AccountsSrv, BackendUtils, LocalForageUtils, Utils){
   'use strict';
+  var cache = {};
+  var storageKey = 'user';
   var service = {
-    findUser          : function(email)                   { return BackendUtils.get('/users/find?email='+email);                             },
-    updateUserSetting : function(userId, setting, value)  { return BackendUtils.put('/users/'+userId+'/settings/'+setting, {value: value});  },
-    setUserDevice     : function(userId, device)          { return BackendUtils.put('/users/'+userId+'/device', device);                     }
+    get: get,
+    set: set,
+    updateWithRemote: updateWithRemote,
+    getSetting: getSetting,
+    setSetting: setSetting,
+    setDevice: setDevice
   };
+
+  function _init(email){
+    var defer = $q.defer();
+    BackendUtils.get('/users/find?email='+email).then(function(user){
+      if(user && user.id){
+        cache.user = user;
+        return LocalForageUtils.set(storageKey, user).then(function(){
+          return setDevice(Utils.getDevice());
+        });
+      }
+    }).then(function(){
+      defer.resolve();
+    }, function(error){
+      if(!error){error = {};}
+      else if(typeof error !== 'object'){error = {message: error};}
+      error.email = email;
+      LogSrv.trackError('userNotFound', error);
+      defer.resolve();
+    });
+    return defer.promise;
+  }
+
+  function get(){
+    if(cache.user){
+      return $q.when(angular.copy(cache.user));
+    } else if(cache.userPromise){
+      return cache.userPromise;
+    } else {
+      cache.userPromise = LocalForageUtils.get('user').then(function(user){
+        if(user && user.id){
+          cache.user = user;
+          return angular.copy(cache.user);
+        } else {
+          return AccountsSrv.getEmailOrAsk().then(function(email){
+            return _init(email);
+          }).then(function(){
+            return $q.when(angular.copy(cache.user));
+          });
+          console.error('Unable to find user !!!');
+        }
+        delete cache.userPromise;
+      });
+      return cache.userPromise;
+    }
+  }
+
+  function set(user){
+    cache.user = angular.copy(user);
+    return LocalForageUtils.set('user', user);
+  }
+
+  function updateWithRemote(){
+    return get().then(function(user){
+      if(user && user.id){
+        return BackendUtils.get('/users/'+user.id).then(function(backendUser){
+          if(backendUser){
+            return set(backendUser).then(function(){
+              return backendUser;
+            });
+          }
+        });
+      } else {
+        console.error('Unable to find user !!!');
+      }
+    });
+  }
+
+  function getSetting(setting){
+    return get().then(function(user){
+      return user && user.settings ? user.settings[setting] : null;
+    });
+  }
+
+  function setSetting(setting, value){
+    return get().then(function(user){
+      if(user && user.id && user.settings){
+        user.settings[setting] = value;
+        return set(user).then(function(){
+          return BackendUtils.put('/users/'+user.id+'/settings/'+setting, {value: value});
+        });
+      } else {
+        if(!user){user = {};}
+        user.settings = {};
+        user.settings[setting] = value;
+        return set(user);
+      }
+    });
+  }
+
+  function setDevice(device){
+    return get().then(function(user){
+      if(user && user.id){
+        return BackendUtils.put('/users/'+user.id+'/device', device);
+      } else {
+        console.error('Unable to find user !!!');
+      }
+    });
+  }
 
   return service;
 })

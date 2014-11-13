@@ -6,7 +6,7 @@
 
   <ion-content>
     <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
-    <div ng-show="data.product">
+    <div class="product-card" ng-show="data.product">
       <div class="card product">
         <div>
           <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
@@ -18,6 +18,18 @@
         <div class="padding">
           <h4>{{data.product.name}}</h4>
           <h5>{{data.product.brand}}</h5>
+        </div>
+      </div>
+      <div>
+        <div class="promo card" ng-if="data.store">
+          <div class="thumbnail pull-left">
+            <img src="http://fr.openfoodfacts.org/images/products/353/571/000/2787/front.5.400.jpg">
+          </div>
+          <div class="badge">
+            <i class="fa fa-certificate"></i>
+            <span class="text">-50%</span>
+          </div>
+
         </div>
       </div>
       <div class="card padding" ng-show="data.product.labels">
@@ -72,10 +84,6 @@
 <div class="item" style="white-space: normal;">Astuce: {{data.product.infos.tips}}</div>
 <div class="item" style="white-space: normal;">Mots clé: <span ng-repeat="keyword in data.product.keywords"><br>{{keyword}}</span></div>
 </div>-->
-    </div>
-    <div>
-      Product: <pre>{{data.product | json}}</pre>
-      Store: <pre>{{data.store | json}}</pre>
     </div>
   </ion-content>
 

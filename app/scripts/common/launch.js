@@ -1,63 +1,37 @@
 angular.module('app')
 
-.factory('LaunchSrv', function($rootScope, $q, $ionicLoading, $window, StorageSrv, BackendUserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, Config){
+.factory('LaunchSrv', function($rootScope, $q, $ionicLoading, $window, StorageSrv, UserSrv, AccountsSrv, ToastSrv, InsomniaSrv, LogSrv, Utils, Config){
   'use strict';
   var service = {
     launch: function(){
       return _initStorage().then(function(){
-        return StorageSrv.getUser();
+        return UserSrv.get();
       }).then(function(user){
         if(user && user.id){
-          return launch();
+          return launch(user);
         } else {
-          return firstLaunch(user ? user.upgrade : null);
+          return firstLaunch(user);
         }
       });
     }
   };
 
-  function firstLaunch(upgrade){
-    var defer = $q.defer();
-
-    AccountsSrv.getEmailOrAsk().then(function(email){
-      var promise =  BackendUserSrv.findUser(email).then(function(user){
-        if(user){
-          return StorageSrv.setUser(user).then(function(){
-            return BackendUserSrv.setUserDevice(user.id, Utils.getDevice());
-          });
-        }
-      }, function(error){
-        if(!error){error = {};}
-        else if(typeof error === 'string'){error = {message: error};}
-        LogSrv.trackError('userNotFound', error);
-        return StorageSrv.setUser({
-          email: email,
-          settings: {}
-        });
-      });
-
-      promise['finally'](function(){
-        if(upgrade){
-          LogSrv.trackUpgrade(upgrade, Config.appVersion);
-        } else {
-          LogSrv.trackInstall();
-        }
-        launch().then(function(){
-          defer.resolve();
-        });
-      });
-    });
-
-    return defer.promise;
+  function firstLaunch(user){
+    var upgrade = user ? user.upgrade : null;
+    if(upgrade){
+      LogSrv.trackUpgrade(upgrade, Config.appVersion);
+    } else {
+      LogSrv.trackInstall();
+    }
+    return launch(user);
   }
 
-  function launch(){
+  function launch(user){
     _trackLaunch();
-    _updateUser();
     _initTrackStateErrors();
     _initNoSleepMode();
     _initAutomaticLoadingIndicators();
-    return $q.when();
+    return UserSrv.updateWithRemote();
   }
 
   function _initStorage(){
@@ -80,18 +54,6 @@ angular.module('app')
     var launchTime = Date.now()-INIT;
     if(Config.debug && ionic.Platform.isWebView()){ToastSrv.show('Application started in '+launchTime+' ms');}
     LogSrv.trackLaunch(launchTime);
-  }
-
-  function _updateUser(){
-    return StorageSrv.getUser().then(function(user){
-      if(user && user.email){
-        return BackendUserSrv.findUser(user.email).then(function(backendUser){
-          if(backendUser){
-            return StorageSrv.setUser(backendUser);
-          }
-        });
-      }
-    });
   }
 
   function _initTrackStateErrors(){
