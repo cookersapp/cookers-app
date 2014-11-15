@@ -50,7 +50,7 @@
           <div class="details" ng-show="openedItems.fn.isOpened(item)">
             <div class="source" ng-class="{'source-bought': source.ingredient.bought}" bindonce ng-repeat="source in item.sources">
               <div class="quantity pull-right" bo-bind="source.quantity | quantity"></div>
-              <div class="text" bo-bind="source.recipe.name+' ('+(source.recipe.cartData.servings | servings)+')'"></div>
+              <div class="details-text" bo-bind="source.recipe.name+' ('+(source.recipe.cartData.servings | servings)+')'"></div>
             </div>
           </div>
         </div>

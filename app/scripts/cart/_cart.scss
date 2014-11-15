@@ -97,6 +97,7 @@
       margin-left: 5px;
       margin-right: 5px;
       padding-left: 10px;
+      color: #bbb;
       .box {
         width: 26px;
         height: 26px;
@@ -106,6 +107,9 @@
         background: #eee;
         border: 1px solid #ccc;
         border-radius: 3px;
+        .checked {
+          display: none;
+        }
       }
     }
     .scan {
@@ -115,17 +119,13 @@
       width: 30px;
       text-align: right;
     }
-    .item-bought {
-      text-decoration: line-through;
-      color: #bbb;
-    }
     .details {
       font-size: .8em;
       .source, .product {
         &.source-bought {
           text-decoration: line-through;
         }
-        .text {
+        .details-text {
           border-left: 1px dashed #666;
           margin-left: 10px;
           padding: 1px 5px;
@@ -146,6 +146,16 @@
           margin-right: 0px;
         }
       }
+    }
+  }
+
+  .item-bought {
+    .text {
+      text-decoration: line-through;
+      color: #bbb;
+    }
+    .check .box .checked {
+      display: inline;
     }
   }
 

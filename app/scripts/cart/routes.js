@@ -30,7 +30,7 @@ angular.module('app')
   .state('app.cart.selfscan', {
     url: '/selfscan',
     templateUrl: 'scripts/cart/cart-selfscan.html',
-    controller: 'CartSelfscanCtrl',
+    controller: 'CartIngredientsCtrl',
     data: {
       noSleep: true
     }

@@ -104,11 +104,11 @@ angular.module('app')
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
-  function preWords(ingredient){
-    if(ingredient && ingredient.pre){
+  function preWords(ingredient, quantity){
+    if(ingredient && ingredient.pre && quantity){
       return ' ' + ingredient.pre + (endsWith(ingredient.pre, '\'') ? '' : ' ');
     } else {
-      return ' ';
+      return quantity ? ' ' : '';
     }
   }
 
@@ -122,7 +122,8 @@ angular.module('app')
 
   return function(ingredient, servingsAdjust){
     if(ingredient){
-      return $filter('quantity')(ingredient.quantity, servingsAdjust) + preWords(ingredient) + ingredient.food.name + postWords(ingredient);
+      var quantity = $filter('quantity')(ingredient.quantity, servingsAdjust);
+      return quantity + preWords(ingredient, quantity) + ingredient.food.name + postWords(ingredient);
     } else {
       return '';
     }

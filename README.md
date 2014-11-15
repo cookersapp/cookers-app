@@ -3,8 +3,6 @@
 # TODO
 
 - next release :
-    - afficher les cutomItems sur la partie self-scan (avec check et scan)
-    - pouvoir checker les items en mode self-scan
     - ajouter suggestions en haut de la liste de courses
     - faire un scénario de démo promos
     

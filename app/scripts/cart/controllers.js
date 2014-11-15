@@ -32,58 +32,26 @@ angular.module('app')
       var startScanTime = Date.now();
       BarcodeSrv.scan().then(function(result){
         if(!result.cancelled){
+          var format = result.format;
           var barcode = result.text;
-          var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
-          barcode = barcode ? barcode : codes[Math.floor(Math.random() * codes.length)];
+          if(!barcode){
+            var codes = ['3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3029330003533', '3023290642177', '3017230000059', '3036810207923'];
+            barcode = codes[Math.floor(Math.random() * codes.length)];
+            format = 'EAN_13';
+          }
           if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
 
-          if(Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){ // format: QR_CODE
+          if(format === 'QR_CODE' && Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){
             var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
             var matches = barcode.match(regex);
             var storeId = matches ? matches[1] : null;
-            $ionicLoading.show();
-            StoreSrv.get(storeId).then(function(store){
-              $ionicLoading.hide();
-              if(store){
-                DialogSrv.confirm('Bienvenu à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
-                  if(result){
-                    data.cart.selfscan = true;
-                    data.cart.store = store;
-                    CartSrv.updateCart(data.cart);
-                    $state.go('app.cart.selfscan');
-                  }
-                });
-              } else {
-                DialogSrv.alert('Magasin non reconnu :(', 'Self-scan');
-              }
-            });
-          } else { // format: EAN_13
+            startSelfScan(storeId);
+          } else if(format === 'EAN_13'){
             var itemId = _item ? (_item.food && _item.food.id ? _item.food.id : _item.name) : undefined;
             LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
-
-            ui.productModal.open({
-              title: 'Produit scanné',
-              store: data && data.cart && data.cart.store ? data.cart.store.id : undefined,
-              barcode: barcode,
-              callback: function(action, product, quantity, price){
-                if(action === 'bought'){
-                  if(data.cart.selfscan){
-                    CartUtils.addProduct(data.cart, product, quantity, price);
-                    ItemUtils.addProduct(data.cart, data.items, product, quantity, price);
-                    data.shopPrice = CartUtils.getShopPrice(data.cart);
-                    ToastSrv.show('✔ '+product.name+' acheté !');
-                  } else {
-                    if(_item){
-                      if(_item.food && _item.food.id){
-                        fn.buyItem(_item);
-                      } else {
-                        fn.buyCustomItems(_item);
-                      }
-                    }
-                  }
-                }
-              }
-            });
+            productScanned(barcode, _item);
+          } else {
+            DialogSrv.alert('Le code barre '+barcode+' comporte un format inutilisable ('+format+')', 'Code barre inconnu !');
           }
         }
       }, function(error){
@@ -107,6 +75,45 @@ angular.module('app')
       }
     };
   });
+
+  function startSelfScan(storeId){
+    $ionicLoading.show();
+    StoreSrv.get(storeId).then(function(store){
+      $ionicLoading.hide();
+      if(store){
+        DialogSrv.confirm('Bienvenu à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
+          if(result){
+            data.cart.selfscan = true;
+            data.cart.store = store;
+            CartSrv.updateCart(data.cart);
+            $state.go('app.cart.selfscan');
+          }
+        });
+      } else {
+        DialogSrv.alert('Magasin non reconnu :(', 'Self-scan');
+      }
+    });
+  }
+
+  function productScanned(barcode, _item){
+    ui.productModal.open({
+      title: 'Produit scanné',
+      store: data && data.cart && data.cart.store ? data.cart.store.id : undefined,
+      barcode: barcode,
+      callback: function(action, product, quantity, price){
+        if(action === 'bought'){
+          var boughtProduct = {product: product, quantity: quantity, price: price};
+          if(_item && _item.food && _item.food.id){
+            fn.buyItem(_item, boughtProduct);
+          } else if(_item){
+            fn.buyCustomItems(_item, boughtProduct);
+          } else {
+            fn.buyProduct(boughtProduct);
+          }
+        }
+      }
+    });
+  }
 })
 
 .controller('CartRecipesCtrl', function($scope, CartUtils, CartSrv, ToastSrv, LogSrv, PerfSrv){
@@ -142,7 +149,7 @@ angular.module('app')
   });
 })
 
-.controller('CartIngredientsCtrl', function($scope, $state, CartSrv, CartUtils, ItemUtils, CustomItemUtils, UserSrv, BarcodeSrv, PopupSrv, ToastSrv, LogSrv, Config, PerfSrv){
+.controller('CartIngredientsCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, CustomItemUtils, UserSrv, BarcodeSrv, PopupSrv, ToastSrv, DialogSrv, LogSrv, Config, PerfSrv){
   'use strict';
   // herited from CartCtrl
   var data = $scope.data;
@@ -169,12 +176,8 @@ angular.module('app')
       }
     });
 
-    if(data.cart && data.cart.selfscan){
-      $state.go('app.cart.selfscan');
-    } else {
-      data.items = ItemUtils.fromCart(data.cart);
-      CustomItemUtils.compatibility(data.cart);
-    }
+    data.items = ItemUtils.fromCart(data.cart);
+    CustomItemUtils.compatibility(data.cart);
 
     var customItems = {
       data: {
@@ -203,14 +206,22 @@ angular.module('app')
             LogSrv.trackEditCartCustomItems(data.cart.customItems);
           }
         },
-        buy: function(item){
+        buy: function(item, _boughtProduct){
           item.bought = true;
+          if(_boughtProduct){buyProduct(_boughtProduct);}
           CartSrv.updateCart(data.cart);
           ToastSrv.show('✔ '+item.name+' acheté !');
         },
         unbuy: function(item){
           item.bought = false;
           CartSrv.updateCart(data.cart);
+        },
+        toggle: function(item){
+          if(item.bought){
+            customItems.fn.unbuy(item);
+          } else {
+            customItems.fn.buy(item);
+          }
         }
       }
     };
@@ -260,8 +271,9 @@ angular.module('app')
       });
       return bought;
     };
-    fn.buyItem = function(item){
+    fn.buyItem = function(item, _boughtProduct){
       LogSrv.trackBuyItem(item.food.id, item.quantity);
+      if(_boughtProduct){buyProduct(_boughtProduct);}
       CartUtils.buyItem(data.cart, item);
       ToastSrv.show('✔ '+item.food.name+' acheté !');
     };
@@ -269,33 +281,19 @@ angular.module('app')
       LogSrv.trackUnbuyItem(item.food.id);
       CartUtils.unbuyItem(data.cart, item);
     };
-  }
-})
+    fn.toggleItem = function(item){
+      if(fn.isBought(item)){
+        fn.unbuyItem(item);
+      } else {
+        fn.buyItem(item);
+      }
+    };
 
-.controller('CartSelfscanCtrl', function($scope, $state, $window, CartSrv, CartUtils, ItemUtils, DialogSrv, PerfSrv){
-  'use strict';
-  // herited from CartCtrl
-  var data = $scope.data;
-  var fn = $scope.fn;
-  var ui = $scope.ui;
+    fn.buyProduct = function(boughtProduct){
+      buyProduct(boughtProduct);
+      ToastSrv.show('✔ '+boughtProduct.product.name+' acheté !');
+    };
 
-  PerfSrv.loadController($scope, function(){
-    if(!data.cart){
-      CartSrv.getCurrentCart().then(function(cart){
-        data.cart = cart;
-        controller();
-      });
-    } else {
-      controller();
-    }
-  });
-
-  function controller(){
-    if(data.cart && data.cart.selfscan){
-      data.items = ItemUtils.fromCart(data.cart);
-    } else {
-      $state.go('app.cart.ingredients');
-    }
 
     fn.removeFromCart = function(product){
       DialogSrv.confirm('Supprimer du panier : '+product.name+' ?').then(function(result){
@@ -306,7 +304,6 @@ angular.module('app')
         }
       });
     };
-
     fn.productDetails = function(product){
       var storeId = data && data.cart && data.cart.store ? data.cart.store.id : undefined;
       ui.productModal.open({
@@ -316,9 +313,14 @@ angular.module('app')
         product: product
       });
     };
-
     fn.checkout = function(){
       $window.alert('TODO...');
     };
   }
+
+  function buyProduct(boughtProduct){
+    CartUtils.addProduct(data.cart, boughtProduct.product, boughtProduct.quantity, boughtProduct.price);
+    ItemUtils.addProduct(data.cart, data.items, boughtProduct.product, boughtProduct.quantity, boughtProduct.price);
+    data.shopPrice = CartUtils.getShopPrice(data.cart);
+  };
 });

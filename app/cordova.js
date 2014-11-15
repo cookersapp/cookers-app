@@ -124,10 +124,13 @@ setTimeout(function(){
     Encode: {TEXT_TYPE: 'TEXT_TYPE', EMAIL_TYPE: 'EMAIL_TYPE', PHONE_TYPE: 'PHONE_TYPE', SMS_TYPE: 'SMS_TYPE'},
     scan: function(success, fail){
       var barcode = window.prompt('barcode :');
+      var format = 'QR_CODE';
+      if((new RegExp('([0-9]{13})', 'i')).test(barcode)){ format = 'EAN_13'; }
+
       if(barcode == null){
-        if(success){success({ text: null, format: null, cancelled: true });}
+        if(success){success({ text: null, format: format, cancelled: true });}
       } else {
-        if(success){success({ text: barcode, format: 'text', cancelled: false });}
+        if(success){success({ text: barcode, format: format, cancelled: false });}
       }
     },
     encode: function (type, data, successCallback, errorCallback, options){
