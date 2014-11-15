@@ -71,7 +71,7 @@ angular.module('app')
   return service;
 })
 
-.factory('UserSrv', function($q, AccountsSrv, BackendUtils, LocalForageUtils, Utils){
+.factory('UserSrv', function($q, AccountsSrv, BackendUtils, LocalForageUtils, Utils, LogSrv){
   'use strict';
   var cache = {};
   var storageKey = 'user';
@@ -121,7 +121,6 @@ angular.module('app')
           }).then(function(){
             return $q.when(angular.copy(cache.user));
           });
-          console.error('Unable to find user !!!');
         }
         delete cache.userPromise;
       });

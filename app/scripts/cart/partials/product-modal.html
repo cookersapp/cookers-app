@@ -48,6 +48,7 @@
       </div>
       <div class="card padding" ng-if="data.product.nutrition">
         <nutrition-grade grade="data.product.nutrition.grade"></nutrition-grade>
+        <div ng-show="data.product.nutrition.energy_100g">Calories: {{data.product.nutrition.energy_100g | quantity}}</div>
         <div ng-if="data.product.nutrition.nutriments">
           <div ng-repeat="nutriment in data.product.nutrition.nutriments | orderBy:'-level'">
             <nutriment data="nutriment"></nutriment>

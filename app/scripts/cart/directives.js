@@ -31,7 +31,7 @@ angular.module('app')
     },
     template: '<div ng-show="nutriment.level" class="nutrition danger{{nutriment.level}}">'+
     '<i class="fa {{icon}}"></i> {{nutriment.displayName}}'+
-    ' <small ng-show="nutriment.quantity_100g">({{nutriment.quantity_100g | mynumber:2}}g pour 100g)</small>'+
+    ' <small ng-show="nutriment.quantity_100g">({{nutriment.quantity_100g.value | mynumber:2}}g pour 100g)</small>'+
     '</div>',
     link: function(scope, element, attrs){
       if(scope.nutriment.level === 1)       { scope.icon = 'fa-smile-o';      }
