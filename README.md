@@ -3,8 +3,6 @@
 # TODO
 
 - next release :
-    - afficher les calories
-    - mettre la barre de navigation aux couleurs de inter (ou carrefour)
     - afficher les cutomItems sur la partie self-scan (avec check et scan)
     - pouvoir checker les items en mode self-scan
     - ajouter suggestions en haut de la liste de courses
@@ -159,7 +157,7 @@ Publishing to market : http://ionicframework.com/docs/guide/publishing.html
     - https://github.com/soarcn/UndoBar
     - https://github.com/SimonVT/MessageBar
 
-Ionic demo : 
+Ionic demo :
     - shttps://github.com/azizimusa/phonegap-demo
 
 ## Design

@@ -17,6 +17,13 @@ angular.module('app')
     CartUiUtils.initProductModal()          .then(function(modal)   { ui.productModal = modal;    });
     CartUiUtils.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
 
+    fn.headerClass = function(cart){
+      if(cart && cart.selfscan){
+        if(cart.store && cart.store.color){ return 'bar-'+cart.store.color; }
+        else { return 'bar-black'; }
+      }
+    };
+
     fn.showOptions = function(event){
       ui.cartOptions.open(event);
     };
