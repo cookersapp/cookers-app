@@ -322,5 +322,5 @@ angular.module('app')
     CartUtils.addProduct(data.cart, boughtProduct.product, boughtProduct.quantity, boughtProduct.price);
     ItemUtils.addProduct(data.cart, data.items, boughtProduct.product, boughtProduct.quantity, boughtProduct.price);
     data.shopPrice = CartUtils.getShopPrice(data.cart);
-  };
+  }
 });

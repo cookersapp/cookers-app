@@ -3,6 +3,7 @@
 # TODO
 
 - next release :
+    - REFACTOR CART : services & html !!!
     - ajouter suggestions en haut de la liste de courses
     - faire un scénario de démo promos
     
@@ -68,7 +69,7 @@
 - `grunt serve` to test on your computer
 
 Your app is now running to your computer. To run it to your android device :
-.
+
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
@@ -155,8 +156,11 @@ Publishing to market : http://ionicframework.com/docs/guide/publishing.html
     - https://github.com/soarcn/UndoBar
     - https://github.com/SimonVT/MessageBar
 
-Ionic demo :
-    - shttps://github.com/azizimusa/phonegap-demo
+Ionic demo & composants :
+
+- https://github.com/azizimusa/phonegap-demo
+- https://github.com/saravmajestic/ionic
+- https://github.com/alongubkin/ionic-multiple-views
 
 ## Design
 
