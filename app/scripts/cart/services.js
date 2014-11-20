@@ -94,6 +94,11 @@ angular.module('app')
                     data.showRecommandation = showRecommandation;
                   });
                 }
+                CartUtils.getProductPromo(cart, product).then(function(promo){
+                  if(promo){
+                    data.productPromo = promo;
+                  }
+                });
               }
             } else {
               // TODO : ask user some infos...
@@ -261,6 +266,7 @@ angular.module('app')
     terminateSelfscan: terminateSelfscan,
     buyProduct: buyProduct,
     unbuyProduct: unbuyProduct,
+    getProductPromo: getProductPromo,
     showPromo: showPromo,
     showRecommandation: showRecommandation,
     addPromo: addPromo,
@@ -516,6 +522,20 @@ angular.module('app')
         }
         return CartData.updateCart(cart);
       });
+    });
+  }
+
+  function getProductPromo(cart, product){
+    return Utils.async(function(){
+      var item = _.find(cart.items, {id: product.foodId});
+      if(item){
+        for(var i in item.promos){
+          var promo = item.promos[i];
+          if(promo.product === product.barcode){
+            return promo;
+          }
+        }
+      }
     });
   }
 

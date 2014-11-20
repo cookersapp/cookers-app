@@ -8,11 +8,17 @@
     <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
     <div class="product-card" ng-show="data.product">
       <div class="card product">
-        <div>
-          <img ng-src="{{data.product.image}}" style="display: block; margin: auto; max-height: 200px;">
+        <div class="product-image">
+            <div class="badge" ng-show="data.productPromo">
+              <i class="fa fa-certificate"></i>
+              <span class="text">{{data.productPromo.badge}}</span>
+            </div>
+            <img ng-src="{{data.product.image}}">
         </div>
         <div class="padding pull-right" ng-show="data.store">
-          <h4 style="white-space: nowrap;">{{data.store.price | price}}</h4>
+          <h4 style="white-space: nowrap;">
+            {{data.store.price | price}}
+          </h4>
           <h5 style="white-space: nowrap;">{{data.store.genericPrice | price}}</h5>
         </div>
         <div class="padding">
