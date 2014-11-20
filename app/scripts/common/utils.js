@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('Utils', function($interval){
+.factory('Utils', function($interval, $timeout, $q){
   'use strict';
   var service = {
     createUuid: createUuid,
@@ -9,6 +9,8 @@ angular.module('app')
     startsWith: startsWith,
     endsWith: endsWith,
     randInt: randInt,
+    async: async,
+    debounce: debounce,
     clock: addClock,
     cancelClock: removeClock,
     getDevice: getDevice,
@@ -50,6 +52,22 @@ angular.module('app')
 
   function randInt(min, max){
     return Math.floor(Math.random()*(max - min + 1)) - min;
+  }
+
+  function async(fn){
+    var defer = $q.defer();
+    $timeout(function(){
+      defer.resolve(fn());
+    }, 0);
+    return defer.promise;
+  }
+
+  var debounces = [];
+  function debounce(key, value, callback, _debounceTime){
+    $timeout.cancel(debounces[key]);
+    debounces[key] = $timeout(function(){
+      callback(value);
+    }, _debounceTime || 1000);
   }
 
   var clockElts = [];

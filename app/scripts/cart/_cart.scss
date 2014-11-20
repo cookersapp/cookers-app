@@ -1,77 +1,36 @@
 @import "_colors";
 
-.cart-screen {
-  .cart-chooser {
-    padding-bottom: 0px;
-  }
+.cart-price {
+  margin: 20px;
+  margin-bottom: -10px;
+  text-align: right;
+  color: #bbb;
+  font-size: 16px;
+}
 
-  .no-items-to-buy {
-    min-height: 200px;
-    text-align: center;
+.no-items-to-buy {
+  min-height: 200px;
+  text-align: center;
 
-    margin: 35px;
-    text-align: center;
-    font-size: 20px;
-    line-height: 25px;
-    color: #aaa;
-  }
+  margin: 35px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 25px;
+  color: #bbb;
+}
 
-  .cart-price {
-    margin: 20px;
-    margin-bottom: -10px;
-    text-align: right;
-    color: #bbb;
-    font-size: 16px;
-  }
-
-  .item-cart-recipe {
-    .item {
-      border: none;
-      .item-content {
-        padding: 0px;
-        .thumbnail {
-          max-width: 100px;
-          img {
-            max-width: 100px;
-            max-height: 100px;
-          }
-        }
-        .content {
-          margin-left: 100px;
-          padding: 10px;
-          .progress {
-            margin-top: 10px;
-            margin-bottom: 0px;
-          }
-        }
-      }
-    }
-    .addon {
-      background: #fff;
-      padding: 0px 20px 8px;
-    }
-  }
-
-  .add-product {
-    margin-bottom: 0px;
-    .item {
-      &.item-input {
-        padding: 0px;
-        textarea {
-          padding: 10px;
-          background: #eee;
-        }
-      }
-    }
-  }
-
-  .list.to-buy {
-    padding: 5px 0px;
-  }
-
-  .item-cart-ingredient {
+.cart-items {
+  padding: 0px;
+  .item {
     padding: 5px 10px;
     border: none;
+    &.item-textarea {
+      padding: 0px;
+      textarea {
+        padding: 10px;
+        background: #eee;
+      }
+    }
     &.fruits-and-legumes .text, &.fruits-legumes .text {border-color: $material-green;}
     &.viandes-and-poissons .text, &.viandes-poissons .text {border-color: $material-red;}
     &.frais .text {border-color: $material-indigo;}
@@ -82,23 +41,29 @@
     .text {
       border-left: 4px solid white;
       padding: 3px 5px;
-      margin-right: 40px;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       &:first-letter {
         text-transform: uppercase;
       }
     }
-    .quantity {
-      padding: 3px 5px;
+    .scan {
+      color: #bbb;
+      font-size: 18px;
+      padding-top: 4px;
+      width: 30px;
+      text-align: right;
     }
-    .check {
+    .buy {
       border-left: 1px solid #ccc;
       margin-left: 5px;
       margin-right: 5px;
       padding-left: 10px;
       color: #bbb;
-      .box {
+      .checkbox {
+        display: block;
+        padding: 0px;
         width: 26px;
         height: 26px;
         font-size: 24px;
@@ -112,121 +77,94 @@
         }
       }
     }
-    .scan {
-      color: #bbb;
-      font-size: 18px;
-      padding-top: 4px;
-      width: 30px;
-      text-align: right;
-    }
     .details {
       font-size: .8em;
-      .source, .product {
-        &.source-bought {
-          text-decoration: line-through;
-        }
-        .details-text {
+      .source {
+        padding: 1px 0px;
+        .text {
           border-left: 1px dashed #666;
           margin-left: 10px;
-          padding: 1px 5px;
+          padding: 3px 5px;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          white-space: nowrap;
           &:first-letter {
             text-transform: uppercase;
           }
         }
-        .quantity {
-          padding: 1px 5px;
-          margin-right: 48px;
-        }
-      }
-      .product {
-        .quantity {
-          margin-right: 0px;
+        .addon {
+          padding: 3px 5px;
         }
       }
     }
   }
-
-  .item-bought {
-    .text {
+  &.bought .item, .item.bought {
+    background: transparent;
+    & > .text {
       text-decoration: line-through;
       color: #bbb;
+      border-color: transparent;
     }
-    .check .box .checked {
+    .buy .checkbox .checked {
       display: inline;
     }
   }
-
-  .bought {
-    margin: 10px;
-    margin-bottom: 20px;
-    .item-cart-ingredient {
+  .item-bought {
+    & > .text {
       text-decoration: line-through;
-      background: transparent;
       color: #bbb;
-      .text {
-        border-color: transparent;
-      }
     }
-  }
-
-  .checkout {
-    text-align: center;
-    margin-bottom: 20px;
+    .buy .checkbox .checked {
+      display: inline;
+    }
   }
 }
 
-.product-card {
-  .promo, .promo-img {
-    position: relative;
-    overflow: initial;
-    display: flex;
-    border: 3px dashed #B72726;
-    .badge {
-      position: absolute;
-      top: -20px;
-      right: -20px;
-      i {
-        color: red;
-        font-size: 55px;
+.cart-recipes {
+  .item {
+    border: none;
+    .item-content {
+      padding: 0px;
+      .thumbnail {
+        max-width: 100px;
+        img {
+          max-width: 100px;
+          max-height: 100px;
+        }
       }
-      .text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-left: -20px;
-        margin-top: -10px;
-        color: white;
-        width: 40px;
-        height: 20px;
-        line-height: 20px;
-      }
-    }
-  }
-  .promo {
-    padding: 5px;
-    .media {
-      img { height: 100px; }
-      h2 {
-        color: #B72726;
-        font-size: 25px;
-        white-space: normal;
-      }
-      p {
-        white-space: normal;
-        strong {
-          color: black;
+      .content {
+        margin-left: 100px;
+        padding: 10px;
+        .progress {
+          margin-top: 10px;
+          margin-bottom: 0px;
         }
       }
     }
   }
-  .promo-img {
-    padding: 0px;
-    padding-bottom: 6px;
-    img {
-      width: 100%;
-    }
+  .addon {
+    background: #fff;
+    padding: 0px 20px 8px;
   }
+}
+
+.checkout {
+  text-align: center;
+}
+
+.nutrition {
+  color: #b0b0b0;
+  &.danger1 { color: #427d06; }
+  &.danger2 { color: #cc9800; }
+  &.danger3 { color: #cc0000; }
+}
+
+.additive {
+  &.danger0 { color: #b0b0b0; }
+  &.danger1 { color: #427d06; }
+  &.danger2 { color: #67b800; }
+  &.danger3 { color: #b0cc00; }
+  &.danger4 { color: #cc9800; }
+  &.danger5 { color: #cc5800; }
+  &.danger6 { color: #cc0000; }
 }

@@ -31,7 +31,8 @@ angular.module('app')
     _initTrackStateErrors();
     _initNoSleepMode();
     _initAutomaticLoadingIndicators();
-    return UserSrv.updateWithRemote();
+    UserSrv.updateWithRemote();
+    return $q.when(user);
   }
 
   function _initStorage(){

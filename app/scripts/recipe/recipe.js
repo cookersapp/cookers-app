@@ -54,20 +54,22 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, UserSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv, PerfSrv){
+.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, UserSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv, PerfSrv, Config){
   'use strict';
   PerfSrv.loadController($scope, function(){
     $scope.recipeShowIngredients = null;
     var data = {};
     CartSrv.getCurrentCart().then(function(cart){
       data.cart = cart;
-      $scope.loadSelection();
+      $scope.loadSelection(SelectionSrv.getCurrentWeek());
     });
 
 
-    $scope.loadSelection = function(){
+    $scope.loadSelection = function(week){
       $scope.status = 'loading';
-      SelectionSrv.getCurrent().then(function(selection){
+      $scope.selection = null;
+      $scope.week = week;
+      SelectionSrv.get(week).then(function(selection){
         if(selection && selection.recipes){
           for(var i in selection.recipes){
             var recipe = selection.recipes[i];
@@ -75,7 +77,7 @@ angular.module('app')
             recipe._formated.isInCart = CartUtils.hasRecipe(data.cart, recipe);
           }
           UserSrv.getSetting('recipeShiftOffset').then(function(offset){
-            userShiftRecipes(selection.recipes, offset);
+            userShiftRecipes(selection.recipes, Config.debug ? 0 : offset);
             $scope.selection = selection;
           });
         }
@@ -83,6 +85,13 @@ angular.module('app')
       }, function(error){
         $scope.status = 'error';
       });
+    };
+    $scope.changeSelectionWeek = function(offset){
+      if(Config.debug){
+        var week = ($scope.week + offset + 53) % 53;
+        if(week === 0){ week = offset > 0 ? 1 : 52; }
+        $scope.loadSelection(week);
+      }
     };
 
     $scope.toggleIngredients = function(recipe, index){
@@ -254,25 +263,14 @@ angular.module('app')
     });
 
     function addToCookedRecipes(cartId, recipe, servings, cookDuration){
-      if(recipe && recipe.cartData){
+      if(cartId !== 'none'){
         recipe.cartData.cooked = {
           time: Date.now(),
           duration: cookDuration
         };
-        CartSrv.updateCartRecipe(recipe);
+        CartSrv.updateCartRecipe(cartId, recipe.cartData);
       } else {
-        var recipeToSave = angular.copy(recipe);
-        recipeToSave.cartData = {
-          cooked: {
-            time: Date.now(),
-            duration: cookDuration
-          },
-          servings: {
-            value: servings,
-            unit: recipeToSave.servings.unit
-          }
-        };
-        CartSrv.addStandaloneCookedRecipe(recipeToSave);
+        CartSrv.addStandaloneCookedRecipe(recipe, servings, cookDuration);
       }
     }
 
@@ -294,22 +292,28 @@ angular.module('app')
   });
 })
 
-.controller('TocookCtrl', function($scope, PopupSrv, CartSrv, DialogSrv, PerfSrv){
+.controller('TocookCtrl', function($scope, CartSrv, CartUtils, DialogSrv, PopupSrv, PerfSrv){
   'use strict';
   PerfSrv.loadController($scope, function(){
-    CartSrv.getRecipesToCook(function(a, b){
-      var ret = -(a.cartData.boughtPc - b.cartData.boughtPc);
-      return ret === 0 ? -(a.cartData.created - b.cartData.created) : ret;
-    }).then(function(recipes){
-      $scope.recipes = recipes;
+    CartSrv.getRecipesToCook().then(function(recipes){
+      if(Array.isArray(recipes)){
+        recipes.sort(function(a, b){
+          var ret = -(a.cartData.boughtPc - b.cartData.boughtPc);
+          return ret === 0 ? -(a.cartData.created - b.cartData.created) : ret;
+        });
+        $scope.recipes = recipes;
+      }
     });
 
     $scope.changeServings = function(recipe){
       PopupSrv.changeServings($scope.servings).then(function(servings){
         if(servings){
           servings = parseInt(servings);
-          recipe.cartData.servings.value = servings;
-          CartSrv.updateCartRecipe(recipe);
+          CartSrv.getCart(recipe.cartData.cart).then(function(cart){
+            if(cart){
+              CartUtils.adjustRecipe(cart, recipe, servings);
+            }
+          });
         }
       });
     };
@@ -318,7 +322,7 @@ angular.module('app')
       DialogSrv.confirm('Ne plus cuisiner cette recette ?').then(function(result){
         if(result){
           recipe.cartData.cooked = 'none';
-          CartSrv.updateCartRecipe(recipe);
+          CartSrv.updateCartRecipe(recipe.cartData.cart, recipe.cartData);
           $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
         }
       });
@@ -329,10 +333,13 @@ angular.module('app')
 .controller('CookedCtrl', function($scope, CartSrv, PerfSrv){
   'use strict';
   PerfSrv.loadController($scope, function(){
-    CartSrv.getCookedRecipes(function(a, b){
-      return -(a.cartData.cooked.time - b.cartData.cooked.time);
-    }).then(function(recipes){
-      $scope.recipes = recipes;
+    CartSrv.getCookedRecipes().then(function(recipes){
+      if(Array.isArray(recipes)){
+        recipes.sort(function(a, b){
+          return -(a.cartData.cooked.time - b.cartData.cooked.time);
+        });
+        $scope.recipes = recipes;
+      }
     });
   });
 })

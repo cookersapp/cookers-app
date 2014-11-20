@@ -376,7 +376,6 @@ angular.module('app')
     return defer.promise;
   }
 
-  // TODO
   function getEmailOrAsk(){
     var defer = $q.defer();
     pluginReady(function(){
@@ -405,6 +404,49 @@ angular.module('app')
         LogSrv.trackError('pluginNotFound:DeviceAccounts');
       }
     });
+  }
+
+  return service;
+})
+
+// for Geolocation plugin : https://github.com/apache/cordova-plugin-geolocation
+.factory('GeolocationSrv', function($q, $window, $ionicPlatform, $timeout, SimpleLogSrv){
+  'use strict';
+  var service = {
+    getCurrentPosition: getCurrentPosition
+  };
+
+  function getCurrentPosition(_timeout, _opts){
+    if(!_timeout){ _timeout = 3000; }
+    var opts = angular.extend({enableHighAccuracy:true, timeout:2000, maximumAge:0}, _opts);
+
+    return pluginReady(function(){
+      var defer = $q.defer();
+      var timeoutGeoloc = $timeout(function(){
+        defer.reject();
+      }, _timeout);
+      $window.navigator.geolocation.getCurrentPosition(function(position){
+        $timeout.cancel(timeoutGeoloc);
+        defer.resolve(position);
+      }, function(error){
+        $timeout.cancel(timeoutGeoloc);
+        defer.reject(error);
+      }, opts);
+      return defer.promise;
+    });
+  }
+
+  function pluginReady(fn){
+    var defer = $q.defer();
+    $ionicPlatform.ready(function(){
+      if($window.navigator && $window.navigator.geolocation){
+        defer.resolve(fn());
+      } else {
+        defer.reject();
+        SimpleLogSrv.trackError('pluginNotFound:Geolocation');
+      }
+    });
+    return defer.promise;
   }
 
   return service;

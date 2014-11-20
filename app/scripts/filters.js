@@ -64,7 +64,7 @@ angular.module('app')
   'use strict';
   return function(servings, servingsAdjust){
     if(!servingsAdjust){servingsAdjust = 1;}
-    var unit = $filter('unit')(servings.unit);
+    var unit = servings ? $filter('unit')(servings.unit) : null;
     return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : '';
   };
 })
@@ -124,6 +124,18 @@ angular.module('app')
     if(ingredient){
       var quantity = $filter('quantity')(ingredient.quantity, servingsAdjust);
       return quantity + preWords(ingredient, quantity) + ingredient.food.name + postWords(ingredient);
+    } else {
+      return '';
+    }
+  };
+})
+
+.filter('item', function($filter){
+  'use strict';
+  return function(item){
+    if(item){
+      var quantity = $filter('quantity')(item.quantity);
+      return quantity + (quantity ? ' de ' : '') + item.name;
     } else {
       return '';
     }

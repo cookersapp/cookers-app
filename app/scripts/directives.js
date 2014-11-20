@@ -1,5 +1,33 @@
 angular.module('app')
 
+.directive('debounce', function($timeout){
+  'use strict';
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    priority: 99,
+    link: function(scope, element, attr, ngModelCtrl){
+      if(attr.type === 'radio' || attr.type === 'checkbox'){ return; }
+
+      var debounce;
+      element.unbind('input');
+      element.bind('input', function(){
+        $timeout.cancel(debounce);
+        debounce = $timeout(function(){
+          scope.$apply(function(){
+            ngModelCtrl.$setViewValue(element.val());
+          });
+        }, attr.ngDebounce || 1000);
+      });
+      element.bind('blur', function(){
+        scope.$apply(function(){
+          ngModelCtrl.$setViewValue(element.val());
+        });
+      });
+    }
+  };
+})
+
 .directive('blurOnKeyboardOut', function($window){
   'use strict';
   return {
@@ -85,17 +113,15 @@ angular.module('app')
   return {
     restrict: 'E',
     scope: {
-      color: '@'
+      color: '@',
+      top: '@'
     },
-    template: '<div class="spinner"><div class="dot1" ng-style="style"></div><div class="dot2" ng-style="style"></div></div>',
+    template: '<div class="spinner" ng-style="spinnerStyle"><div class="dot1" ng-style="dotStyle"></div><div class="dot2" ng-style="dotStyle"></div></div>',
     link: function(scope, element, attrs){
-      if(scope.color){
-        scope.style = {
-          'background-color': scope.color
-        };
-      } else {
-        scope.style = {};
-      }
+      scope.dotStyle = {};
+      if(scope.color){ scope.dotStyle['background-color'] = scope.color; }
+      scope.spinnerStyle = {};
+      if(scope.top){ scope.spinnerStyle['margin-top'] = scope.top; }
     }
   };
 });

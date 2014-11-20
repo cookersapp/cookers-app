@@ -1,136 +1,152 @@
-.bar.bar-custom {
-  border-color: $custom-border;
-  background-color: $custom-bg;
-  background-image: linear-gradient(0deg, $custom-border, $custom-border 50%, transparent 50%);
-  color: $custom-text;
-}
-.bar.bar-custom .title {
-  color: $custom-text;
-}
+  .bar.bar-custom {
+    border-color: $custom-border;
+    background-color: $custom-bg;
+    background-image: linear-gradient(0deg, $custom-border, $custom-border 50%, transparent 50%);
+    color: $custom-text; }
+    .bar.bar-custom .title {
+      color: $custom-text; }
+    .bar.bar-custom.bar-footer {
+      background-image: linear-gradient(180deg, $custom-border, $custom-border 50%, transparent 50%); }
 
 .bar-custom .button {
   border-color: $custom-border;
   background-color: $custom-bg;
-  color: $custom-text;
-}
-.bar-custom .button:hover {
-  color: $custom-text;
-  text-decoration: none;
-}
-.bar-custom .button.active, .bar-custom .button.activated {
-  border-color: $custom-border;
-  background-color: $custom-border;
-  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.15);
-}
-.bar-custom .button.button-clear {
-  border-color: transparent;
-  background: none;
-  box-shadow: none;
-  color: $custom-text;
-  font-size: 17px;
-}
-.bar-custom .button.button-icon {
-  border-color: transparent;
-  background: none;
-}
+  color: $custom-text; }
+  .bar-custom .button:hover {
+    color: $custom-text;
+    text-decoration: none; }
+  .bar-custom .button.active, .bar-custom .button.activated {
+    border-color: $custom-border;
+    background-color: $custom-border;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.15); }
+  .bar-custom .button.button-clear {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    color: $custom-text;
+    font-size: 17px; }
+  .bar-custom .button.button-icon {
+    border-color: transparent;
+    background: none; }
 
 .tabs-custom > .tabs, .tabs.tabs-custom {
   border-color: $custom-border;
   background-color: $custom-bg;
   background-image: linear-gradient(0deg, $custom-border, $custom-border 50%, transparent 50%);
-  color: $custom-text;
-}
-.tabs-custom > .tabs .tab-item .badge, .tabs.tabs-custom .tab-item .badge {
-  background-color: $custom-text;
-  color: $custom-bg;
-}
+  color: $custom-text; }
+  .tabs-custom > .tabs .tab-item .badge, .tabs.tabs-custom .tab-item .badge {
+    background-color: $custom-text;
+    color: $custom-bg; }
 
-.tabs-striped.tabs-custom .tab-item.tab-item-active, .tabs-striped.tabs-custom .tab-item.active, .tabs-striped.tabs-custom .tab-item.activated {
-  margin-top: -4px;
-  color: $custom-bg;
-  border-style: solid;
-  border-width: 4px 0 0 0;
-  border-color: $custom-bg;
-}
+.tabs-striped.tabs-custom .tabs {
+  background-color: $custom-text; }
+.tabs-striped.tabs-custom .tab-item {
+  color: rgba(74, 135, 238, 0.4);
+  opacity: 1; }
+  .tabs-striped.tabs-custom .tab-item .badge {
+    opacity: 0.4; }
+  .tabs-striped.tabs-custom .tab-item.tab-item-active, .tabs-striped.tabs-custom .tab-item.active, .tabs-striped.tabs-custom .tab-item.activated {
+    /*margin-top: -2px;*/
+    color: $custom-bg;
+    border-style: solid;
+    border-width: 2px 0 0 0;
+    border-color: $custom-bg; }
+    .tabs-striped.tabs-custom .tab-item.tab-item-active .badge, .tabs-striped.tabs-custom .tab-item.active .badge, .tabs-striped.tabs-custom .tab-item.activated .badge {
+      top: 2px;
+      opacity: 1; }
 
-.tab-item.tab-item-active.tab-item-custom, .tab-item.active.tab-item-custom, .tab-item.activated.tab-item-custom {
-  color: $custom-bg;
-}
+.tabs-striped.tabs-background-custom .tabs {
+  background-color: $custom-bg; }
 
-.item.item-custom {
+.tabs-striped.tabs-color-custom .tab-item {
+  color: rgba(74, 135, 238, 0.4);
+  opacity: 1; }
+  .tabs-striped.tabs-color-custom .tab-item .badge {
+    opacity: 0.4; }
+  .tabs-striped.tabs-color-custom .tab-item.tab-item-active, .tabs-striped.tabs-color-custom .tab-item.active, .tabs-striped.tabs-color-custom .tab-item.activated {
+    margin-top: -2px;
+    color: $custom-bg;
+    border: 0 solid $custom-bg;
+    border-top-width: 2px; }
+    .tabs-striped.tabs-color-custom .tab-item.tab-item-active .badge, .tabs-striped.tabs-color-custom .tab-item.active .badge, .tabs-striped.tabs-color-custom .tab-item.activated .badge {
+      top: 2px;
+      opacity: 1; }
+
+  .tab-item.tab-item-active.tab-item-custom, .tab-item.active.tab-item-custom, .tab-item.activated.tab-item-custom {
+    color: $custom-bg; }
+
+  .item.item-custom {
+    border-color: $custom-border;
+    background-color: $custom-bg;
+    color: $custom-text; }
+
+  .item.active.item-custom, .item.activated.item-custom, .item-complex.active .item-content.item-custom, .item-complex.activated .item-content.item-custom, .item .item-content.active.item-custom, .item .item-content.activated.item-custom {
+    border-color: $custom-border;
+    background-color: $custom-border; }
+
+.item-complex.item-custom > .item-content {
   border-color: $custom-border;
   background-color: $custom-bg;
-  color: $custom-text;
-}
-
-.item.active.item-custom, .item.activated.item-custom, .item-complex.active .item-content.item-custom, .item-complex.activated .item-content.item-custom, .item .item-content.active.item-custom, .item .item-content.activated.item-custom {
-  border-color: $custom-border;
-  background-color: $custom-border;
-}
+  color: $custom-text; }
+  .item-complex.item-custom > .item-content.active, .item-complex.item-custom > .item-content:active {
+    border-color: $custom-border;
+    background-color: $custom-border; }
 
 .tabs .tab-item .badge.badge-custom, .badge.badge-custom {
   background-color: $custom-bg;
-  color: $custom-text;
-}
+  color: $custom-text; }
 
-.checkbox.checkbox-custom input:before, .checkbox.checkbox-custom .checkbox-icon:before {
-  border-color: $custom-bg;
-}
-.checkbox.checkbox-custom input:checked:before, .checkbox.checkbox-custom input:checked + .checkbox-icon:before {
-  background: $custom-bg;
-}
+.checkbox-custom input:before, .checkbox-custom .checkbox-icon:before {
+  border-color: $custom-bg; }
+.checkbox-custom input:checked:before, .checkbox-custom input:checked + .checkbox-icon:before {
+  background: $custom-bg; }
 
-.toggle.toggle-custom input:checked + .track {
-  border-color: $custom-bg;
-  background-color: $custom-bg;
-}
+  .toggle.toggle-custom input:checked + .track {
+    border-color: $custom-bg;
+    background-color: $custom-bg; }
 
-.range.range-custom input::-webkit-slider-thumb:before {
-  background: $custom-bg;
-}
+  .range.range-custom input::-webkit-slider-thumb:before {
+    background: $custom-bg; }
 
-.button.button-custom {
-  border-color: $custom-border;
-  background-color: $custom-bg;
-  color: $custom-text;
-}
-.button.button-custom:hover {
-  color: $custom-text;
-  text-decoration: none;
-}
-.button.button-custom.active, .button.button-custom.activated {
-  border-color: $custom-border;
-  background-color: $custom-border;
-  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.15);
-}
-.button.button-custom.button-clear {
-  border-color: transparent;
-  background: none;
-  box-shadow: none;
-  color: $custom-bg;
-}
-.button.button-custom.button-icon {
-  border-color: transparent;
-  background: none;
-}
-.button.button-custom.button-outline {
-  border-color: $custom-bg;
-  background: transparent;
-  color: $custom-bg;
-}
-.button.button-custom.button-outline.active, .button.button-custom.button-outline.activated {
-  background-color: $custom-bg;
-  box-shadow: none;
-  color: $custom-text;
-}
+  .item-select.item-custom select {
+    background: $custom-bg;
+    color: $custom-text; }
+  .item-select.item-custom:after, .item-select.item-custom .input-label {
+    color: $custom-text; }
 
+  .button.button-custom {
+    border-color: $custom-border;
+    background-color: $custom-bg;
+    color: $custom-text; }
+    .button.button-custom:hover {
+      color: $custom-text;
+      text-decoration: none; }
+    .button.button-custom.active, .button.button-custom.activated {
+      border-color: $custom-border;
+      background-color: $custom-border;
+      box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.15); }
+    .button.button-custom.button-clear {
+      border-color: transparent;
+      background: none;
+      box-shadow: none;
+      color: $custom-bg; }
+    .button.button-custom.button-icon {
+      border-color: transparent;
+      background: none; }
+    .button.button-custom.button-outline {
+      border-color: $custom-bg;
+      background: transparent;
+      color: $custom-bg; }
+      .button.button-custom.button-outline.active, .button.button-custom.button-outline.activated {
+        background-color: $custom-bg;
+        box-shadow: none;
+        color: $custom-text; }
 
 .custom, a.custom {
-  color: $custom-bg;
-}
+  color: $custom-bg; }
+
 .custom-bg {
-  background-color: $custom-bg;
-}
+  background-color: $custom-bg; }
+
 .custom-border {
-  border-color: $custom-border;
-}
+  border-color: $custom-border; }

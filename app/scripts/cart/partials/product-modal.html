@@ -20,25 +20,12 @@
           <h5>{{data.product.brand}}</h5>
         </div>
       </div>
-      <div class="promo card" ng-if="data.store && !data.textPromo" ng-click="data.textPromo=!data.textPromo">
-        <div class="media">
-          <a class="media-left"><img src="http://images.test-comparatif.quechoisir.org/test/potage-aux-legumes/zoom/liebig-pur-soup_001.jpg"></a>
-          <div class="media-body">
-            <h2 class="media-heading"><strong>0,50€</strong> de réduction immédiate</h2>
-            <p>à valoir sur une soupe <strong>Liebig</strong></p>
-          </div>
-        </div>
+      <div class="promo-img card" ng-if="data.showPromo" ng-click="fn.addPromoToCart(data.store.promo)">
         <div class="badge">
           <i class="fa fa-certificate"></i>
-          <span class="text">0,50€</span>
+          <span class="text">{{data.store.promo.badge}}</span>
         </div>
-      </div>
-      <div class="promo-img card" ng-if="data.store && data.textPromo" ng-click="data.textPromo=!data.textPromo">
-        <div class="badge">
-          <i class="fa fa-certificate"></i>
-          <span class="text">0,50€</span>
-        </div>
-        <img src="images/promo.jpg">
+        <img ng-src="{{data.store.promo.image}}">
       </div>
       <div class="card padding" ng-show="data.product.labels">
         Labels :
@@ -60,12 +47,12 @@
       </div>
       <div class="card padding">
         Additifs :
-        <div ng-show="data.product.additives">
+        <div ng-show="data.product.additives && data.product.additives.length > 0">
           <div ng-repeat="additive in data.product.additives | orderBy:'-danger.level'">
             <additive data="additive"></additive>
           </div>
         </div>
-        <div ng-show="!data.product.additives">
+        <div ng-show="!data.product.additives || data.product.additives.length === 0">
           <span class="additive danger1">Aucun additif recensé :)</span>
         </div>
       </div>

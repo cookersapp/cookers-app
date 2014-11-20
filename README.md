@@ -3,9 +3,9 @@
 # TODO
 
 - next release :
-    - REFACTOR CART : services & html !!!
+    - afficher sur la fiche produit si le produit correspond à un bon promo
+    
     - ajouter suggestions en haut de la liste de courses
-    - faire un scénario de démo promos
     
     - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
     - widget uservoice sur la home
@@ -198,3 +198,5 @@ Screenshot gallery inspiration :
 ## See
 
 - http://modernweb.com/category/mobile/phonegap/
+- https://github.com/jbeurel/angular-parse
+- https://github.com/jbeurel/angular-parse-boilerplate

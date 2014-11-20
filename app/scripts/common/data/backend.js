@@ -208,9 +208,14 @@ angular.module('app')
   'use strict';
   var timeToUpdate = 1000*60*60*24; // one day
   var service = {
-    getCurrent: function(){ return get(moment().week()+(Config.debug ? 1 : 0)); },
+    getCurrentWeek: getCurrentWeek,
+    getCurrent: function(){ return get(getCurrentWeek()); },
     get: get
   };
+
+  function getCurrentWeek(){
+    return Config.debug ? 51 : moment().week();
+  }
 
   function get(id){
     return BackendUtils.getWithCache('selections', id, null, timeToUpdate);

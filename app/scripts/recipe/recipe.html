@@ -9,7 +9,8 @@
   <ion-content class="recipe-screen" bo-class="{empty: !(recipe && recipe.id)}">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
-    <div class="screen" ng-cloack>
+    <loading ng-if="!recipe" top="100px"></loading>
+    <div class="screen" ng-show="recipe">
       <img-recipe images="recipe.images" type="'landing'" style="width: 100%"></img-recipe>
       <div class="legend-top">
         <div class="price" bo-if="ctx.settings.showPrices">
@@ -55,7 +56,7 @@
     </div>
   </ion-content>
 
-  <ion-footer-bar class="bar-dark">
+  <ion-footer-bar class="bar-dark" ng-show="recipe">
     <div class="button-bar spaced">
       <a class="button icon-left ion-clipboard button-balanced" ng-click="addRecipeToCart(recipe)" ng-if="!recipe._formated.isInCart">A acheter !</a>
       <a class="button icon-left ion-clipboard button-assertive" ng-click="removeRecipeFromCart(recipe)" ng-if="recipe._formated.isInCart">A supprimer !</a>

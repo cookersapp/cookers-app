@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('LogSrv', function($timeout){
+.factory('LogSrv', function(GeolocationSrv){
   'use strict';
   var service = {
     trackInstall:               function()                        { track('app-installed');                                                           },
@@ -18,10 +18,10 @@ angular.module('app')
     trackBuyItem:               function(item, quantity)          { trackWithPosition('item-bought', {item: item, quantity: quantity});               },
     trackUnbuyItem:             function(item)                    { track('item-unbought', {item: item});                                             },
     trackCartScan:              function(item, barcode, time)     { trackWithPosition('cart-product-scanned', {item:item,barcode:barcode,time:time}); },
-    trackCartProductLoaded:     function  (barcode, time, found)    { track('cart-product-loaded', {barcode: barcode, time: time, found: found});       },
+    trackCartProductLoaded:     function(barcode, time, found)    { track('cart-product-loaded', {barcode: barcode, time: time, found: found});       },
 
     trackEditCartCustomItems:   function(customItems)             { track('cart-custom-items-edited', {customItems: customItems});                    },
-    trackCartRecipeDetails:     function(recipe)                  { track('cart-recipe-details-showed', {recipe: recipe});                            },
+    trackShowCartRecipeDetails: function(recipe)                  { track('cart-recipe-details-showed', {recipe: recipe});                            },
     trackShowCartItemDetails:   function(item)                    { track('cart-item-details-showed', {item: item});                                  },
 
     trackClearCache:            function()                        { track('cache-cleared');                                                           },
@@ -32,30 +32,37 @@ angular.module('app')
   };
 
   function trackWithPosition(event, params){
-    if(navigator && navigator.geolocation){
-      var now = Date.now();
-      var timeoutGeoloc = $timeout(function(){
-        track(event, params, now);
-      }, 3000);
-      navigator.geolocation.getCurrentPosition(function(position){
-        $timeout.cancel(timeoutGeoloc);
-        params.position = position.coords;
-        if(params.position){params.position.timestamp = position.timestamp;}
-        track(event, params, now);
-      }, function(error){
-        $timeout.cancel(timeoutGeoloc);
-        params.position = error;
-        if(params.position){params.position.timestamp = Date.now();}
-        track(event, params, now);
-      }, {
-        enableHighAccuracy: true,
-        timeout: 2000,
-        maximumAge: 0
-      });
-    } else {
-      track(event, params);
-    }
+    var now = Date.now();
+    GeolocationSrv.getCurrentPosition().then(function(position){
+      params.position = position.coords;
+      if(params.position){params.position.timestamp = position.timestamp;}
+      track(event, params, now);
+    }, function(error){
+      params.position = error;
+      if(params.position){params.position.timestamp = Date.now();}
+      track(event, params, now);
+    });
   }
+
+  function track(name, data, time){
+    var event = {};
+    if(data){ event.data = data; }
+    if(time){ event.time = time; }
+
+    Logger.track(name, event);
+  }
+
+  return service;
+})
+
+// logger without service dependency (to avoid circular dependencies)
+.factory('SimpleLogSrv', function(){
+  'use strict';
+  var service = {
+    trackError: function(type, error){ track('error', {type: type, error: error});},
+    track: track
+  };
+  
 
   function track(name, data, time){
     var event = {};

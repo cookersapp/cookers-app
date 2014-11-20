@@ -10,8 +10,6 @@ angular.module('app')
     setApp: setApp,
     getRecipeHistory: getRecipeHistory,
     addRecipeToHistory: addRecipeToHistory,
-    getStandaloneCookedRecipes: getStandaloneCookedRecipes,
-    addStandaloneCookedRecipe: addStandaloneCookedRecipe,
     clear: LocalForageUtils.clear
   };
 
@@ -34,19 +32,6 @@ angular.module('app')
     } else {
       return $q.when();
     }
-  }
-  function getStandaloneCookedRecipes(){
-    return _get('userStandaloneCookedRecipes').then(function(userStandaloneCookedRecipes){
-      return userStandaloneCookedRecipes ? userStandaloneCookedRecipes.recipes : null;
-    });
-  }
-  function addStandaloneCookedRecipe(recipe){
-    return _get('userStandaloneCookedRecipes').then(function(userStandaloneCookedRecipes){
-      if(userStandaloneCookedRecipes && Array.isArray(userStandaloneCookedRecipes.recipes)){
-        userStandaloneCookedRecipes.recipes.push(recipe);
-        return _set('userStandaloneCookedRecipes', userStandaloneCookedRecipes);
-      }
-    });
   }
 
 

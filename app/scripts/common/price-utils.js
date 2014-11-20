@@ -6,7 +6,8 @@ angular.module('app')
     add: addPrices,
     sum: sumPrices,
     getForServings: getForServings,
-    adjustForServings: adjustForServings
+    adjustForServings: adjustForServings,
+    productPrice: productPrice
   };
 
   function addPrices(p1, p2, _ctx, _errors){
@@ -19,24 +20,24 @@ angular.module('app')
         p1: angular.copy(p1),
         p2: angular.copy(p2)
       };
-      
+
       // known errors
       if(p.currency !== p2.currency){ err.message = 'Can\'t add price <'+p1.currency+'> with price <'+p2.currency+'>'; }
       else if(p1.unit){ err.message = 'Price p1 has unit <'+p1.unit+'>'; }
       else if(p2.unit){ err.message = 'Price p2 has unit <'+p2.unit+'>'; }
-      
+
       // add context info
       if(_ctx && _ctx.ingredient){
         err.ingredient = angular.copy(_ctx.ingredient);
         err.message = err.message + ' for ingredient <'+_ctx.ingredient.food.name+'>';
       }
-      
+
       if(_errors) { _errors.push(err);  }
       else        { LogSrv.trackError('addIngredientsPrice', err); }
     }
     return p;
   }
-  
+
   function sumPrices(prices, _ctx, _errors){
     if(Array.isArray(prices) && prices.length > 0){
       var result = angular.copy(prices[0]);
@@ -46,7 +47,7 @@ angular.module('app')
       return result;
     }
   }
-  
+
   // transform an unitary price (1€/personne) in a price (3€) using servings (3 personnes)
   function getForServings(unitPrice, servings, _errors){
     if(unitPrice.unit && unitPrice.unit === servings.unit){
@@ -60,11 +61,11 @@ angular.module('app')
         price: angular.copy(unitPrice),
         servings: angular.copy(servings)
       };
-      
+
       // known errors
       if(!unitPrice.unit){err.message = 'UnitPrice does not has unit <'+unitPrice.unit+'>';}
       else if(unitPrice.unit !== servings.unit){err.message = 'Can \'t convert price with unit <'+unitPrice.unit+'> to unit <'+servings.unit+'>';}
-      
+
       if(_errors) { _errors.push(err);  }
       else        { LogSrv.trackError('PriceCalculator.getForServings', err); }
     }
@@ -89,6 +90,33 @@ angular.module('app')
       if(_errors) { _errors.push(err);  }
       else        { LogSrv.trackError('PriceCalculator.adjustForServings', err); }
     }
+  }
+
+  function productPrice(product){
+    console.log('price for ', product);
+    var price = angular.copy(product.price);
+    price.value = product.price.value * product.number;
+    if(product.promos.length > 0){
+      console.log('has promos !')
+      var productBenefits = _.map(product.promos, function(promo){
+        if(promo.benefit.category === 'value'){
+          return promo.benefit.value;
+        } else if(promo.benefit.category === 'percentage'){
+          return product.price.value * (promo.benefit.value / 100);
+        } else {
+          return 0;
+        }
+      });
+      productBenefits.sort(function(a,b){return b-a;});
+      var usedBenefits = _.first(productBenefits, product.number);
+      var totalPromo = _.reduce(usedBenefits, function(sum, num) {
+        return sum + num;
+      });
+      console.log('total promo', totalPromo);
+      price.value = price.value - totalPromo;
+    }
+    console.log('final price', price);
+    return price;
   }
 
   return service;

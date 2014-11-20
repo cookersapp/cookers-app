@@ -4,7 +4,7 @@
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
     <h1 class="title handwritten">Cook time !</h1>
-    <div class="buttons">
+    <div class="buttons" ng-show="timer">
       <button class="button button-clear bold" ng-class="{warn: timer < 0}">{{timer | duration}}</button>
     </div>
   </ion-header-bar>
@@ -12,7 +12,8 @@
   <ion-content class="cook-screen" bo-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
-    <div class="screen" ng-cloack>
+    <loading ng-if="!recipe" top="100px"></loading>
+    <div class="screen" ng-show="recipe">
       <div class="header row card">
         <div class="col col-33 picture">
           <img-recipe images="recipe.images" type="'portrait'"></img-recipe>
