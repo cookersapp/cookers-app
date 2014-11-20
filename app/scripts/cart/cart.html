@@ -44,6 +44,7 @@
             <button class="button button-stable" ng-click="fn.archiveCart()">Archiver cette liste de courses</button>
           </div>
           <div class="list card cart-items">
+            <div class="progress"><div class="bar" style="width: {{data.cart.boughtPc}}%;"></div></div>
             <div class="item {{item.category.slug}}" ng-repeat="item in itemsToBuy = (data.cart.items | filter:fn.isBought(false))">
               <div class="pull-right scan" ng-click="fn.scan(item)"><i class="ion-icon ion-android-mixer"></i></div>
               <div class="pull-right buy" ng-click="fn.buyItem(item)"><div class="checkbox"><span class="checked">✔</span></div></div>
