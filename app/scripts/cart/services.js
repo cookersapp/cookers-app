@@ -83,15 +83,17 @@ angular.module('app')
             if(product){
               data.product = product;
               data.store = store;
-              if(store && store.promo){
-                CartUtils.showPromo(cart, store.promo).then(function(showPromo){
-                  data.showPromo = showPromo;
-                  data.showRecommandation = !!store.recommandation;
-                });
-                console.log('TODO CartUtils.showRecommandation()');
-              } else {
-                data.showPromo = false;
-                data.showRecommandation = !!store.recommandation;
+              if(store){
+                if(store.promo){
+                  CartUtils.showPromo(cart, store.promo).then(function(showPromo){
+                    data.showPromo = showPromo;
+                  });
+                }
+                if(store.recommandation){
+                  CartUtils.showRecommandation(cart, store.recommandation).then(function(showRecommandation){
+                    data.showRecommandation = showRecommandation;
+                  });
+                }
               }
             } else {
               // TODO : ask user some infos...
@@ -260,6 +262,7 @@ angular.module('app')
     buyProduct: buyProduct,
     unbuyProduct: unbuyProduct,
     showPromo: showPromo,
+    showRecommandation: showRecommandation,
     addPromo: addPromo,
     removePromo: removePromo,
     archive: archive
@@ -552,6 +555,17 @@ angular.module('app')
             return true;
           });
         }
+      } else {
+        return false;
+      }
+    });
+  }
+
+  function showRecommandation(cart, recommandation){
+    return Utils.async(function(){
+      if(recommandation && recommandation.category === 'recipe'){
+        var alreadyAdded = _.findIndex(cart.recipes, {id: recommandation.reference}) > -1;
+        return !alreadyAdded;
       } else {
         return false;
       }

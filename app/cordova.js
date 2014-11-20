@@ -126,6 +126,7 @@ setTimeout(function(){
       var barcode = window.prompt('barcode :');
       var format = 'QR_CODE';
       if((new RegExp('([0-9]{13})', 'i')).test(barcode)){ format = 'EAN_13'; }
+      if((new RegExp('([0-9]{8})', 'i')).test(barcode)){ format = 'EAN_8'; }
 
       if(barcode == null){
         if(success){success({ text: null, format: format, cancelled: true });}
