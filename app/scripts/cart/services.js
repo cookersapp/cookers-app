@@ -261,13 +261,13 @@ angular.module('app')
             var source = CartBuilder.createItemSourceFromRecipe(ingredient, recipe, servings);
             item.bought = 0;
             item.sources.push(source);
-            item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'));
-            item.estimatedPrice = PriceCalculator.sum(_.map(item.sources, 'price'));
+            _updateItemQuantityAndEstimatedPrice(item);
           }
         }
         cart.recipesData.push(CartBuilder.createRecipeData(cart.id, recipe, servings));
         _sortItemsByCategory(cart.items);
-        cart.estimatedPrice = PriceCalculator.sum(_.map(cart.items, 'estimatedPrice'));
+        _updateCartEstimatedPrice(cart);
+        _updateCartBoughtPc(cart);
         return CartData.updateCart(cart);
       }
     });
@@ -290,13 +290,13 @@ angular.module('app')
             source.servings.value = servings;
             source.quantity = QuantityCalculator.adjustForServings(source.quantity, oldServings, source.servings);
             source.price = PriceCalculator.adjustForServings(source.price, oldServings, source.servings);
-            item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'));
-            item.estimatedPrice = PriceCalculator.sum(_.map(item.sources, 'price'));
+            _updateItemQuantityAndEstimatedPrice(item);
           }
         }
         recipeData.servings.value = servings;
         recipeData.boughtPc = 100 * recipeData.nbIngredientsBought / recipeData.nbIngredients;
-        cart.estimatedPrice = PriceCalculator.sum(_.map(cart.items, 'estimatedPrice'));
+        _updateCartEstimatedPrice(cart);
+        _updateCartBoughtPc(cart)
         return CartData.updateCart(cart);
       }
     });
@@ -313,12 +313,11 @@ angular.module('app')
             if(item.sources.length === 0 && item.products.length === 0 && item.promos.length === 0){
               cart.items.splice(i, 1);
             } else {
-              item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'));
-              item.estimatedPrice = PriceCalculator.sum(_.map(item.sources, 'price'));
+              _updateItemQuantityAndEstimatedPrice(item);
             }
           }
         }
-        cart.estimatedPrice = PriceCalculator.sum(_.map(cart.items, 'estimatedPrice'));
+        _updateCartEstimatedPrice(cart);
         return CartData.updateCart(cart);
       }
     });
@@ -378,6 +377,7 @@ angular.module('app')
   function buyItem(cart, item){
     return Utils.async(function(){
       item.bought = Date.now();
+      _updateCartBoughtPc(cart);
       for(var i in item.sources){
         var source = item.sources[i];
         if(source.type === 'recipe'){
@@ -393,6 +393,7 @@ angular.module('app')
   function unbuyItem(cart, item){
     return Utils.async(function(){
       item.bought = 0;
+      _updateCartBoughtPc(cart);
       for(var i in item.sources){
         var source = item.sources[i];
         if(source.type === 'recipe'){
@@ -476,6 +477,7 @@ angular.module('app')
         if(item){
           _updateItemPrice(item);
           _updateCartPrice(cart);
+          _updateCartBoughtPc(cart);
         }
         return CartData.updateCart(cart);
       });
@@ -636,6 +638,20 @@ angular.module('app')
     cart.selfscan.price = PriceCalculator.sum(_.filter(_.map(cart.items, 'selfscanPrice'), function(e){return e && e.value && e.currency;})) || {value: 0, currency: '€'};
     cart.selfscan.promoBenefit = PriceCalculator.sum(_.filter(_.map(cart.items, 'promoBenefit'), function(e){return e && e.value && e.currency;})) || {value: 0, currency: '€'};
   }
+  function _updateCartBoughtPc(cart){
+    var boughtItems = _.filter(cart.items, function(i){ return !!i.bought; });
+    cart.boughtPc = 100 * boughtItems.length / cart.items.length;
+  }
+  function _updateItemQuantityAndEstimatedPrice(item){
+    item.quantity = QuantityCalculator.sum(_.map(item.sources, 'quantity'));
+    item.estimatedPrice = PriceCalculator.sum(_.map(item.sources, 'price')) || {value: 0, currency: '€'};
+  }
+  function _updateCartEstimatedPrice(cart){
+    console.log('cart', cart);
+    console.log('items', cart.items);
+    console.log('prices', _.map(cart.items, 'estimatedPrice'));
+    cart.estimatedPrice = PriceCalculator.sum(_.map(cart.items, 'estimatedPrice'));
+  }
 
   return service;
 })
@@ -658,6 +674,7 @@ angular.module('app')
     return {
       id: Utils.createUuid(),
       name: name ? name : 'Liste du '+moment().format('LL'),
+      boughtPc: 0,
       customItems: [],
       items: [],
       recipesData: [],
@@ -679,7 +696,7 @@ angular.module('app')
     var item = angular.copy(food);
     item.bought = 0; // timestamp or 0
     item.quantity = null;
-    item.estimatedPrice = null;
+    item.estimatedPrice = {value: 0, currency: '€'};
     item.sources = [];
     item.selfscanPrice = null;
     item.promoBenefit = null;

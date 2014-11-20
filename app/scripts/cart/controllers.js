@@ -8,19 +8,15 @@ angular.module('app')
   $scope.ui = ui;
 
 
-  //PerfSrv.loadController($scope, function(){
-  $scope.$on('$viewContentLoaded', function(){
+  PerfSrv.loadController($scope, function(){
     if(!data.controllerLoaded){
       data.controllerLoaded = true;
       CartSrv.getCurrentCart().then(function(cart){
-        // timeout needed to avoid error: Cannot read property 'options' of null (ionic bug !)
-        $timeout(function(){
-          if(cart.selfscan.started){
-            $ionicTabsDelegate.select(1);
-          } else {
-            $ionicTabsDelegate.select(0);
-          }
-        }, 1000);
+        if(cart.selfscan.started){
+          $ionicTabsDelegate.select(1);
+        } else {
+          $ionicTabsDelegate.select(0);
+        }
         data.cart = cart;
         data.customItemsText = null;
         data.selectedItem = null;
@@ -81,6 +77,13 @@ angular.module('app')
       fn.unbuyItem = function(item){
         LogSrv.trackUnbuyItem(item.id);
         CartUtils.unbuyItem(data.cart, item);
+      };
+      fn.toggleItem = function(item){
+        if(item.bought){
+          fn.unbuyItem(item);
+        } else {
+          fn.buyItem(item);
+        }
       };
       fn.removeRecipeFromCart = function(recipe){
         LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');

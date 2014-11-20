@@ -21,6 +21,21 @@
 
 .cart-items {
   padding: 0px;
+  .progress {
+    height: 3px;
+    margin: 0;
+    overflow: hidden;
+    background: transparent;
+    border-radius: initial;
+    box-shadow: initial;
+    .bar {
+      position: initial;
+      display: block;
+      height: 100%;
+      background: #f83d3a;
+      transition: width .6s ease;
+    }
+  }
   .item {
     padding: 5px 10px;
     border: none;

@@ -4,6 +4,7 @@
 
 - next release :
     - afficher sur la fiche produit si le produit correspond à un bon promo
+    - recommandation de recette
     
     - ajouter suggestions en haut de la liste de courses
     
