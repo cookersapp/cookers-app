@@ -93,11 +93,9 @@ angular.module('app')
   }
 
   function productPrice(product){
-    console.log('price for ', product);
     var price = angular.copy(product.price);
     price.value = product.price.value * product.number;
     if(product.promos.length > 0){
-      console.log('has promos !')
       var productBenefits = _.map(product.promos, function(promo){
         if(promo.benefit.category === 'value'){
           return promo.benefit.value;
@@ -112,10 +110,8 @@ angular.module('app')
       var totalPromo = _.reduce(usedBenefits, function(sum, num) {
         return sum + num;
       });
-      console.log('total promo', totalPromo);
       price.value = price.value - totalPromo;
     }
-    console.log('final price', price);
     return price;
   }
 

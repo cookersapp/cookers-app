@@ -3,9 +3,9 @@
 # TODO
 
 - next release :
-    - afficher sur la fiche produit si le produit correspond à un bon promo
-    - indiquer les informations complémentaires lorsqu'on affiche le produit à partir du panier
     - recommandation de recette (et améliorer le champ : recipe => recommandation, category...)
+    - afficher sur la fiche produit si le produit correspond à un bon promo
+    - indiquer les informations complémentaires lorsqu'on affiche le produit à partir du panier (quantité...)
     - envoyer le panier sur le serveur lorsqu'il est archivé
     
     - ajouter suggestions en haut de la liste de courses

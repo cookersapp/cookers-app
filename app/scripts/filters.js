@@ -28,7 +28,6 @@ angular.module('app')
         return prefix + moment.duration(seconds, 'seconds').format('hh:mm:ss');
       }
     } else {
-      console.warn('Unable to format duration', seconds);
       return '<duration>';
     }
   };

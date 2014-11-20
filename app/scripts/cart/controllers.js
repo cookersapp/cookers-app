@@ -1,6 +1,6 @@
 angular.module('app')
 
-.controller('CartCtrl', function($scope, $state, $timeout, $ionicLoading, $ionicTabsDelegate, CartSrv, CartUtils, CartUi, StoreSrv, BarcodeSrv, DialogSrv, ToastSrv, LogSrv, Utils, PerfSrv, Config){
+.controller('CartCtrl', function($scope, $state, $q, $ionicLoading, $ionicTabsDelegate, CartSrv, CartUtils, CartUi, StoreSrv, BarcodeSrv, DialogSrv, ToastSrv, LogSrv, Utils, PerfSrv, Config){
   'use strict';
   var data = {}, fn = {}, ui = {};
   $scope.data = data;
@@ -23,9 +23,6 @@ angular.module('app')
         data.selectedRecipe = null;
         CartUi.initProductModal(data.cart) .then(function(modal)   { ui.productModal = modal;    });
         CartUi.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
-        CartUtils.getRecipes(data.cart).then(function(recipes){
-          data.recipes = recipes;
-        });
       });
 
       fn.customItems = {
@@ -87,9 +84,7 @@ angular.module('app')
       };
       fn.removeRecipeFromCart = function(recipe){
         LogSrv.trackRemoveRecipeFromCart(recipe.id, null, 'cart');
-        CartUtils.removeRecipe(data.cart, recipe).then(function(){
-          _.remove(data.recipes, {id: recipe.id});
-        });
+        CartUtils.removeRecipe(data.cart, recipe);
         ToastSrv.show('✔ recette supprimée de la liste de courses');
       };
       fn.updateServings = function(recipe, servings){
@@ -194,23 +189,21 @@ angular.module('app')
             break;
           }
         }
+        var answerPromise = $q.when(true);
         if(stillPromo){
-          DialogSrv.confirm('Il vous reste des coupons de réductions non utilisés. Êtes vous sûr de ne pas vouloir les utiliser ?', 'Coupons').then(function(result){
-            if(result){
-              DialogSrv.confirm('Vous pouvez maintenant passer en caisse :)').then(function(result){
-                if(result){
-                  fn.archiveCart();
-                }
-              });
-            }
-          });
-        } else {
-          DialogSrv.confirm('Vous pouvez maintenant passer en caisse :)').then(function(result){
-            if(result){
-              fn.archiveCart();
-            }
-          });
+          answerPromise = DialogSrv.confirm('Certains coupons n\'ont pas été utilisés ! Terminer quand même ?', 'Coupons');
         }
+        answerPromise.then(function(result){
+          if(result){
+            DialogSrv.confirm('Vous pouvez maintenant passer en caisse :)').then(function(result){
+              if(result){
+                CartUtils.terminateSelfscan(data.cart).then(function(){
+                  $state.go('app.home');
+                });
+              }
+            });
+          }
+        });
       };
     }
   });

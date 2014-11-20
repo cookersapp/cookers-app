@@ -150,15 +150,15 @@
 
     <ion-tab title="Recettes">
       <ion-content>
-        <loading ng-if="!data.recipes" top="100px"></loading>
-        <div class="no-items-to-buy" ng-show="!(data.recipes && data.recipes.length > 0)">
+        <loading ng-if="!data.cart" top="100px"></loading>
+        <div class="no-items-to-buy" ng-show="data.cart && data.cart.recipes.length === 0">
           Aucune recette ajoutée à la liste de course.
           <a class="button button-block button-balanced" ui-sref="app.recipes">Ajoute ta première recette !</a>
         </div>
-        <div ng-show="data.recipes">
+        <div ng-show="data.cart.recipes.length > 0">
           <ion-list class="cart-recipes">
             <div class="cart-price" ng-show="ctx.settings.showPrices && data.cart.estimatedPrice">Prix estimé : {{data.cart.estimatedPrice | price}}</div>
-            <div class="card" ng-repeat="recipe in data.recipes">
+            <div class="card" ng-repeat="recipe in data.cart.recipes">
               <ion-item ng-click="fn.toggleRecipe(recipe)">
                 <div>
                   <div class="thumbnail pull-left"><img-recipe images="recipe.images" type="'thumbnail'"></img-recipe></div>

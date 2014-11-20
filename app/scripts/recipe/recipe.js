@@ -268,7 +268,7 @@ angular.module('app')
           time: Date.now(),
           duration: cookDuration
         };
-        CartSrv.updateCartRecipe(cartId, recipe.cartData);
+        CartSrv.updateCartRecipe(cartId, recipe);
       } else {
         CartSrv.addStandaloneCookedRecipe(recipe, servings, cookDuration);
       }
@@ -322,7 +322,7 @@ angular.module('app')
       DialogSrv.confirm('Ne plus cuisiner cette recette ?').then(function(result){
         if(result){
           recipe.cartData.cooked = 'none';
-          CartSrv.updateCartRecipe(recipe.cartData.cart, recipe.cartData);
+          CartSrv.updateCartRecipe(recipe.cartData.cart, recipe);
           $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
         }
       });

@@ -2,7 +2,7 @@ angular.module('app')
 
 
 // modals for cart
-.factory('CartUi', function($rootScope, $state, $q, CartUtils, ProductSrv, IonicUi, DialogSrv, ToastSrv, LogSrv, Config){
+.factory('CartUi', function($rootScope, $state, $q, CartUtils, ProductSrv, RecipeSrv, UserSrv, StorageSrv, IonicUi, PopupSrv, DialogSrv, ToastSrv, LogSrv, Config){
   'use strict';
   var service = {
     initProductModal: initProductModal,
@@ -28,8 +28,27 @@ angular.module('app')
         });
       };
       fn.addRecommandationToCart = function(recommandation){
-        console.log('TODO addRecommandationToCart');
-        alert('TODO ...');
+        if(recommandation.category === 'recipe'){
+          RecipeSrv.get(recommandation.reference); // to get data early
+          PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recommandation.name).then(function(servings){
+            if(servings){
+              servings = parseInt(servings);
+              $rootScope.ctx.settings.defaultServings = servings;
+              UserSrv.setSetting('defaultServings', servings);
+              RecipeSrv.get(recommandation.reference).then(function(recipe){
+                if(recipe){
+                  LogSrv.trackAddRecipeToCart(recipe.id, servings, null); // TODO : track better (added from recommandations !!!)
+                  CartUtils.addRecipe(cart, recipe, servings);
+                  ToastSrv.show('✔ recette ajoutée à la liste de courses');
+                  StorageSrv.addRecipeToHistory(recipe);
+                  data.showRecommandation = false;
+                }
+              });
+            }
+          });
+        } else {
+          DialogSrv.alert('Unknown recommandation category <'+recommandation.category+'> !');
+        }
       };
       return {
         open: function(opts){
@@ -41,7 +60,7 @@ angular.module('app')
               data.product = null;
               data.store = null;
               data.showPromo = false;
-              data.showRecommandation = true;
+              data.showRecommandation = false;
             });
           };
           data.title = opts.title;
@@ -67,12 +86,12 @@ angular.module('app')
               if(store && store.promo){
                 CartUtils.showPromo(cart, store.promo).then(function(showPromo){
                   data.showPromo = showPromo;
-                  data.showRecommandation = !!store.recipe;
+                  data.showRecommandation = !!store.recommandation;
                 });
                 console.log('TODO CartUtils.showRecommandation()');
               } else {
                 data.showPromo = false;
-                data.showRecommandation = !!store.recipe;
+                data.showRecommandation = !!store.recommandation;
               }
             } else {
               // TODO : ask user some infos...
@@ -149,10 +168,7 @@ angular.module('app')
   function getCartRecipe(cartId, recipeId){
     return CartData.getCarts().then(function(carts){
       var cart = _.find(carts, {id: cartId});
-      var recipeData = cart ? _.find(cart.recipesData, {id: recipeId}) : null;
-      if(recipeData){
-        return CartUtils.recipeFrom(recipeData);
-      }
+      return cart ? _.find(cart.recipes, {id: recipeId}) : null;
     });
   }
 
@@ -164,45 +180,44 @@ angular.module('app')
    */
   function getRecipesToCook(){
     return CartData.getCarts().then(function(carts){
-      var recipesData = _recipesFromCarts(carts);
-      var toCookRecipesData = _.filter(recipesData, {cooked: false});
-      return CartUtils.recipesFrom(toCookRecipesData);
+      var recipes = _recipesFromCarts(carts);
+      return _.filter(recipes, {cartData: {cooked: false}});
     });
   }
 
   function getCookedRecipes(){
     return CartData.getCarts().then(function(carts){
-      var recipesData = _recipesFromCarts(carts);
-      var cookedRecipesData = _.filter(recipesData, function(recipeData){
-        return recipeData && recipeData.cooked && recipeData.cooked !== 'none' && recipeData.cooked !== false;
+      var recipes = _recipesFromCarts(carts);
+      var cookedRecipes = _.filter(recipes, function(recipe){
+        return recipe && recipe.cartData && recipe.cartData.cooked && recipe.cartData.cooked !== 'none' && recipe.cartData.cooked !== false;
       });
       return _getStandaloneCookedRecipes().then(function(standaloneCookedRecipes){
-        return CartUtils.recipesFrom(cookedRecipesData.concat(standaloneCookedRecipes));
+        return cookedRecipes.concat(standaloneCookedRecipes);
       });
     });
   }
 
   function addStandaloneCookedRecipe(recipe, servings, cookDuration){
-    var recipeData = CartBuilder.createStandaloneRecipeData(recipe, servings, cookDuration);
-    return _addStandaloneCookedRecipe(recipeData);
+    var cartRecipe = CartBuilder.createStandaloneRecipe(recipe, servings, cookDuration);
+    return _addStandaloneCookedRecipe(cartRecipe);
   }
 
-  function updateCartRecipe(cartId, recipeData){
+  function updateCartRecipe(cartId, recipe){
     return CartData.getCarts().then(function(carts){
       var cart = _.find(carts, {id: cartId});
-      var cartRecipeData = getRecipeFromCart(cart, recipeData.id);
-      if(cartRecipeData){
-        angular.copy(recipeData, cartRecipeData);
+      var cartRecipe = getRecipeFromCart(cart, recipe.id);
+      if(cartRecipe){
+        angular.copy(recipe, cartRecipe);
         return CartData.updateCart(cart);
       }
     });
   }
 
-  function getRecipeFromCart(cart, recipeId){ return cart ? _.find(cart.recipesData, {id: recipeId}) : null; }
+  function getRecipeFromCart(cart, recipeId){ return cart ? _.find(cart.recipes, {id: recipeId}) : null; }
 
   function _recipesFromCarts(carts){
     return _.reduce(carts, function(result, cart){
-      return result.concat(cart.recipesData);
+      return result.concat(cart.recipes);
     }, []);
   }
 
@@ -211,10 +226,10 @@ angular.module('app')
       return userStandaloneCookedRecipes ? userStandaloneCookedRecipes.recipes : [];
     });
   }
-  function _addStandaloneCookedRecipe(recipeData){
+  function _addStandaloneCookedRecipe(recipe){
     return LocalForageUtils.get(storageKeyCookedRecipes).then(function(userStandaloneCookedRecipes){
       if(userStandaloneCookedRecipes && Array.isArray(userStandaloneCookedRecipes.recipes)){
-        userStandaloneCookedRecipes.recipes.push(recipeData);
+        userStandaloneCookedRecipes.recipes.push(recipe);
         return LocalForageUtils.set(storageKeyCookedRecipes, userStandaloneCookedRecipes);
       }
     });
@@ -225,7 +240,7 @@ angular.module('app')
 
 
 // modify cart
-.factory('CartUtils', function($q, RecipeSrv, FoodSrv, ProductSrv, CartData, CartBuilder, QuantityCalculator, PriceCalculator, Utils, LogSrv){
+.factory('CartUtils', function($q, FoodSrv, CartData, CartBuilder, QuantityCalculator, PriceCalculator, Utils, LogSrv){
   'use strict';
   var service = {
     getEstimatedPrice: function(cart){},
@@ -241,19 +256,17 @@ angular.module('app')
     unbuyItem: unbuyItem,
     startSelfscan: startSelfscan,
     cancelSelfscan: cancelSelfscan,
+    terminateSelfscan: terminateSelfscan,
     buyProduct: buyProduct,
     unbuyProduct: unbuyProduct,
     showPromo: showPromo,
     addPromo: addPromo,
     removePromo: removePromo,
-    getRecipes: getRecipes,
-    recipesFrom: recipesFrom,
-    recipeFrom: recipeFrom,
     archive: archive
   };
 
   function hasRecipe(cart, recipe){
-    return !!_.find(cart.recipesData, {id: recipe.id});
+    return !!_.find(cart.recipes, {id: recipe.id});
   }
 
   function addRecipe(cart, recipe, servings){
@@ -273,7 +286,7 @@ angular.module('app')
             _updateItemQuantityAndEstimatedPrice(item);
           }
         }
-        cart.recipesData.push(CartBuilder.createRecipeData(cart.id, recipe, servings));
+        cart.recipes.push(CartBuilder.createCartRecipe(cart.id, recipe, servings));
         _sortItemsByCategory(cart.items);
         _updateCartEstimatedPrice(cart);
         _updateCartBoughtPc(cart);
@@ -284,15 +297,15 @@ angular.module('app')
 
   function adjustRecipe(cart, recipe, servings, _force){
     return Utils.async(function(){
-      var recipeData = _.find(cart.recipesData, {id: recipe.id});
-      if(recipeData && (recipeData.servings.value !== servings || _force)){
+      var recipe = _.find(cart.recipes, {id: recipe.id});
+      if(recipe && (recipe.cartData.servings.value !== servings || _force)){
         for(var i in cart.items){
           var item = cart.items[i];
           var sourceIndex = _.findIndex(item.sources, {type: 'recipe', id: recipe.id});
           if(sourceIndex > -1){
             var source = item.sources[sourceIndex];
             if(source.servings < servings && item.bought !== 0){
-              recipeData.nbIngredientsBought--;
+              recipe.cartData.nbIngredientsBought--;
               item.bought = 0;
             }
             var oldServings = angular.copy(source.servings);
@@ -302,10 +315,10 @@ angular.module('app')
             _updateItemQuantityAndEstimatedPrice(item);
           }
         }
-        recipeData.servings.value = servings;
-        recipeData.boughtPc = 100 * recipeData.nbIngredientsBought / recipeData.nbIngredients;
+        recipe.cartData.servings.value = servings;
+        recipe.cartData.boughtPc = 100 * recipe.cartData.nbIngredientsBought / recipe.cartData.nbIngredients;
         _updateCartEstimatedPrice(cart);
-        _updateCartBoughtPc(cart)
+        _updateCartBoughtPc(cart);
         return CartData.updateCart(cart);
       }
     });
@@ -313,7 +326,7 @@ angular.module('app')
 
   function removeRecipe(cart, recipe){
     return Utils.async(function(){
-      var removedRecipe = _.remove(cart.recipesData, {id: recipe.id});
+      var removedRecipe = _.remove(cart.recipes, {id: recipe.id});
       if(removedRecipe.length > 0){
         for(var i=cart.items.length-1; i>=0; i--){ // from last to first to remove items on the fly !
           var item = cart.items[i];
@@ -390,9 +403,9 @@ angular.module('app')
       for(var i in item.sources){
         var source = item.sources[i];
         if(source.type === 'recipe'){
-          var recipeData = _.find(cart.recipesData, {id: source.id});
-          recipeData.nbIngredientsBought++;
-          recipeData.boughtPc = 100 * recipeData.nbIngredientsBought / recipeData.nbIngredients;
+          var recipe = _.find(cart.recipes, {id: source.id});
+          recipe.cartData.nbIngredientsBought++;
+          recipe.cartData.boughtPc = 100 * recipe.cartData.nbIngredientsBought / recipe.cartData.nbIngredients;
         }
       }
       return CartData.updateCart(cart);
@@ -406,9 +419,9 @@ angular.module('app')
       for(var i in item.sources){
         var source = item.sources[i];
         if(source.type === 'recipe'){
-          var recipeData = _.find(cart.recipesData, {id: source.id});
-          recipeData.nbIngredientsBought--;
-          recipeData.boughtPc = 100 * recipeData.nbIngredientsBought / recipeData.nbIngredients;
+          var recipe = _.find(cart.recipes, {id: source.id});
+          recipe.cartData.nbIngredientsBought--;
+          recipe.cartData.boughtPc = 100 * recipe.cartData.nbIngredientsBought / recipe.cartData.nbIngredients;
         }
       }
       return CartData.updateCart(cart);
@@ -418,8 +431,10 @@ angular.module('app')
   function startSelfscan(cart, store){
     return Utils.async(function(){
       cart.selfscan.started = Date.now();
+      cart.selfscan.done = 0;
       cart.selfscan.store = store;
       cart.selfscan.price = {value: 0, currency: '€'};
+      cart.selfscan.showedPromos = [];
       return CartData.updateCart(cart);
     });
   }
@@ -440,6 +455,14 @@ angular.module('app')
         item.products = [];
         item.promos = [];
       }
+      return CartData.updateCart(cart);
+    });
+  }
+
+  function terminateSelfscan(cart){
+    return Utils.async(function(){
+      cart.selfscan.done = Date.now();
+      cart.archived = true;
       return CartData.updateCart(cart);
     });
   }
@@ -586,33 +609,6 @@ angular.module('app')
     });
   }
 
-  function getRecipes(cart){
-    return recipesFrom(cart.recipesData);
-  }
-
-  function recipesFrom(recipesData){
-    return Utils.async(function(){
-      var recipePromises = _.map(recipesData, function(recipeData){
-        return RecipeSrv.get(recipeData.id);
-      });
-      return $q.all(recipePromises).then(function(results){
-        for(var i in results){
-          results[i].cartData = _.find(recipesData, {id: results[i].id});
-        }
-        return results;
-      });
-    });
-  }
-
-  function recipeFrom(recipeData){
-    return RecipeSrv.get(recipeData.id).then(function(recipe){
-      if(recipe){
-        recipe.cartData = recipeData;
-        return recipe;
-      }
-    });
-  }
-
   function archive(cart){
     cart.archived = true;
     return CartData.updateCart(cart);
@@ -656,9 +652,6 @@ angular.module('app')
     item.estimatedPrice = PriceCalculator.sum(_.map(item.sources, 'price')) || {value: 0, currency: '€'};
   }
   function _updateCartEstimatedPrice(cart){
-    console.log('cart', cart);
-    console.log('items', cart.items);
-    console.log('prices', _.map(cart.items, 'estimatedPrice'));
     cart.estimatedPrice = PriceCalculator.sum(_.map(cart.items, 'estimatedPrice'));
   }
 
@@ -673,8 +666,8 @@ angular.module('app')
     createCart: createCart,
     createItem: createItem,
     createItemSourceFromRecipe: createItemSourceFromRecipe,
-    createRecipeData: createRecipeData,
-    createStandaloneRecipeData: createStandaloneRecipeData,
+    createCartRecipe: createCartRecipe,
+    createStandaloneRecipe: createStandaloneRecipe,
     createProduct: createProduct,
     createPromo: createPromo
   };
@@ -686,7 +679,7 @@ angular.module('app')
       boughtPc: 0,
       customItems: [],
       items: [],
-      recipesData: [],
+      recipes: [],
       created: Date.now(),
       archived: false,
       estimatedPrice: null,
@@ -726,35 +719,37 @@ angular.module('app')
     return source;
   }
 
-  function createRecipeData(cartId, recipe, servings){
-    var recipeData = {};
-    recipeData.cart = cartId;
-    recipeData.id = recipe.id;
-    recipeData.added = Date.now();
-    recipeData.servings = angular.copy(recipe.servings);
-    recipeData.servings.value = servings;
-    recipeData.cooked = false;
-    recipeData.nbIngredients = recipe.ingredients ? recipe.ingredients.length : 0;
-    recipeData.nbIngredientsBought = 0;
-    recipeData.boughtPc = 0;
-    return recipeData;
+  function createCartRecipe(cartId, recipe, servings){
+    var cartRecipe = angular.copy(recipe);
+    cartRecipe.cartData = {};
+    cartRecipe.cartData.cart = cartId;
+    cartRecipe.cartData.id = recipe.id;
+    cartRecipe.cartData.added = Date.now();
+    cartRecipe.cartData.servings = angular.copy(recipe.servings);
+    cartRecipe.cartData.servings.value = servings;
+    cartRecipe.cartData.cooked = false;
+    cartRecipe.cartData.nbIngredients = recipe.ingredients ? recipe.ingredients.length : 0;
+    cartRecipe.cartData.nbIngredientsBought = 0;
+    cartRecipe.cartData.boughtPc = 0;
+    return cartRecipe;
   }
 
-  function createStandaloneRecipeData(recipe, servings, cookDuration){
-    var recipeData = {};
-    recipeData.cart = null;
-    recipeData.id = recipe.id;
-    recipeData.added = Date.now();
-    recipeData.servings = angular.copy(recipe.servings);
-    recipeData.servings.value = servings;
-    recipeData.cooked = {
+  function createStandaloneRecipe(recipe, servings, cookDuration){
+    var cartRecipe = angular.copy(recipe);
+    cartRecipe.cartData = {};
+    cartRecipe.cartData.cart = null;
+    cartRecipe.cartData.id = recipe.id;
+    cartRecipe.cartData.added = Date.now();
+    cartRecipe.cartData.servings = angular.copy(recipe.servings);
+    cartRecipe.cartData.servings.value = servings;
+    cartRecipe.cartData.cooked = {
       time: Date.now(),
       duration: cookDuration
     };
-    recipeData.nbIngredients = recipe.ingredients ? recipe.ingredients.length : 0;
-    recipeData.nbIngredientsBought = 0;
-    recipeData.boughtPc = 0;
-    return recipeData;
+    cartRecipe.cartData.nbIngredients = recipe.ingredients ? recipe.ingredients.length : 0;
+    cartRecipe.cartData.nbIngredientsBought = 0;
+    cartRecipe.cartData.boughtPc = 0;
+    return cartRecipe;
   }
 
   function createProduct(cartId, product, price, number, promos){
