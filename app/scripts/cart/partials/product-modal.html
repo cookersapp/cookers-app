@@ -9,9 +9,9 @@
     <div class="product-card" ng-show="data.product">
       <div class="card product">
         <div class="product-image">
-            <div class="badge" ng-show="data.productPromo">
+            <div class="badge" ng-show="data.ctx.productPromo">
               <i class="fa fa-certificate"></i>
-              <span class="text">{{data.productPromo.badge}}</span>
+              <span class="text">{{data.ctx.productPromo.badge}}</span>
             </div>
             <img ng-src="{{data.product.image}}">
         </div>
@@ -26,14 +26,14 @@
           <h5>{{data.product.brand}}</h5>
         </div>
       </div>
-      <div class="card promo" ng-if="data.showPromo" ng-click="fn.addPromoToCart(data.store.promo)">
+      <div class="card promo" ng-if="data.ctx.showPromo" ng-click="fn.addPromoToCart(data.store.promo)">
         <div class="badge">
           <i class="fa fa-certificate"></i>
           <span class="text">{{data.store.promo.badge}}</span>
         </div>
         <img ng-src="{{data.store.promo.image}}">
       </div>
-      <div class="card recommandation" ng-if="!data.showPromo && data.showRecommandation" ng-click="fn.addRecommandationToCart(data.store.recommandation)">
+      <div class="card recommandation" ng-if="!data.ctx.showPromo && data.ctx.showRecommandation" ng-click="fn.addRecommandationToCart(data.store.recommandation)">
         <img ng-src="{{data.store.recommandation.image}}">
       </div>
       <div class="card padding" ng-show="data.product.labels">

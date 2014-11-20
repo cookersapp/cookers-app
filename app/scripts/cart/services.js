@@ -59,8 +59,7 @@ angular.module('app')
               if(opts.callback){opts.callback(action, data.product, data.store ? data.store.price : null, 1);}
               data.product = null;
               data.store = null;
-              data.showPromo = false;
-              data.showRecommandation = false;
+              data.ctx = null;
             });
           };
           data.title = opts.title;
@@ -83,20 +82,21 @@ angular.module('app')
             if(product){
               data.product = product;
               data.store = store;
+              data.ctx = {};
               if(store){
                 if(store.promo){
                   CartUtils.showPromo(cart, store.promo).then(function(showPromo){
-                    data.showPromo = showPromo;
+                    data.ctx.showPromo = showPromo;
                   });
                 }
                 if(store.recommandation){
                   CartUtils.showRecommandation(cart, store.recommandation).then(function(showRecommandation){
-                    data.showRecommandation = showRecommandation;
+                    data.ctx.showRecommandation = showRecommandation;
                   });
                 }
                 CartUtils.getProductPromo(cart, product).then(function(promo){
                   if(promo){
-                    data.productPromo = promo;
+                    data.ctx.productPromo = promo;
                   }
                 });
               }
