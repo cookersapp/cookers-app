@@ -112,7 +112,7 @@
                 </div>
                 <div class="source" ng-repeat="product in item.products">
                   <div class="addon pull-right">
-                    {{product.price | price:product.number}}
+                    {{product.totalPrice | price}}
                     <button class="button button-clear button-xs button-assertive" ng-click="fn.unbuyProduct(product)">&times;</button>
                   </div>
                   <div class="text" ng-click="fn.productDetails(product)">
