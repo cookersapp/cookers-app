@@ -27,6 +27,10 @@ angular.module('app')
           }
         });
       };
+      fn.addRecommandationToCart = function(recommandation){
+        console.log('TODO addRecommandationToCart');
+        alert('TODO ...');
+      };
       return {
         open: function(opts){
           var startTime = Date.now(), modalShowedTime = null, productLoadedTime = null;
@@ -37,6 +41,7 @@ angular.module('app')
               data.product = null;
               data.store = null;
               data.showPromo = false;
+              data.showRecommandation = true;
             });
           };
           data.title = opts.title;
@@ -46,12 +51,13 @@ angular.module('app')
             modalShowedTime = Date.now();
             if(Config.debug){ToastSrv.show('Modal showed in '+((modalShowedTime-startTime)/1000)+' sec');}
             var promises = [];
-            promises.push(opts.product ? $q.when(opts.product) : ProductSrv.get(opts.barcode));
-            if(opts.store){ promises.push(ProductSrv.getStoreInfo(opts.store, opts.product ? opts.product.barcode : opts.barcode)); }
+            promises.push(ProductSrv.get(opts.barcode));
+            if(opts.store){ promises.push(ProductSrv.getStoreInfo(opts.store, opts.barcode)); }
             return $q.all(promises);
           }).then(function(results){
             var product = results[0];
-            var store = results[1];
+            if(opts.cartProduct){ product.cartProduct = opts.cartProduct; }
+            var store = results.length > 1 ? results[1] : null;
             productLoadedTime = Date.now();
             if(Config.debug){ToastSrv.show('Product loaded in '+((productLoadedTime-modalShowedTime)/1000)+' sec');}
             LogSrv.trackCartProductLoaded(product ? product.barcode : opts.barcode, productLoadedTime-modalShowedTime, product ? true : false);
@@ -61,9 +67,12 @@ angular.module('app')
               if(store && store.promo){
                 CartUtils.showPromo(cart, store.promo).then(function(showPromo){
                   data.showPromo = showPromo;
+                  data.showRecommandation = !!store.recipe;
                 });
+                console.log('TODO CartUtils.showRecommandation()');
               } else {
                 data.showPromo = false;
+                data.showRecommandation = !!store.recipe;
               }
             } else {
               // TODO : ask user some infos...

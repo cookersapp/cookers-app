@@ -129,7 +129,9 @@ angular.module('app')
             var format = result.format;
             var barcode = result.text;
             if(!barcode){
-              var codes = ['3029330003533', '3036810207923', '3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3023290642177', '3017230000059', '3608580750031', '3280221011086'];
+              // http://cookers.io/scan/stores/54622d4ba0cc4ac400643c49
+              // 2167705005346
+              var codes = ['3029330003533', '3036810207923', '3564700006061', '3535710002787', '3560070393763', '3038350054203', '3535710002930', '3023290642177', '3017230000059', '3608580750031', '3280221011086', '2167705005346'];
               barcode = codes[Math.floor(Math.random() * codes.length)];
               format = 'EAN_13';
             }
@@ -180,7 +182,8 @@ angular.module('app')
           title: 'Produit acheté',
           buyBar: false,
           store: storeId,
-          product: product
+          barcode: product.barcode,
+          cartProduct: product
         });
       };
       fn.checkout = function(){
