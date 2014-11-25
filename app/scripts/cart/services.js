@@ -257,7 +257,7 @@ angular.module('app')
 
 
 // modify cart
-.factory('CartUtils', function($q, FoodSrv, CartData, CartBuilder, QuantityCalculator, PriceCalculator, Utils, LogSrv){
+.factory('CartUtils', function($q, FoodSrv, CartData, CartBuilder, QuantityCalculator, PriceCalculator, UserSrv, BackendUtils, Utils, LogSrv){
   'use strict';
   var service = {
     getEstimatedPrice: function(cart){},
@@ -481,8 +481,7 @@ angular.module('app')
   function terminateSelfscan(cart){
     return Utils.async(function(){
       cart.selfscan.done = Date.now();
-      cart.archived = true;
-      return CartData.updateCart(cart);
+      return archive(cart);
     });
   }
 
@@ -657,7 +656,11 @@ angular.module('app')
 
   function archive(cart){
     cart.archived = true;
-    return CartData.updateCart(cart);
+    return CartData.updateCart(cart).then(function(){
+      return UserSrv.get().then(function(user){
+        return BackendUtils.put('/users/'+user.id+'/carts/'+cart.id+'/archive', cart);
+      });
+    });
   }
 
   function _sortItemsByCategory(items){
