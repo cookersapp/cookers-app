@@ -33,8 +33,8 @@
         </div>
         <img ng-src="{{data.store.promo.image}}">
       </div>
-      <div class="card recommandation" ng-if="!data.ctx.showPromo && data.ctx.showRecommandation" ng-click="fn.addRecommandationToCart(data.store.recommandation)">
-        <img ng-src="{{data.store.recommandation.image}}">
+      <div class="card recommandation" ng-if="!data.ctx.showPromo && data.ctx.showRecommandation" ng-click="fn.addRecommandationToCart(data.ctx.recommandationToShow)">
+        <img ng-src="{{data.ctx.recommandationToShow.image}}">
       </div>
       <div class="card padding" ng-show="data.product.labels">
         Labels :

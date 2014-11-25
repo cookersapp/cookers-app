@@ -89,9 +89,14 @@ angular.module('app')
                     data.ctx.showPromo = showPromo;
                   });
                 }
-                if(store.recommandation){
-                  CartUtils.showRecommandation(cart, store.recommandation).then(function(showRecommandation){
-                    data.ctx.showRecommandation = showRecommandation;
+                if(store.recommandations){
+                  CartUtils.showRecommandation(cart, store.recommandations).then(function(recommandationToShow){
+                    if(recommandationToShow){
+                      data.ctx.showRecommandation = true;
+                      data.ctx.recommandationToShow = recommandationToShow;
+                    } else {
+                      data.ctx.showRecommandation = false;
+                    }
                   });
                 }
                 CartUtils.getProductPromo(cart, product).then(function(promo){
@@ -581,14 +586,18 @@ angular.module('app')
     });
   }
 
-  function showRecommandation(cart, recommandation){
+  function showRecommandation(cart, recommandations){
     return Utils.async(function(){
-      if(recommandation && recommandation.category === 'recipe'){
-        var alreadyAdded = _.findIndex(cart.recipes, {id: recommandation.reference}) > -1;
-        return !alreadyAdded;
-      } else {
-        return false;
+      for(var i in recommandations){
+        var recommandation = recommandations[i];
+        if(recommandation.category === 'recipe'){
+          var alreadyAdded = _.findIndex(cart.recipes, {id: recommandation.reference}) > -1;
+          if(!alreadyAdded){
+            return recommandation;
+          }
+        }
       }
+      return false;
     });
   }
 
