@@ -281,8 +281,11 @@ angular.module('app')
     showRecommandation: showRecommandation,
     addPromo: addPromo,
     removePromo: removePromo,
-    archive: archive
+    archive: archive,
+    getRecommandedItems: getRecommandedItems,
+    addItem: addItem
   };
+
 
   function hasRecipe(cart, recipe){
     return !!_.find(cart.recipes, {id: recipe.id});
@@ -660,6 +663,44 @@ angular.module('app')
       return UserSrv.get().then(function(user){
         return BackendUtils.put('/users/'+user.id+'/carts/'+cart.id+'/archive', cart);
       });
+    });
+  }
+
+  function getRecommandedItems(cart){
+    return Utils.async(function(){
+      var promises = [];
+      for(var i in cart.items){
+        var item = cart.items[i];
+        if(item.id === 'pomme-de-terre' && _.findIndex(cart.items, {id: 'fromage-a-raclette'}) === -1){
+          promises.push(_createRecommandation(item, 'fromage-a-raclette'));
+        }
+      }
+      return $q.all(promises);
+    });
+  }
+
+  function _createRecommandation(item, recommandedFood){
+    return FoodSrv.get(recommandedFood).then(function(food){
+      var ret = {};
+      ret.itemSource = angular.copy(item);
+      ret.itemRecommanded = CartBuilder.createItem(food);
+      ret.html = 'Ajouter du <strong>'+ret.itemRecommanded.name+'</strong> pour aller avec les '+ret.itemSource.name+' ?';
+      return ret;
+    });
+  }
+
+  function addItem(cart, item){
+    return Utils.async(function(){
+      var itemExists = _.find(cart.items, {id: item.id});
+      if(!itemExists){
+        cart.items.push(item);
+        _sortItemsByCategory(cart.items);
+        _updateCartEstimatedPrice(cart);
+        _updateCartBoughtPc(cart);
+        return CartData.updateCart(cart);
+      } else {
+        console.error('ERROR: can\'t add items already in cart !!!');
+      }
     });
   }
 

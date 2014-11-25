@@ -97,6 +97,13 @@
               </div>
             </div>
           </div>
+          <div class="card recommanded-items" ng-if="data.recommandedItems.length > 0">
+            <div class="pull-right">
+              <button class="button button-xs button-balanced" ng-click="fn.acceptRecommandation(data.recommandedItems[0])">✔</button>
+              <button class="button button-xs button-assertive" ng-click="fn.denyRecommandation(data.recommandedItems[0])">✘</button>
+            </div>
+            <span ng-bind-html="data.recommandedItems[0].html"></span>
+          </div>
           <div class="list card cart-items" ng-show="data.cart.items.length > 0">
             <div class="progress"><div class="bar" style="width: {{data.cart.boughtPc}}%;"></div></div>
             <div class="item {{item.category.slug}}" ng-class="{'item-bought': item.bought}" ng-repeat="item in itemsToBuy = (data.cart.items | filter:fn.isBought(false))">

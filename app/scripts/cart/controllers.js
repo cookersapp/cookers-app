@@ -23,6 +23,9 @@ angular.module('app')
         data.selectedRecipe = null;
         CartUi.initProductModal(data.cart) .then(function(modal)   { ui.productModal = modal;    });
         CartUi.initCartOptions(data.cart)  .then(function(popover) { ui.cartOptions  = popover;  });
+        CartUtils.getRecommandedItems(cart).then(function(items){
+          data.recommandedItems = items;
+        });
       });
 
       fn.customItems = {
@@ -204,6 +207,22 @@ angular.module('app')
             });
           }
         });
+      };
+
+      fn.acceptRecommandation = function(recommandation){
+        // TODO : track
+        CartUtils.addItem(data.cart, recommandation.itemRecommanded);
+        var index = data.recommandedItems.indexOf(recommandation);
+        if(index > -1){
+          data.recommandedItems.splice(index, 1);
+        }
+      };
+      fn.denyRecommandation = function(recommandation){
+        // TODO : track
+        var index = data.recommandedItems.indexOf(recommandation);
+        if(index > -1){
+          data.recommandedItems.splice(index, 1);
+        }
       };
     }
   });
