@@ -22,7 +22,7 @@ angular.module('app')
           if(result){
             CartUtils.addPromo(cart, promo).then(function(){
               ToastSrv.show('✔ Coupon ajoutée au panier \\o/');
-              data.showPromo = false;
+              data.ctx.showPromo = false;
             });
           }
         });
@@ -41,7 +41,7 @@ angular.module('app')
                   CartUtils.addRecipe(cart, recipe, servings);
                   ToastSrv.show('✔ recette ajoutée à la liste de courses');
                   StorageSrv.addRecipeToHistory(recipe);
-                  data.showRecommandation = false;
+                  data.ctx.showRecommandation = false;
                 }
               });
             }
@@ -84,9 +84,14 @@ angular.module('app')
               data.store = store;
               data.ctx = {};
               if(store){
-                if(store.promo){
-                  CartUtils.showPromo(cart, store.promo).then(function(showPromo){
-                    data.ctx.showPromo = showPromo;
+                if(store.promos){
+                  CartUtils.showPromo(cart, store.promos).then(function(promoToShow){
+                    if(promoToShow){
+                      data.ctx.showPromo = true;
+                      data.ctx.promoToShow = promoToShow;
+                    } else {
+                      data.ctx.showPromo = false;
+                    }
                   });
                 }
                 if(store.recommandations){
@@ -566,23 +571,21 @@ angular.module('app')
     });
   }
 
-  function showPromo(cart, promo){
+  function showPromo(cart, promos){
     return Utils.async(function(){
-      if(promo){
+      for(var i in promos){
+        var promo = promos[i];
         var alreadyShowed = _.findIndex(cart.selfscan.showedPromos, {id: promo.id}) > -1;
-        if(alreadyShowed){
-          return false;
-        } else {
+        if(!alreadyShowed){
           var cartPromo = CartBuilder.createPromo(promo);
           cartPromo.showed = Date.now();
           cart.selfscan.showedPromos.push(cartPromo);
           return CartData.updateCart(cart).then(function(){
-            return true;
+            return promo;
           });
         }
-      } else {
-        return false;
       }
+      return false;
     });
   }
 

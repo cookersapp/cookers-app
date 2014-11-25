@@ -26,12 +26,12 @@
           <h5>{{data.product.brand}}</h5>
         </div>
       </div>
-      <div class="card promo" ng-if="data.ctx.showPromo" ng-click="fn.addPromoToCart(data.store.promo)">
+      <div class="card promo" ng-if="data.ctx.showPromo" ng-click="fn.addPromoToCart(data.ctx.promoToShow)">
         <div class="badge">
           <i class="fa fa-certificate"></i>
-          <span class="text">{{data.store.promo.badge}}</span>
+          <span class="text">{{data.ctx.promoToShow.badge}}</span>
         </div>
-        <img ng-src="{{data.store.promo.image}}">
+        <img ng-src="{{data.ctx.promoToShow.image}}">
       </div>
       <div class="card recommandation" ng-if="!data.ctx.showPromo && data.ctx.showRecommandation" ng-click="fn.addRecommandationToCart(data.ctx.recommandationToShow)">
         <img ng-src="{{data.ctx.recommandationToShow.image}}">
