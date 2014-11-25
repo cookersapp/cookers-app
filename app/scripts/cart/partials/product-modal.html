@@ -35,6 +35,7 @@
       </div>
       <div class="card recommandation" ng-if="!data.ctx.showPromo && data.ctx.showRecommandation" ng-click="fn.addRecommandationToCart(data.ctx.recommandationToShow)">
         <img ng-src="{{data.ctx.recommandationToShow.image}}">
+        <p>Un peu de cuisine : {{data.ctx.recommandationToShow.name}}</p>
       </div>
       <div class="card padding" ng-show="data.product.labels">
         Labels :

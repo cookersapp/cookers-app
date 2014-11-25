@@ -4,7 +4,6 @@
 
 - next release :
     - ajouter suggestions en haut de la liste de courses (fake)
-    - améliorer le design des recettes suggérées
     - home design :
         * http://www.pinterest.com/pin/205124958004123004/
         * http://www.pinterest.com/pin/180003316332324102/
