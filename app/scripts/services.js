@@ -23,12 +23,11 @@ angular.module('app')
 
   function loadController($scope, controllerFn){
     // $stateChangeSuccess
+    // $viewContentLoaded
     // http://ionicframework.com/docs/nightly/api/directive/ionView/
-    $scope.$on('$viewContentLoaded', function(){
-      $timeout(function(){
-        controllerFn();
-      }, 700);
-    });
+    $timeout(function(){
+      controllerFn();
+    }, 700);
   }
 
   return service;

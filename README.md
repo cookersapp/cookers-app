@@ -3,13 +3,19 @@
 # TODO
 
 - next release :
+    - ajouter suggestions en haut de la liste de courses (fake)
+    - améliorer le design des recettes suggérées
+    - renvoyer un tableau de recommandations avec le product store
+    - envoyer le panier sur le serveur lorsqu'il est archivé
+    - home design :
+        * http://www.pinterest.com/pin/205124958004123004/
+        * http://www.pinterest.com/pin/180003316332324102/
+        * http://www.pinterest.com/pin/171277592054176205/
+        * http://www.pinterest.com/pin/171277592054176204/
     - compléter fiche produit :
-        * afficher s'il y a une promo ajoutée au panier sur ce produit
         * quand on affiche un produit contenant un bon promo : réafficher le bon promo
         * afficher et pouvoir changer la quantité sur la fiche produit
-    - envoyer le panier sur le serveur lorsqu'il est archivé
     
-    - ajouter suggestions en haut de la liste de courses
     
     - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
     - widget uservoice sur la home

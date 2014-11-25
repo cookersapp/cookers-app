@@ -7,18 +7,6 @@
   </ion-header-bar>
 
   <ion-content class="recipes-screen" ng-class="{empty: !(selection && selection.recipes && selection.recipes.length > 0)}">
-    <div class="card" ng-if="ctx.debug">
-      <div class="item" style="text-align: center;">
-        <div class="pull-left" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(-1)">
-          <i class="ion ion-arrow-left-c"></i>
-        </div>
-        Week: {{week}}
-        <div class="pull-right" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(1)">
-          <i class="ion ion-arrow-right-c"></i>
-        </div>
-      </div>
-    </div>
-
     <div class="screen-empty">
       <loading ng-if="status === 'loading'"></loading>
       <div ng-if="status === 'loaded'">
@@ -80,6 +68,18 @@
           <div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>
           <div class="col" ng-click="recipeFeedback(2)"><img src="images/great.png"></div>
           <div class="col" ng-click="recipeFeedback(3)"><img src="images/awesome.png"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" ng-if="ctx.debug">
+      <div class="item" style="text-align: center;">
+        <div class="pull-left" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(-1)">
+          <i class="ion ion-arrow-left-c"></i>
+        </div>
+        Week: {{week}}
+        <div class="pull-right" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(1)">
+          <i class="ion ion-arrow-right-c"></i>
         </div>
       </div>
     </div>
