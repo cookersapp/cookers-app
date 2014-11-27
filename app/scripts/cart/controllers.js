@@ -155,7 +155,7 @@ angular.module('app')
       };
       fn.archiveCart = function(){
         CartUtils.archive(data.cart);
-        $state.go('app.home');
+        $state.go('app.recipes');
       };
 
       fn.removePromo = function(promo){
@@ -201,7 +201,7 @@ angular.module('app')
             DialogSrv.confirm('Vous pouvez maintenant passer en caisse :)').then(function(result){
               if(result){
                 CartUtils.terminateSelfscan(data.cart).then(function(){
-                  $state.go('app.home');
+                  $state.go('app.recipes');
                 });
               }
             });

@@ -75,7 +75,7 @@ Your app is now running to your computer. To run it to your android device :
 - `mkdir platforms plugins www` create folders for cordova
 - `cordova platform add android` add android platform to the project
 - copy `app/res/android` in `platforms/android/res` ([explanation](http://intown.biz/2014/03/07/changing-the-cordova-app-icon/))
-- `cordova plugin add org.apache.cordova.device org.apache.cordova.console org.apache.cordova.splashscreen https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git https://github.com/Dbuggerx/BarcodeScanner.git org.apache.cordova.dialogs org.apache.cordova.vibration` add interesting plugins
+- `cordova plugin add org.apache.cordova.device org.apache.cordova.console org.apache.cordova.splashscreen https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git https://github.com/Dbuggerx/BarcodeScanner.git org.apache.cordova.dialogs org.apache.cordova.vibration org.apache.cordova.camera https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
 ## Grunt commands
@@ -96,6 +96,8 @@ Your app is now running to your computer. To run it to your android device :
 - org.apache.cordova.media (0.2.12) : play sounds (for alarms in cook screen) (android.permission.WRITE_EXTERNAL_STORAGE, android.permission.RECORD_AUDIO, android.permission.MODIFY_AUDIO_SETTINGS, android.permission.READ_PHONE_STATE)
 - org.apache.cordova.file (1.3.0) : required by media plugin
 - https://github.com/loicknuchel/cordova-device-accounts.git (0.0.1) : to get user email (android.permission.GET_ACCOUNTS)
+- org.apache.cordova.camera (0.3.3) : provides an API for taking pictures and for choosing images from the system's image library (android.permission.WRITE_EXTERNAL_STORAGE)
+- https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git (4.3.10) : This plugin allows you to use the native sharing window of your mobile device. (android.permission.WRITE_EXTERNAL_STORAGE)
 
 Interesting plugins :
 - Access contacts : https://github.com/apache/cordova-plugin-contacts

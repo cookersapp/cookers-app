@@ -1,6 +1,5 @@
 if(!window.plugins){window.plugins = {};}
 if(!window.navigator){window.navigator = {};}
-if(!window.navigator.notification){window.navigator.notification = {};}
 
 // for plugin https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
 window.plugins.toast = {
@@ -114,6 +113,55 @@ window.navigator.notification = (function(){
     },
     beep: beep
   };
+})();
+
+
+// for plugin org.apache.cordova.camera (https://github.com/apache/cordova-plugin-camera)
+window.navigator.camera = (function(){
+  window.Camera = {
+    DestinationType: {
+      DATA_URL: 0, // return image as base64-encoded string
+      FILE_URI: 1, // return image file URI (default)
+      NATIVE_URI: 2 // return image native URI
+    },
+    Direction: {
+      BACK: 0, // Use the back-facing camera (default)
+      FRONT: 1 // Use the front-facing camera
+    },
+    EncodingType: {
+      JPEG: 0, // (default)
+      PNG: 1
+    },
+    MediaType: {
+      PICTURE: 0, // allow selection of pictures only. Will return format specified via DestinationType (default)
+      VIDEO: 1, // allow selection of video only, will always return FILE_URI
+      ALLMEDIA: 2 // allow selection from all media types
+    },
+    PictureSourceType: {
+      PHOTOLIBRARY: 0, // dialog displays that allows users to select an existing image
+      CAMERA: 1, // opens the device's default camera application that allows users to snap pictures (default)
+      SAVEDPHOTOALBUM: 2 // dialog displays that allows users to select an existing image
+    },
+    PopoverArrowDirection: { // iOS only
+      ARROW_UP: 1,
+      ARROW_DOWN: 2,
+      ARROW_LEFT: 4,
+      ARROW_RIGHT: 8,
+      ARROW_ANY: 15
+    }
+  };
+
+  var ret = JSON.parse(JSON.stringify(window.Camera));
+  ret.getPicture = function(success, error, options){
+    var uri = window.prompt('Image uri :');
+    if(uri){
+      if(success){ success(uri); }
+    } else {
+      if(error){ error(); }
+    }
+  };
+
+  return ret;
 })();
 
 // add property cordova with a delay because it prevents deviceready to get fired !!!

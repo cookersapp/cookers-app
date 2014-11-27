@@ -139,7 +139,7 @@ angular.module('app')
           if(result){
             CartUtils.archive(cart);
             popover.remove();
-            $state.go('app.home');
+            $state.go('app.recipes');
           }
         });
       };

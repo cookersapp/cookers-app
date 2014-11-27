@@ -54,7 +54,7 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $timeout, $ionicScrollDelegate, GlobalMessageSrv, UserSrv, CartSrv, CartUtils, SelectionSrv, StorageSrv, PopupSrv, ToastSrv, PerfSrv, LogSrv, Config){
+.controller('RecipesCtrl', function($rootScope, $scope, $timeout, $ionicScrollDelegate, GlobalMessageSrv, UserSrv, CartSrv, CartUtils, SelectionSrv, StorageSrv, PopupSrv, ToastSrv, PerfSrv, LogSrv, Config, CameraSrv){
   'use strict';
   var data = {}, fn = {};
   $scope.data = data;
@@ -81,7 +81,7 @@ angular.module('app')
       }, 3000);
     };
     
-    
+
     data.recipeShowIngredients = null;
     CartSrv.getCurrentCart().then(function(cart){
       data.cart = cart;
@@ -261,16 +261,11 @@ angular.module('app')
         $window.history.back();
         ToastSrv.show('T\'as pas cuisiné, avoue ! ;)');
       } else {
-        LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
-        addToCookedRecipes(cartId, $scope.recipe, $scope.servings, cookDuration);
-
-        PopupSrv.recipeCooked().then(function(shouldExit){
-          if(shouldExit){
-            Utils.exitApp();
-          } else {
-            $state.go('app.home');
-          }
+        PopupSrv.recipeCooked($scope.recipe).then(function(){
+          $state.go('app.recipes');
         });
+        addToCookedRecipes(cartId, $scope.recipe, $scope.servings, cookDuration);
+        LogSrv.trackRecipeCooked($scope.recipe.id, cookDuration);
       }
     };
 

@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, ToastSrv, Config){
+.factory('PopupSrv', function($rootScope, $q, $ionicPopup, $ionicActionSheet, $ionicLoading, CameraSrv, SharingSrv, ToastSrv, Config){
   'use strict';
   var service = {
     forceAskEmail: forceAskEmail,
@@ -63,33 +63,50 @@ angular.module('app')
     });
   }
 
-  function recipeCooked(){
-    /*return $ionicPopup.show({
-      title: 'La recette est maintenant terminée !',
-      subTitle: 'Que veux-tu faire ?',
-      buttons: [{
-        text: 'Revenir à l\'accueil',
-        onTap: function(e){
-          return false;
-        }
-      }, {
-        text: '<b>Quitter l\'application</b>',
-        type: 'button-positive',
-        onTap: function(e){
-          return true;
-        }
-      }]
-    });*/
+  function recipeCooked(recipe){
     var defer = $q.defer();
     $ionicActionSheet.show({
-      titleText: 'La recette est maintenant terminée ! Que faire ?',
-      destructiveText: 'Quitter l\'application',
-      destructiveButtonClicked: function() {
-        defer.resolve(true);
+      titleText: 'La recette est maintenant terminée, partage une photo de ta création !',
+      buttons: [
+        { text: 'Partager via Facebook' },
+        { text: 'Partager via Twitter' },
+        { text: 'Envoyer par email' }
+      ],
+      buttonClicked: function(index){
+        $ionicLoading.show();
+        CameraSrv.takePicture().then(function(imageUri){
+          var sharePromise;
+          if(index == 0){
+            sharePromise = SharingSrv.shareViaFacebook(
+              'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec http://cookers.io ',
+              [imageUri, recipe.images.portrait]);
+          } else if(index == 1){
+            sharePromise = SharingSrv.shareViaTwitter(
+              'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec @cookersapp',
+              imageUri,
+              'http://cookers.io');
+          } else if(index == 2){
+            sharePromise = SharingSrv.shareViaEmail(
+              'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec http://cookers.io ',
+              'A table : ' + recipe.name,
+              [imageUri, recipe.images.portrait]);
+          }
+
+          sharePromise.then(function(){
+            $ionicLoading.hide();
+            defer.resolve(true);
+          },function(){
+            $ionicLoading.hide();
+            ToastSrv.show('Le partage a échoué :(');
+            defer.resolve(false);
+          });
+        });
+        return true;
       },
-      cancelText: 'Revenir à l\'accueil',
-      cancel: function() {
+      destructiveText: 'Revenir à l\'accueil',
+      destructiveButtonClicked: function(){
         defer.resolve(false);
+        return true;
       }
     });
     return defer.promise;

@@ -1,6 +1,6 @@
 angular.module('app')
 
-.factory('PerfSrv', function($timeout){
+.factory('PerfSrv', function($window, $timeout){
   'use strict';
   var service = {
     loadController: loadController,
@@ -25,9 +25,16 @@ angular.module('app')
     // $stateChangeSuccess
     // $viewContentLoaded
     // http://ionicframework.com/docs/nightly/api/directive/ionView/
+
+    /*if($window.requestAnimationFrame){
+      $window.requestAnimationFrame(function(){
+        controllerFn();
+      });
+    } else {*/
     $timeout(function(){
       controllerFn();
     }, 700);
+    //}
   }
 
   return service;

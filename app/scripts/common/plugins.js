@@ -450,4 +450,139 @@ angular.module('app')
   }
 
   return service;
+})
+
+// for Camera plugin : org.apache.cordova.camera (https://github.com/apache/cordova-plugin-camera)
+.factory('CameraSrv', function($q, $window, $ionicPlatform, SimpleLogSrv){
+  'use strict';
+  var service = {
+    takePicture: takePicture,
+    findPicture: findPicture
+  };
+
+  function takePicture(){
+    return _getPicture({});
+  }
+
+  function findPicture(){
+    return _getPicture({sourceType: $window.Camera.PictureSourceType.PHOTOLIBRARY});
+  }
+
+  function _getPicture(_opts){
+    return pluginReady(function(){
+      var opts = angular.extend({quality : 75, // between 0-100 (default: 50)
+                                 destinationType : $window.Camera.DestinationType.FILE_URI, // Type of result (default: FILE_URI)
+                                 sourceType : $window.Camera.PictureSourceType.CAMERA, // Source of the picture (default: CAMERA)
+                                 allowEdit : false,
+                                 encodingType: $window.Camera.EncodingType.JPEG, // (default: JPEG)
+                                 /*targetWidth: 100,
+                                 targetHeight: 100,*/
+                                 mediaType: $window.Camera.MediaType.PICTURE, // (default: PICTURE)
+                                 cameraDirection: $window.Camera.Direction.BACK, // (default: BACK)
+                                 correctOrientation: true, // rotate the image to correct for the orientation of the device during capture
+                                 saveToPhotoAlbum: false
+                                }, _opts);
+      var defer = $q.defer();
+      $window.navigator.camera.getPicture(function(pictureUri){
+        defer.resolve(pictureUri);
+      }, function(error){
+        defer.reject(error);
+      }, opts);
+      return defer.promise;
+    });
+  }
+
+  function pluginReady(fn){
+    var defer = $q.defer();
+    $ionicPlatform.ready(function(){
+      if($window.navigator && $window.navigator.camera){
+        defer.resolve(fn());
+      } else {
+        defer.reject();
+        SimpleLogSrv.trackError('pluginNotFound:Camera');
+      }
+    });
+    return defer.promise;
+  }
+
+  return service;
+})
+
+// for Sharing plugin : https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin
+.factory('SharingSrv', function($q, $window, $ionicPlatform, SimpleLogSrv){
+  'use strict';
+  var service = {
+    share: share,
+    shareViaFacebook: shareViaFacebook,
+    shareViaTwitter: shareViaTwitter,
+    shareViaEmail: shareViaEmail
+  };
+  // _file can be null, a string or an array of strings
+
+  function share(message, _subject, _fileOrFileArray, _link){
+    return pluginReady(function(){
+      var defer = $q.defer();
+      $window.plugins.socialsharing.share(message, _subject || null, _fileOrFileArray || null, _link || null, function(){
+        defer.resolve();
+      }, function(error){
+        defer.reject(error);
+        SimpleLogSrv.trackError('pluginError:SocialSharing', error);
+      });
+      return defer.promise;
+    });
+  }
+
+  function shareViaFacebook(message, _fileOrFileArray, _link){
+    return pluginReady(function(){
+      var defer = $q.defer();
+      $window.plugins.socialsharing.shareViaFacebookWithPasteMessageHint(message, _fileOrFileArray || null, _link || null, 'Tu peux coller le message par défaut si tu veux...', function(){
+        defer.resolve();
+      }, function(error){
+        defer.reject(error);
+        SimpleLogSrv.trackError('pluginError:SocialSharing', error);
+      });
+      return defer.promise;
+    });
+  }
+
+  function shareViaTwitter(message, _file, _link){
+    return pluginReady(function(){
+      var defer = $q.defer();
+      $window.plugins.socialsharing.shareViaTwitter(message, _file || null, _link || null, function(){
+        defer.resolve();
+      }, function(error){
+        defer.reject(error);
+        SimpleLogSrv.trackError('pluginError:SocialSharing', error);
+      });
+      return defer.promise;
+    });
+  }
+
+  function shareViaEmail(message, _subject, _fileOrFileArray){
+    return pluginReady(function(){
+      var defer = $q.defer();
+      $window.plugins.socialsharing.shareViaEmail(message, _subject || null, null /*to*/, null /*cc*/, null /*bcc*/, _fileOrFileArray || null, function(){
+        defer.resolve();
+      }, function(error){
+        defer.reject(error);
+        SimpleLogSrv.trackError('pluginError:SocialSharing', error);
+      });
+      return defer.promise;
+    });
+  }
+
+  function pluginReady(fn){
+    var defer = $q.defer();
+    $ionicPlatform.ready(function(){
+      if($window.plugins && $window.plugins.socialsharing){
+        defer.resolve(fn());
+      } else {
+        defer.reject();
+        SimpleLogSrv.trackError('pluginNotFound:SocialSharing');
+      }
+    });
+    return defer.promise;
+  }
+
+  return service;
 });
