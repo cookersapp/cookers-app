@@ -1,6 +1,31 @@
 @import "_colors";
 
-.recipes-screen {
+.selection {
+  .header {
+    background: $custom-bg;
+    min-height: 200px;
+    padding: 20px;
+    padding-top: 50px;
+    text-align: center;
+    border-bottom: 1px solid $custom-border;
+
+    .round-button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: none;
+      .icon:before {
+        color: $custom-bg;
+        font-size: 40px;
+      }
+      &:hover .icon:before {
+        color: $custom-border;
+      }
+    }
+  }
+}
+
+.recipes-screen, .selection {
   .recipes-empty {
     padding: 30px;
     text-align: center;
@@ -144,7 +169,7 @@
   }
 }
 
-.recipes-screen, .recipe-screen {
+.recipes-screen, .recipe-screen, .selection {
   .legend-top {
     position: absolute;
     left: 0px;

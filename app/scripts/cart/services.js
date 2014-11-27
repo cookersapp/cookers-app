@@ -2,13 +2,12 @@ angular.module('app')
 
 
 // modals for cart
-.factory('CartUi', function($rootScope, $state, $q, CartUtils, ProductSrv, RecipeSrv, UserSrv, StorageSrv, IonicUi, PopupSrv, DialogSrv, ToastSrv, LogSrv, Config){
+.factory('CartUi', function($rootScope, $state, $q, $timeout, CartUtils, ProductSrv, RecipeSrv, UserSrv, StorageSrv, IonicUi, PopupSrv, DialogSrv, ToastSrv, LogSrv, Config){
   'use strict';
   var service = {
     initProductModal: initProductModal,
     initCartOptions: initCartOptions
   };
-
 
   function initProductModal(cart){
     var data = {}, fn = {};
@@ -64,6 +63,12 @@ angular.module('app')
           };
           data.title = opts.title;
           data.buyBar = opts.buyBar;
+
+          $timeout(function(){
+            if(!data.ctx){data.ctx = {};}
+            data.ctx.firstTime = true;
+          }, 3000);
+
 
           return modal.show().then(function(){
             modalShowedTime = Date.now();
@@ -319,15 +324,15 @@ angular.module('app')
 
   function adjustRecipe(cart, recipe, servings, _force){
     return Utils.async(function(){
-      var recipe = _.find(cart.recipes, {id: recipe.id});
-      if(recipe && (recipe.cartData.servings.value !== servings || _force)){
+      var cartRecipe = _.find(cart.recipes, {id: recipe.id});
+      if(cartRecipe && (cartRecipe.cartData.servings.value !== servings || _force)){
         for(var i in cart.items){
           var item = cart.items[i];
-          var sourceIndex = _.findIndex(item.sources, {type: 'recipe', id: recipe.id});
+          var sourceIndex = _.findIndex(item.sources, {type: 'recipe', id: cartRecipe.id});
           if(sourceIndex > -1){
             var source = item.sources[sourceIndex];
             if(source.servings < servings && item.bought !== 0){
-              recipe.cartData.nbIngredientsBought--;
+              cartRecipe.cartData.nbIngredientsBought--;
               item.bought = 0;
             }
             var oldServings = angular.copy(source.servings);
@@ -337,8 +342,8 @@ angular.module('app')
             _updateItemQuantityAndEstimatedPrice(item);
           }
         }
-        recipe.cartData.servings.value = servings;
-        recipe.cartData.boughtPc = 100 * recipe.cartData.nbIngredientsBought / recipe.cartData.nbIngredients;
+        cartRecipe.cartData.servings.value = servings;
+        cartRecipe.cartData.boughtPc = 100 * cartRecipe.cartData.nbIngredientsBought / cartRecipe.cartData.nbIngredients;
         _updateCartEstimatedPrice(cart);
         _updateCartBoughtPc(cart);
         return CartData.updateCart(cart);

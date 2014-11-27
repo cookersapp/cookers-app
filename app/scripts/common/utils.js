@@ -63,10 +63,10 @@ angular.module('app')
   }
 
   var debounces = [];
-  function debounce(key, value, callback, _debounceTime){
+  function debounce(key, callback, _debounceTime){
     $timeout.cancel(debounces[key]);
     debounces[key] = $timeout(function(){
-      callback(value);
+      callback();
     }, _debounceTime || 1000);
   }
 

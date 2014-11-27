@@ -16,31 +16,4 @@ angular.module('app')
       }
     });
   }, 10000);
-})
-
-.controller('HomeCtrl', function($scope, $timeout, GlobalMessageSrv, SelectionSrv){
-  'use strict';
-  // preload selection
-  SelectionSrv.getCurrent();
-
-  $scope.standardMessage = null;
-  $scope.stickyMessages = [];
-
-  GlobalMessageSrv.getMessage().then(function(message){
-    $scope.standardMessage = message;
-  });
-  GlobalMessageSrv.getStickyMessages().then(function(messages){
-    $scope.stickyMessages = messages;
-  });
-
-  $scope.hideMessage = function(message){
-    GlobalMessageSrv.hideMessage(message);
-    $scope.standardMessage = null;
-    // wait 3 sec before show new message
-    $timeout(function(){
-      GlobalMessageSrv.getMessage().then(function(message){
-        $scope.standardMessage = message;
-      });
-    }, 3000);
-  };
 });

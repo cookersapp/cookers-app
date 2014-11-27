@@ -27,19 +27,10 @@ angular.module('app', ['ionic', 'ngSanitize', 'ngAnimate', 'ngTouch', 'pasvaz.bi
     abstract: true,
     templateUrl: 'views/sidemenu.html',
     controller: 'AppCtrl'
-  })
-  .state('app.home', {
-    url: '/home',
-    views: {
-      'menuContent': {
-        templateUrl: 'views/home.html',
-        controller: 'HomeCtrl'
-      }
-    }
   });
 
   // set default route
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/app/recipes');
 })
 
 .constant('Config', Config)

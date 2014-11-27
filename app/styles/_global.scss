@@ -44,6 +44,16 @@ i {
   }
 }
 
+.screen-placeholder {
+  display: block;
+  min-height: 200px;
+  margin: 35px 20px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 25px;
+  color: #bbb;
+}
+
 // from http://tobiasahlin.com/spinkit/
 .spinner {
   margin: auto;

@@ -54,21 +54,44 @@ angular.module('app')
   });
 })
 
-.controller('RecipesCtrl', function($rootScope, $scope, $state, PopupSrv, SelectionSrv, UserSrv, StorageSrv, CartSrv, CartUtils, ToastSrv, LogSrv, PerfSrv, Config){
+.controller('RecipesCtrl', function($rootScope, $scope, $timeout, $ionicScrollDelegate, GlobalMessageSrv, UserSrv, CartSrv, CartUtils, SelectionSrv, StorageSrv, PopupSrv, ToastSrv, PerfSrv, LogSrv, Config){
   'use strict';
+  var data = {}, fn = {};
+  $scope.data = data;
+  $scope.fn = fn;
+
   PerfSrv.loadController($scope, function(){
-    $scope.recipeShowIngredients = null;
-    var data = {};
-    CartSrv.getCurrentCart().then(function(cart){
-      data.cart = cart;
-      $scope.loadSelection(SelectionSrv.getCurrentWeek());
+    data.standardMessage = null;
+    data.stickyMessages = [];
+    GlobalMessageSrv.getMessage().then(function(message){
+      data.standardMessage = message;
+    });
+    GlobalMessageSrv.getStickyMessages().then(function(messages){
+      data.stickyMessages = messages;
     });
 
+    fn.hideMessage = function(message){
+      GlobalMessageSrv.hideMessage(message);
+      data.standardMessage = null;
+      // wait 3 sec before show new message
+      $timeout(function(){
+        GlobalMessageSrv.getMessage().then(function(message){
+          data.standardMessage = message;
+        });
+      }, 3000);
+    };
+    
+    
+    data.recipeShowIngredients = null;
+    CartSrv.getCurrentCart().then(function(cart){
+      data.cart = cart;
+      fn.loadSelection(SelectionSrv.getCurrentWeek());
+    });
 
-    $scope.loadSelection = function(week){
-      $scope.status = 'loading';
-      $scope.selection = null;
-      $scope.week = week;
+    fn.loadSelection = function(week){
+      data.status = 'loading';
+      data.selection = null;
+      data.week = week;
       SelectionSrv.get(week).then(function(selection){
         if(selection && selection.recipes){
           for(var i in selection.recipes){
@@ -77,31 +100,30 @@ angular.module('app')
             recipe._formated.isInCart = CartUtils.hasRecipe(data.cart, recipe);
           }
           UserSrv.getSetting('recipeShiftOffset').then(function(offset){
-            userShiftRecipes(selection.recipes, Config.debug ? 0 : offset);
-            $scope.selection = selection;
+            _userShiftRecipes(selection.recipes, Config.debug ? 0 : offset);
+            data.selection = selection;
           });
         }
-        $scope.status = 'loaded';
-      }, function(error){
-        $scope.status = 'error';
+        data.status = 'loaded';
       });
     };
-    $scope.changeSelectionWeek = function(offset){
+    fn.changeSelectionWeek = function(offset){
       if(Config.debug){
-        var week = ($scope.week + offset + 53) % 53;
+        var week = (data.week + offset + 53) % 53;
         if(week === 0){ week = offset > 0 ? 1 : 52; }
-        $scope.loadSelection(week);
+        $ionicScrollDelegate.scrollTop();
+        fn.loadSelection(week);
       }
     };
 
-    $scope.toggleIngredients = function(recipe, index){
-      if($scope.recipeShowIngredients === recipe){$scope.recipeShowIngredients = null;}
+    fn.toggleIngredients = function(recipe, index){
+      if(data.recipeShowIngredients === recipe){data.recipeShowIngredients = null;}
       else {
-        $scope.recipeShowIngredients = recipe;
+        data.recipeShowIngredients = recipe;
         LogSrv.trackShowRecipeIngredients(recipe.id, index);
       }
     };
-    $scope.addRecipeToCart = function(recipe, index){
+    fn.addRecipeToCart = function(recipe, index){
       PopupSrv.changeServings($rootScope.ctx.settings.defaultServings, recipe.name).then(function(servings){
         if(servings){
           servings = parseInt(servings);
@@ -115,27 +137,21 @@ angular.module('app')
         }
       });
     };
-    $scope.removeRecipeFromCart = function(recipe, index){
+    fn.removeRecipeFromCart = function(recipe, index){
       LogSrv.trackRemoveRecipeFromCart(recipe.id, index);
       CartUtils.removeRecipe(data.cart, recipe);
       recipe._formated.isInCart = false;
       ToastSrv.show('✔ recette supprimée de la liste de courses');
     };
+  });
 
-    $scope.recipeFeedback = function(feedback){
-      LogSrv.trackRecipesFeedback($scope.selection.week, feedback);
-      ToastSrv.show('Merci pour le retour :)');
-      $state.go('app.feedback', {source: 'recipes-rating-'+feedback});
-    };
-
-    function userShiftRecipes(recipes, shiftOffset){
-      if(Array.isArray(recipes)){
-        for(var i=0; i<shiftOffset; i++){
-          recipes.push(recipes.shift());
-        }
+  function _userShiftRecipes(recipes, shiftOffset){
+    if(Array.isArray(recipes)){
+      for(var i=0; i<shiftOffset; i++){
+        recipes.push(recipes.shift());
       }
     }
-  });
+  }
 })
 
 .controller('RecipeCtrl', function($rootScope, $scope, $stateParams, CartSrv, CartUtils, UserSrv, StorageSrv, RecipeSrv, PopupSrv, ToastSrv, LogSrv, PerfSrv){

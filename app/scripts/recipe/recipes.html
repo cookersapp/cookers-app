@@ -6,82 +6,169 @@
     <h1 class="title">La sélection Cookers</h1>
   </ion-header-bar>
 
-  <ion-content class="recipes-screen" ng-class="{empty: !(selection && selection.recipes && selection.recipes.length > 0)}">
-    <div class="screen-empty">
-      <loading ng-if="status === 'loading'"></loading>
-      <div ng-if="status === 'loaded'">
-        Aucune recette planifiée cette semaine :(<br>
-        Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
+  <ion-content class="selection">
+    <div class="header">
+      <button class="button round-button" ui-sref="app.cart"><i class="icon ion-clipboard"></i></button>
+    </div>
+
+    <!-- contextual message -->
+    <div class="padding message" bindonce ng-repeat="msg in data.stickyMessages">
+      <div class="alert card" bo-class="'alert-'+msg.category">
+        <span bo-html="msg.content"></span>
       </div>
-      <div ng-if="status === 'error'">
-        Impossible de charger les recettes :(<br>
-        Vérifie que tu as accès à internet et
-        <button class="button button-block button-stable" ng-click="loadSelection()">Charge à nouveau la sélection</button>
+    </div>
+    <div class="padding message" ng-if="data.standardMessage">
+      <div class="alert card" ng-class="'alert-'+data.standardMessage.category">
+        <button type="button" class="close" ng-click="fn.hideMessage(data.standardMessage)">&times;</button>
+        <span external-content="data.standardMessage.content"></span>
       </div>
     </div>
 
-    <div class="screen">
-      <div class="list">
-        <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe === recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
-          <img-recipe images="recipe.images" type="ctx.settings.bigImages ? 'portrait' : 'landing'" ng-click="toggleIngredients(recipe, $index)"></img-recipe>
-          <div class="legend-top">
-            <div class="price" bo-if="ctx.settings.showPrices">
-              <div class="number" bo-bind="recipe.price | price:1:false"></div>
-              <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
-            </div>
-          </div>
-          <div class="ingredients-overlay" ng-click="toggleIngredients(recipe, $index)">
-            <div class="list">
-              <div class="item item-divider" bo-bind="'Ingrédients pour '+(recipe.servings | servings)"></div>
-              <div bindonce ng-repeat="ingredient in recipe.ingredients" class="item ingredient" bo-class="ingredient.role" bo-bind="ingredient | ingredient"></div>
-              <a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id+'?recipeIndex='+$index">
-                <i class="fa fa-circle-thin fa-stack-2x"></i>
-                <i class="fa fa-info fa-stack-1x"></i>
-              </a>
-            </div>
-          </div>
-          <div class="legend">
-            <div class="actions">
-              <span ng-show="!recipe._formated.isInCart" class="fa-stack fa-lg balanced" ng-click="addRecipeToCart(recipe, $index)">
-                <i class="fa fa-circle-thin fa-stack-2x"></i>
-                <i class="fa fa-plus fa-stack-1x"></i>
-              </span>
-              <span ng-show="recipe._formated.isInCart" class="fa-stack fa-lg assertive" ng-click="removeRecipeFromCart(recipe, $index)">
-                <i class="fa fa-circle-thin fa-stack-2x"></i>
-                <i class="fa fa-minus fa-stack-1x"></i>
-              </span>
-            </div>
-            <div class="content" ng-click="toggleIngredients(recipe, $index)">
-              <div class="title" bo-bind="recipe.name"></div>
-              <div class="subtitle" bo-bind="(recipe.time | cookTime)+', '+recipe.ingredients.length+' ingrédients'"></div>
-            </div>
+    <loading ng-show="!data.selection && data.status === 'loading'" top="100px"></loading>
+    <div class="screen-empty" ng-if="!data.selection && data.status === 'loaded'">
+      Impossible de charger les recettes :(<br>
+      Vérifie que tu as accès à internet et
+      <button class="button button-block button-stable" ng-click="loadSelection()">Charge à nouveau la sélection</button>
+    </div>
+    <div class="list" ng-show="data.selection">
+      <div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe === data.recipeShowIngredients}" bindonce ng-repeat="recipe in data.selection.recipes">
+        <img-recipe images="recipe.images" type="ctx.settings.bigImages ? 'portrait' : 'landing'" ng-click="fn.toggleIngredients(recipe, $index)"></img-recipe>
+        <div class="legend-top">
+          <div class="price" bo-if="ctx.settings.showPrices">
+            <div class="number" bo-bind="recipe.price | price:1:false"></div>
+            <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
           </div>
         </div>
-      </div>
-
-      <div class="list card feedback">
-        <a class="item item-text-wrap" href="#/app/feedback">
-          C'était notre sélection de la semaine !<br>
-          Ça t'a plu ?
-        </a>
-        <div class="item row">
-          <div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>
-          <div class="col" ng-click="recipeFeedback(2)"><img src="images/great.png"></div>
-          <div class="col" ng-click="recipeFeedback(3)"><img src="images/awesome.png"></div>
+        <div class="ingredients-overlay" ng-click="fn.toggleIngredients(recipe, $index)">
+          <div class="list">
+            <div class="item item-divider" bo-bind="'Ingrédients pour '+(recipe.servings | servings)"></div>
+            <div bindonce ng-repeat="ingredient in recipe.ingredients" class="item ingredient" bo-class="ingredient.role" bo-bind="ingredient | ingredient"></div>
+            <a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id+'?recipeIndex='+$index">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-info fa-stack-1x"></i>
+            </a>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="actions">
+            <span ng-show="!recipe._formated.isInCart" class="fa-stack fa-lg balanced" ng-click="fn.addRecipeToCart(recipe, $index)">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-plus fa-stack-1x"></i>
+            </span>
+            <span ng-show="recipe._formated.isInCart" class="fa-stack fa-lg assertive" ng-click="fn.removeRecipeFromCart(recipe, $index)">
+              <i class="fa fa-circle-thin fa-stack-2x"></i>
+              <i class="fa fa-minus fa-stack-1x"></i>
+            </span>
+          </div>
+          <div class="content" ng-click="fn.toggleIngredients(recipe, $index)">
+            <div class="title" bo-bind="recipe.name"></div>
+            <div class="subtitle" bo-bind="(recipe.time | cookTime)+', '+recipe.ingredients.length+' ingrédients'"></div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="card" ng-if="ctx.debug">
       <div class="item" style="text-align: center;">
-        <div class="pull-left" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(-1)">
+        <div class="pull-left" style="font-size: 20px; padding: 0px 15px;" ng-click="fn.changeSelectionWeek(-1)">
           <i class="ion ion-arrow-left-c"></i>
         </div>
-        Week: {{week}}
-        <div class="pull-right" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(1)">
+        Week: {{data.week}}
+        <div class="pull-right" style="font-size: 20px; padding: 0px 15px;" ng-click="fn.changeSelectionWeek(1)">
           <i class="ion ion-arrow-right-c"></i>
         </div>
       </div>
     </div>
   </ion-content>
+
+  <!--<ion-content class="recipes-screen" ng-class="{empty: !(selection && selection.recipes && selection.recipes.length > 0)}">
+<div class="screen-empty">
+<loading ng-if="status === 'loading'"></loading>
+<div ng-if="status === 'loaded'">
+Aucune recette planifiée cette semaine :(<br>
+Merci de le signaler à <a href="mailto:loicknuchel@gmail.com">loicknuchel@gmail.com</a>.
+</div>
+<div ng-if="status === 'error'">
+Impossible de charger les recettes :(<br>
+Vérifie que tu as accès à internet et
+<button class="button button-block button-stable" ng-click="loadSelection()">Charge à nouveau la sélection</button>
+</div>
+</div>
+
+<div class="screen">
+<div class="home">
+<div class="dashboard">
+<div class="card row button" ui-sref="app.recipes">
+<div class="col col-25 media"><i class="icon ion-lightbulb"></i></div>
+<div class="col content">La sélection Cookers</div>
+</div>
+<div class="card row button" ui-sref="app.cart">
+<div class="col col-25 media"><i class="icon ion-clipboard"></i></div>
+<div class="col content">Ma liste de courses</div>
+</div>
+</div>
+</div>
+<div class="list">
+<div class="item item-recipe-img-full card" ng-class="{'show-ingredients': recipe === data.recipeShowIngredients}" bindonce ng-repeat="recipe in selection.recipes">
+<img-recipe images="recipe.images" type="ctx.settings.bigImages ? 'portrait' : 'landing'" ng-click="toggleIngredients(recipe, $index)"></img-recipe>
+<div class="legend-top">
+<div class="price" bo-if="ctx.settings.showPrices">
+<div class="number" bo-bind="recipe.price | price:1:false"></div>
+<div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
+</div>
+</div>
+<div class="ingredients-overlay" ng-click="toggleIngredients(recipe, $index)">
+<div class="list">
+<div class="item item-divider" bo-bind="'Ingrédients pour '+(recipe.servings | servings)"></div>
+<div bindonce ng-repeat="ingredient in recipe.ingredients" class="item ingredient" bo-class="ingredient.role" bo-bind="ingredient | ingredient"></div>
+<a class="fa-stack fa-lg calm details" bo-href="'#/app/recipe/'+recipe.id+'?recipeIndex='+$index">
+<i class="fa fa-circle-thin fa-stack-2x"></i>
+<i class="fa fa-info fa-stack-1x"></i>
+</a>
+</div>
+</div>
+<div class="legend">
+<div class="actions">
+<span ng-show="!recipe._formated.isInCart" class="fa-stack fa-lg balanced" ng-click="addRecipeToCart(recipe, $index)">
+<i class="fa fa-circle-thin fa-stack-2x"></i>
+<i class="fa fa-plus fa-stack-1x"></i>
+</span>
+<span ng-show="recipe._formated.isInCart" class="fa-stack fa-lg assertive" ng-click="removeRecipeFromCart(recipe, $index)">
+<i class="fa fa-circle-thin fa-stack-2x"></i>
+<i class="fa fa-minus fa-stack-1x"></i>
+</span>
+</div>
+<div class="content" ng-click="toggleIngredients(recipe, $index)">
+<div class="title" bo-bind="recipe.name"></div>
+<div class="subtitle" bo-bind="(recipe.time | cookTime)+', '+recipe.ingredients.length+' ingrédients'"></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="list card feedback">
+<a class="item item-text-wrap" href="#/app/feedback">
+C'était notre sélection de la semaine !<br>
+Ça t'a plu ?
+</a>
+<div class="item row">
+<div class="col" ng-click="recipeFeedback(1)"><img src="images/blah.png"></div>
+<div class="col" ng-click="recipeFeedback(2)"><img src="images/great.png"></div>
+<div class="col" ng-click="recipeFeedback(3)"><img src="images/awesome.png"></div>
+</div>
+</div>
+</div>
+
+<div class="card" ng-if="ctx.debug">
+<div class="item" style="text-align: center;">
+<div class="pull-left" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(-1)">
+<i class="ion ion-arrow-left-c"></i>
+</div>
+Week: {{week}}
+<div class="pull-right" style="font-size: 20px; padding: 0px 15px;" ng-click="changeSelectionWeek(1)">
+<i class="ion ion-arrow-right-c"></i>
+</div>
+</div>
+</div>
+</ion-content>-->
 </ion-view>

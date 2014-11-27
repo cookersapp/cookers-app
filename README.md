@@ -3,11 +3,7 @@
 # TODO
 
 - next release :
-    - home design :
-        * http://www.pinterest.com/pin/205124958004123004/
-        * http://www.pinterest.com/pin/180003316332324102/
-        * http://www.pinterest.com/pin/171277592054176205/
-        * http://www.pinterest.com/pin/171277592054176204/
+    - partage eddy
     - compléter fiche produit :
         * quand on affiche un produit contenant un bon promo : réafficher le bon promo
         * afficher et pouvoir changer la quantité sur la fiche produit

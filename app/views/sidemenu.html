@@ -9,11 +9,11 @@
         <div class="cover" ng-style="{'background-image': 'url('+imageCover+')'}"></div>
       </div>
       <div class="list">
-        <div class="item item-divider">Cookers</div>
-        <a class="item item-icon-left" menu-close ui-sref="app.home"><i class="icon ion-home"></i> Accueil</a>
+        <div class="item item-divider">Cookers <span ng-if="ctx.debug">(debug mode)</span></div>
         <a class="item item-icon-left" menu-close ui-sref="app.recipes"><i class="icon ion-lightbulb"></i> La sélection Cookers</a>
         <a class="item item-icon-left" menu-close ui-sref="app.cart"><i class="icon ion-clipboard"></i> Ma liste de courses</a>
         <a class="item item-icon-left" menu-close ui-sref="app.tocook"><i class="icon ion-clock"></i> Mes recettes à cuisiner</a>
+        <a class="item item-icon-left" menu-close ui-sref="app.cooked"><i class="icon ion-checkmark"></i> Mes recettes cuisinées</a>
       </div>
       <div class="list">
         <div class="item item-divider">Outils</div>

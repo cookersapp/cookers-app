@@ -72,13 +72,13 @@ angular.module('app')
       fn.buyItem = function(item){
         LogSrv.trackBuyItem(item.id, item.quantity);
         CartUtils.buyItem(data.cart, item);
-        ToastSrv.show('✔ '+item.name+' acheté !');
+        ToastSrv.showShortTop('✔ '+item.name+' acheté !');
       };
       fn.unbuyItem = function(item){
         LogSrv.trackUnbuyItem(item.id);
         CartUtils.unbuyItem(data.cart, item);
       };
-      fn.toggleItem = function(item){
+      fn.toggleBuyItem = function(item){
         if(item.bought){
           fn.unbuyItem(item);
         } else {
@@ -91,8 +91,8 @@ angular.module('app')
         ToastSrv.show('✔ recette supprimée de la liste de courses');
       };
       fn.updateServings = function(recipe, servings){
-        Utils.debounce('cart-recipe-servings-'+recipe.id, {recipe: recipe, servings: servings}, function(value){
-          CartUtils.adjustRecipe(data.cart, value.recipe, value.servings, true);
+        Utils.debounce('cart-recipe-servings-'+recipe.id, function(){
+          CartUtils.adjustRecipe(data.cart, recipe, servings, true);
         });
       };
       fn.colorClass = function(prefix, cart, suffix){
@@ -261,7 +261,7 @@ angular.module('app')
               }
             }).then(function(){
               // TODO : track
-              ToastSrv.show('✔ '+product.name+' acheté !');
+              ToastSrv.showShortTop('✔ '+product.name+' acheté !');
             });
           } else if(_item){
             fn.buyItem(_item);

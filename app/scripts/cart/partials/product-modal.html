@@ -5,7 +5,11 @@
   </ion-header-bar>
 
   <ion-content>
-    <div style="padding-top: 50%; margin-top: -20px;" ng-show="!data.product"><loading></loading></div>
+    <loading ng-show="!data.product" top="100px"></loading>
+    <div class="screen-placeholder" ng-show="!data.product && data.ctx.firstTime">
+      Vous êtes le premier à scanner ce produit,<br>
+      nous recherchons les informations dessus !
+    </div>
     <div class="product-card" ng-show="data.product">
       <div class="card product">
         <div class="product-image">

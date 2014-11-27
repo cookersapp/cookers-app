@@ -8,20 +8,9 @@
   font-size: 16px;
 }
 
-.no-items-to-buy {
-  min-height: 200px;
-  text-align: center;
-
-  margin: 35px;
-  text-align: center;
-  font-size: 20px;
-  line-height: 25px;
-  color: #bbb;
-}
-
 .recommanded-items {
   padding: 10px;
-  background: #FEF7DD;
+  background: #FFE0D3;
 }
 
 .cart-items {
@@ -202,7 +191,7 @@
   .product-image {
     img {
       margin: auto;
-      max-height: 200px;
+      max-height: 100px;
     }
   }
   .promo {
