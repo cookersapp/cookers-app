@@ -7,7 +7,7 @@
   <ion-content>
     <loading ng-show="!data.product" top="100px"></loading>
     <div class="screen-placeholder" ng-show="!data.product && data.ctx.firstTime">
-      Vous êtes le premier à scanner ce produit,<br>
+      Tu es le premier à scanner ce produit,<br>
       nous recherchons les informations dessus !
     </div>
     <div class="product-card" ng-show="data.product">
@@ -99,8 +99,8 @@
 
   <ion-footer-bar class="bar-dark" ng-show="data.product && data.buyBar !== false">
     <div class="button-bar spaced">
-      <a class="button button-assertive" ng-click="fn.close('notBought')">Reposer le produit</a>
-      <a class="button button-balanced" ng-click="fn.close('bought')">Ajouter au panier</a>
+      <a class="button button-assertive" ng-click="fn.close('notBought')">Je repose le produit</a>
+      <a class="button button-balanced" ng-click="fn.close('bought')">J'ajoute au panier</a>
     </div>
   </ion-footer-bar>
 </ion-modal-view>

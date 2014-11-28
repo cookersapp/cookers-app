@@ -85,7 +85,7 @@ angular.module('app')
       if(sent){
         $scope.feedback.sent = true;
       } else {
-        DialogSrv.alert('Echec de l\'envoi du email :(\nContactez '+supportTeamEmail+' si vous le souhaitez !');
+        DialogSrv.alert('Echec de l\'envoi du email :(\nContacte '+supportTeamEmail+' si tu le souhaites !');
       }
     });
   };

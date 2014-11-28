@@ -20,7 +20,7 @@ angular.module('app')
         DialogSrv.confirm('Ajouter ce coupon au panier ?').then(function(result){
           if(result){
             CartUtils.addPromo(cart, promo).then(function(){
-              ToastSrv.show('✔ Coupon ajoutée au panier \\o/');
+              ToastSrv.show('✔ Coupon ajouté au panier \\o/');
               data.ctx.showPromo = false;
             });
           }
@@ -116,7 +116,7 @@ angular.module('app')
               }
             } else {
               // TODO : ask user some infos...
-              DialogSrv.alert('Product not found :(');
+              DialogSrv.alert('On n\'a pas trouvé d\'informations sur ce produit :(');
               modal.hide();
             }
           });

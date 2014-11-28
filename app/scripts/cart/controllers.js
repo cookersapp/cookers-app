@@ -137,7 +137,7 @@ angular.module('app')
 
             if(format === 'QR_CODE' && Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){
               if(data.cart.selfscan.started){
-                DialogSrv.alert('Une session d\'achat est déjà en cours !');
+                DialogSrv.alert('Tu as déjà une session d\'achat en cours !');
               } else {
                 var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
                 var matches = barcode.match(regex);
@@ -149,12 +149,12 @@ angular.module('app')
               LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
               productScanned(barcode, _item);
             } else {
-              DialogSrv.alert('Le code barre '+barcode+' comporte un format inutilisable ('+format+')', 'Code barre inconnu !');
+              DialogSrv.alert('Le code barre '+barcode+' comporte un format inutilisable ('+format+')', 'On ne connaît pas ce code barre');
               LogSrv.trackError('Unknown barcode', result);
             }
           }
         }, function(error){
-          DialogSrv.alert(JSON.stringify(error), 'Scanning failed !');
+          DialogSrv.alert(JSON.stringify(error), 'Désolé, ça a planté !');
           LogSrv.trackError('scanFailed', error);
         });
       };
@@ -164,7 +164,7 @@ angular.module('app')
       };
 
       fn.removePromo = function(promo){
-        DialogSrv.confirm('Supprimer ce coupon promo de votre panier ?', promo.name).then(function(result){
+        DialogSrv.confirm('Supprimer ce coupon promo de ton panier ?', promo.name).then(function(result){
           if(result){
             CartUtils.removePromo(data.cart, promo);
             // TODO track
@@ -199,11 +199,11 @@ angular.module('app')
         }
         var answerPromise = $q.when(true);
         if(stillPromo){
-          answerPromise = DialogSrv.confirm('Certains coupons n\'ont pas été utilisés ! Terminer quand même ?', 'Coupons');
+          answerPromise = DialogSrv.confirm('Certains coupons n\'ont pas été utilisés ! Tu veux terminer quand même ?', 'Coupons');
         }
         answerPromise.then(function(result){
           if(result){
-            DialogSrv.confirm('Vous pouvez maintenant passer en caisse :)').then(function(result){
+            DialogSrv.confirm('Tu peux maintenant passer en caisse :)').then(function(result){
               if(result){
                 CartUtils.terminateSelfscan(data.cart).then(function(){
                   $state.go('app.recipes');
@@ -237,7 +237,7 @@ angular.module('app')
     StoreSrv.get(storeId).then(function(store){
       $ionicLoading.hide();
       if(store){
-        DialogSrv.confirm('Bienvenu à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
+        DialogSrv.confirm('Bienvenue à '+store.name+'. Commencer le self-scan ?', 'Self-scan').then(function(result){
           if(result){
             // TODO : track
             CartUtils.startSelfscan(data.cart, store).then(function(){
@@ -246,7 +246,7 @@ angular.module('app')
           }
         });
       } else {
-        DialogSrv.alert('Magasin non reconnu :(', 'Self-scan');
+        DialogSrv.alert('Je ne connais pas ce magasin :(', 'Self-scan');
         // TODO : track
       }
     });
