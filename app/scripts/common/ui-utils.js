@@ -76,16 +76,16 @@ angular.module('app')
         $ionicLoading.show();
         CameraSrv.takePicture().then(function(imageUri){
           var sharePromise;
-          if(index == 0){
+          if(index === 0){
             sharePromise = SharingSrv.shareViaFacebook(
               'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec http://cookers.io ',
               [imageUri, recipe.images.portrait]);
-          } else if(index == 1){
+          } else if(index === 1){
             sharePromise = SharingSrv.shareViaTwitter(
               'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec @cookersapp',
               imageUri,
               'http://cookers.io');
-          } else if(index == 2){
+          } else if(index === 2){
             sharePromise = SharingSrv.shareViaEmail(
               'Hey, voilà ma dernière recette ! Tu veux goûter ? :)\n--- Cuisiné avec http://cookers.io ',
               'A table : ' + recipe.name,
