@@ -136,16 +136,21 @@ angular.module('app')
             if(Config.debug){ToastSrv.show('Scanned in '+((Date.now()-startScanTime)/1000)+' sec');}
 
             if(format === 'QR_CODE' && Utils.startsWith(barcode, 'http://cookers.io/scan/stores/')){
-              var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
-              var matches = barcode.match(regex);
-              var storeId = matches ? matches[1] : null;
-              startSelfScan(storeId);
-            } else if(format === 'EAN_13' || format === 'EAN_8'){
+              if(data.cart.selfscan.started){
+                DialogSrv.alert('Une session d\'achat est déjà en cours !');
+              } else {
+                var regex = new RegExp('http://cookers\\.io/scan/stores/([0-9a-z]+)', 'i');
+                var matches = barcode.match(regex);
+                var storeId = matches ? matches[1] : null;
+                startSelfScan(storeId);
+              }
+            } else if(format === 'EAN_13' || format === 'EAN_8' || format === 'UPC_A'){
               var itemId = _item ? (_item.id ? _item.id : _item.name) : undefined;
               LogSrv.trackCartScan(itemId, barcode, Date.now()-startScanTime);
               productScanned(barcode, _item);
             } else {
               DialogSrv.alert('Le code barre '+barcode+' comporte un format inutilisable ('+format+')', 'Code barre inconnu !');
+              LogSrv.trackError('Unknown barcode', result);
             }
           }
         }, function(error){

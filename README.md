@@ -3,7 +3,6 @@
 # TODO
 
 - next release :
-    - partage eddy
     - compléter fiche produit :
         * quand on affiche un produit contenant un bon promo : réafficher le bon promo
         * afficher et pouvoir changer la quantité sur la fiche produit

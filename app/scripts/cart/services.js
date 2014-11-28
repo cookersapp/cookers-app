@@ -53,22 +53,22 @@ angular.module('app')
         open: function(opts){
           var startTime = Date.now(), modalShowedTime = null, productLoadedTime = null;
 
-          fn.close = function(action){
-            modal.hide().then(function(){
-              if(opts.callback){opts.callback(action, data.product, data.store ? data.store.price : null, 1);}
-              data.product = null;
-              data.store = null;
-              data.ctx = null;
-            });
-          };
+          data.ctx = {};
           data.title = opts.title;
           data.buyBar = opts.buyBar;
+          data.product = null;
+          data.store = null;
+          fn.close = function(action){
+            modal.hide().then(function(){
+              if(opts.callback){
+                opts.callback(action, data.product, data.store ? data.store.price : null, 1);
+              }
+            });
+          };
 
           $timeout(function(){
-            if(!data.ctx){data.ctx = {};}
             data.ctx.firstTime = true;
-          }, 3000);
-
+          }, 5000);
 
           return modal.show().then(function(){
             modalShowedTime = Date.now();
@@ -87,7 +87,6 @@ angular.module('app')
             if(product){
               data.product = product;
               data.store = store;
-              data.ctx = {};
               if(store){
                 if(store.promos){
                   CartUtils.showPromo(cart, store.promos).then(function(promoToShow){

@@ -34,10 +34,14 @@ cordova platform add android
 cp -r app_icons/android/* platforms/android/res/
 grunt build
 cordova build --release android
-cp platforms/android/ant-build/Cookers-release-unsigned.apk .
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore -storepass $password Cookers-release-unsigned.apk alias_name
-zipalign -v 4 Cookers-release-unsigned.apk $prodFile
-rm Cookers-release-unsigned.apk
+#cp platforms/android/ant-build/Cookers-release-unsigned.apk .
+#jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore -storepass $password Cookers-release-unsigned.apk alias_name
+#zipalign -v 4 Cookers-release-unsigned.apk $prodFile
+#rm Cookers-release-unsigned.apk
+cp platforms/android/ant-build/CordovaApp-release-unsigned.apk .
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore cookers-assistant-android-key.keystore -storepass $password CordovaApp-release-unsigned.apk alias_name
+zipalign -v 4 CordovaApp-release-unsigned.apk $prodFile
+rm CordovaApp-release-unsigned.apk
 
 
 # build debug apk
@@ -49,8 +53,10 @@ cordova platform remove android
 cordova platform add android
 cp -r app_icons/android/* platforms/android/res/
 grunt build
-cp platforms/android/ant-build/devCookers-debug.apk .
-mv devCookers-debug.apk $debugFile
+#cp platforms/android/ant-build/devCookers-debug.apk .
+#mv devCookers-debug.apk $debugFile
+cp platforms/android/ant-build/CordovaApp-debug.apk .
+mv CordovaApp-debug.apk $debugFile
 
 
 # Finish...
