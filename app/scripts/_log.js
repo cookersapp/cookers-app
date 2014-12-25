@@ -140,7 +140,7 @@ var Logger = (function(){
     if(!event.id){
       event.id = createUuid();
       event.prevId = cache.currentEventId;
-      cache.currentEventId = event.eventId;
+      cache.currentEventId = event.id;
     }
 
     if(!event.user){
