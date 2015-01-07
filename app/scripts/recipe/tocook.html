@@ -1,4 +1,4 @@
-<ion-view bindonce="recipes">
+<ion-view>
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
@@ -6,23 +6,24 @@
     <h1 class="title handwritten">Recettes à cuisiner</h1>
   </ion-header-bar>
 
-  <ion-content class="tocook-screen" bo-class="{empty: !(recipes && recipes.length > 0)}">
+  <ion-content class="tocook-screen" ng-class="{empty: !(recipes && recipes.length > 0)}">
     <div class="screen-empty">Ajoute des recettes à ta liste de course pour les voir apparaitre ici !</div>
 
     <div class="screen">
-      <div class="row card" bindonce ng-repeat="recipe in recipes">
+      <div class="row card" ng-repeat="recipe in ::recipes">
         <div class="col col-33 picture" ng-if="$index%2 === 0"><img-recipe images="recipe.images" type="'portrait'"></img-recipe></div>
         <div class="col text">
           <a class="cart-link" ng-click="remove(recipe)"><i class="icon ion-close-round"></i></a>
-          <h1 class="title" bo-bind="recipe.name"></h1>
+          <h1 class="title">{{::recipe.name}}</h1>
           <div class="progress">
-            <div class="progress-bar" bo-class="{empty: recipe.cartData.boughtPc === 0}" bo-style="{width: recipe.cartData.boughtPc+'%'}"
-                 bo-bind="(recipe.cartData.boughtPc | mynumber:0)+'% acheté'"></div>
+            <div class="progress-bar" ng-class="{empty: recipe.cartData.boughtPc === 0}" ng-style="::{width: recipe.cartData.boughtPc+'%'}">
+              {{::recipe.cartData.boughtPc | mynumber:0}}% acheté
+            </div>
           </div>
-          <a class="button" bo-href="'#/app/cook/'+recipe.cartData.cart+'/'+recipe.id">Cuisiner</a>
+          <a class="button" ng-href="{{::'#/app/cook/'+recipe.cartData.cart+'/'+recipe.id}}">Cuisiner</a>
           <div class="tags">
-            <span ng-click="changeServings(recipe)" ng-bind="recipe.cartData.servings | servings"></span>
-            <span bo-bind="recipe.time | cookTime"></span>
+            <span ng-click="changeServings(recipe)">{{recipe.cartData.servings | servings}}</span>
+            <span>{{::recipe.time | cookTime}}</span>
           </div>
         </div>
         <div class="col col-33 picture" ng-if="$index%2 === 1"><img-recipe images="recipe.images" type="'portrait'"></img-recipe></div>

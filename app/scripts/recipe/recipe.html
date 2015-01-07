@@ -1,27 +1,27 @@
-<ion-view bindonce="recipe">
+<ion-view>
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
-    <h1 class="title" bo-bind="recipe.name"></h1>
+    <h1 class="title">{{::recipe.name}}</h1>
   </ion-header-bar>
 
-  <ion-content class="recipe-screen" bo-class="{empty: !(recipe && recipe.id)}">
+  <ion-content class="recipe-screen" ng-class="{empty: !(recipe && recipe.id)}">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
     <loading ng-if="!recipe" top="100px"></loading>
     <div class="screen" ng-show="recipe">
       <img-recipe images="recipe.images" type="'landing'" style="width: 100%"></img-recipe>
       <div class="legend-top">
-        <div class="price" bo-if="ctx.settings.showPrices">
-          <div class="number" bo-bind="recipe.price | price:1:false"></div>
-          <div class="detail" bo-if="recipe.price.unit" bo-bind="'/'+recipe.price.unit"></div>
+        <div class="price" ng-if="ctx.settings.showPrices">
+          <div class="number">{{::recipe.price | price:1:false}}</div>
+          <div class="detail" ng-if="::recipe.price.unit">{{::'/'+recipe.price.unit}}</div>
         </div>
       </div>
       <div class="row recipe-meta card">
-        <div class="col"><i class="fa fa-tag"></i> <span bo-bind="recipe.category"></span></div>
-        <div class="col"><i class="fa fa-clock-o"></i> <span bo-bind="recipe.time | cookTime"></span></div>
-        <div class="col"><i class="fa fa-users"></i> <span bo-bind="recipe.servings | servings"></span></div>
+        <div class="col"><i class="fa fa-tag"></i> {{::recipe.category}}</div>
+        <div class="col"><i class="fa fa-clock-o"></i> {{::recipe.time | cookTime}}</div>
+        <div class="col"><i class="fa fa-users"></i> {{::recipe.servings | servings}}</div>
       </div>
       <div class="requirements card">
         <h2 class="header">
@@ -33,13 +33,12 @@
         <div class="row">
           <div class="col">
             <ul>
-              <li bindonce ng-repeat="ingredient in recipe.ingredients"
-                  bo-class="ingredient.role" bo-bind="ingredient | ingredient"></li>
+              <li ng-repeat="ingredient in ::recipe.ingredients" ng-class="::ingredient.role">{{::ingredient | ingredient}}</li>
             </ul>
           </div>
           <div class="col">
             <ul>
-              <li bindonce ng-repeat="tool in recipe.tools" bo-bind="tool | tool"></li>
+              <li ng-repeat="tool in ::recipe.tools">{{::tool | tool}}</li>
             </ul>
           </div>
         </div>
@@ -47,9 +46,9 @@
       <div class="instructions card">
         <h2 class="header">Préparation</h2>
         <div class="padding">
-          <ul bindonce ng-repeat="instruction in recipe.instructions" class="instruction">
-            <li bo-if="instruction.summary" bo-html="instruction.summary"></li>
-            <li bo-if="!instruction.summary" bo-html="instruction.content"></li>
+          <ul ng-repeat="instruction in ::recipe.instructions" class="instruction">
+            <li ng-if="::instruction.summary" ng-bind-html="::instruction.summary"></li>
+            <li ng-if="::!instruction.summary" ng-bind-html="::instruction.content"></li>
           </ul>
         </div>
       </div>
@@ -60,7 +59,7 @@
     <div class="button-bar spaced">
       <a class="button icon-left ion-clipboard button-balanced" ng-click="addRecipeToCart(recipe)" ng-if="!recipe._formated.isInCart">A acheter !</a>
       <a class="button icon-left ion-clipboard button-assertive" ng-click="removeRecipeFromCart(recipe)" ng-if="recipe._formated.isInCart">A supprimer !</a>
-      <a class="button icon-left fa fa-cutlery button-assertive" bo-href="'#/app/cook/none/'+recipe.id">Cuisiner !</a>
+      <a class="button icon-left fa fa-cutlery button-assertive" ng-href="#/app/cook/none/{{::recipe.id}}">Cuisiner !</a>
     </div>
   </ion-footer-bar>
 </ion-view>

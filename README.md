@@ -1,22 +1,23 @@
 # Cookers app
 
+# BUGs
+
+- le header de l'écran cuisine
+
 # TODO
+
+- notifications pour ne pas oublier l'application !
+- mise en favoris de recette
+- voir aléatoirement les recettes
 
 - next release :
     - compléter fiche produit :
         * quand on affiche un produit contenant un bon promo : réafficher le bon promo
         * afficher et pouvoir changer la quantité sur la fiche produit
     
-    
-    - quand on archive un liste, proposer de reporter les élements non cochés sur la prochaine
-    - widget uservoice sur la home
-    - mettre en cache les données embeded dans les recipes (foods), les products (additives)
-
-    - trier les ingrédients achetés par ordre dans lequel ils ont été achetés
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
     
-    - notifications pour ne pas oublier l'application !
     - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(

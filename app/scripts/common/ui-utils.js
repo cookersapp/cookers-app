@@ -46,7 +46,7 @@ angular.module('app')
     return $ionicPopup.show({
       template: ['<div style="text-align: center;">'+
                  (title ? '<h3 class="title" style="font-size: 20px;">'+title+'</h3>' : '')+
-                 '<div>Cuisiner pour <b ng-bind="data.servings">??</b> personnes ?</div>'+
+                 '<div>Cuisiner pour <b>{{data.servings}}</b> personnes ?</div>'+
                  '</div>'+
                  '<div class="range">'+
                  '<i class="fa fa-user"></i>'+

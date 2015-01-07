@@ -25,22 +25,16 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.2.25",
-    "angular-sanitize": "~1.2.25",
-    "angular-animate": "~1.2.25",
-    "angular-touch": "~1.2.25",
-    "angular-ui-router": "~0.2.10",
-    "ionic": "1.0.0-beta.13",
-    "ngCordova": "~0.1.2-alpha",
-    "font-awesome": "~4.1.0",
-    "moment": "~2.7.0",
+    "ionic": "1.0.0-beta.14",
+    "ngCordova": "0.1.8-alpha",
+    "font-awesome": "~4.2.0",
+    "moment": "~2.8.4",
+    "moment-duration-format": "~1.3.0",
     "lodash": "~2.4.1",
     "speakingurl": "~0.9.1",
-    "angular-elastic": "~2.3.5",
-    "moment-duration-format": "~1.3.0",
-    "angular-bindonce": "~0.3.1",
-    "jquery": "~1.11.1",
     "angular-localforage": "~1.1.0",
+    "angular-elastic": "~2.3.5",
+    "jquery": "~1.11.1",
     "angular-img-fallback": "~0.0.2"
   }
 }

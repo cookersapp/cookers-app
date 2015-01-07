@@ -13,7 +13,7 @@ angular.module('app')
 .filter('date', function(){
   'use strict';
   return function(timestamp, format){
-    return timestamp ? moment(timestamp).format(format ? format : 'll') : '<date>';
+    return timestamp ? moment(timestamp).format(format ? format : 'll') : undefined;
   };
 })
 
@@ -28,7 +28,7 @@ angular.module('app')
         return prefix + moment.duration(seconds, 'seconds').format('hh:mm:ss');
       }
     } else {
-      return '<duration>';
+      return undefined;
     }
   };
 })
@@ -45,7 +45,7 @@ angular.module('app')
   'use strict';
   return function(unit){
     if(unit === 'piece' || unit === 'pièce' || unit === 'unit'){
-      return '';
+      return undefined;
     } else {
       return unit;
     }
@@ -55,7 +55,7 @@ angular.module('app')
 .filter('cookTime', function($filter){
   'use strict';
   return function(time){
-    return time && time.eat > 0 ? $filter('mynumber')(time.eat, 2)+' '+$filter('unit')(time.unit) : '';
+    return time && time.eat > 0 ? $filter('mynumber')(time.eat, 2)+' '+$filter('unit')(time.unit) : undefined;
   };
 })
 
@@ -64,7 +64,7 @@ angular.module('app')
   return function(servings, servingsAdjust){
     if(!servingsAdjust){servingsAdjust = 1;}
     var unit = servings ? $filter('unit')(servings.unit) : null;
-    return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : '';
+    return servings && servings.value > 0 ? $filter('mynumber')(servings.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : undefined;
   };
 })
 
@@ -76,7 +76,7 @@ angular.module('app')
       if(showUnit === undefined){showUnit = true;}
       return $filter('mynumber')(price.value*priceAdjust, 2) + ' ' + price.currency + (showUnit && price.unit ? '/' + price.unit : '');
     } else {
-      return '<price>';
+      return undefined;
     }
   };
 })
@@ -86,14 +86,14 @@ angular.module('app')
   return function(quantity, servingsAdjust){
     if(!servingsAdjust){servingsAdjust = 1;}
     var unit = $filter('unit')(quantity ? quantity.unit : '');
-    return quantity && quantity.value > 0 ? $filter('mynumber')(quantity.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : '';
+    return quantity && quantity.value > 0 ? $filter('mynumber')(quantity.value*servingsAdjust, 2)+(unit ? ' '+unit : '') : undefined;
   };
 })
 
 .filter('tool', function(){
   'use strict';
   return function(tool){
-    return tool && tool.name ? tool.name : '';
+    return tool && tool.name ? tool.name : undefined;
   };
 })
 
@@ -124,7 +124,7 @@ angular.module('app')
       var quantity = $filter('quantity')(ingredient.quantity, servingsAdjust);
       return quantity + preWords(ingredient, quantity) + ingredient.food.name + postWords(ingredient);
     } else {
-      return '';
+      return undefined;
     }
   };
 })
@@ -136,7 +136,7 @@ angular.module('app')
       var quantity = $filter('quantity')(item.quantity);
       return quantity + (quantity ? ' de ' : '') + item.name;
     } else {
-      return '';
+      return undefined;
     }
   };
 })

@@ -1,15 +1,15 @@
-<ion-view bindonce="recipe">
+<ion-view>
   <ion-header-bar class="bar-custom">
     <div class="buttons">
       <button menu-toggle="left" class="button button-icon ion-navicon"></button>
     </div>
     <h1 class="title handwritten">Cook time !</h1>
-    <div class="buttons" ng-show="timer">
-      <button class="button button-clear bold" ng-class="{warn: timer < 0}">{{timer | duration}}</button>
+    <div class="buttons">
+      <button class="button button-clear bold" ng-class="{warn: timer < 0}" ng-show="timer" ng-bind="timer | duration"></button>
     </div>
   </ion-header-bar>
 
-  <ion-content class="cook-screen" bo-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
+  <ion-content class="cook-screen" ng-class="{empty: !(recipe && recipe.id)}" delegate-handle="cookScroll">
     <div class="screen-empty">La recette demandée n'a pas été trouvée :(</div>
 
     <loading ng-if="!recipe" top="100px"></loading>
@@ -19,10 +19,10 @@
           <img-recipe images="recipe.images" type="'portrait'"></img-recipe>
         </div>
         <div class="col text">
-          <h1 class="title" bo-bind="recipe.name"></h1>
+          <h1 class="title">{{::recipe.name}}</h1>
           <div class="tags">
-            <span ng-click="changeServings()" ng-bind="recipe.servings | servings:servingsAdjust"></span>
-            <span bo-bind="recipe.time | cookTime"></span>
+            <span ng-click="changeServings()">{{recipe.servings | servings:servingsAdjust}}</span>
+            <span>{{::recipe.time | cookTime}}</span>
           </div>
         </div>
       </div>
@@ -30,25 +30,25 @@
         <div class="col">
           <h2 class="title">Ingrédients</h2>
           <ul>
-            <li bindonce ng-repeat="ingredient in recipe.ingredients" bo-class="ingredient.role" ng-bind="ingredient | ingredient:servingsAdjust"></li>
+            <li ng-repeat="ingredient in ::recipe.ingredients" ng-class="::ingredient.role">{{ingredient | ingredient:servingsAdjust}}</li>
           </ul>
         </div>
         <div class="col">
           <h2 class="title">Ustensiles</h2>
           <ul>
-            <li bindonce ng-repeat="tool in recipe.tools" class="title" bo-bind="tool | tool"></li>
+            <li ng-repeat="tool in ::recipe.tools" class="title">{{::tool | tool}}</li>
           </ul>
         </div>
       </div>
       <div class="cooking">
         <h2 class="title">Préparation</h2>
-        <div bindonce ng-repeat="instruction in recipe.instructions">
+        <div ng-repeat="instruction in ::recipe.instructions">
           <div class="step card">
-            <h3 bo-if="instruction.title" bo-html="instruction.title"></h3>
-            <div bo-html="instruction.content"></div>
+            <h3 ng-if="::instruction.title" ng-bind-html="::instruction.title"></h3>
+            <div ng-bind-html="::instruction.content"></div>
           </div>
-          <div class="timers" bo-if="instruction.timers">
-            <cook-timer ng-repeat="timer in instruction.timers" data="timer"></cook-timer>
+          <div class="timers" ng-if="::instruction.timers">
+            <cook-timer ng-repeat="timer in ::instruction.timers" data="timer"></cook-timer>
           </div>
         </div>
       </div>
