@@ -1,4 +1,4 @@
-angular.module('app', ['ngSanitize', 'ngAnimate', 'ngTouch', 'ionic', 'ngCordova', 'LocalForageModule', 'monospaced.elastic', 'dcbImgFallback'])
+angular.module('app', ['ionic', 'ngCordova', 'LocalForageModule', 'monospaced.elastic', 'dcbImgFallback'])
 
 .config(function($stateProvider, $urlRouterProvider, $provide){
   'use strict';
