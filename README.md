@@ -1,4 +1,14 @@
+![Cookers](docs/logo.png)
+
 # Retail-scan app
+
+![Screenshot](docs/02-menu.png)
+![Screenshot](docs/03-planning-start.png)
+![Screenshot](docs/04-planning-choose.png)
+![Screenshot](docs/07-shopping-list.png)
+![Screenshot](docs/08-shopping-list-ingredients.png)
+
+[All screenshots](docs/screenshots)
 
 # Technical
 
