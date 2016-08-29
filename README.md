@@ -1,4 +1,15 @@
+![Cookers](docs/logo.png)
+
 # Retail-scan app
+
+![Screenshot](docs/01-home.png)
+![Screenshot](docs/03-find-recipe.png)
+![Screenshot](docs/04-recipe-results.png)
+![Screenshot](docs/05-recipe-details.png)
+![Screenshot](docs/07-shopping-list.png)
+![Screenshot](docs/08-add-ingredient-to-shopping-list.png)
+
+[All screenshots](docs/screenshots)
 
 This is a [ionic](http://ionicframework.com/) project for the retail-scan mobile application.  
 It allows users to scan food products in stores and get meaningful and personalized recipes. Ingredients can be saved in a grocery list for a convenient shopping.
