@@ -1,10 +1,21 @@
-# Cookers app
+![Cookers](docs/logo.png)
 
-# BUGs
+# Daily food is no longer a hassle
+
+![Screenshot](docs/01-home_recipes.png)
+![Screenshot](docs/02-add_recipe.png)
+![Screenshot](docs/03-recipe_info.png)
+![Screenshot](docs/05-cart_used.png)
+![Screenshot](docs/06-cart_recipes.png)
+![Screenshot](docs/08-to_cook.png)
+
+[All screenshots](docs/screenshots)
+
+## BUGs
 
 - le header de l'écran cuisine
 
-# TODO
+## TODO
 
 - notifications pour ne pas oublier l'application !
 - mise en favoris de recette
@@ -14,10 +25,8 @@
     - compléter fiche produit :
         * quand on affiche un produit contenant un bon promo : réafficher le bon promo
         * afficher et pouvoir changer la quantité sur la fiche produit
-    
     - espace blanc en bas de l'écran cuisine :(
     - status bar gradients (ex: https://github.com/AChep/HeadsUp/)
-    
     - proposer de poster la photo du plat cuisiné sur les réseaux sociaux
     - créer un workflow de mail (côté serveur) et fonction des événements de tracking
     - sur la home et dans les recettes cuisiné, le display flex fait aller le texte à la ligne :(
@@ -61,9 +70,9 @@
     - track api
     - user profiles
 
-# Technical
+## Technical
 
-## Getting started
+### Getting started
 
 - go to project root folder
 - `npm install` to install all grunt dependencies
@@ -78,13 +87,13 @@ Your app is now running to your computer. To run it to your android device :
 - `cordova plugin add org.apache.cordova.device org.apache.cordova.console org.apache.cordova.splashscreen https://github.com/driftyco/ionic-plugins-keyboard org.apache.cordova.geolocation https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git org.apache.cordova.inappbrowser https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git org.apache.cordova.media https://github.com/loicknuchel/cordova-device-accounts.git https://github.com/Dbuggerx/BarcodeScanner.git org.apache.cordova.dialogs org.apache.cordova.vibration org.apache.cordova.camera https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git` add interesting plugins
 - `grunt build && cordova run android` to run app on your phone
 
-## Grunt commands
+### Grunt commands
 
 - `grunt serve` use it to develop. It will open your project in browser with live realod.
 - `grunt ripple` is an alternative to `grunt serve`. It will open your project in adobe ripple editor with live realod.
 - `grunt build` builds your sources and put them in www/ folder to deploy on your device.
 
-## Cordova plugin description
+### Cordova plugin description
 
 - org.apache.cordova.device (0.2.11) : allow to get phone data (uuid, phone model, android version...)
 - org.apache.cordova.console (0.2.10) : not really sure of benefits but it's recommended (to have a better console.log)
@@ -102,7 +111,7 @@ Your app is now running to your computer. To run it to your android device :
 Interesting plugins :
 - Access contacts : https://github.com/apache/cordova-plugin-contacts
 
-## Release process
+### Release process
 
 - change package & name in `config.xml` : `com.cookers.android.dev` => `com.cookers.android` and `dev-Cookers` => `Cookers`
 - increment version number and check that `debug` option is false : `app/scripts/_config.js`
@@ -112,7 +121,7 @@ Interesting plugins :
 
 Publishing to market : http://ionicframework.com/docs/guide/publishing.html
 
-## Useful plugins
+### Useful plugins
 
 - barcode scanner :
     - https://github.com/wildabeast/BarcodeScanner
@@ -190,7 +199,7 @@ Screenshot gallery inspiration :
 - [Tictoc](https://play.google.com/store/apps/details?id=kr.co.tictocplus)
 - [Cymera-Appareil photo/éditeur](https://play.google.com/store/apps/details?id=com.cyworld.camera)
 
-## Tools 
+## Tools
 
 - images : [croppola](http://www.croppola.com/) (corp), [fixpicture](http://www.fixpicture.org/) (resize) and [kraken](https://kraken.io/web-interface) (optimize)
 - screenshots : https://developer.android.com/distribute/tools/promote/device-art.html
